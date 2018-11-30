@@ -1,0 +1,180 @@
+#{extends 'admin.html' /}
+
+#{form @saveCoverage(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>${coverage==null ? messages.get('createCoverage.title') : messages.get('editCoverage.title')}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if coverage}
+			<input type="hidden" name="coverage.id" value="${coverage?.id}" />
+		#{/if}
+	
+		#{field 'coverage.transferCode'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		#{field 'coverage.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		#{field 'coverage.coverageOrder'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.description'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" maxlength="255" cols="1" class="form-control">${field.flash ? field.flash : field.value}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.quotationName'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.quotationDescription'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.fieldDescription'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group ${errors.forKey('coverage.category') ? 'has-error' : ''}">
+			<label class="col-sm-3 control-label" for="coverage_category">#{required/} &{'coverage.form.coverage.category'}</label>
+			<div class="col-sm-6">
+				#{select 'coverage.category.id', id:'coverage_category', value: flash?.get('coverage.category.id') ? flash?.get('coverage.category.id') : coverage?.category?.id, class:'form-control'}
+					#{option}&{'form.none'}#{/option}
+					#{list items: categories, as: 'category'}
+						#{option category?.id}${category?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if errors.forKey('coverage.category')}<span class="help-block">${errors.forKey('coverage.category')}</span>#{/if}
+			</div>
+		</div>
+		
+		<div class="form-group ${errors.forKey('coverage.type') ? 'has-error' : ''}">
+			<label class="col-sm-3 control-label">#{required/} &{'coverage.form.coverage.type'}</label>
+			<div class="col-sm-6">
+				#{list calculationTypes, as: 'type'}
+					<div class="tip" data-toggle="tooltip" data-placement="left" data-original-title="${type.description}">
+					<label class="radio">
+						<input type="radio" value="${type.id}" name="coverage.type.id" id="coverage_type_id_${type.id}" ${((flash?.get('coverage.type.id') ?: coverage?.type?.id?.toString()) == type.id?.toString())?'checked':''}/>
+						${type.name}
+					</label>
+					</div>
+				#{/list}
+				#{if errors.forKey('coverage.type')}<span class="help-block">${errors.forKey('coverage.type')}</span>#{/if}
+			</div>
+		</div>
+		
+		#{field 'coverage.applyDiscount'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<label class="checkbox">
+						<input type="checkbox" name="${field.name}" id="${field.id}" class="form-control" ${ (field.flash != null) ? (field?.flash?.equals("on")?"checked":"") : (field.value?"checked":"")}/>
+						<input type="hidden" name="${field.name}" value="0"/>
+					</label>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.partOfNetPrime'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<label class="checkbox">
+						<input type="checkbox" name="${field.name}" id="${field.id}" class="form-control" ${ (field.flash != null) ? (field?.flash?.equals("on")?"checked":"") : (field.value?"checked":"")}/>
+						<input type="hidden" name="${field.name}" value="0"/>
+					</label>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'coverage.externals'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<label class="checkbox">
+						<input type="checkbox" name="${field.name}" id="${field.id}" class="form-control" ${ (field.flash != null) ? (field?.flash?.equals("on")?"checked":"") : (field.value?"checked":"")}/>
+						<input type="hidden" name="${field.name}" value="0"/>
+					</label>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${coverage==null ? messages.get('coverage.form.create') : messages.get('coverage.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function() {
+			$("div.tip").tooltip();
+		});
+	</script>
+#{/}

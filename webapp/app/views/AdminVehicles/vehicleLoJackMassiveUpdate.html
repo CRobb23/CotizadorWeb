@@ -1,0 +1,42 @@
+#{extends 'admin.html' /}
+
+<form action="@{uploadValuesLoJack()}" method="POST" class="form-horizontal" enctype="multipart/form-data" role="form">
+	<div class="well">
+		<div class="orange-title"><span>
+			<h1>&{'vehicleLoJackMassiveUpdate.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+
+		<div class="form-group">
+	    	<label class="col-sm-4 control-label">&{'vehicleLoJack.form.template'}</label>
+	    	<div class="col-sm-6">
+	      		<p class="form-control-static"><a href="@{'/public/templates/PlantillaValoresAltoRiesgo.xls'}" class="btn btn-block">&{'vehicleLoJack.form.downloadTemplate'}</a></p>
+	    	</div>
+	  	</div>
+		
+		#{field 'lojackFile'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-4 control-label" for="${field.id}">&{'vehicleLoJack.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="file" name="${field.name}" id="${field.id}" class="form-control" />
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-4 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'vehicleLoJack.form.upload'}" />
+			</div>
+		</div>
+	</div>
+</form>

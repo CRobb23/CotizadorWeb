@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @savePlateType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'plateType.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'plateType.id'}
+		<input type="hidden" name="plateTypeId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'plateType.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'plateType.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'plateType.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'plateType.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'plateType.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'plateType.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(plateType?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'plateTypesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'plateTypesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${plateType?.id==null ? messages.get('plateType.form.create') : messages.get('plateType.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{plateTypesList(null,true)}">&{'plateType.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

@@ -1,0 +1,324 @@
+		
+		<h4 id="titleFieldsLegal" class="fieldsLegal" style="border-bottom: groove; text-align: center;">
+			REPRESENTANTE LEGAL
+		</h4>
+		<div class="row fieldsLegal">
+			<input type="hidden" name="legalRepresentative.id" value="${legalRepresentative?.id}">
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.taxNumber'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" maxlength="10" class="form-control" validate="true"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.firstName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.secondName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.firstSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.secondSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.marriedSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.birthdate'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.legalRepresentative.sex'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.sex.id', class:'form-control', id:'sexRep', value: legalRepresentative?.sex?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: sex, as: 'sexItem'}
+								#{option sexItem?.id}${sexItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.legalRepresentative.profession'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.profession.id', class:'form-control', id:'professionRep', value: legalRepresentative?.profession?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: professions, as: 'professionItem'}
+								#{option professionItem?.id}${professionItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.identificationDocument'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">
+							#{required/} &{'quotation.form.'+field.name} <h6>&{'quotation.form.client.messageDPI'}</h6>
+						</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.passport'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/}  &{'quotation.form.legalRepresentative.civilStatus'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.civilStatus.id', class:'form-control', id:'civilStatusRep', value: legalRepresentative?.civilStatus?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: statuses, as: 'civilStatusItem'}
+								#{option civilStatusItem?.id}${civilStatusItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="legal_nationality">#{required/} &{'quotation.form.legalRepresentative.nationality'}</label>
+					<div class="col-sm-8">
+						%{valueNationality = (legalRepresentative?.nationality?.id)? legalRepresentative?.nationality?.id :client?.nationality?.id}%
+						#{select 'legalRepresentative.nationality.id', class:'form-control', id:'legal_nationality', value: valueNationality}
+							#{option}&{'form.select'}#{/option}
+							#{list items: nationalities, as: 'nationalityItem'}
+								#{option nationalityItem?.id}${nationalityItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.email'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.registry'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.caseFile'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.extendedIn'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.registrationDate'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.book'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.folio'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 id="titleFieldsLegal" class="fieldsLegal" style="border-bottom: groove; text-align: center;">
+			DIRECCIÓN REPRESENTANTE
+		</h4>
+		<div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.address'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.legalRepresentative.address'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            <label id="clientLegalBussinessWorkAddressLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.legalRepresentative.country'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.country.id', class:'form-control', id:'country_legal', value: client?.country?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: countries, as: 'countryItem'}
+								#{option countryItem?.id}${countryItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.legalRepresentative.department'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.department.id', class:'form-control', id:'department_legal', value: legalRepresentative?.department?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: legalDepartments, as: 'departmentItem'}
+								#{option departmentItem?.id}${departmentItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.legalRepresentative.municipality'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.municipality.id', class:'form-control', id:'municipality_legal', value: legalRepresentative?.municipality?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: legalMunicipalities, as: 'municipalityItem'}
+								#{option municipalityItem?.id}${municipalityItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="zone_legal">#{required/} &{'quotation.form.legalRepresentative.zone'}</label>
+					<div class="col-sm-8">
+						#{select 'legalRepresentative.zone.id', class:'form-control', id:'zone_legal', value: legalRepresentative?.zone?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: legalZones, as: 'zoneItem'}
+								#{option zoneItem?.id}${zoneItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.phoneNumber1'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.legalRepresentative.phoneNumber1'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientLegalBussinessPhoneNumberLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.phoneNumber2'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.legalRepresentative.phoneNumber2'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientLegalBussinessPhoneNumberLb2"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'legalRepresentative.phoneNumber3'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.legalRepresentative.phoneNumber3'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientLegalBussinessPhoneNumberLb3"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>

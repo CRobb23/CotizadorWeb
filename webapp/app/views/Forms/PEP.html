@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>IVE-ASR-32</title>
+
+        <link rel="stylesheet" type="text/css" href="/public/stylesheets/PEPForm.css"/>
+    </head>
+    <body>
+    <br>
+        <table class="Border">
+            <!--5.2-->
+            <tbody>
+                <tr>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                    <td style="width:9.09%;"></td>
+                </tr>
+
+
+                <tr>
+                    <td class="Fields" colspan="2" style="text-align: center">ANEXO A.III</td>
+                    <td colspan="3" align="center"><img src="/public/images/SIB.png" alt="logo-SIB" style="width:80px"/></td>
+                    <td class="Fields" colspan="3">Numero o Codigo de Cliente:</td>
+                    <td class="Fields" colspan="3">No. cuenta o Identificacion del producto o servicio:</td>
+                </tr>
+                <tr>
+                    <td  colspan="5"></td>
+                    <td class="FillFields" style="height: 15px;" colspan="3"></td>
+                    <td class="FillFields" style="height: 15px;" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="11" height="20px">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="Fields" style= "height: 20px; text-align: center; font-size: 18px;" colspan="11">ANEXO DE PERSONAS EXPUESTAS POLÍTICAMENTE -PEP-*/</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="2">1. LUGAR:</td>
+                    <td class="FillFields" colspan="3">Guatemala</td>
+                    <td class="Fields" colspan="3">2. FECHA (dd/mm/aaaa):</td>
+                    <td class="FillFields" colspan="3">${new Date().format('dd/MM/yy HH:mm')}</td>
+                </tr>
+                <tr>
+                    <td class="Title" colspan="11">3. DATOS DE LA PERSONA OBLIGADA</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="4">3.1 Razon Social y Nombre Comercial:</td>
+                    <td class="FillFields" colspan="7">#{if incident?.client?.isIndividual == false}${incident?.client?.businessName}#{/if}</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="7">3.2 Nombre de la central, sucursal o agencia donde se solicita el producto o servicio:</td>
+                    <td class="Fields" colspan="4">3.2.1 Codigo de agencia o sucursal:</td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="7"></td>
+                    <td class="FillFields" colspan="4"></td>
+                </tr>
+                <tr>
+                    <td class="Title" colspan="11">4. DATOS PERSONALES DE**/</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="5">4.1 Solicitante:</td>
+                    #{if incident?.client?.isIndividual == true}
+                        <td class="FillFields" colspan="1"><input type="checkbox" checked></td>
+                    #{/if}
+                    #{else }
+                        <td class="FillFields" colspan="1"><input type="checkbox"></td>
+                    #{/else}
+                    <td class="Fields" colspan="4">4.2 Representante Legal:</td>
+                    #{if incident?.client?.isIndividual == false}
+                        <td class="FillFields" colspan="1"><input type="checkbox" checked></td>
+                    #{/if}
+                    #{else }
+                        <td class="FillFields" colspan="1"><input type="checkbox"></td>
+                    #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="5">4.3 Otros firmantes (y/o tarjetahabientes adicionales):</td>
+                    <td class="FillFields" colspan="1"><input type="checkbox"></td>
+                    <td class="Fields" colspan="4">4.4 Beneficiario***/:</td>
+                    <td class="FillFields" colspan="1"><input type="checkbox"></td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3">4.5 Primer apellido:</td>
+                    <td class="Fields" colspan="5">Segundo apellido:</td>
+                    <td class="Fields" colspan="3">Apellido de casada:</td>
+                </tr>
+                <tr>
+                    #{if incident?.client?.isIndividual}
+                        <td class="FillFields" colspan="3">${incident?.client?.firstSurname}</td>
+                        <td class="FillFields" colspan="5">${incident?.client?.secondSurname}</td>
+                        <td class="FillFields" colspan="3">${incident?.client?.marriedSurname}</td>
+                    #{/if}
+                    #{else }
+                        <td class="FillFields" colspan="3">${incident?.client?.legalRepresentative?.firstSurname}</td>
+                        <td class="FillFields" colspan="5">${incident?.client?.legalRepresentative?.secondSurname}</td>
+                        <td class="FillFields" colspan="3">${incident?.client?.legalRepresentative?.marriedSurname}</td>
+                    #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3">Primer nombre:</td>
+                    <td class="Fields" colspan="5">Segundo nombre:</td>
+                    <td class="Fields" colspan="3">Otros nombres:</td>
+                </tr>
+                <tr>
+                #{if incident?.client?.isIndividual}
+                    <td class="FillFields" colspan="3">${incident?.client?.firstName}</td>
+                    <td class="FillFields" colspan="5">${incident?.client?.secondName}</td>
+                    <td class="FillFields" colspan="3"></td>
+                #{/if}
+                #{else }
+                    <td class="FillFields" colspan="3">${incident?.client?.legalRepresentative?.firstName}</td>
+                    <td class="FillFields" colspan="5">${incident?.client?.legalRepresentative?.secondName}</td>
+                    <td class="FillFields" colspan="3"></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="4">4.6 Razon Social/Nombre Comercial:</td>
+                    <td class="FillFields" colspan="7">#{if incident?.client?.isIndividual == false}${incident?.client?.businessName}#{/if}</td>
+                </tr>
+                <tr>
+                    <td class="Title" colspan="11">5. DATOS DE LA PERSONA QUE SE INDICO EN EL PUNTO ANTERIOR</td>
+                </tr>
+                <tr>
+                    <td class="Title" colspan="11">5.1 PERSONA EXPUESTA POLITICAMENTE</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="4">5.1.1 Es Persona Expuesta Politicamente(PEP):</td>
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.expose?.booleanValue() == true}
+                        SI <input type="checkbox" checked> NO <input type="checkbox"></td>
+                    #{/if}
+                    #{else }
+                        SI <input type="checkbox"> NO <input type="checkbox" checked></td>
+                    #{/else}
+                    <td class="Fields" colspan="2">5.1.2 Condicion:</td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.expose?.booleanValue() == true}
+                    #{if incident?.client?.nationality?.name?.equalsIgnoreCase("guatemala")}
+                        Nacional <input type="checkbox" checked> Extranjero <input type="checkbox"></td>
+                    #{/if}
+                    #{else }
+                        Nacional <input type="checkbox" > Extranjero <input type="checkbox" checked></td>
+                    #{/else}
+                    #{/if}
+                    #{else }
+                        Nacional <input type="checkbox" > Extranjero <input type="checkbox"></td>
+                    #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="5">5.1.3 Nombre de la Institucion o ente donde trabaja:</td>
+                    <td class="Fields" colspan="3">5.1.4 Puesto que desempeña:</td>
+                    <td class="Fields" colspan="3">5.1.5 Pais de la Institucion o ente:</td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="5">#{if incident?.client?.isIndividual == false && incident?.client?.expose?.booleanValue() == true}${incident?.client?.companyName}#{/if}</td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.expose?.booleanValue() == true}
+                    #{if incident?.client?.isIndividual == true}
+                        ${incident?.client?.profession?.name}
+                    #{/if}
+                        #{else }${incident?.client?.legalRepresentative?.profession?.name?.toLowerCase()}#{/else}
+                        #{/if}
+                    </td>
+                    <td class="FillFields" colspan="3"></td>
+                </tr>
+                <tr>
+                    <td class="Title" colspan="11">PARENTESCO CON UNA PERSONA EXPUESTA POLITICAMENTE (PEP)</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="9">5.2.1 Tiene parentesco con una Persona Expuesta Politicamente (PEP):(Si es positiva, indicar lo siguiente)</td>
+                    <td class="FillFields" colspan="2">
+                     #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                         SI <input type="checkbox" checked> NO <input type="checkbox"></td>
+                    #{/if}
+                #{else }
+                     SI <input type="checkbox"> NO <input type="checkbox" checked></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3">5.2.2 Indicar parentesco:</td>
+                    <td class="FillFields" colspan="1">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Padre") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Padre:<input type="checkbox" checked> </td>
+                    #{/if}
+                #{else }
+                    Padre:<input type="checkbox"> </td>
+                #{/else}
+                    <td class="FillFields" colspan="1">
+                    #{if} incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Madre") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Madre:<input type="checkbox" checked> </td>
+                    #{/if}
+                #{else }
+                    Madre:<input type="checkbox" > </td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Hijo(a)") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Hijo(a):<input type="checkbox" checked> </td>
+                    #{/if}
+                #{else }
+                    Hijo(a):<input type="checkbox" > </td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Hermano(a)") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Hermano(a):<input type="checkbox" checked> </td>
+                    #{/if}
+                #{else }
+                    Hermano(a):<input type="checkbox" > </td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Cónyuge") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Cónyuge:<input type="checkbox" checked> </td>
+                    #{/if}
+                #{else }
+                    Cónyuge:<input type="checkbox" > </td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3"></td>
+                    <td class="FillFields" colspan="1">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Otro") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Otro: <input type="checkbox" checked> </td>
+                    #{/if}
+                        #{else }
+                            Otro:<input type="checkbox"></td>
+                        #{/else}
+                    <td class="FillFields" colspan="7">Especifique:
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.specificRelationship}
+                    #{/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="7">5.2.3 Datos de la persona que desempeña el cargo público relevante: </td>
+                    <td class="Fields" colspan="2">5.2.3.1 Condición: </td>
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationIsNational && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Nacional <input type="checkbox" checked>  Extranjero <input type="checkbox"></td>
+                    #{/if}
+                    #{elseif !incident?.client?.clientPEP?.relationIsNational && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        Nacional <input type="checkbox">  Extranjero <input type="checkbox" checked></td>
+                    #{/elseif}
+                #{else}
+                    Nacional <input type="checkbox">  Extranjero <input type="checkbox" ></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3">5.2.3.2 Primer apellido:</td>
+                    <td class="Fields" colspan="4">Segundo apellido:</td>
+                    <td class="Fields" colspan="4">Apellido de casada:</td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationFirstSurname}
+                        #{/if}
+                    </td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                        ${incident?.client?.clientPEP?.relationSecondSurname}
+                    #{/if}</td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationMarriedSurname}
+                    #{/if}</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="2">Primer nombre: </td>
+                    <td class="Fields" colspan="3">Segundo nombre: </td>
+                    <td class="Fields" colspan="3">Otros nombres: </td>
+                    <td class="Fields" colspan="3">5.2.3.3 Genero: </td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationFirtName} #{/if}</td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationSecondName}#{/if} </td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationOtherName}#{/if} </td>
+                    <td class="FillFields" colspan="3">
+                #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Otro")}
+                        M  <input type="checkbox" checked> F <input type="checkbox"></td>
+                    #{/if}
+                    #{else}
+                        M <input type="checkbox"> F  <input type="checkbox" checked></td>
+                    #{/else}
+                #{/if}
+                #{else}
+                    M <input type="checkbox"> F  <input type="checkbox"></td>
+                #{/else}
+
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="4">5.2.3.4 Nombre de la Institución o ente donde trabaja: </td>
+                    <td class="Fields" colspan="3">5.2.3.5 Puesto que desempeña: </td>
+                    <td class="Fields" colspan="4">5.2.3.6 Pais de la Institución o ente: </td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationCompanyName} #{/if} </td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.relationJob} #{/if} </td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Parentesco")}
+                    ${incident?.client?.clientPEP?.idRelationCompanyCountry?.name} #{/if} </td>
+                </tr>
+                <!--5.3-->
+                <tr >
+                    <td class="Title" colspan="11" align="center" >5.3 ASOCIADO CERCANO DE UNA PERSONA EXPUESTA POLÍTICAMENTE (PEP)</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="9" style="border-right:1px solid black !important">5.3.1 Es asociado cercano de una Persona Expuesta Políticamente (PEP): (Si es positiva, indicar lo siguiente)</td>
+                    <td class="FillFields" colspan="2">
+                #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    SI <input type="checkbox" checked> NO <input type="checkbox"></td>
+                #{/if}
+                #{else }
+                    SI <input type="checkbox"> NO <input type="checkbox" checked></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3"> 5.3.2 Indicar Motivos:</td>
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Profesionales") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        Profesionales:<input type="checkbox" checked></td>
+                    #{/if}
+                #{else }
+                    Profesionales:<input type="checkbox"></td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Políticos") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        Políticos:<input type="checkbox" checked></td>
+                    #{/if}
+                #{else }
+                    Políticos:<input type="checkbox"></td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Comerciales") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        Comerciales:<input type="checkbox" checked></td>
+                    #{/if}
+                #{else }
+                    Comerciales:<input type="checkbox"></td>
+                #{/else}
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Negocios") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        Negocios:<input type="checkbox" checked></td>
+                    #{/if}
+                #{else }
+                    Negocios:<input type="checkbox"></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3"></td>
+                    <td class="FillFields" colspan="1">
+                    #{if incident?.client?.clientPEP?.relationship?.equalsIgnoreCase("Otro") && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        Otro:<input type="checkbox" checked></td>
+                    #{/if}
+                    #{else }
+                        Otro:<input type="checkbox"></td>
+                    #{/else}
+                    <td class="FillFields" colspan="7">Especifique:
+                #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                ${incident?.client?.clientPEP?.specificRelationship}
+                #{/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="7" style="border-right:1px solid black !important">5.3.3 Datos de la persona que desempeña el cargo público relevante:               </td>
+                    <td class="Fields" colspan="2"style="border-right:1px solid black !important">5.3.3.1 Condición:              </td>
+                    <td class="FillFields" colspan="2">
+                #{if incident?.client?.clientPEP?.relationIsNational && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    Nacional <input type="checkbox" checked>  Extranjero <input type="checkbox"></td>
+                #{/if}
+                #{elseif !incident?.client?.clientPEP?.relationIsNational && incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    Nacional <input type="checkbox">  Extranjero <input type="checkbox" checked></td>
+                #{/elseif}
+                #{else}
+                    Nacional <input type="checkbox">  Extranjero <input type="checkbox" ></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="3" style="border-right:1px solid black !important">5.3.3.2 Primer apellido: </td>
+                    <td class="Fields" colspan="4" style="border-right:1px solid black !important">Segundo apellido: </td>
+                    <td class="Fields" colspan="4">Apellido de casada: </td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationFirstSurname}
+                        #{/if}
+                    </td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                        ${incident?.client?.clientPEP?.relationSecondSurname}
+                    #{/if}</td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationMarriedSurname}
+                    #{/if}</td>
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="2">Primer nombre: </td>
+                    <td class="Fields" colspan="3">Segundo nombre: </td>
+                    <td class="Fields" colspan="3">Otros nombres: </td>
+                    <td class="Fields" colspan="3">5.3.3.3 Género: </td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="2">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationFirtName} #{/if}</td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationSecondName}#{/if} </td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationOtherName}#{/if} </td>
+                <td class="FillFields" colspan="3">
+                #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Otro")}
+                        M  <input type="checkbox" checked> F <input type="checkbox"></td>
+                    #{/if}
+                    #{else}
+                        M <input type="checkbox"> F  <input type="checkbox" checked></td>
+                    #{/else}
+                #{/if}
+                #{else}
+                    M <input type="checkbox"> F  <input type="checkbox"></td>
+                #{/else}
+                </tr>
+                <tr>
+                    <td class="Fields" colspan="4">5.3.3.4 Nombre de la institución o ente donde trabaja: </td>
+                    <td class="Fields" colspan="3" >5.2.3.5 Puesto que desempeña: </td>
+                    <td class="Fields" colspan="4">5.3.3.6 País de la institución o ente: </td>
+                </tr>
+                <tr>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationCompanyName} #{/if} </td>
+                    <td class="FillFields" colspan="3">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.relationJob} #{/if} </td>
+                    <td class="FillFields" colspan="4">
+                    #{if incident?.client?.clientPEP?.typeOfrelationship?.equalsIgnoreCase("Asociado")}
+                    ${incident?.client?.clientPEP?.idRelationCompanyCountry?.name} #{/if} </td>
+                </tr>
+
+            </tbody>
+        </table>
+
+        <p>
+            <label style="font-size: 11px"> */ Cuando corresponda aplica en formularios para inicio de relaciones cuya prima anual supere el monto de US$ 2,500.00 o su equivalente en moneda nacional. <br></label>
+            <label style="font-size: 11px"> **/ En caso de existir más de una persona, consignar los datos para cada una de ellas, utilizando el presente Anexo. <br></label>
+            <label style="font-size: 11px"> ***/ Es obligatorio en el caso de Compañías de Seguros. Es importante indicar que, la información del beneficiario se deberán requerir previo al pago de la póliza o suma asegurada según la condición del Anexo "A.IV". <br></label>
+        </p>
+
+<table class="Border">
+    <tbody>
+    <tr >
+        <td class="Title" align="center" >6. DOCUMENTOS QUE SE DEBEN ANEXAR </td>
+    </tr>
+    <tr>
+        <td>6.1 Fotocopia de los documentos de identificación de los firmantes de la cuenta, producto o servicio. En  caso  de  ser  extranjeros,  documento que acredite su condición migratoria, cuando sea aplicable (pasaporte, tarjeta de visitante, pase especial de viaje, etc.).
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br><br><br>
+<p align="center">
+    <label style="font-size: 11px" ><b> __________________________________________ </b><br></label>
+    <label style="font-size: 11px" ><b> Firma de quien presenta el anexo según numeral 4.</b> <br></label>
+</p>
+
+<pre >
+     _______________________________     __________________________    ____________________________________
+</pre>
+<pre style="font-size: 11px"> <b>
+ Firma y código del empleado              Firma y código del empleado          Firma y código de
+ o intermediario de seguro que asistio    responsable de la verificación       quien autoriza la operación.
+ en consignar la información.             de la información</b>
+</pre>
+
+<p>
+    <label style="font-size: 11px"><b>BASE LEGAL: </b></label><label style="font-size: 11px">Articulo 21 de la Ley Contra el Lavado de Dinero u Otros Activos, Decreto Número 67-2001 del Congreso de la República, 12 de su Reglamento, contenido en Acuerdo Gubernativo Número
+    118-2002, de la Presidencia y 15 de la Ley Para Prevenir y Reprimir el Financiamiento del Terrorismo, Decreto Número 58-2005</label>
+</p>
+
+        </tbody>
+        </table>
+    </body>
+</html>

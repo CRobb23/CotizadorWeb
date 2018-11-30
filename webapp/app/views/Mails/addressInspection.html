@@ -1,0 +1,59 @@
+#{extends 'Mails/layout.html' /}
+ <layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody><tr>
+            <td class="w580" width="580">
+                <p align="left" class="article-title"><singleline label="Title">Nueva inspección</singleline></p>
+                <div align="left" class="article-content">
+                    <multiline label="Description">
+                    	<p>Se ha creado una nueva inspección en domicilio:</p>
+						<h3>Datos del cliente</h3>
+						<table>
+							<tr>
+								<th style="text-align:left;">Nombre</th>
+								<td>${incident?.client?.getFullName()}</td>
+							</tr>
+							<tr>
+								<th style="text-align:left;">Teléfono</th>
+								<td>${incident?.client?.phoneNumber1}</td>
+							</tr>
+						</table>
+						<p></p>
+						<h3>Datos del vehículo</h3>
+						<table>
+							<tr>
+								<th style="text-align:left;">Marca</th>
+								<td>${incident?.vehicle?.line?.brand?.name}</td>
+							</tr>
+							<tr>
+								<th style="text-align:left;">Línea</th>
+								<td>${incident?.vehicle?.line?.name}</td>
+							</tr>
+							<tr>
+								<th style="text-align:left;">Año</th>
+								<td>${incident?.vehicle?.erYear?.year}</td>
+							</tr>
+						</table>
+                    	<h3>Datos de la inspección</h3>
+                    	<table>
+							<tr>
+								<th style="text-align:left;">Dirección</th>
+								<td>${inspection?.address}</td>
+							</tr>
+							<tr>
+								<th style="text-align:left;">Fecha tentativa</th>
+								<td>${inspection?.appointmentDate?.format("dd/MM/yyyy HH:mm")}</td>
+							</tr>
+						</table>
+                    	
+                    	<p>
+						Atentamente<br>
+						Administración El Roble
+						</p>
+                    </multiline>
+                </div>
+            </td>
+        </tr>
+        <tr><td class="w580" width="580" height="10"></td></tr>
+    </tbody></table>
+</layout>

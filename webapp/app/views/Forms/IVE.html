@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>IVE</title>
+        <style>
+        	.roundedBackground {
+        		background-repeate: no-repeat;
+        		background-size: 100.5% 100.5%;
+        		background-position:center;
+        	}
+        	
+        	.title {
+        		font-size:0.875em;	
+        		font-weight:bold;
+        	}
+        	
+        	.subtitle {
+        		font-size:0.625em;	
+        		font-weight:bold;
+        	}
+        
+        	.field {
+        		font-size:0.5em;
+        		font-weight:bold;
+        		border: 0.5px solid black;
+        		height:12px;
+        	}
+        	
+        	.bordered {
+        		border: 0.5px solid black;
+        	}
+        	
+        	.noRightBorder {
+        		border-right: none !important;
+        	}
+        	
+        	.noLeftBorder {
+        		border-left: none !important;
+        	}
+        	
+        	.noTopBorder {
+        		border-top: none !important;
+        	}
+        	
+        	.noBorder {
+        		border: none !important;
+        	}
+        	
+        	.center {
+        		text-align:center;
+        	}
+        	
+        	.condition {
+        		font-size:0.5em;
+        		padding-left:1em;
+        	}
+        	
+        	.conditionNumber {
+        		font-size:0.5em;
+        		vertical-align:top;
+        	}
+        	
+        	.noteTitle {
+        		font-size:0.5em;
+        		vertical-align:top;
+        		font-weight:bold;
+        		width:10%;
+        	}
+        	
+        	.note {
+        		font-size:0.5em;
+        		padding-left:6em;
+        	}
+        	
+        	.signatureName {
+        		font-size:0.5em;
+        		vertical-align:top;
+        		font-weight:bold;
+        	}
+        	
+        	table {
+        		border-collapse: collapse;
+    			border-spacing: 0; 
+    			margin-bottom:8px;
+        	}
+        	
+        	table, th, td {
+        		font-family:sans-serif;
+        	}
+        	
+        	.header {
+			    width: 100%;
+			    overflow: auto;
+			}
+			
+			.leftTitle {
+			    float: left;
+			    width: 42.14%;
+			}
+			        	
+		</style>
+    </head>
+    
+    <body>
+    	<div class="header">
+    		<div class="leftTitle">
+    			<table class="bordered" style="width:60%">
+    				<tr><td class="subtitle">FORMULARIO IVE-AS-01-01</td></tr>
+    			</table>
+    		</div>
+    		<div>
+    			<img src="@{'/public/images/LogoIVE.png'}" width="75"/>
+    		</div>
+    	</div>
+    	
+    	<table class="bordered center" style="width:100%">
+    		<tr><td class="title">EMPRESAS DE SEGUROS</td></tr>
+    		<tr><td class="subtitle">FORMULARIO PARA INICIO DE RELACIONES</td></tr>
+    		<tr><td class="subtitle">- Persona o Empresa Individual -</td></tr>
+    		<tr><td class="subtitle">Operaciones menores a US$10,000.00 o su equivalente en moneda nacional para seguros de daños</td></tr>
+    		<tr><td class="subtitle">Operaciones menores a US$5,000.00 o su equivalente en moneda nacional para seguros de vida</td></tr>
+    	</table>
+    	    
+    	<table style="width:100%">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr>
+	    		<td style="width:04.08%;"></td>
+	    		<td style="width:18.86%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:08.68%;"></td>
+	    		<td style="width:15.07%;"></td>
+	    		<td style="width:12.02%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:15.07%;"></td>
+    		</tr>
+    		
+    		<!--Lugar y fecha-->
+    		<tr>
+    			<td class="field noRightBorder" colspan="1">1.</td>
+    			<td class="field noLeftBorder" colspan="3">LUGAR:</td>
+    			<td class="field" colspan="4">2. FECHA (dd/mm/aaaa):</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="4">Guatemala</td>
+	    		<td class="field center" colspan="4">${new Date().format('dd/MM/yyyy')}</td>
+    		</tr>
+    	</table>
+    	
+    	<!--Datos de la persona obligada-->
+    	<table class="bordered" style="width:100%">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr>
+	    		<td style="width:04.08%;"></td>
+	    		<td style="width:18.86%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:08.68%;"></td>
+	    		<td style="width:15.07%;"></td>
+	    		<td style="width:12.02%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:15.07%;"></td>
+    		</tr>
+    		
+    		<tr>
+	    		<td class="field center noTopBorder" colspan="8">DATOS DE LA PERSONA OBLIGADA</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">3.1</td>
+	    		<td class="field noLeftBorder" colspan="7">Nombre:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="7">Seguros El Roble, S.A.</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">3.2</td>
+	    		<td class="field noLeftBorder" colspan="7">Dirección completa (calle o avenida, casa No., colonia, sector, lote, manzana, zona, municipio y departamento):</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="7">7a avenida 5-10 zona 4, Torre II Centro Financiero, Nivel 16</td>
+    		</tr>
+    	</table>
+    	
+    	<!--Datos del solicitante o asegurado-->
+    	<table class="bordered" style="width:100%">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr>
+	    		<td style="width:04.08%;"></td>
+	    		<td style="width:18.86%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:08.68%;"></td>
+	    		<td style="width:15.07%;"></td>
+	    		<td style="width:12.02%;"></td>
+	    		<td style="width:10.52%;"></td>
+	    		<td style="width:15.07%;"></td>
+    		</tr>
+    		
+    		<tr>
+	    		<td class="field center noTopBorder" colspan="8">DATOS DEL SOLICITANTE O ASEGURADO</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.1</td>
+	    		<td class="field noLeftBorder" colspan="2">Primer apellido:</td>
+	    		<td class="field" colspan="3">Segundo apellido:</td>
+	    		<td class="field" colspan="2">Apellido de casada:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="3">${primerApellido}</td>
+	    		<td class="field center" colspan="3">${segundoApellido}</td>
+	    		<td class="field center" colspan="2">${apellidoCasada}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="3">Primer nombre:</td>
+	    		<td class="field" colspan="4">Segundo nombre:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="4">${primerNombre}</td>
+	    		<td class="field center" colspan="4">${segundoNombre}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.2</td>
+	    		<td class="field noLeftBorder" colspan="2">Fecha de nacimiento (dd/mm/aaaa):</td>
+	    		<td class="field" colspan="2">4.3 Ciudadanía:</td>
+	    		<td class="field" colspan="3">4.4 Profesión u oficio:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="3">${fechaNacimiento}</td>
+	    		<td class="field center" colspan="2">${ciudadania}</td>
+	    		<td class="field center" colspan="3">${profesion}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.5</td>
+	    		<td class="field noLeftBorder" colspan="3">Tipo de documento de identificación:</td>
+	    		<td class="field" colspan="2">Número:</td>
+	    		<td class="field" colspan="2">Lugar de emisión: </td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field center noLeftBorder" colspan="3">${tipoIdentificacion}</td>
+	    		<td class="field center" colspan="2">${numeroIdentificacion}</td>
+	    		<td class="field center" colspan="2">${lugarIdentificacion}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.6</td>
+	    		<td class="field noLeftBorder" colspan="7">Dirección particular completa (calle o avenida, casa No., colonia, sector, lote, manzana, zona, municipio, Depto.  y país):</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="2">${direccion}</td>
+	    		<td class="field" colspan="2">${colonia}</td>
+	    		<td class="field" colspan="1">Zona ${zona}</td>
+	    		<td class="field" colspan="1">${municipio}</td>
+	    		<td class="field" colspan="2">${departamento}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.7</td>
+	    		<td class="field noLeftBorder" colspan="2">Número de identificación tributaria:</td>
+	    		<td class="field" colspan="2">4.8 Teléfonos:</td>
+	    		<td class="field" colspan="1">4.9 Fax:</td>
+	    		<td class="field" colspan="2">4.10 E-mail:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field center" colspan="3">${nit}</td>
+	    		<td class="field center" colspan="1">${telefono1}</td>
+	    		<td class="field center" colspan="1">${telefono2}</td>
+	    		<td class="field center" colspan="1">${fax}</td>
+	    		<td class="field center" colspan="2">${email}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.11</td>
+	    		<td class="field noLeftBorder" colspan="7">El solicitante actùa en nombre propio (como asegurado)</td>	    		
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder" colspan="2"></td>
+	    		<td class="field noRightBorder noLeftBorder" colspan="1">Sí <input name="NombrePropio" type="radio" #{if nombrePropio?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field noRightBorder noLeftBorder" colspan="1"></td>
+	    		<td class="field noRightBorder noLeftBorder" colspan="1">No <input name="NombrePropio" type="radio" #{if nombrePropio?.compareTo("0")==0}checked#{/if}></td>
+	    		<td class="field noLeftBorder" colspan="3"></td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder">4.12</td>
+	    		<td class="field noLeftBorder" colspan="7">Si la respuesta es negativa proporcionar información de la persona asegurada en nombre de quien actúa:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="7">4.12.1 Nombre completo de la persona  y/o razón social de la entidad:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="7">${nombreEntidad}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="3">4.12.2 Fecha de nacimiento (dd/mm/aaaa):</td>
+	    		<td class="field" colspan="4">4.12.3 Ciudadanía:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="3">${fechaEntidad}</td>
+	    		<td class="field" colspan="4">${ciudadaniaEntidad}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="3">4.12.4 Tipo de documento de identificación:</td>
+	    		<td class="field" colspan="2">Número:</td>
+	    		<td class="field" colspan="2">Lugar de emisión:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder"></td>
+	    		<td class="field noLeftBorder" colspan="3">${tipoDocumentoEntidad}</td>
+	    		<td class="field" colspan="2">${numeroDocumentoEntidad}</td>
+	    		<td class="field" colspan="2">${emisionDocumentoEntidad}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field" colspan="4"></td>
+	    		<td class="field" colspan="4">4.12.6 Teléfonos:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field" colspan="4"></td>
+	    		<td class="field" colspan="4">${telefonosEntidad}</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noRightBorder" colspan="1">4.13</td>
+	    		<td class="field noLeftBorder" colspan="7">Otras operaciones del asegurado con el grupo financiero:</td>
+    		</tr>
+    		<tr>
+	    		<td class="field noBorder" colspan="1"></td>
+	    		<td class="field noBorder" colspan="1">Banco</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionBanco?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field center noBorder" colspan="2">Casa de Cambio</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionCambio?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field noBorder" colspan="1">Factoraje</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionFactoraje?.compareTo("0")>0}checked#{/if}></td>
+    		</tr>
+    		<tr>
+	    		<td class="field noBorder" colspan="1"></td>
+	    		<td class="field noBorder" colspan="1">Sociedad Financiera</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionSocFinanciera?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field center noBorder" colspan="2">Empresa de Fianzas</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionFianzas?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field noBorder" colspan="1">Off-Shore</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionOffShore?.compareTo("0")>0}checked#{/if}></td>
+    		</tr>
+    		<tr>
+	    		<td class="field noBorder" colspan="1"></td>
+	    		<td class="field noBorder" colspan="1">Almacén General de Depósito</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionAlmacen?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field center noBorder" colspan="2">Casa de Bolsa</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionBolsa?.compareTo("0")>0}checked#{/if}></td>
+	    		<td class="field noBorder" colspan="1">Tarjeta de Crédito</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionTarjeta?.compareTo("0")>0}checked#{/if}></td>
+    		</tr>
+    		<tr>
+	    		<td class="field noBorder" colspan="1"></td>
+	    		<td class="field noBorder" colspan="1">Otros (especifique)</td>
+	    		<td class="field center noBorder" colspan="1"><input type="checkbox" #{if operacionOtros?.length()>0}checked#{/if}></td>
+	    		<td class="field noBorder" colspan="5">${operacionOtros}</td>
+    		</tr>
+    	</table>
+    	
+    	<!--Requisitos y papelería a adjuntar-->
+    	<table style="width:100%">
+    		<tr>
+	    		<td style="padding-left:1em;padding-right:12em; border: 0.5px solid black;">
+	    			<table>
+	    				<tr>
+	    					<td class="conditionNumber">5.1</td>
+	    					<td class="condition">Fotocopia de los documentos de identificación del (de los) solicitante(s) y del (de los) asegurado(s) de la póliza.</td>
+	    				</tr>
+	    				<tr>
+	    					<td class="conditionNumber">5.2</td>
+	    					<td class="condition">En caso de ser extranjeros una fotocopia del documento que acredite la condición migratoria cuando sea aplicable (pasaporte tarjeta de visitante, pase especial de viaje, etc.)</td>
+	    				</tr>
+	    				<tr>
+	    					<td class="conditionNumber">5.3</td>
+	    					<td class="condition">Fotocopia  de un recibo, ya sea de agua, luz o teléfono (no celular) u otro servicio similar, que registre la dirección de la residencia reportada por el (los) solicitante (s) de la póliza.</td>
+	    				</tr>
+	    				<tr>
+	    					<td class="conditionNumber">5.4</td>
+	    					<td class="condition">En caso de poseer negocio propio adjuntar, fotocopia de patente de empresa y del formulario de inscripción en la SAT o carné.</td>
+	    				</tr>
+	    			</table>
+	    		</td>
+    		</tr>
+    	</table>
+    	
+    	<!--Obligaciones del solicitante y/o asegurado-->
+    	<table style="width:100%">
+    		<tr>
+    			<td class="field center">OBLIGACIONES DEL SOLICITANTE Y/O ASEGURADO</td>
+    		</tr>
+    		<tr>
+	    		<td style="padding-left:1em; padding-right:12em;border: 0.5px solid black;">
+	    			<table>
+	    				<tr>
+	    					<td class="conditionNumber">6.1</td>
+	    					<td class="condition">Me comprometo a informar de inmediato a la Aseguradora cuando se produzca cualquier cambio en la información consignada en este formulario.</td>
+	    				</tr>
+	    				<tr>
+	    					<td class="conditionNumber">6.2</td>
+	    					<td class="condition">Autorizo a la Aseguradora a verificar la información proporcionada en este formulario.</td>
+	    				</tr>
+	    			</table>
+	    		</td>
+    		</tr>
+    	</table>
+    		
+    	<!--Firma del solicitante-->
+    	<table class="bordered" style="width:100%">
+    		<tr>
+	    		<td>
+					<table style="width:50%;margin-top:25px;" align="center">
+						<tr>
+							<td class="center signatureName" style="border-top: 0.5px solid black;">Firma del solicitante</td>
+						</tr>
+					</table>
+				</td>
+    		</tr>
+    	</table>
+    	
+    	<table style="width:100%;margin-top:40px;">
+    		<tr>
+	    		<td class="center signatureName" style="border-top: 0.5px solid black;">Firma y código del responsable que llenó el formulario</td>
+	    		<td style="width:40%;"></td>
+	    		<td class="center signatureName" style="border-top: 0.5px solid black;">Firma y código del responsable que llenó el formulario</td>
+    		</tr>
+    	</table>
+    	
+    	<table style="width:50%; margin-top:25px;" align="center">
+    		<tr>
+	    		<td class="center signatureName" style="border-top: 0.5px solid black;">Firma y código de quien autoriza la operación</td>
+    		</tr>
+    	</table>
+    	
+    	
+    	<table style="width:100%">
+    		<tr>
+    			<td class="noteTitle">NOTA:</td>
+    			<td class="note">Para operaciones por primas de seguros menores de US$3,000.00 o su equivalente en moneda nacional para seguros de daños o de US$2,000.00 o su equivalente en moneda nacional para seguros de vida, no será necesaria la firma del solicitante pero debe completarse los datos del formulario.</td>
+    		</tr>
+    	</table>
+    	
+    	<table style="width:100%">
+    		<tr>
+    			<td class="noteTitle">BASE LEGAL:</td>
+    			<td class="note">Artículo 21 de la Ley Contra el Lavado de Dinero u Otros Activos, Decreto Número 67-2001 del Congreso de la República y 12 de su Reglamento, contenido en el Acuerdo Gubernativo Número 118-2002, de la Presidencia de la República.</td>
+    		</tr>
+    	</table>
+    	
+    </body>
+</html>

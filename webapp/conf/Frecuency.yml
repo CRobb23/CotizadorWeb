@@ -1,0 +1,115 @@
+Frecuency(frecuency):
+    code:               1
+    description:        
+    frecuencyInYear:    12
+    name:               Mensual
+
+Frecuency(frecuency2):
+    code:               2
+    description:        
+    frecuencyInYear:    1
+    name:               Anual
+    
+Frecuency(frecuency3):
+    code:               3
+    description:        
+    frecuencyInYear:    6
+    name:               Bimestral
+
+Frecuency(frecuency4):
+    code:               4
+    description:        
+    frecuencyInYear:    4
+    name:               Trimestral
+
+Frecuency(frecuency5):
+    code:               5
+    description:        
+    frecuencyInYear:    3
+    name:               Cuatrimestral
+
+Frecuency(frecuency6):
+    code:               6
+    description:        
+    frecuencyInYear:    2
+    name:               Semestral
+
+ER_Payment_Frecuency(pf0):    
+    numberOfPayments:   1
+    frecuency:          [frecuency2]
+
+ER_Payment_Frecuency(pf1):    
+    numberOfPayments:   2
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf2):
+    numberOfPayments:   3
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf3):
+    numberOfPayments:   4
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf4):
+    numberOfPayments:   5
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf5):
+    numberOfPayments:   6
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf6):
+    numberOfPayments:   7
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf7):
+    numberOfPayments:   8
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf8):
+    numberOfPayments:   9
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf9):
+    numberOfPayments:   10
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf10):
+    numberOfPayments:   11
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf11):
+    numberOfPayments:   12
+    frecuency:          [frecuency]
+
+ER_Payment_Frecuency(pf12):
+    numberOfPayments:   2
+    frecuency:          [frecuency3]
+
+ER_Payment_Frecuency(pf13):
+    numberOfPayments:   3
+    frecuency:          [frecuency3]
+
+ER_Payment_Frecuency(pf14):
+    numberOfPayments:   4
+    frecuency:          [frecuency3]
+
+ER_Payment_Frecuency(pf15):
+    numberOfPayments:   5
+    frecuency:          [frecuency3]
+
+ER_Payment_Frecuency(pf16):
+    numberOfPayments:   6
+    frecuency:          [frecuency3]
+
+ER_Payment_Frecuency(pf17):
+    numberOfPayments:   4
+    frecuency:          [frecuency4]
+
+ER_Payment_Frecuency(pf18):
+    numberOfPayments:   3
+    frecuency:          [frecuency5]
+
+ER_Payment_Frecuency(pf19):
+    numberOfPayments:   2
+    frecuency:          [frecuency6]

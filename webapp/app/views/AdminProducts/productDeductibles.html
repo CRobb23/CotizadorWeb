@@ -1,0 +1,102 @@
+#{extends 'admin.html' /}
+
+
+#{form @saveDeductibles(), class:'form-horizontal', method:"POST"}
+	<input type="hidden" name="productId" value="${product?.id}"/>
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'product.deductibles'} ${product?.name}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<div class="table-responsive">
+		<table class="table table-striped fixedLayout" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th rowspan="1" class="first">&{'product.additionalParameters.coverage'}</th>
+					<th rowspan="1">&{'product.additionalParameters.minPrime'}</th>
+					<th rowspan="1">&{'product.additionalParameters.minDeductible'}</th>
+					<th rowspan="1">&{'product.additionalParameters.coverage'}</th>
+					#{list vehicleClasses, as: 'vehicleClass'}
+						<th colspan="1">&{'product.additionalParameters.deductiblePercentage'} ${vehicleClass.code}</th>
+					#{/list}
+				</tr>
+			</thead>
+			<tbody>
+				%{deductiblesCount = 0; }%
+				#{list coverages, as: 'coverage'}
+					<tr>
+						<td>
+							<input type="hidden" name="coverages[${(coverage_index-1)}].id" value="${coverage.id}"/>
+							${coverage.coverage?.name}
+						</td>
+						<td style="text-align:center;">
+							<input type="text" name="coverages[${(coverage_index-1)}].minimumPrime" class="input-small form-control" value="${data?.get('coverages['+(coverage_index-1)+'].minimumPrime')?:coverage.minimumPrime?:0}"/>
+							<span class="label label-danger">${errors.forKey('coverages['+(coverage_index-1)+'].minimumPrime')}</span>
+						</td>
+						<td style="text-align:center;">
+							<input type="text" name="coverages[${(coverage_index-1)}].minimumDeductible" class="input-small form-control" value="${data?.get('coverages['+(coverage_index-1)+'].minimumDeductible')?:coverage.minimumDeductible?:0}"/>
+							<span class="label label-danger">${errors.forKey('coverages['+(coverage_index-1)+'].minimumDeductible')}</span>
+						</td>
+						<td style="text-align:center;">
+							#{if coverage?.coverage?.type?.code == 1 || coverage.coverage?.type?.code == 2}
+								Monto ingresado
+								<input type="hidden" name="coverages[${(coverage_index-1)}].coverageValue" value="0"/>
+							#{/if}
+							#{elseif coverage.coverage?.type?.code == 3}
+								Monto seleccionado
+								<input type="hidden" name="coverages[${(coverage_index-1)}].coverageValue" value="0"/>
+							#{/elseif}
+							#{elseif coverage.coverage?.type?.code == 4}
+								<input type="hidden" name="coverages[${(coverage_index-1)}].coverageValue" value="0"/>
+							#{/elseif}
+							#{else}
+								<input type="text" name="coverages[${(coverage_index-1)}].coverageValue" class="input-small form-control" value="${data?.get('coverages['+(coverage_index-1)+'].coverageValue')?:coverage.coverageValue?:0}"/>
+							#{/else}
+							<span class="label label-danger">${errors.forKey('coverages['+(coverage_index-1)+'].coverageValue')}</span>
+						</td>
+						
+						#{list vehicleClasses, as: 'vehicleClass'}
+							%{coverageDeductible=null;}%
+							#{list coverage.deductibles, as: 'deductible'}
+								#{if deductible?.vehicleClass?.equals(vehicleClass) && coverageDeductible==null}
+									%{coverageDeductible=deductible;}%
+								#{/if}
+							#{/list}
+							
+							<td colspan="1">
+								<input type="hidden" name="deductibles[${deductiblesCount}].id" value="${coverageDeductible?.id}"/>
+								<input type="hidden" name="deductibles[${deductiblesCount}].vehicleClass.id" value="${vehicleClass?.id}"/>
+								<input type="hidden" name="deductibles[${deductiblesCount}].productCoverage.id" value="${coverage?.id}"/>
+								<input type="text" class="form-control" name="deductibles[${deductiblesCount}].damagesDeductible" value="${data?.get('deductibles['+deductiblesCount+'].damagesDeductible')?:coverageDeductible?.damagesDeductible?:0}"/>
+								<span class="label label-danger">${errors.forKey('deductibles['+deductiblesCount+'].damagesDeductible')}</span>
+							</td>
+							%{deductiblesCount ++; %}
+						#{/list}
+					</tr>			
+				#{/list}
+			</tbody>
+		</table>
+		</div>
+	</div>
+	
+	<div class="well">
+		<div class="form-group">
+			<div class="col-sm-6 col-md-offset-3">
+				<input type="submit" class="btn btn-default btn-primary btn-block" value="&{'product.form.deductibles.save'}" />
+			</div>
+		</div>
+	</div>
+#{/form}

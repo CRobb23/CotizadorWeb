@@ -1,0 +1,198 @@
+#{extends 'admin.html' /}
+
+#{form @saveVehicleLoJack(), class:"form-horizontal", method:"POST", role:"form"}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>${vehicleLoJack==null ? messages.get('createVehicleLoJack.title') : messages.get('editVehicleLoJack.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if vehicleLoJack}
+			<input type="hidden" name="vehicleLoJack.id" value="${vehicleLoJack?.id}" />
+		#{/if}
+		
+		#{if line}
+			<input type="hidden" name="vehicleLoJack.line.id" value="${line?.id}" />
+			<input type="hidden" name="lineId" value="${line?.id}" />
+		#{/if}
+		#{else}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="coverage_category">#{required/} &{'vehicleLoJack.form.vehicleLoJack.brand'}</label>
+				<div class="col-sm-6">
+					#{select 'brand.id', id:'brand_line', value: flash?.get('brand.id') ? flash?.get('brand.id') : vehicleLoJack?.line?.brand?.id, class:'filter form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: brands, as: 'vehicleBrand'}
+							#{option vehicleBrand?.id}${vehicleBrand?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('brand.id')}<span class="help-block">${errors.forKey('brand.id')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('vehicleLoJack.line') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="coverage_category">#{required/} &{'vehicleLoJack.form.vehicleLoJack.line'}</label>
+				<div class="col-sm-6">
+					#{select 'vehicleLoJack.line.id', id:'vehicleLoJack_line', value: flash?.get('vehicleLoJack.line.id') ? flash?.get('vehicleLoJack.line.id') : vehicleLoJack?.line?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: lines, as: 'vehicleLine'}
+							#{option vehicleLine?.id}${vehicleLine?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('vehicleLoJack.line')}<span class="help-block">${errors.forKey('vehicleLoJack.line')}</span>#{/if}
+				</div>
+			</div>
+		#{/else}
+	
+		#{field 'vehicleLoJack.yearInit'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+        #{field 'vehicleLoJack.yearEnd'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+        #{field 'vehicleLoJack.withLoJack'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+				<div class="col-sm-6">
+                  <div class="input-group">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                    <span class="input-group-addon">%</span>
+                  </div>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+        #{field 'vehicleLoJack.withoutLoJack'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                <span class="input-group-addon">%</span>
+              </div>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+        #{field 'vehicleLoJack.withoutLoJackPlus10'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                <span class="input-group-addon">%</span>
+              </div>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+        #{field 'vehicleLoJack.withoutLoJackPlus15'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                <span class="input-group-addon">%</span>
+              </div>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+        #{field 'vehicleLoJack.withoutLoJackPlusHalf'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                <span class="input-group-addon">%</span>
+              </div>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+        #{field 'vehicleLoJack.withoutLoJackPlusFull'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleLoJack.form.'+field.name}</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+                <span class="input-group-addon">%</span>
+              </div>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+
+      <div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${vehicleLoJack==null ? messages.get('vehicleLoJack.form.create') : messages.get('vehicleLoJack.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+
+<script type="text/javascript">
+	$(function (){
+	    $(".filter").change(function () {
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	$('#vehicleLoJack_line').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+	    	var id = $(this).val(); 
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceVehicles.vehicleLinesForBrand()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#vehicleLoJack_line').html('<option value="">'+"&{'form.none'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.lines, function(index, line) {
+							html+= '<option value="'+line.id+'">'+line.name+'</option>';
+						});
+						$('#vehicleLoJack_line').append(html);
+					} 
+				},
+				error: function() {
+					$('#vehicleLoJack_line').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    });
+	});
+</script>

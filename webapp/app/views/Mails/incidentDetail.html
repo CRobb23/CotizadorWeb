@@ -1,0 +1,26 @@
+#{extends 'Mails/layout.html' /}
+ <layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+	        <tr>
+	            <td class="w580" width="580">
+	                <div align="left" class="article-content">
+	                    <multiline label="Description">
+	                    	<p>Se ha creado el caso No. <span style="font-weight: bold;">${incident?.number}</span></p>
+							<p>
+								Para ver el detalle del caso siga el siguiente enlace:
+								<a href="${serverUrl}@{Incidents.incidentDetail(incident?.id)}">Detalle</a>
+							</p>
+							<p>
+								Atentamente
+								<br>
+								Cotizador Web El Roble
+							</p>
+						</multiline>
+	                </div>
+	            </td>
+	        </tr>
+        	<tr><td class="w580" width="580" height="10"></td></tr>
+    	</tbody>
+    </table>
+</layout>

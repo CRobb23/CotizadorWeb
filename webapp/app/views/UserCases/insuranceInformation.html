@@ -1,0 +1,583 @@
+#{extends 'admin.html' /}
+
+#{form @insuranceInformationNext(), class:"form-horizontal", method:"POST"}	
+
+	<div id="quotations_container_div" class="well fixed-sidebar-parent">
+		<div class="orange-title">
+			<span>
+				<h1>&{'quotation.insurance'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+				<ul class="steps hidden-xs pull-right">
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Seguro</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Simulación</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguimiento</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Caso</li>
+				</ul>
+			</span>
+		</div>		
+		#{if errors}
+		<div class="alert alert-danger">
+			&{'quotation.form.insurance.fielderrors'}
+		</div>	
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		<div class="row">
+			<div class="col-sm-9">
+				<input type="hidden" name="iField" value="${iField}"/>
+				<input type="hidden" id="averageValueParam" name="averageValue" value="${averageValue}"/>
+                <input type="hidden" name="loJackId" value="${loJackId}"/>
+
+                #{if quotations?.size()>0}
+					#{list quotations, as: 'quotation'}
+						<div class="quotation_div mb-20 mt-40 pa-19" id="quotation_${(quotation_index-1)}">
+							#{if quotation_index !=1}
+								<div class="remove-icon deleteButton">
+									x
+								</div>
+							#{/if}
+							<div class="ribbon-container">
+								<h4 class="ribbon-title-small quotationTitle">
+									Cotización ${quotation_index}
+								</h4>
+							</div>
+							
+							#{field 'quotations['+(quotation_index-1)+'].product'}
+								<div class="form-group ${(field.error || errors.forKey('quotations['+(quotation_index-1)+'].totalPrime'))?'has-error':''}">
+									<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.quotation.labelProduct'}</label>
+									<div class="col-sm-8">
+										#{select 'quotations['+(quotation_index-1)+'].product.id', id:field.id, value: quotation?.product?.id, class:'form-control quotation_product'}
+											#{option}&{'form.none'}#{/option}
+											#{list items: products, as: 'product'}
+												#{option product?.id}${product?.name}#{/option}
+											#{/list}
+										#{/select}
+										#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+										#{if errors.forKey('quotations['+(quotation_index-1)+'].totalPrime')}
+											<span class="help-block">El vehículo no puede cotizarse para este producto</span>
+										#{/if}
+									</div>
+								</div>
+							#{/}
+								
+							<div id="quotation_parameters_${(quotation_index-1)}" class="quotation_parameters_content">
+								
+								#{if quotation?.hasCarValue()}
+								#{field 'quotations['+(quotation_index-1)+'].carValue'}
+									<div class="form-group ${(field.error)?'has-error':''}">
+										<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.quotation.carValue'}</label>
+										<div class="col-sm-8">
+											<div class="input-group">
+												<span class="input-group-addon">${quotation?.product?.currency?.symbol}</span>
+												<input type="text" value="${quotation?.carValue?.doubleValue()?.decimalFormat()}" class="form-control" name="${field.name}"/>
+											</div>
+											#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+										</div>
+									</div>
+								#{/}
+								#{/if}
+								
+								%{index = 0;}%
+								#{list quotation?.parameters, as: 'parameter'}
+									#{if !parameter.productCoverage?.coverage?.equals(configuration.thirdInjuriesCoverage)}
+									<div class="form-group ${errors.forKey('quotations['+(quotation_index-1)+'].parameters['+index+'].value') ? 'has-error' : ''}">
+										<label class="col-sm-4 control-label">#{if !parameter.productCoverage?.optional}#{required/} #{/if}${parameter?.productCoverage?.coverage?.fieldDescription}</label>
+										<div class="col-sm-8">
+											<input type="hidden" value="${parameter?.productCoverage?.id}" name="quotations[${(quotation_index-1)}].parameters[${index}].productCoverage.id">
+											#{if parameter.productCoverage?.getOptions(quotation?.product)!=null}
+												#{select 'quotations['+(quotation_index-1)+'].parameters['+index+'].coverageValue.id', class:'form-control', value:parameter.coverageValue?.id}
+												#{if parameter?.productCoverage?.optional}
+													#{option}&{'form.none'}#{/option}
+												#{/if}
+												#{list parameter.productCoverage?.getOptions(quotation?.product), as: 'option'}
+													#{option option.id}${option.value}#{/option}
+												#{/list}
+												#{/select}
+											#{/if}
+											#{elseif parameter.productCoverage?.isField()}
+												<div class="input-group">
+													<span class="input-group-addon">${quotation?.product?.currency?.symbol}</span>
+													<input type="text" value="${parameter?.value?.doubleValue()?.decimalFormat()}" class="form-control" name="quotations[${(quotation_index-1)}].parameters[${index}].value"/>
+												</div>
+											#{/elseif}
+											#{elseif parameter.productCoverage?.optional}
+												<div class="checkbox">
+												<input type="checkbox" name="quotations[${(quotation_index-1)}].parameters[${index}].applyInsurance" ${parameter.applyInsurance?'checked':''}/>
+												</div>
+											#{/elseif}
+											#{if errors.forKey('quotations['+(quotation_index-1)+'].parameters['+index+'].value')}
+												<span class="help-block errorBlock">${errors.forKey('quotations['+(quotation_index-1)+'].parameters['+index+'].value')}</span>
+											#{/if}
+											#{if parameter.productCoverage?.coverage?.equals(configuration?.theftCoverage)}
+												<span class="help-block">&{'quotation.form.quotation.theftcoveragleyend', configuration.partialTheftPercentage, '%'}</span>
+											#{/if}
+										</div>
+									</div>
+									%{index++;}%
+									#{/if}
+								#{/list}
+								
+								#{if quotation?.product?.hasFacultative}
+								<div class="form-group">
+									<label class="col-sm-4 control-label">&{'quotation.form.facultative'}</label>
+									<div class="col-sm-8">
+										#{select 'quotations['+(quotation_index-1)+'].facultative', value: quotation.facultative, class:'form-control'}
+											#{option}&{'form.none'}#{/option}
+											#{list facultative, as: 'deductible'}
+												#{option deductible?.id}${deductible?.deductibleIncrease?.formatDeductibleIncrease()}#{/option}
+											#{/list}
+										#{/select}
+									</div>
+								</div>
+								#{/if}
+								
+								#{if quotation?.product?.hasAvailableDiscount()}
+								<div class="form-group ${errors.forKey('quotations['+(quotation_index-1)+'].discount') ? 'has-error' : ''}">
+									<label class="col-sm-4 control-label">&{'quotation.form.discount'}</label>
+									<div class="col-sm-8">
+										<div class="input-group">
+											<input type="text" class="form-control" value="${quotation.discount?.decimalFormat()}" name="quotations[${(quotation_index-1)}].discount"/>
+											<span class="input-group-addon">%</span>
+										</div>
+										#{if errors.forKey('quotations['+(quotation_index-1)+'].discount')}
+											<span class="help-block">${errors.forKey('quotations['+(quotation_index-1)+'].discount')}</span>
+										#{/if}
+									</div>
+								</div>
+								#{/if}
+
+							</div>
+
+							<div id="quotation_lojack_${(quotation_index-1)}" class="quotation_lojack_content" #{if !quotation?.hasCarValue()} style="display: none" #{/if}>
+								#{if loJackId != null}
+									#{field 'quotations['+(quotation_index-1)+'].loJack'}
+										<div class="form-group ${(field.error || errors.forKey('quotations['+(quotation_index-1)+'].loJack'))?'has-error':''}">
+											<label class="col-sm-4 control-label" for="${field}">#{required/} &{'quotation.form.loJack'}</label>
+											<div class="col-sm-8">
+												#{select 'quotations['+(quotation_index-1)+'].loJack', id:field, value: quotation?.loJack, class:'form-control'}
+													#{list items: loJackOptions, as: 'ljOption'}
+														#{option ljOption.number}${ljOption?.description}#{/option}
+													#{/list}
+												#{/select}
+												#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+											</div>
+										</div>
+									#{/}
+								#{/if}
+							</div>
+
+						</div>
+					#{/list}
+				#{/if}
+				#{else}
+					<div class="quotation_div mb-20 mt-40 pa-19" id="quotation_0">
+						<div class="ribbon-container">
+							<h4 class="ribbon-title-small quotationTitle">
+								Cotización 1
+							</h4>
+						</div>
+						
+						#{field 'quotation.product'}
+							<div class="form-group ${field.error?'has-error':''}">
+								<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+								<div class="col-sm-8">
+									#{select 'quotations[0].product.id', class:'form-control', id:field.id, class:'quotation_product form-control'}
+										#{option}&{'form.none'}#{/option}
+										#{list items: products, as: 'product'}
+											#{option product?.id}${product?.name}#{/option}
+										#{/list}
+									#{/select}
+								</div>
+							</div>
+						#{/}
+						
+						<div id="quotation_parameters_0" class="quotation_parameters_content">
+						</div>
+
+						<div id="quotation_lojack_0" class="quotation_lojack_content" #{if !quotation?.hasCarValue()} style="display: none" #{/if}>
+							#{if loJackId != null}
+								#{field 'quotations[0].loJack'}
+								  <div class="form-group ${(field.error || errors.forKey('quotations[0].loJack'))?'has-error':''}">
+									<label class="col-sm-4 control-label" for="${field}">#{required/} &{'quotation.form.loJack'}</label>
+									<div class="col-sm-8">
+										#{select 'quotations[0].loJack', id:field, value: quotation?.loJack, class:'form-control'}
+											#{list items: loJackOptions, as: 'ljOption'}
+												#{option ljOption.number}${ljOption?.description}#{/option}
+											#{/list}
+										#{/select}
+										#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+									</div>
+								  </div>
+								#{/}
+							#{/if}
+						</div>
+					</div>
+
+				#{/else}
+
+				<!-- frecuencia pago -->
+                #{field 'paymentFrecuencies'}
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="white-panel mb-20 mt-40 pa-19 quote-panel-frecuency ${(field.error)?'has-error':''}" style="padding-top:0px;padding-bottom:5px;" id="frecuencies">
+							<h5>#{required/} &{'quotation.form.quotation.frecuencies'}</h5>
+                            #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="1" class="frecuency-dates-selected">Frecuencia</th>
+                                            <th colspan="11" class="frecuency-dates-selected">Número de pagos</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        #{list items: frecuencies, as: 'frecuency'}
+                                        <tr>
+                                            <th>${frecuency.name}</th>
+                                            #{list frecuency.list, as: 'option'}
+                                            <td class="frecuency-dates-selected">${option?.numberOfPayments} <input type="checkbox" value="${option.id}" name="${field.name}" ${(selectedFrecuencies?.toList()?.contains(option?.id))?'checked':''}></td>
+                                            #{/list}
+                                            %{
+                                                missing = 10-frecuency.list.size();
+                                            }%
+                                            #{if missing > 0}
+                                            #{list 0..missing, as: 'i'}
+                                            <td class="frecuency-dates-selected"></td>
+                                            #{/list}
+                                            #{/if}
+
+                                        </tr>
+                                        #{/list}
+                                    </tbody>
+                                </table>
+                            </div>
+						</div>
+					</div>
+				</div>
+                #{/field}
+				
+				<div class="form-group">
+					<div class="col-sm-12">
+						<div id="addQuotation" class="btn btn-default btn-block">Agregar cotización número  2 </div>
+					</div>
+				</div>
+				
+				#{requiredleyend/}
+			</div>
+			
+			<!--<div class="col-sm-3 fixed-sidebar">
+			
+					<div class="white-panel mb-20 mt-40 pa-19" style="padding-top:0px;padding-bottom:5px;" id="frecuencies">
+						<h5>#{required/} &{'quotation.form.quotation.frecuencies'}</h5>
+						#{field 'paymentFrecuencies'}
+						<div class="form-group ${(field.error)?'has-error':''}">
+							<div class="col-sm-12">
+								#{select field.name, id:field.id, class:'form-control multiselect', multiple:'multiple', size:'5'}
+									#{list items: frecuencies, as: 'frecuency'}
+										<option value="${frecuency?.id}" ${(selectedFrecuencies?.toList()?.contains(frecuency?.id))?'selected = "selected"':''}>${frecuency?.numberOfPayments} ${frecuency?.frecuency?.name?.toLowerCase()}
+										</option>
+									#{/list}
+								#{/select}
+								#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+							</div>
+						</div>
+						#{/}
+					</div>
+					
+					<input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.simulate'}" />
+					<input type="submit" class="btn btn-default btn-block back-btn" name="back" value="&{'quotation.form.back'}" />
+			</div>-->
+			<div class="col-sm-3 fixed-sidebar">
+					<input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.simulate'}" />
+					<input type="submit" class="btn btn-default btn-block back-btn" name="back" value="&{'quotation.form.back'}" />
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreStyles'}
+	<link rel="stylesheet" href="@{'public/multiselect/bootstrap-multiselect.css'}" type="text/css"/>
+#{/}
+
+#{set 'moreScripts'}
+<script type="text/javascript" src="@{'public/multiselect/detectmobilebrowser.js'}"></script>
+<script type="text/javascript" src="@{'public/multiselect/bootstrap-multiselect.js'}"></script>
+
+<script type="text/javascript">
+
+    function isNumber(evt){
+        var theEvent = evt || window.event;
+        var currentChar = parseInt(String.fromCharCode(theEvent.keyCode), 10);
+
+        var key = theEvent.keyCode || theEvent.which;
+        key = String.fromCharCode(key);
+        if (key.length == 0) return;
+        var regex = /^[0-9.,\b]+$/;
+        if (!regex.test(key)) {
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+        if($("#2417").val()+currentChar>40000){
+            theEvent.returnValue = false;
+            if (theEvent.preventDefault) theEvent.preventDefault();
+        }
+    };
+
+    var quotationsCount = ${(quotations!=null)?quotations.size():0};
+
+	$(function (){
+		if (!jQuery.browser.mobile) {
+	    	$('.multiselect').multiselect({
+	    		buttonClass:'form-control',
+	    		maxHeight: 200,
+	    		buttonContainer: '<div class="btn-group btn-block" />',
+    			buttonWidth: false,
+    			nonSelectedText: 'Ninguno',
+            	nSelectedText: 'seleccionados',
+    			onChange: function(element, checked) {
+    				$(element).attr('selected', checked);
+      			}
+    		});
+    	}
+    	
+		$('#addQuotation').click(function(){
+			var quotationDiv = $("div.quotation_div").last();
+
+
+
+			var newQuotation = quotationDiv.clone();
+			newQuotation.find(':input').each(function() {
+				this.name = this.name.replace(/quotations\[(\d+)\]/, function(str,p1) {
+					return 'quotations[' + (parseInt(p1) + 1) + ']';
+				});
+			});
+			
+			quotationDiv.find('select').each(function(){
+				var name = this.name.replace(/quotations\[(\d+)\]/, function(str,p1) {
+					return 'quotations[' + (parseInt(p1) + 1) + ']';
+				});
+				var value = $(this).val();
+				newQuotation.find('[name="'+name+'"]').val(value);
+			});
+			
+			newQuotation.find('div.quotation_parameters_content').each(function() {
+				var contentId = $(this).attr("id");
+				$(this).attr("id", contentId.replace(/quotation_parameters_(\d+)/, function(str,p1) {
+					return 'quotation_parameters_' + (parseInt(p1) + 1);
+				}));
+			});
+			
+			var quotationId = quotationDiv.attr("id");
+			newQuotation.attr("id", quotationId.replace(/quotation_(\d+)/, function(str,p1) {
+				return 'quotation_' + (parseInt(p1) + 1);
+			}));
+			
+			newQuotation.find('.quotationTitle').each(function() {
+			    var numero = 1;
+				var quotationTitle = $(this).html().replace(/(\d+)/, function(str,p1) {
+                    $('#addQuotation').html("Agregar cotización número " + (parseInt(p1) + 2));
+					return (parseInt(p1) + 1);
+				});
+
+				$(this).html(quotationTitle);
+			});
+			
+			if (newQuotation.find('.deleteButton').length <= 0){
+				newQuotation.prepend('<div class="remove-icon deleteButton">x</div>');
+			}
+			
+			newQuotation.find('span.errorBlock').each(function() {
+				$(this).empty();
+			});
+			
+			newQuotation.find('div.has-error').each(function() {
+				$(this).removeClass('has-error');
+			});
+			
+			newQuotation.insertAfter(quotationDiv);
+			
+		});
+		
+		$(document).on("click",".deleteButton",function(e) {		
+			var div = $(this).closest("div.quotation_div");
+			div.remove();
+			
+			$(document).find('div.quotation_div').each(function(index){
+				var div = $(this);
+				div.find('.quotationTitle').each(function() {
+					var quotationTitle = $(this).html().replace(/(\d+)/, function(str,p1) {
+						return (parseInt(index) + 1);
+					});
+					$(this).html(quotationTitle);
+				});
+				
+				div.find(':input').each(function() {
+					this.name = this.name.replace(/quotations\[(\d+)\]/, function(str,p1) {
+						return 'quotations[' + parseInt(index) + ']';
+					});
+				});
+				
+				div.find('select').each(function() {
+					this.name = this.name.replace(/quotations\[(\d+)\]/, function(str,p1) {
+						return 'quotations[' + parseInt(index) + ']';
+					});
+				});
+		 	});
+		 });
+		
+		$(document).on("change",".quotation_product",function(e) {
+
+			var id = $(this).val();
+			var mainDiv = $(this).closest("div.quotation_div");
+	    	var contentDiv = mainDiv.children(".quotation_parameters_content");
+            var lojackDiv = mainDiv.children(".quotation_lojack_content");
+			
+			if (!id) {
+				contentDiv.html('');
+	    		return;
+	    	} 
+		
+	    	
+	    	var idFields = contentDiv.attr("id").split("_");
+	    	var idNumber = idFields[idFields.length-1]; 
+	    	
+	    	contentDiv.html("&{'form.select.loading'}");
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceVehicles.parametersForProduct()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					contentDiv.empty();
+					if (response.success) {
+						var html = "";
+						var i = 0;
+						var askValue = false;
+						$.each(response.fields, function(index, field) {
+							if (field.optional || field.field || field.options!=null) {
+								if (!field.optional) {
+									field.name = '#{required/} ' + field.name;
+								}
+							
+								html += '<div class="form-group">';
+								html += '<label class="col-sm-4 control-label">'+field.name+'</label>'
+								html += '<div class="col-sm-8">';
+								if(field.id){
+									html += '<input type="hidden" value="'+field.id+'" name="quotations['+idNumber+'].parameters['+i+'].productCoverage.id">';	
+								}
+								if (field.options!=null) {
+									html += '<select name="quotations['+idNumber+'].parameters['+i+'].coverageValue.id" class="form-control">';
+									if (field.optional) {
+										html += '<option value="">'+"&{'form.none'}"+'</option>';
+									}
+									$.each(field.options, function(index, option) {
+										html += '<option value="'+option.id+'">'
+										html += option.value
+										html += '</option>'
+									});
+									html += '</select>';
+								} else if (field.field) {
+									var value = '';
+									html += '<div class="input-group">';
+									html += '<span class="input-group-addon">'+response.currency+'</span>';
+									
+									if (field.carValue) {
+										#{if value}
+										value = Math.round((${value?.value?.doubleValue()} / response.exchangeRate)*100)/100;
+										#{/if}
+										html += '<input type="text" value="'+value+'" name="quotations['+idNumber+'].carValue" id="carValue" class="form-control"/>';
+										i--;
+										askValue = true;
+									} else {
+                                        if(field.id!=2417){
+                                            html += '<input type="text" value="'+value+'" name="quotations['+idNumber+'].parameters['+i+'].value" class="form-control"/>';
+                                        }else{
+                                            html += '<input type="text" value="'+value+'" name="quotations['+idNumber+'].parameters['+i+'].value" class="form-control" onkeypress="isNumber()" id="2417">';
+                                        }
+									}
+									
+									html += '</div>';
+									
+									if (field.leyend!=null) {
+										html += '<span class="help-block">'+field.leyend+'</span>';
+									}
+                                    if (field.id==2417){
+                                        html += '<span class="help-block">Hasta un límite máximo de Q.40, 000.00</span>';
+                                    }
+									
+								} else if (field.optional) {
+									html += '<div class="checkbox">';
+									html += '<input type="checkbox" name="quotations['+idNumber+'].parameters['+i+'].applyInsurance"/>'
+									html += '</div>'
+								} else {
+									i--;
+								}
+								
+								i++
+							}
+							
+							html += '</div>';
+							html += '</div>';
+							
+						});
+
+						if (response.facultative) {
+							html += '<div class="form-group">';
+							html += '<label class="col-sm-4 control-label">&{'quotation.form.facultative'}</label>';
+							html += '<div class="col-sm-8">'
+							html += '<select class="form-control" name="quotations['+idNumber+'].facultative">';
+							html += '<option value="">&{'form.none'}</option>';
+							#{list facultative, as: 'deductible'}
+							html += '<option value="${deductible?.id}">';
+							html += '${deductible?.deductibleIncrease?.formatDeductibleIncrease()}';
+							html += '</option>';
+							#{/list}
+							html += '</select>';
+							html += '</div>';
+							html += '</div>';
+						}
+						
+						if (response.discountAvailable) {
+							html += '<div class="form-group">';
+							html += '<label class="col-sm-4 control-label">&{'quotation.form.discount'}</label>';
+							html += '<div class="col-sm-8">'
+							html += '<div class="input-group">';
+							html += '<input type="text" class="form-control" name="quotations['+idNumber+'].discount"/>';
+							html += '<span class="input-group-addon">%</span>';
+							html += '</div>';
+							html += '</div>';
+							html += '</div>';
+						}
+
+						contentDiv.html(html);
+
+						if (askValue) {
+						    lojackDiv.show();
+                        } else {
+						    lojackDiv.hide();
+                        }
+
+					}
+					if($('input[name="quotations['+idNumber+'].carValue"]').val()==''){
+			    		$('input[name="quotations['+idNumber+'].carValue"]').val($('#averageValueParam').val());
+			    	}
+				},
+				error: function() {
+					contentDiv.html("&{'form.select.error'}");
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    });
+	});
+</script>
+#{/}

@@ -1,0 +1,17 @@
+.form-group {
+	margin-bottom:5px;
+}
+
+.multiselect {
+  text-align: left;
+}
+
+.multiselect b.caret {
+  position: absolute;
+  top: 18px;
+  right: 6px;
+}
+
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}

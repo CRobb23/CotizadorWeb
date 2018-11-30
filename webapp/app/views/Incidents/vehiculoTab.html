@@ -1,0 +1,361 @@
+
+			<input type="hidden" name="vehicle.id" value="${vehicle?.id}"/>
+			<h4 style="border-bottom: groove; text-align: center;"></h4>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.vehicle.brand'}</label>
+						<div class="col-sm-8">
+							#{select 'vehicle.brand.id', class:'form-control', id:'brand_line', value: vehicle?.line?.brand?.id, disabled: disabled}
+								#{option}&{'form.select'}#{/option}
+								#{list items: brands, as: 'vehicleBrand'}
+									#{option vehicleBrand?.id}${vehicleBrand?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">	
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="line">#{required/} &{'quotation.form.vehicle.line'}</label>
+						<div class="col-sm-8">
+                            #{select 'vehicle.line.id',  class:'form-control', id:'line', value: vehicle?.line?.id, disabled: disabled}
+								#{option}&{'form.select'}#{/option}
+								#{list items: lines, as: 'vehicleLine'}
+									#{option vehicleLine?.id} ${vehicleLine?.name} #{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="type">#{required/} &{'quotation.form.vehicle.type'}</label>
+						<div class="col-sm-8">
+							#{select 'vehicle.type.id', class:'form-control', id:'type', value: vehicle?.type?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: vehicleTypes, as: 'vehicleType'}
+									#{option vehicleType?.id} ${vehicleType?.name} #{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="erYear">#{required/} &{'quotation.form.vehicle.erYear'}</label>
+						<div class="col-sm-8">
+                            #{select 'vehicle.erYear.id', class:'form-control', id:'erYear', value: vehicle?.erYear?.id, disabled: disabled}
+								#{option}&{'form.select'}#{/option}
+								#{list items: vehicleERYears, as: 'year'}
+									#{option year?.id} ${year?.year} #{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="reminderType">#{required/} &{'quotation.form.vehicle.reminderType'}</label>
+						<div class="col-sm-8">
+							#{select 'vehicle.reminderType.id', class:'form-control', id:'reminderType', value: vehicle?.reminderType?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: vehicleReminderTypes, as: 'vehicleReminderType'}
+									#{option vehicleReminderType?.id}${vehicleReminderType?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+                <div class="col-sm-6">
+					#{field 'vehicle.owner'}
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.vehicle.owner'}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+                </div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="plateType">#{required/} &{'quotation.form.vehicle.plateType'}</label>
+						<div class="col-sm-8">
+							#{select 'vehicle.plateType.id', class:'form-control', id:'plateType', value: vehicle?.plateType?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: vehiclePlateTypes, as: 'vehiclePlateType'}
+									#{option vehiclePlateType?.id}${vehiclePlateType?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.plate'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" maxlength="6"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.chassis'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" maxlength="17"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.engine'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.armor'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.armor', class:'form-control', id:'armor', value: vehicle?.armor}
+									#{option 'S'}SI#{/option}
+									#{option 'N'}NO#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.armorValue'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">	
+					#{field 'vehicle.numberOfPassengers'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.color'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+        <div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.numberDoor'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.typeMileage'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.typeMileage', class:'form-control', id:'typeMileage', value: vehicle?.typeMileage}
+									#{option 'K'}Kilómetros#{/option}
+									#{option 'M'}Millas#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.mileage'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.fuelType'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.fuelType', class:'form-control', id:'fuelType', value: vehicle?.fuelType}
+									#{option 'G'}Gasolina#{/option}
+									#{option 'D'}Diesel#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.warranty'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.warranty', class:'form-control', id:'warranty', value: vehicle?.warranty}
+									#{option 'N'}NO#{/option}
+									#{option 'S'}SI#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+                    <div class="form-group ">
+                        <label class="col-sm-4 control-label" for="${beneficiaries}">#{required/} &{'quotation.form.vehicle.beneficiaries'}</label>
+                        <div class="col-sm-8">
+                            #{select 'vehicle.beneficiaries.id', class:'form-control', id:'beneficiaries', value: vehicle?.beneficiaries?.id}
+                                #{option}&{'form.select'}#{/option}
+                                #{list items: beneficiaries, as: 'beneficiary'}
+                                    #{option beneficiary?.id}${beneficiary?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.preExistingDamage'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.preExistingDamage', class:'form-control', id:'preExistingDamage', value: vehicle?.preExistingDamage}
+									#{option 'N'}NO#{/option}
+									#{option 'S'}SI#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row" style="min-height:auto">
+				<div class="col-sm-6">
+					#{field 'vehicle.promotionCode'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+							</div>
+						</div>
+					#{/}
+				</div>
+				<div class="col-sm-6">
+					#{field 'vehicle.specialTeam'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+							<div class="col-sm-8">
+								#{select 'vehicle.specialTeam', class:'form-control', id:'specialTeam', value: vehicle?.specialTeam}
+									#{option 'N'}NO#{/option}
+									#{option 'S'}SI#{/option}
+								#{/select}
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-6">
+					#{field 'vehicle.isNew'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-4 control-label">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-6">
+							<label class="radio-inline">
+								<input type="radio" value="true" name="${field.name}" id="isNew_true" ${field.value == true ? 'checked' : ''} />
+								&{'form.yes'}
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="false" name="${field.name}" id="isNew_false" ${!field.value ? 'checked' : ''} />
+								&{'form.no'}
+							</label>
+						</div>
+					</div>
+					#{/}
+				</div>
+
+                <div class="col-sm-6" style="display:none;">
+				#{field 'vehicle.alreadyInsured'}
+                    <div class="form-group ${field.error?'has-error':''}">
+                        <label class="col-sm-4 control-label">#{required/} &{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-6">
+                            <label class="radio-inline">
+                                <input type="radio" value="true" name="${field.name}" id="alreadyInsured_false" ${field.value ? 'checked' : ''} />
+							&{'form.yes'}
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="false" name="${field.name}" id="alreadyInsured_true" ${!field.value ? 'checked' : ''} />
+							&{'form.no'}
+                            </label>
+                        </div>
+                    </div>
+				#{/}
+                </div>
+			*{Valido si esta chequeado}*
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        if ($('#isNew_false').is(':checked')) {
+                            $("#invoiceDiv").hide();
+                        }
+                        $("#isNew_false").change(function () {
+                            if ($('#isNew_false').is(':checked')) {
+                                $("#invoiceDiv").hide();
+                            }})
+                        $("#isNew_true").change(function () {
+                            if ($('#isNew_true').is(':checked')) {
+                                $("#invoiceDiv").show();
+                            }})
+
+                    });
+                </script>
+
+				<div id="invoiceDiv" class="col-sm-6">
+					#{field 'vehicle.invoiceDate'}
+					<div class="form-group ${field.error?'has-error':''}">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} Fecha de factura</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+                            </div>
+					</div>
+					#{/}
+				</div>
+			</div>

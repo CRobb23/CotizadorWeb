@@ -1,0 +1,361 @@
+#{extends 'admin.html' /}
+
+#{form @simulateQuotation(), class:"form-horizontal", method:"POST"}	
+	
+	<div id="quotations_container_div" class="well fixed-sidebar-parent">
+		<div class="orange-title">
+			<span>
+				<h1>&{'quotation.title'}</h1>
+			</span>
+		</div>		
+		#{if errors}
+		<div class="alert alert-danger">
+			&{'quotation.form.insurance.fielderrors'}
+		</div>	
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<input type="hidden" name="quotation.incident.id" value="${incident?.id}"/>
+        <input type="hidden" name="loJackId" value="${loJackId}"/>
+		
+		<div class="quotation_div mb-20 mt-40 pa-19" id="quotation_0">
+			<div class="ribbon-container">
+				<h4 class="ribbon-title-small quotationTitle">
+					Cotización
+				</h4>
+			</div>
+			
+			#{field 'quotation.product'}
+				<div class="form-group ${(field.error || errors.forKey('quotation.totalPrime'))?'has-error':''}">
+					<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+					<div class="col-sm-8">
+						#{select 'quotation.product.id', class:'form-control', id:field.id, class:'quotation_product form-control', value:flash.get('quotation.product.id')}
+							#{option}&{'form.none'}#{/option}
+							#{list items: products, as: 'product'}
+								#{option product?.id}${product?.name}#{/option}
+							#{/list}
+						#{/select}
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+						#{if errors.forKey('quotation.totalPrime')}
+							<span class="help-block">El vehículo no puede cotizarse para este producto</span>
+						#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			<div class="quotation_parameters_content">
+				%{currencySymbol = parameters?.currency ?: ''}%
+			
+				%{i=0}%
+				#{list parameters?.fields, as: 'field'}
+					#{if (field.optional || field.field || field.options!=null)}
+						#{if field.carValue}
+							<div class="form-group ${errors.forKey('quotation.carValue') ? 'has-error' : ''}">
+						#{/if}
+						#{else}
+							<div class="form-group ${errors.forKey('quotation.parameters['+i+'].value') ? 'has-error' : ''}">
+						#{/else}
+						<label class="col-sm-4 control-label">#{if !field.optional}#{required/} #{/if}${field.name}</label>
+						<div class="col-sm-8">
+						#{if field.id}
+							<input type="hidden" value="${field.id}" name="quotation.parameters[${i}].productCoverage.id">
+						#{/if}
+						#{if (field.options!=null)}
+							#{select 'quotation.parameters['+i+'].coverageValue.id', class:'form-control', value:flash.get('quotation.parameters['+i+'].coverageValue.id')}
+								#{if (field.optional)}
+									#{option}&{'form.none'}#{/option}
+								#{/if}
+								#{list field.options, as:'option'}
+									#{option option.id}${option.value}#{/option}
+								#{/list}
+							#{/select}
+							#{if errors.forKey('quotation.parameters['+i+'].value')}<span class="help-block">${errors.forKey('quotation.parameters['+i+'].value')}</span>#{/if}
+						#{/if}
+						#{elseif field.field}
+							<div class="input-group">
+							<span class="input-group-addon">${currencySymbol}</span>
+							#{if field.carValue}
+								<input type="text" value="${flash.get('quotation.carValue')}" name="quotation.carValue" class="form-control"/>
+								</div>
+								#{if errors.forKey('quotation.carValue')}<span class="help-block">${errors.forKey('quotation.carValue')}</span>#{/if}
+								%{i--}%
+							#{/if}
+
+							#{else}
+								<input type="text" value="${flash.get('quotation.parameters['+i+'].value')}" name="quotation.parameters[${i}].value" class="form-control"/>
+								</div>
+								#{if errors.forKey('quotation.parameters['+i+'].value')}<span class="help-block">${errors.forKey('quotation.parameters['+i+'].value')}</span>#{/if}
+							#{/else}
+							#{elseif field.leyend!=null}
+								<span class="help-block">${field.leyend}</span>
+							#{/elseif}
+						#{/elseif}
+						#{elseif field.optional}
+							<div class="checkbox">
+								<input type="checkbox" name="quotation.parameters[${i}].applyInsurance" ${flash.get('quotation.parameters['+i+'].applyInsurance')?.equals('on')?'checked':''}/>
+							</div>
+						#{/elseif}
+
+
+						#{else}
+							%{i--}%
+						#{/else}
+						%{i++}%
+						</div>
+						</div>
+					#{/if}
+				#{/list}
+				
+				#{if parameters?.facultative}
+				<div class="form-group">
+					<label class="col-sm-4 control-label">&{'quotation.form.facultative'}</label>
+					<div class="col-sm-8">
+						#{select 'quotation.facultative', value: flash.get('quotation.facultative'), class:'form-control'}
+							#{option}&{'form.none'}#{/option}
+							#{list facultative, as: 'deductible'}
+								#{option deductible?.id}${deductible?.deductibleIncrease?.formatDeductibleIncrease()}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+				#{/if}
+				
+				#{if parameters?.discountAvailable}
+				<div class="form-group ${errors.forKey('quotation.discount') ? 'has-error' : ''}">
+					<label class="col-sm-4 control-label">&{'quotation.form.discount'}</label>
+					<div class="col-sm-8">
+						<div class="input-group">
+							<input type="text" class="form-control" value="${flash.get('quotation.discount')?.decimalFormat()}" name="quotation.discount"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if errors.forKey('quotation.discount')}
+							<span class="help-block">${errors.forKey('quotation.discount')}</span>
+						#{/if}
+					</div>
+				</div>
+
+				#{/if}
+				
+			</div>
+
+			#{if loJackId != null}
+				#{field 'quotation.loJack'}
+                    <div class="form-group ${(field.error || errors.forKey('quotation.loJack'))?'has-error':''}">
+                        <label class="col-sm-4 control-label" for="${field}">#{required/} &{'quotation.form.loJack'}</label>
+                        <div class="col-sm-8">
+							#{select 'quotation.loJack', id:field, value: quotation?.loJack, class:'form-control'}
+								#{list items: loJackOptions, as: 'ljOption'}
+									#{option ljOption.number}${ljOption?.description}#{/option}
+								#{/list}
+							#{/select}
+							#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                        </div>
+                    </div>
+				#{/}
+			#{/if}
+
+            <!-- frecuencia pago -->
+            #{field 'paymentFrecuencies'}
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="white-panel mb-20 mt-40 pa-19 quote-panel-frecuency ${(field.error)?'has-error':''}" style="padding-top:0px;padding-bottom:5px;" id="frecuencies">
+                        <h5>#{required/} &{'quotation.form.quotation.frecuencies'}</h5>
+                        #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th colspan="1" class="frecuency-dates-selected">Frecuencia</th>
+                                    <th colspan="11" class="frecuency-dates-selected">Número de pagos</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                #{list items: frecuencies, as: 'frecuency'}
+                                <tr>
+                                    <th>${frecuency.name}</th>
+                                    #{list frecuency.list, as: 'option'}
+                                    <td class="frecuency-dates-selected">${option?.numberOfPayments} <input type="checkbox" value="${option.id}" name="${field.name}" ${(selectedFrecuencies?.toList()?.contains(option?.id))?'checked':''}></td>
+                                    #{/list}
+                                    %{
+                                    missing = 10-frecuency.list.size();
+                                    }%
+                                    #{if missing > 0}
+                                    #{list 0..missing, as: 'i'}
+                                    <td class="frecuency-dates-selected"></td>
+                                    #{/list}
+                                    #{/if}
+
+                                </tr>
+                                #{/list}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            #{/field}
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-12">
+				<a href="@{incidentDetail(incident?.id)}" class="btn btn-default btn-block">Regresar</a>
+				<input type="submit" class="btn btn-default btn-block" value="Simular"/>
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreStyles'}
+	<link rel="stylesheet" href="@{'public/multiselect/bootstrap-multiselect.css'}" type="text/css"/>
+#{/}
+
+#{set 'moreScripts'}
+<script type="text/javascript" src="@{'public/multiselect/detectmobilebrowser.js'}"></script>
+<script type="text/javascript" src="@{'public/multiselect/bootstrap-multiselect.js'}"></script>
+<script type="text/javascript">
+
+	var quotationsCount = ${(quotations!=null)?quotations.size():0};
+
+	$(function (){		
+	
+		if (!jQuery.browser.mobile) {
+	    	$('.multiselect').multiselect({
+	    		buttonClass:'form-control',
+	    		maxHeight: 200,
+	    		buttonContainer: '<div class="btn-group btn-block" />',
+    			buttonWidth: false,
+    			nonSelectedText: 'Ninguno',
+            	nSelectedText: 'seleccionados',
+    			onChange: function(element, checked) {
+    				$(element).attr('selected', checked);
+      			}
+    		});
+    	}
+	
+		$(document).on("change",".quotation_product",function(e) {
+	    	var mainDiv = $(this).closest("div.quotation_div");
+	    	var contentDiv = mainDiv.children(".quotation_parameters_content");
+	    	
+	    	contentDiv.html("&{'form.select.loading'}");
+	    	var id = $(this).val();
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	 
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceVehicles.parametersForProduct()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					contentDiv.empty();
+					if (response.success) {
+						var html = "";
+						var i = 0;
+						$.each(response.fields, function(index, field) {
+							if (field.optional || field.field || field.options!=null) {
+							
+								if (!field.optional) {
+									field.name = '#{required/} ' + field.name; 
+								}
+							
+								html += '<div class="form-group">';
+								html += '<label class="col-sm-4 control-label">'+field.name+'</label>'
+								html += '<div class="col-sm-8">';
+								
+								if(field.id){
+									html += '<input type="hidden" value="'+field.id+'" name="quotation.parameters['+i+'].productCoverage.id">';	
+								}
+								
+								if (field.options!=null) {
+									html += '<select name="quotation.parameters['+i+'].coverageValue.id" class="form-control">';
+									if (field.optional) {
+										html += '<option value="">'+"&{'form.none'}"+'</option>';
+									}
+									$.each(field.options, function(index, option) {
+										html += '<option value="'+option.id+'">'
+										html += option.value
+										html += '</option>'
+									});
+									html += '</select>';
+								} else if (field.field) {
+									var value = '';
+									html += '<div class="input-group">';
+									html += '<span class="input-group-addon">'+response.currency+'</span>';
+									
+									if (field.carValue) {
+										//value = Math.ceil((${value?.value ? value.value.doubleValue() : 0} / response.exchangeRate)*100)/100;
+										html += '<input type="text" value="${value.value.format('###,###,###.##')}" name="quotation.carValue" class="form-control"/>';
+										i--;
+									} else {
+										html += '<input type="text" value="'+value+'" name="quotation.parameters['+i+'].value" class="form-control"/>';
+									}
+									
+									html += '</div>';
+									
+									if (field.leyend!=null) {
+										html += '<span class="help-block">'+field.leyend+'</span>';
+									}
+									
+								} else if (field.optional) {
+									html += '<div class="checkbox">';
+									html += '<input type="checkbox" name="quotation.parameters['+i+'].applyInsurance"/>'
+									html += '</div>'
+								} else {
+									i--;
+								}
+								
+								i++
+							}
+							
+							html += '</div>';
+							html += '</div>';
+						});
+						
+						if (response.facultative) {
+							html += '<div class="form-group">';
+							html += '<label class="col-sm-4 control-label">&{'quotation.form.facultative'}</label>';
+							html += '<div class="col-sm-8">'
+							html += '<select class="form-control" name="quotation.facultative">';
+							html += '<option value="">&{'form.none'}</option>';
+							#{list facultative, as: 'deductible'}
+							html += '<option value="${deductible?.id}">';
+							html += '${deductible?.deductibleIncrease?.formatDeductibleIncrease()}';
+							html += '</option>';
+							#{/list}
+							html += '</select>';
+							html += '</div>';
+							html += '</div>';
+						}
+						
+						if (response.discountAvailable) {
+							html += '<div class="form-group">';
+							html += '<label class="col-sm-4 control-label">&{'quotation.form.discount'}</label>';
+							html += '<div class="col-sm-8">'
+							html += '<div class="input-group">';
+							html += '<input type="text" class="form-control" name="quotation.discount"/>';
+							html += '<span class="input-group-addon">%</span>';
+							html += '</div>';
+							html += '</div>';
+							html += '</div>';
+						}
+
+						contentDiv.html(html);
+					}
+				},
+				error: function() {
+					contentDiv.html("&{'form.select.error'}");
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    	
+	    });
+	});
+</script>
+#{/}

@@ -1,0 +1,521 @@
+#{extends 'admin.html' /}
+
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'configuration.title'}</h1>
+		</span>
+	</div>
+
+	#{if error}
+		<div class="alert alert-danger">
+			${error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	#{form @saveConfiguration(), class:"form-horizontal", method:"POST"}
+			#{field 'configuration.partialTheftPercentage'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.ivaPercentage'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.emissionFeePercentage'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.agentCodeAS400'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+			#{field 'configuration.guardMails'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} Correos para resguardos. (separar por coma)</label>
+					<div class="col-sm-6">
+                         <textarea  id="${field.id}" name="${field.name}" class="form-control">${flash.contains(field.name)?field.flash:field.value}</textarea>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.emissionFeeFirstPayment'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label">&{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" value="1" name=${field.name} ${(field.flash=='1')?'checked':(field.value==true)?'checked':''}/>
+								<input type="hidden" value="0" name=${field.name} />
+							</label>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.taskReminderTime'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.guardReminderTime'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.guardValidityDays'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.maxValueWithoutLoJack'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+			#{field 'configuration.theftDeductibleWithoutLowJack'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">&{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+
+                        <div class="input-group">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+                            <span class="input-group-addon">%</span>
+                        </div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+            #{field 'configuration.minimumCarYear'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+                    #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                </div>
+            </div>
+            #{/}
+
+            #{field 'configuration.maximumCarYear'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+                    #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                </div>
+            </div>
+            #{/}
+
+            #{field 'configuration.garanteedValueConfig'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+                    <div class="col-sm-6">
+                        <div class="input-group">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+                            <span class="input-group-addon">%</span>
+                        </div>
+                        #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                    </div>
+                </div>
+            #{/}
+
+			#{field 'configuration.averageValueConfig'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${flash.contains(field.name)?field.flash:field.value}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+			#{field 'configuration.sessionTimeout'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						#{select field.name, id:field.id, value: flash?.contains(field.name) ? flash?.get(field.flash) : field.value, class:'form-control'}
+							#{list items: timeoutList, as: 'timeout'}
+								#{option timeout}${timeout} min.#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			#{/}
+
+			#{field 'configuration.fullAccess'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+                        <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+        	<hr />
+			<h4 class="text-center">&{'configuration.form.configuration.coverages'}</h4>
+			
+			<div class="form-group ${errors.forKey('configuration.totalTheftCoverage') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="configuration_totalTheftCoverage">#{required/} &{'configuration.form.totalTheftCoverage'}</label>
+				<div class="col-sm-6">
+					#{select 'configuration.totalTheftCoverage.id', id:'configuration_totalTheftCoverage', value: flash?.contains('configuration.totalTheftCoverage.id') ? flash?.get('configuration.totalTheftCoverage.id') : configuration?.totalTheftCoverage?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: valuecoverages, as: 'coverage'}
+							#{option coverage?.id}${coverage?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('configuration.totalTheftCoverage')}<span class="help-block">${errors.forKey('configuration.totalTheftCoverage')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('configuration.civilResponsability') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="configuration_civilResponsability">#{required/} &{'configuration.form.civilResponsability'}</label>
+				<div class="col-sm-6">
+					#{select 'configuration.civilResponsabilityCoverage.id', id:'configuration_civilResponsability', value: flash?.contains('configuration.civilResponsabilityCoverage.id') ? flash?.get('configuration.civilResponsabilityCoverage.id') : configuration?.civilResponsabilityCoverage?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: fixedamountscoverages, as: 'coverage'}
+							#{option coverage?.id}${coverage?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('configuration.civilResponsability')}<span class="help-block">${errors.forKey('configuration.civilResponsability')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('configuration.injuriesCoverage') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="configuration_injuriesCoverage">#{required/} &{'configuration.form.injuriesCoverage'}</label>
+				<div class="col-sm-6">
+					#{select 'configuration.injuriesCoverage.id', id:'configuration_injuriesCoverage', value: flash?.contains('configuration.injuriesCoverage.id') ? flash?.get('configuration.injuriesCoverage.id') : configuration?.injuriesCoverage?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: fixedamountscoverages, as: 'coverage'}
+							#{option coverage?.id}${coverage?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('configuration.injuriesCoverage')}<span class="help-block">${errors.forKey('configuration.injuriesCoverage')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('configuration.thirdInjuriesCoverage') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="configuration_injuriesCoverage">#{required/} &{'configuration.form.thirdInjuriesCoverage'}</label>
+				<div class="col-sm-6">
+					#{select 'configuration.thirdInjuriesCoverage.id', id:'configuration_thirdInjuriesCoverage', value: flash?.contains('configuration.thirdInjuriesCoverage.id') ? flash?.get('configuration.thirdInjuriesCoverage.id') : configuration?.thirdInjuriesCoverage?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: fixedamountscoverages, as: 'coverage'}
+							#{option coverage?.id}${coverage?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('configuration.thirdInjuriesCoverage')}<span class="help-block">${errors.forKey('configuration.thirdInjuriesCoverage')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('configuration.theftCoverage') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="configuration_theftCoverage">#{required/} &{'configuration.form.theftCoverage'}</label>
+				<div class="col-sm-6">
+					#{select 'configuration.theftCoverage.id', id:'configuration_theftCoverage', value: flash?.contains('configuration.theftCoverage.id') ? flash?.get('configuration.theftCoverage.id') : configuration?.theftCoverage?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: coverages, as: 'coverage'}
+							#{option coverage?.id}${coverage?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('configuration.theftCoverage')}<span class="help-block">${errors.forKey('configuration.theftCoverage')}</span>#{/if}
+				</div>
+			</div>
+			
+			<hr />
+			<h4 class="text-center">&{'configuration.form.configuration.exchangeRate'}</h4>
+			#{list items:currencies, as: 'currency'}
+				<div class="form-group ${errors.forKey('currencies['+(currency_index - 1)+'].exchangeRate') ? 'has-error' : ''}">
+					<label class="col-sm-3 control-label" for="payment_${payment_index}">#{required/} &{'configuration.exchangeRate.title', currency?.name?.toLowerCase(), currency?.symbol}</label>
+					<div class="col-sm-6">
+						<input type="hidden" name="currencies[${currency_index-1}].id" value="${currency?.id}">
+						<div class="input-group">
+							<span class="input-group-addon">${defaultCurrency.symbol}</span>
+							<input type="text" name="currencies[${currency_index-1}].exchangeRate" id="currency_${currency_index}" value="${flash?.contains('currencies['+(currency_index - 1)+'].exchangeRate') ? flash.get('currencies['+(currency_index - 1)+'].exchangeRate'): currency?.exchangeRate}" class="form-control"/>
+						</div>
+						#{if errors.forKey('currencies['+(currency_index - 1)+'].exchangeRate')}<span class="help-block">${errors.forKey('currencies['+(currency_index - 1)+'].exchangeRate')}</span>#{/if}
+					</div>
+				</div>
+			#{/list}
+			
+			<hr />
+			<h4 class="text-center">&{'configuration.form.configuration.quotations'}</h4>
+			#{field 'configuration.additionalBenefits'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<textarea name="${field.name}" id="${field.id}" cols="1" rows="6" class="form-control">${field.flash ?: field.value}</textarea>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'configuration.observations'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'configuration.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<textarea name="${field.name}" id="${field.id}" cols="1" rows="6" class="form-control">${field.flash ?: field.value}</textarea>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			<hr />
+			<h4 class="text-center">&{'configuration.form.configuration.fractionFee'}</h4>
+			#{list payments, as: 'payment'}
+				<div class="form-group ${errors.forKey('payments['+(payment_index - 1)+'].fractioningFee') ? 'has-error' : ''}">
+					<label class="col-sm-3 control-label" for="payment_${payment_index}">#{required/} &{'configuration.payment.title', payment?.numberOfPayments, payment?.frecuency?.name?.toLowerCase()} (%)</label>
+					<div class="col-sm-6">
+						<input type="hidden" name="payments[${payment_index-1}].id" value="${payment?.id}">
+						<div class="input-group">
+							<input type="text" name="payments[${payment_index-1}].fractioningFee" id="payment_${payment_index}" value="${flash?.contains('payments['+(payment_index - 1)+'].fractioningFee') ? flash.get('payments['+(payment_index - 1)+'].fractioningFee'): payment?.fractioningFee}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if errors.forKey('payments['+(payment_index - 1)+'].fractioningFee')}<span class="help-block">${errors.forKey('payments['+(payment_index - 1)+'].fractioningFee')}</span>#{/if}
+					</div>
+				</div>
+			#{/list}
+			
+			<hr />
+			<h4 class="text-center">&{'configuration.form.configuration.facultativeDeductible'}</h4>
+			
+			<div class="form-group">
+				<div class="col-sm-6 col-sm-offset-3">
+
+					<table id="facultative_table" class="table table-striped table-bordered">
+						<thead>
+							<tr class="table-head">
+								<th>&{'configuration.facultativeDeductible.primediscount'}</th>
+								<th>&{'configuration.facultativeDeductible.deductibleincrement'}</th>
+								<th style="width:50px;"></th>
+							</tr>
+						</thead>
+						
+						<tbody>
+							#{list items:facultative, as: 'deductible'}	
+								<tr>
+									<td>
+										<input type="hidden" name="facultative[${deductible_index-1}].id" value="${deductible?.id}" class="form-control"/>
+										<div class="input-group" style="width:200px">
+											<input type="text" name="facultative[${deductible_index-1}].primeDiscount" value="${flash?.get('facultative['+(deductible_index - 1)+'].primeDiscount') ?: deductible?.primeDiscount}" class="form-control" />
+											<span class="input-group-addon">%</span>
+										</div>
+										<span class="label label-danger center-block">${errors.forKey('facultative['+(deductible_index-1)+'].primeDiscount')}</span>
+									</td>
+									<td>
+										<div class="input-group" style="width:200px">
+
+
+											#{select 'facultative['+(deductible_index-1)+'].deductibleIncrease', value: facultative[(deductible_index-1)].deductibleIncrease, class:'form-control'}
+
+											#{option 100.00}DOBLE#{/option}
+											#{option 200.00}TRIPLE#{/option}
+											#{option 300.00}CUADRUPLE#{/option}
+											#{option 400.00}QUINTUPLE#{/option}
+											#{option 500.00}SEXTUPLE#{/option}
+											#{option 600.00}SEPTUPLE#{/option}
+											#{option 700.00}OCTUPLE#{/option}
+											#{option 800.00}NONUPLO#{/option}
+											#{option 900.00}DECUPLO#{/option}
+
+											#{/select}
+
+											#{if errors.forKey('facultative['+(deductible_index-1)+'].deductibleIncrease')}<span class="help-block">${errors.forKey('facultative['+(deductible_index-1)+'].deductibleIncrease')}</span>#{/if}
+
+
+
+										</div>
+										<span class="label label-danger center-block">${errors.forKey('facultative['+(deductible_index-1)+'].deductibleIncrease')}</span>
+									</td>
+									<td style="text-align:center;">
+										<button type="button" class="btn btn-default deleteButton"><span class="glyphicon glyphicon-minus"></span></button>
+									</td>
+								</tr>
+							#{/list}
+							*{#{else}
+								<tr>
+									<td>
+										<div class="input-group">
+											<input type="text" name="facultative[0].primeDiscount" class="form-control"/>
+											<span class="input-group-addon">%</span>
+										</div>
+									</td>
+									<td>
+										<!--
+											-- byron guerre 12/1/16 - se realizo este cambio para intruducir un combo en lugar de un campo texto
+
+											<div class="input-group">
+											<input type="text" name="facultative[0].deductibleIncrease" class="form-control"/>
+											<span class="input-group-addon">%</span>
+										</div>-->
+
+										#{select 'facultative[0].deductibleIncrease', value: facultative[0].deductibleIncrease, class:'form-control'}
+
+										#{option 100.00}DOBLE#{/option}
+										#{option 200.00}TRIPLE#{/option}
+										#{option 300.00}CUADRUPLE#{/option}
+										#{option 400.00}QUINTUPLE#{/option}
+										#{option 500.00}SEXTUPLE#{/option}
+										#{option 600.00}SEPTUPLE#{/option}
+										#{option 700.00}OCTUPLE#{/option}
+										#{option 800.00}NONUPLO#{/option}
+										#{option 900.00}DECUPLO#{/option}
+
+										#{/select}
+
+
+
+									</td>
+									<td style="text-align:center;">
+										<button type="button" class="btn btn-default deleteButton"><span class="glyphicon glyphicon-minus"></span></button>
+									</td>
+								</tr>
+							#{/else}}*
+						</tbody>
+					</table>
+				</div>
+				<div class="col-sm-6 col-sm-offset-3">
+					<button type="button" class="btn btn-default addButton btn-block">Agregar deducible</button>
+				</div>
+			</div>
+			
+
+			<hr />
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-6 mt-20">
+					<input type="submit" class="btn btn-primary btn-block" value="&{'configuration.form.save'}" />
+				</div>
+			</div>
+			
+			<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	#{/form}
+</div>
+
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(document).on("click",".addButton",function(e) {
+			var table = $('#facultative_table');
+			var row = $("#facultative_table tr:last");
+			var rowCount = $('#facultative_table tr').length;
+			
+			var html = '<tr>';
+			html+= '<td>';
+			html+= '<div class="input-group">';
+			html+= '<input type="text" name="facultative['+(rowCount-1)+'].primeDiscount" value="" class="form-control"/>';
+			html += '<span class="input-group-addon">%</span>';
+			html+= '</div>';		
+			html+= '</td>';
+			html+= '<td>';
+			html+= '<div class="input-group">';
+
+
+			html +='<select name="facultative['+(rowCount-1)+'].deductibleIncrease" class="form-control">';
+
+			html +='<option value="100.00" selected >DOBLE</option>';
+			html +='<option value="200.00">TRIPLE</option>';
+			html +='<option value="300.00">CUADRUPLE</option>';
+			html +='<option value="400.00">QUINTUPLE</option>';
+			html +='<option value="500.00">SEXTUPLE</option>';
+			html +='<option value="600.00">SEPTUPLE</option>';
+			html +='<option value="700.00">OCTUPLE</option>';
+			html +='<option value="800.00">NONUPLO</option>';
+			html +='<option value="900.00">DECUPLO</option>';
+			html += '</select>';
+
+
+
+			html+= '</div>';
+			html+= '</td>';
+			html+= '<td style="text-align:center;">';
+			html+= '<button type="button" class="btn btn-default deleteButton"><span class="glyphicon glyphicon-minus"></span></button>';
+			html+= '</td>';
+			html+= '</tr>';
+			console.log(html);
+			var newRow = $(html);
+			table.append(newRow);
+			
+		});
+		
+		$(document).on("click",".deleteButton",function(e) {
+			
+			var row = $(this).closest("tr");
+		 	row.remove(); 
+		 	
+	 		$('#facultative_table > tbody > tr').each(function(index){
+	 			$(this).find(':input').each(function() {
+	 				this.name = this.name.replace(/facultative\[(\d+)\]/, function(str,p1) {
+	 					return 'facultative[' + parseInt(index) + ']';
+	 				});
+				});
+		 	});
+		 });
+	</script>
+#{/}

@@ -1,0 +1,81 @@
+#{extends 'admin.html' /}
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+#{form @searchGuards(), class:"form-horizontal", method:"POST"}	
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'guards.title'}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'searchField'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'guardsList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash}" class="form-control"/>
+			</div>
+			<div class="col-sm-3">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'guardsList.search.form.search'}" />
+			</div>
+		</div>
+		#{/}
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+#{if guards?.size()>0}
+<div class="overflow well">
+	<table class="table table-striped table-bordered tablelist table-hover">
+		<thead>
+			<tr class="table-head">
+				<th>&{'guardsList.table.number'}</th>
+				<th>&{'guardsList.table.name'}</th>
+				<th>&{'guardsList.table.vehicle'}</th>
+				<th>&{'guardsList.table.status'}</th>
+				<th>&{'guardsList.table.creationdate'}</th>
+				<th>&{'guardsList.table.expirationdate'}</th>
+				*{<th style="width:50px;">&{'guardsList.table.detail'}</th>}*
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:guards, as:'current'}
+				<tr class="${current_parity}">
+					<td data-title="&{'guardsList.table.number'}">${current.incident?.number}</td>
+					<td data-title="&{'guardsList.table.name'}">${current.incident?.client?.getFullName()}</td>
+					<td data-title="&{'guardsList.table.vehicle'}">${current.incident?.vehicle?.description()}</td>
+					<td data-title="&{'guardsList.table.status'}" style="${current.isExpired()?'color:red;':'color:green;'}">${current.isExpired()?'Vencido':'Vigente'}</td>
+					<td data-title="&{'guardsList.table.creationdate'}">${current.creationDate?.format("dd/MM/yy HH:mm")}</td>
+					<td data-title="&{'guardsList.table.expirationdate'}" style="${current.isExpired()?'color:red;':''}">${current?.expirationDate?.format("dd/MM/yy HH:mm")}</td>
+					*{<td data-title="&{'guardsList.table.detail'}"><a href="@{guardDetail(current.id)}" class="btn btn-xs">&{'guardsList.table.detail'}</a></td>}*
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	
+	#{if guards?.getPageCount() > 1}
+		#{paginate.controls items:guards /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:guards /}
+		</div>
+	#{/if}
+</div>
+#{/if}

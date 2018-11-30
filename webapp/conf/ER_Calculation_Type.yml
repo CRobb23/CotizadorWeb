@@ -1,0 +1,24 @@
+ER_Calculation_Type(c1):
+    code:           1
+    name:           Monto
+    description:    El usuario debe ingresar la cobertura deseada y se realizará el cálculo con este monto.
+
+ER_Calculation_Type(c2):
+    code:           2
+    name:           Rango
+    description:    El usuario debe ingresar la cobertura deseada y se realizará el cálculo en base al monto y el rango.
+
+ER_Calculation_Type(c3):
+    code:           3
+    name:           Montos Fijos
+    description:    El usuario debe seleccionar el monto de cobertura deseado y se hará el cálculo en base al monto seleccionado.
+
+ER_Calculation_Type(c4):
+    code:           4
+    name:           Opciones
+    description:    El cálculo se hará en base a la opción elegida. La opción elegida no tendra un monto como cobertura.
+
+ER_Calculation_Type(c5):
+    code:           5
+    name:           Fijo
+    description:    Se agregará al cálculo automáticamente. Si la cobertura es opcional en el producto, se pedira marcarlo.

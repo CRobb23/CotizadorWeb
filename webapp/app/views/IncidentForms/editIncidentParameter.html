@@ -1,0 +1,189 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css'}">
+#{/}
+
+#{form @saveIncidentParameters(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title">
+			<span><h1>${form?.name}</h1></span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{if incidentId}
+			<input type="hidden" name="incidentId" value="${incidentId}" />
+		#{/if}
+		
+		#{if form?.id}
+			<input type="hidden" name="formId" value="${form?.id}" />
+		#{/if}
+		
+		#{if formParams }
+			%{ i=0; }%
+			#{list items:formParams, as:'parameter'}
+			%{ incidentParam = incidentParams.get(i); }%
+			<div class="form-group ${errors.forKey('incidentParams['+(parameter_index - 1)+'].value') ? 'has-error' : ''}">
+				
+				<label class="col-sm-3 control-label" for="incidentParams_${parameter_index-1}">#{if parameter.required}#{required/} #{/if}${parameter?.name}</label>
+				<div class="col-sm-6">
+					<input type="hidden" name="incidentParams[${parameter_index-1}].id" value="${incidentParams[parameter_index-1]?.id}"/>
+					
+					<input type="hidden" name="incidentParams[${parameter_index-1}].incident.id" value="${incidentId}"/>
+					
+					<input type="hidden" name="incidentParams[${parameter_index-1}].parameter.id" value="${parameter?.id}"/>
+					
+					#{field 'incidentParam.value'}
+						*{Alphanumeric}*
+						#{if parameter?.type?.code == 1}
+							<input type="text" name="incidentParams[${parameter_index-1}].value" id="incidentParams_${parameter_index-1}" value="${data?.get('incidentParams['+(parameter_index - 1)+'].value')?: incidentParam?.value}" class="form-control" maxlength="${parameter?.maxLength}" />
+						#{/if}
+						*{Account}*
+						#{if parameter?.type?.code == 6}
+							<input type="text" name="incidentParams[${parameter_index-1}].value" id="incidentParams_${parameter_index-1}" value="${data?.get('incidentParams['+(parameter_index - 1)+'].value')?: incidentParam?.decryptedValue()}" class="form-control" maxlength="${parameter?.maxLength}" />
+						#{/if}
+						*{Numeric}*
+						#{if parameter?.type?.code == 2}
+							<input type="text" name="incidentParams[${parameter_index-1}].value" id="incidentParams_${parameter_index-1}" value="${data?.get('incidentParams['+(parameter_index - 1)+'].value')?: incidentParam?.value}" class="form-control" onkeypress="return isNumber(event)" maxlength="${parameter?.maxLength}"/>
+						#{/if}
+						*{Date}*
+						#{if parameter?.type?.code == 3}
+							<input type="text" data-format="DD/MM/YYYY" name="incidentParams[${parameter_index-1}].value" id="incidentParams_${parameter_index-1}" value="${data?.get('incidentParams['+(parameter_index - 1)+'].value')?: incidentParam?.value}" class="form-control datepicker enabled" maxlength="${parameter?.maxLength}"/>
+						#{/if}
+						*{Options}*
+						#{if parameter?.type?.code == 4}
+							<select name="incidentParams[${(parameter_index-1)}].value" id="incidentParams_${(parameter_index-1)}" class="form-control ${(parameter?.multiple)?'multiselect':''}" ${(parameter?.multiple)?'multiple="multiple"':''}>
+								#{if !parameter?.required && !parameter?.multiple}
+									<option value="">Ninguno</option>
+								#{/if}
+								#{list items: parameter.options, as: 'option'}
+									%{
+										selected = false;
+										if (data!=null && data.containsKey('incidentParams['+(parameter_index - 1)+'].value')) {
+											selected = incidentParam.arrayContainsValue(data.get('incidentParams['+(parameter_index - 1)+'].value'), option.id)
+										} else {
+											selected = incidentParam.containsValue(option.id);
+										}
+									}%
+									<option value="${option?.id}" ${selected?'selected':''}>${option?.value}</option>
+								#{/list}
+							</select>
+						#{/if}
+						*{Boolean}*
+						#{if parameter?.type?.code == 5}
+							<div class="checkbox">
+							<input type="checkbox" name="incidentParams[${parameter_index-1}].value" id="incidentParams_${parameter_index-1}" ${data?.get('incidentParams['+(parameter_index - 1)+'].value')?.equals('on')?'checked':''} ${incidentParam?.value?.equals("1")?'checked':''}/>
+							<input type="hidden" name="incidentParams[${parameter_index-1}].value" value="off"/>
+							</div>
+						#{/if}
+					
+					#{if errors.forKey('incidentParams['+(parameter_index - 1)+'].value')}<span class="help-block">${errors.forKey('incidentParams['+(parameter_index - 1)+'].value')}</span>#{/if}
+					
+					#{/}
+					
+				</div>
+			</div>
+			%{i++;}%
+			#{/list}
+		#{/if}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${messages.get('incidentParameter.form.save')}" />
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreStyles'}
+
+<link href="@{'/public/mobiscroll/css/mobiscroll.scroller.css'}" rel="stylesheet" type="text/css" />
+<link href="@{'/public/mobiscroll/css/mobiscroll.animation.css'}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="@{'public/multiselect/bootstrap-multiselect.css'}" type="text/css"/>
+<link href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'}"/>
+
+#{/}
+
+#{set 'moreScripts'}
+<script type="text/javascript" src="@{'public/multiselect/detectmobilebrowser.js'}"></script>
+<script type="text/javascript" src="@{'public/multiselect/bootstrap-multiselect.js'}"></script>
+<script src="@{'/public/mobiscroll/js/mobiscroll.core.js'}"></script>
+<script src="@{'/public/mobiscroll/js/mobiscroll.scroller.js'}" type="text/javascript"></script>
+<script src="@{'/public/mobiscroll/js/mobiscroll.datetime.js'}" type="text/javascript"></script>
+<script src="@{'/public/mobiscroll/js/i18n/mobiscroll.i18n.es.js'}" type="text/javascript"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+
+<script type="text/javascript">
+
+	$(function () {
+
+	    if (isTouchDevice()) {
+            $('.datepicker').scroller({
+                theme: 'default',
+                mode: 'scroller',
+                lang: 'es',
+                display: 'modal',
+                animate: 'slideup',
+                preset: 'date'
+            });
+		} else {
+            $('.datepicker').datetimepicker({
+                locale: "es",
+                sideBySide: false,
+                format: 'DD/MM/YYYY'
+            });
+		}
+
+        *{
+		$(".datepicker").scroller({
+			theme: 'default',
+			mode: 'scroller',
+			lang: 'es',
+			display: 'modal',
+			animate: 'slideup',
+			preset: 'date',
+            stepMinute: 5
+		});
+		}*
+		
+		if (!jQuery.browser.mobile) {
+			$('.multiselect').multiselect({
+				buttonClass:'form-control',
+				maxHeight: 200,
+				buttonContainer: '<div class="btn-group btn-block" />',
+				buttonWidth: false,
+				nonSelectedText: 'Ninguno',
+		    	nSelectedText: 'seleccionados',
+				onChange: function(element, checked) {
+    				$(element).attr('selected', checked);
+      			}
+    		});
+    	}
+	});
+	
+	function isNumber(evt) {
+    	evt = (evt) ? evt : window.event;
+    	var charCode = (evt.which) ? evt.which : evt.keyCode;
+    	if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        	return false;
+    	}
+    	return true;
+	}
+</script>	            
+#{/}

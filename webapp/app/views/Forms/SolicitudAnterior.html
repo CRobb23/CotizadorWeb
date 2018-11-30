@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    
+    %{currencySymbol = quotation?.product?.currency?.symbol?:""}%
+    
+    <body>
+        <style>
+            body
+            {
+              font-size: 10px;  
+            }
+            
+            table {
+        		border-collapse: collapse;
+    			border-spacing: 0; 
+        	}
+            
+            table.bordered {
+				/*border-color: black;*/
+				/*border-style: solid;*/
+				/*border-spacing:0;*/
+                /*border-width: 1px;*/
+			}
+			
+			table {
+				width: 100%;
+				/*border-color: black;*/
+				/*border-style: solid;*/
+				/*border-spacing:0;*/
+                /*border-width: 1px;*/
+			}
+            
+            td
+            {
+                padding: 2px;
+            }
+            
+            td.right-aligment
+            {
+                text-align: right;
+            }
+            
+            td.top-aligment
+            {
+                vertical-align: top;
+            }
+
+            td.bold {
+                font-weight: bold;
+            }
+            
+            th
+            {
+                color: #4E4234;
+                background-color: #F2CA9A;
+                font-size: 1.2em;
+                font-style: italic;
+                font-weight: bold;
+                height: 1.2em;
+                text-align: left;
+                border: 0.5px solid black;
+            }
+            
+            .subtitle
+            {
+                font-weight: bold;
+            }
+            
+            td.italic {
+				font-style:italic;
+			}
+			
+			td.bold {
+				font-weight:bold;
+			}
+			
+			td.center {
+				text-align:center;
+			}
+			
+			td.right {
+				text-align:right;
+			}
+			
+			td.left {
+				text-align:left;
+			}
+			
+			td.bordered {
+				border: 0.5px solid black;
+			}
+
+            td.date {
+                font-size: 0.8em;
+            }
+            
+        </style>
+
+        <img src="@{'/public/images/QuotationHeader.jpg'}" alt="logo-seguros-el-roble" style="width:100%"/>
+
+		<table>
+            <tr>
+                    <td style="width:18.17%;"></td>
+                    <td style="width:09.72%;"></td>
+                    <td style="width:09.72%;"></td>
+                    <td style="width:09.72%;"></td>
+                    <td style="width:08.73%;"></td>
+                    <td style="width:09.15%;"></td>
+                    <td style="width:09.72%;"></td>
+                    <td style="width:06.76%;"></td>
+                    <td style="width:08.45%;"></td>
+                    <td style="width:09.86%;"></td>
+                </tr>
+			<tr>
+				<td colspan="10">Por este medio solicito a Seguros El Roble, un seguro de vehículo de acuerdo a las coberturas, términos y condiciones aquí detalladas. Declaro y afirmo que los siguientes datos son verdaderos y exactos:</td>
+			</tr>
+            <tr>
+                <td colspan="7"></td>
+                <td colspan="1" class="bold center date">FECHA</td>
+                <td colspan="2" class="bold right date">${new Date().format('dd/MM/yy HH:mm')}</td>
+            </tr>
+		</table>
+        
+        <table class="bordered">
+            <thead>
+            	<tr>
+            		<td style="width:18.17%;"></td>
+            		<td style="width:09.72%;"></td>
+            		<td style="width:09.72%;"></td>
+            		<td style="width:09.72%;"></td>
+            		<td style="width:08.73%;"></td>
+            		<td style="width:09.15%;"></td>
+            		<td style="width:09.72%;"></td>
+            		<td style="width:06.76%;"></td>
+            		<td style="width:08.45%;"></td>
+            		<td style="width:09.86%;"></td>
+            	</tr>
+                <tr>
+                    <th colspan="10">Datos del Asegurado</th>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td colspan="1">NOMBRE COMPLETO</td>
+                    <td colspan="9" class="bordered">${nombrePersona?.toUpperCase()} </td>
+                </tr>
+                
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td>IDENTIFICACIÓN</td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><input type="checkbox" ${tipoDocumento?.equalsIgnoreCase("dpi")?'checked':''}></td>
+                                <td>DPI</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><input type="checkbox" ${tipoDocumento?.equalsIgnoreCase("pasaporte")?'checked':''}></td>
+                                <td>Pasaporte</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>No.</td>
+                    <td class="bordered center">${numeroIdentificacion?.toUpperCase()}</td>
+                    <td class="center">OCUPACIÓN</td>
+                    <td colspan="2" class="bordered center">${profesion?.toUpperCase()}</td>
+                    <td class="center">NIT</td>
+                    <td class="bordered center">${nit}</td>
+                </tr>
+
+				<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td>DIR. CORRESPONDENCIA</td>
+                    <td colspan="4" class="bordered center">${direccion?.toUpperCase()}</td>
+                    <td class="center">Zona</td>
+                    <td class="bordered center">${zona?.toUpperCase()}</td>
+                    <td class="center">Colonia</td>
+                    <td colspan="2" class="bordered center">${colonia?.toUpperCase()}</td>
+                </tr>
+				<tr><td colspan="10" style="height:0.5em;"></td></tr>
+				
+                <tr>
+                    <td></td>
+                    <td>Municipio</td>
+                    <td colspan="3" class="bordered center">${municipio?.toUpperCase()}</td>
+                    <td class="center">Depto</td>
+                    <td colspan="4" class="bordered center">${departamento?.toUpperCase()}</td>
+                </tr>
+                
+				<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td>TELÉFONOS</td>
+                    <td>Casa</td>
+                    <td colspan="2" class="bordered center">${telefonoCasa}</td>
+                    <td class="center">Oficina</td>
+                    <td colspan="2" class="bordered center">${telefonoOficina}</td>
+                    <td>Celular</td>
+                    <td colspan="2" class="bordered center">${celular}</td>
+                </tr>
+                
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                	<td></td>
+                    <td>Fax</td>
+                    <td colspan="2" class="bordered center">${fax}</td>
+                    <td class="center">E-mail</td>
+                    <td colspan="5" class="bordered center">${email}</td>
+                </tr>
+
+				<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td>FACTURA A NOMBRE DE</td>
+                    <td colspan="7" class="bordered">${nombreFactura?.toUpperCase()}</td>
+                    <td class="center">NIT</td>
+                    <td class="bordered center">${nitFactura?.toUpperCase()}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+            </tbody>
+        </table>
+
+        <table class="bordered">
+            <thead>
+            	<tr>
+            		<td style="width:18.17%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:08.73%"></td>
+            		<td style="width:09.15%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:06.76%"></td>
+            		<td style="width:08.45%"></td>
+            		<td style="width:09.86%"></td>
+            	</tr>
+                <tr>
+                    <th colspan="10">Datos del Vehículo</th>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">MARCA</td>
+                    <td colspan="2" class="center bordered">${incident?.vehicle?.line?.brand?.name?.toUpperCase()}</td>
+                    <td class="center">LÍNEA</td>
+                    <td colspan="2" class="center bordered">${incident?.vehicle?.line?.name?.toUpperCase()}</td>
+                    <td class="center">MODELO</td>
+                    <td colspan="2" class="center bordered">${incident?.vehicle?.erYear?.year}</td>
+                    <td></td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">No. Chasis</td>
+                    <td colspan="2" class="center bordered">${chasis?.toUpperCase()}</td>
+                    <td class="center">No. Motor</td>
+                    <td colspan="2" class="center bordered">${motor?.toUpperCase()}</td>
+                    <td class="center">No. Placa</td>
+                    <td colspan="2" class="center bordered">${placa?.toUpperCase()}</td>
+                    <td></td>
+                </tr>
+
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">Tipo de Vehículo</td>
+                    <td colspan="2" class="center bordered">${tipoVehiculo?.toUpperCase()}</td>
+                    <td class="center">USO</td>
+                    <td colspan="2" class="center bordered">${usoVehiculo?.toUpperCase()}</td>
+                    <td colspan="4"></td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+            </tbody>
+        </table>
+
+        <table class="bordered">
+            <thead>
+            	<tr>
+            		<td style="width:18.17%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:08.73%"></td>
+            		<td style="width:09.15%"></td>
+            		<td style="width:09.72%"></td>
+            		<td style="width:06.76%"></td>
+            		<td style="width:08.45%"></td>
+            		<td style="width:09.86%"></td>
+            	</tr>
+                <tr>
+                    <th colspan="10">Conductor habitual</th>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td>NOMBRE COMPLETO</td>
+                    <td colspan="4" class="bordered center">${nombreConductor?.toUpperCase()}</td>
+                    <td class="center">DPI</td>
+                    <td class="bordered center">${dpiConductor?.toUpperCase()}</td>
+                    <td class="center">Licencia</td>
+                    <td colspan="2" class="bordered center">${licenciaConductor?.toUpperCase()}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+            </tbody>
+        </table>
+
+	   	<!--Coberturas y deducibles-->
+		<table class="bordered">
+			<tr>
+				<th colspan="11" class="sectionTitle">Coberturas y deducibles</th>
+			</tr>
+			<!--Se colocan los anchos de las columnas-->
+			<tr style="height:0px">
+	    		<td style="width:8.0663983903421%;"></td>
+				<td style="width:12.35010060362173%;"></td>
+				<td style="width:6.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+			</tr>
+			<tr>
+				<td colspan="1"></td>
+				<td colspan="4" class="center bold italic" style="font-size:12px;">Cobertura</td>
+				<td colspan="2"></td>
+				<td colspan="2" class="right bold italic" style="font-size:12px;">Suma Asegurada</td>
+				<td colspan="1" class="center bold italic" style="font-size:12px;">%</td>
+				<td colspan="1" class="right bold italic" style="font-size:12px;padding-right:5px;">Deducible</td>
+			</tr>
+			
+			%{
+				if (incident!=null) {
+					quotation = incident.selectedQuotation;
+				}
+			}%
+			
+			%{currencySymbol = (quotation?.quotationDetail?.currencySymbol)? quotation?.quotationDetail?.currencySymbol + '.' :''}%
+			
+			#{list quotation?.quotationDetail?.categories?.sort({it.name}), as: 'quotationCoverage'}
+				<tr>
+	    			<td colspan="1"></td>
+	    			<td colspan="10" class="bold italic" style="font-size:11px;">${quotationCoverage.name}${(!quotationCoverage.description?.isEmpty())?':':''} ${quotationCoverage?.description}</td>
+	    		</tr>
+	    		#{list quotationCoverage.getCosts(), as: 'coverage'}
+		    		#{if coverage.coverageId?.equals(configuration?.injuriesCoverage?.id) || coverage.coverageId?.equals(configuration?.thirdInjuriesCoverage?.id)}
+		    			<tr>
+		    				%{
+		    					BigDecimal totalCoverage = (quotation?.incident?.vehicle?.numberOfPassengers)?coverage?.coverage?.multiply(quotation?.incident?.vehicle?.numberOfPassengers):coverage?.coverage;
+		    				}%
+			    			<td colspan="1"></td>
+			    			<td colspan="4">${coverage?.coverageName}</td>
+			    			<td colspan="2" class="left">(${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()} por ocupante)</td>
+			    			<td colspan="2" class="right">
+			    				#{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+			    					Por accidente: ${currencySymbol} ${totalCoverage?.doubleValue()?.decimalFormat()}
+			    				#{/if}
+			    			</td>
+			    			<td colspan="1" class="center">
+				    			#{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+				    				${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+				    			#{/if}
+			    			</td>
+			    			%{
+			    				BigDecimal hundred = new BigDecimal(100);
+			    				if (coverage?.damagesDeductible!=null) {
+		    						BigDecimal deductibleAmount = totalCoverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+		    					}
+			    			}%
+			    			<td colspan="1" class="right" style="padding-right:5px;">
+			    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+				    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+				    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+				    				#{/if}
+				    				#{else}
+				    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+				    				#{/else}
+			    				#{/if}
+			    			</td>
+			    		</tr>
+		    		#{/if}
+                    #{elseif coverage.coverageId?.equals(configuration?.totalTheftCoverage?.id)}
+                      <tr>
+                        <td colspan="1"></td>
+                        <td colspan="2">${coverage?.coverageName}</td>
+                        <td colspan="4" class="center bold" style="font-size:8px;">${coverage?.coverageDescription}</td>
+                        <td colspan="2" class="right">${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+
+                          #{if quotation?.quotationDetail?.theftDeductible}
+                            <td colspan="1" class="center">
+                                #{if quotation?.loJackDeductible != null}
+                                ${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+                                #{/if}
+                                                #{elseif quotation?.quotationDetail?.theftDeductible.compareTo(BigDecimal.ZERO)>0}
+                            ${quotation?.quotationDetail?.theftDeductible?.doubleValue()?.numberFormat()}%
+                            #{/elseif}
+                            </td>
+
+                          %{
+                            BigDecimal hundred = new BigDecimal(100);
+                            BigDecimal deductibleAmount = BigDecimal.ZERO;
+                            if (quotation?.quotationDetail?.theftDeductible!=null) {
+                            if (quotation.loJackDeductible != null) {
+                            deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+                            }else {
+                            deductibleAmount = coverage?.coverage?.multiply(quotation?.quotationDetail?.theftDeductible?.divide(hundred));
+                            }
+                            }
+                            }%
+                            <td colspan="1" class="right" style="padding-right:5px;">
+
+                                #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                    #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                    ${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+                                    #{/if}
+                                    #{else}
+                                    ${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                    #{/else}
+                                #{/if}
+                            </td>
+                          #{/if}
+                          #{else}
+                            <td colspan="1" class="center">
+                                #{if quotation?.loJackDeductible != null}
+                                ${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+                                #{/if}
+                                            #{elseif coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+                            ${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+                            #{/elseif}
+                            </td>
+
+                          %{
+                            BigDecimal hundred = new BigDecimal(100);
+                            BigDecimal deductibleAmount = BigDecimal.ZERO;
+                            if (coverage?.damagesDeductible!=null) {
+                            if (quotation.loJackDeductible != null) {
+                            deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+                            }else {
+                            deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+                            }
+                            }
+                            }%
+                            <td colspan="1" class="right" style="padding-right:5px;">
+
+                                #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                    #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                    ${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+                                    #{/if}
+                                    #{else}
+                                    ${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                    #{/else}
+                                #{/if}
+                            </td>
+                          #{/else}
+
+                      </tr>
+                    #{/elseif}
+                    #{else}
+		    			#{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+		    			<tr>
+			    			<td colspan="1"></td>
+			    			<td colspan="2">${coverage?.coverageName}</td>
+			    			<td colspan="4" class="center bold" style="font-size:8px;">${coverage?.coverageDescription}</td>
+			    			<td colspan="2" class="right">${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+			    			<td colspan="1" class="center">
+				    			#{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+				    				${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+				    			#{/if}
+			    			</td>
+			    			%{
+			    				BigDecimal hundred = new BigDecimal(100);
+			    				BigDecimal deductibleAmount = BigDecimal.ZERO;
+			    				if (coverage?.damagesDeductible!=null) {
+		    						deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+		    					}
+			    			}%
+			    			<td colspan="1" class="right" style="padding-right:5px;">
+			    				
+			    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+				    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+				    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+				    				#{/if}
+				    				#{else}
+				    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+				    				#{/else}
+			    				#{/if}
+			    			</td>
+			    		</tr>
+			    		#{/if}
+		    		#{/else}
+	    		#{/list}
+	    		
+	    		<tr>
+	    			<td colspan="1"></td>
+	    			<td colspan="6">
+	    				%{i=0;}%
+	    				#{list quotationCoverage.getCosts(), as: 'coverage'}
+	    					#{if (coverage?.coverage==null) || (coverage.coverage?.compareTo(BigDecimal.ZERO)==0)}
+	    						#{if i!=0}
+	    							,&nbsp;
+	    						#{/if}
+	    						${coverage?.coverageName}
+	    						%{i++;}%
+	    					#{/if}
+	    				#{/list}
+	    			</td>
+	    			<td colspan="2"></td>
+			    	<td colspan="1"></td>
+	    		</tr>
+	    		
+	    		<tr>
+					<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+				</tr>
+	    		
+	    	#{/list}
+			
+			<tr>
+				<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+			</tr>
+				
+			<tr>
+				<td colspan="2">FIRMA DEL ASEGURADO</td>
+				<td colspan="4" style="border-bottom:0.75px solid black;"></td>
+				<td colspan="5"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+			</tr>
+			
+		</table>
+	
+        
+        <!--Inspección-->
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <td style="width:18.17%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:08.73%"></td>
+                    <td style="width:09.15%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:06.76%"></td>
+                    <td style="width:08.45%"></td>
+                    <td style="width:09.86%"></td>
+                </tr>
+                <tr>
+                    <th colspan="10">Inspección</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">No. Inspección</td>
+                    <td class="center bordered">${inpeccion?.toUpperCase()}</td>
+                    <td colspan="2" class="center">Lugar Inspección</td>
+                    <td colspan="2" class="center bordered">${lugarInspeccion?.toUpperCase()}</td>
+                    <td colspan="2" class="center">Fecha Solicitud</td>
+                    <td colspan="2" class="center bordered">${fechaSolicitudInspeccion}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+            </tbody>
+        </table>
+
+        <!--Forma de pago-->
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <th colspan="12">Forma de Pago</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="12" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td><input type="checkbox" ${tipoPago?.equalsIgnoreCase("contado")?'checked':''}></td>
+                    <td>Contado</td>
+
+                    <td><input type="checkbox" ${tipoPago?.equalsIgnoreCase("fraccionado")?'checked':''}></td>
+                    <td>Fraccionado</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("efectivo")?'checked':''}></td>
+                    <td>Efectivo</td>
+
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("tarjeta de crédito")?'checked':''}></td>
+                    <td>Tarjeto Crédito</td>
+
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("débito bi")?'checked':''}></td>
+                    <td>Débito BI</td>
+
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("cobrador")?'checked':''}></td>
+                    <td>Cobrador</td>
+
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("cheques pre fechados")?'checked':''}></td>
+                    <td>Cheques Pre Fechados</td>
+
+                    <td><input type="checkbox" ${medioPago?.equalsIgnoreCase("boletas pre impresas")?'checked':''}></td>
+                    <td>Boletas Pre Impresas</td>
+                </tr>
+                <tr><td colspan="12" style="height:0.5em;"></td></tr>
+
+                %{amount = null}%
+                #{list quotation?.quotationDetail?.paymentOptions, as: 'option'}
+                	#{if option.frecuencyId == incident?.selectedPaymentFrecuency?.id}
+                		%{amount = option.amount}%
+                	#{/if}
+                #{/list}
+                
+                <tr>
+                    <td colspan="4" class="center bold">Prima Total a Pagar</td>
+                    <td colspan="2" class="center bordered">${currencySymbol} ${(amount?.doubleValue() * incident?.selectedPaymentFrecuency?.numberOfPayments)?.decimalFormat()}</td>
+                </tr>
+                <tr><td colspan="12" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="4" class="center bold">Número de Pagos</td>
+                    <td colspan="2" class="center bordered">${incident?.selectedPaymentFrecuency?.numberOfPayments}</td>
+                </tr>
+                <tr><td colspan="12" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="4" class="center bold">Prima ${incident?.selectedPaymentFrecuency?.frecuency?.name}</td>
+                    <td colspan="2"class="center bordered bold">${amount?.doubleValue()?.decimalFormat()}</td>
+                    <td></td>
+                    <td colspan="6"><span style="font-weight: bold">Nota: </span>Con la presente solicitud debe adjuntarse el primer pago de prima</td>
+                </tr>
+                <tr><td colspan="12" style="height:0.5em;"></td></tr>
+            </tbody>
+        </table>
+        
+        <!--Autorización de cobros-->
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <td style="width:18.17%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:08.73%"></td>
+                    <td style="width:09.15%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:06.76%"></td>
+                    <td style="width:08.45%"></td>
+                    <td style="width:09.86%"></td>
+                </tr>
+                <tr>
+                    <th colspan="10">AUTORIZACIÓN DE COBROS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td colspan="10">Autorizo a Seguros El Roble debitar de la cuenta / tarjeta de crédito que especifíco en esta solicitud, la cantidad necesaria para cubrir el pago de las primas de Seguro de Automóvil que he contratado</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="3">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="width:10%;" class="center"><input type="checkbox" ${formaPago?.equalsIgnoreCase("Débito a cuenta depósitos monetarios BI")?'checked':''}></td>
+                                    <td>Débito a cuenta depósitos monetarios BI</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td colspan="3" class="center">No. Cuenta Monetaria</td>
+                    <td colspan="3" class="center bordered">${formaPago?.equalsIgnoreCase("Débito a cuenta depósitos monetarios BI")?cuentaMonetaria:''}</td>
+                    <td colspan="1"></td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="3">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="width:10%;" class="center"><input type="checkbox" ${formaPago?.equalsIgnoreCase("Déito a cuenta de ahorro BI")?'checked':''}></td>
+                                    <td>Débito a cuenta de ahorro BI</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td colspan="3" class="center">No. Cuenta Ahorro</td>
+                    <td colspan="3" class="center bordered">${formaPago?.equalsIgnoreCase("Déito a cuenta de ahorro BI")?cuentaAhorro:''}</td>
+                    <td colspan="1"></td>
+                </tr>
+
+                <tr>
+                    <td colspan="3">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="width:10%;" class="center"><input type="checkbox" ${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?'checked':''}></td>
+                                    <td>Cargo a Tarjeta de Crédito</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td></td>
+                    <td colspan="2">NO. TARJETA</td>
+                    <td colspan="5" class="bordered">${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?cuentaTarjeta:''}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="3" class="center">NOMBRES Y APELLIDOS TARJETA</td>
+                    <td colspan="3" class="center bordered">${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?tarjetaNombre:''}</td>
+                    <td colspan="2" class="center">ENTIDAD EMISORA</td>
+                    <td colspan="2" class="center bordered">${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?tarjetaEmisor:''}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="3" class="center">FECHA Y VENCIMIENTO</td>
+                    <td class="center bordered">${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?tarjetaMes:''}</td>
+                    <td class="center bordered">${formaPago?.equalsIgnoreCase("Cargo a Tarjeta de Crédito")?tarjetaAnio:''}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td colspan="10">
+                        <p>Entiendo y acepto:</p>
+                        <p>1. Los débitos se realizarán hasta que se cubra el total de la prima de la póliza.</p>
+                        <p>2. Se dejarán de hacer los débitos por carencia de disponibilidad en mi cuenta bancaria o tarjeta de crédito, quedando sin efecto el Seguro de Automóvil</p>
+                        <p>3. En caso de siniestro, autorizo a Seguros El Roble debitar la PRIMA TOTAL de mi tarjeta de crédito, cuenta de ahorros o cuenta monetaria. En caso de no haber    disponibilidad de fondos, efectuaré el pago con otro medio de pago.</p>
+
+                        <p>FIRMA AUTORIZACIÓN ________________________________________</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!--Pago mediante cobrador-->
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <td style="width:18.17%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:08.73%"></td>
+                    <td style="width:09.15%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:06.76%"></td>
+                    <td style="width:08.45%"></td>
+                    <td style="width:09.86%"></td>
+                </tr>
+                <tr>
+                    <th colspan="10">Pago mediante cobrador</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">DIRECCIÓN COBRO</td>
+                    <td colspan="4" class="center bordered">${direccionCobro}</td>
+                    <td class="center">ZONA</td>
+                    <td class="center bordered">${zonaCobro}</td>
+                    <td class="center">COLONIA</td>
+                    <td colspan="2" class="center bordered">${coloniaCobro}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td></td>
+                    <td class="center">Municipio</td>
+                    <td colspan="3" class="center bordered">${municipioCobro}</td>
+                    <td class="center">Depto.</td>
+                    <td colspan="4" class="center bordered">${departamentoCobro}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td class="center">REALIZAR COBRO</td>
+                    <td colspan="2">
+                        <input type="radio" name="group1" value="DÍA 1 AL 5" ${(fechasCobro?.equalsIgnoreCase("Día 1 al 5"))?'checked':''}> DÍA 1 AL 5
+                    </td>
+                    <td colspan="2">
+                        <input type="radio" name="group1" value="DÍA 15 AL 20" ${(fechasCobro?.equalsIgnoreCase("Día 15 al 20"))?'checked':''}> DÍA 15 AL 20
+                    </td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+            </tbody>
+        </table>
+
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <td style="width:18.17%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:08.73%"></td>
+                    <td style="width:09.15%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:06.76%"></td>
+                    <td style="width:08.45%"></td>
+                    <td style="width:09.86%"></td>
+                </tr>
+                <tr>
+                    <th colspan="10">Referidos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">Nombre Completo</td>
+                    <td colspan="4" class="center bordered">${nombreReferido1}</td>
+                    <td class="center">Teléfonos</td>
+                    <td colspan="4" class="center bordered">${telefonoReferido1}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td class="center">Nombre Completo</td>
+                    <td colspan="4" class="center bordered">${nombreReferido2}</td>
+                    <td class="center">Teléfonos</td>
+                    <td colspan="4" class="center bordered">${telefonoReferido2}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td class="center">Nombre Completo</td>
+                    <td colspan="4" class="center bordered">${nombreReferido3}</td>
+                    <td class="center">Teléfonos</td>
+                    <td colspan="4" class="center bordered">${telefonoReferido3}</td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+            </tbody>
+        </table>
+
+        <table class="bordered">
+            <thead>
+                <tr>
+                    <td style="width:18.17%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:08.73%"></td>
+                    <td style="width:09.15%"></td>
+                    <td style="width:09.72%"></td>
+                    <td style="width:06.76%"></td>
+                    <td style="width:08.45%"></td>
+                    <td style="width:09.86%"></td>
+                </tr>
+                <tr>
+                    <th colspan="10">Exclusivo Vendedor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+                <tr>
+                    <td class="center">Nombre del agente</td>
+                    <td colspan="4" class="center bordered">${incident?.creator?.getFullName()?.toUpperCase()}</td>
+                    <td class="center">Firma</td>
+                    <td colspan="4" style="border-bottom:0.75px solid black"></td>
+                </tr>
+                <tr><td colspan="10" style="height:0.5em;"></td></tr>
+
+                <tr>
+                    <td class="center">Código del Agente</td>
+                    <td colspan="4" class="center bordered">${incident?.creator?.profile?.agentCode?.toUpperCase()}</td>
+                    <td class="center">Fecha</td>
+                    <td colspan="4" class="center bordered">${new Date().format('dd/MM/yyyy')}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </body>
+</html>

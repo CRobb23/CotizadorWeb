@@ -1,0 +1,27 @@
+ER_Vehicle_Class(vclass1):
+    code:           A
+    description:    Autos livianos
+
+ER_Vehicle_Class(vclass2):
+    code:           A1
+    description:    Autos livianos deportivos
+
+ER_Vehicle_Class(vclass3):
+    code:           B
+    description:    Pick-ups 2.5T y Camionetas agricolas 4x2 No japoneses
+
+ER_Vehicle_Class(vclass4):
+    code:           B1
+    description:    Pick-ups 2.5T Ton y Camionetas agricolas 4x2 Japoneses
+
+ER_Vehicle_Class(vclass5):
+    code:           C
+    description:    Pick-ups y Paneles de Carga Máximo 5T
+
+ER_Vehicle_Class(vclass6):
+    code:           C1
+    description:    Transporte de Carga Mayor a 5T
+    
+ER_Vehicle_Class(vclass7):
+    code:           M
+    description:    Motos

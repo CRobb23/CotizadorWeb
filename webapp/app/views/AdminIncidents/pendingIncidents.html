@@ -1,0 +1,80 @@
+#{extends 'admin.html' /}
+
+#{form @searchIncidents(), class:"form-horizontal", method:"POST", role:'form'}
+<div class="well">
+    <div class="orange-title"><span>
+		<h1>&{'pendingIncidentsList.title'}</h1>
+		</span></div>
+    #{if flash.error}
+        <div class="alert alert-danger">
+        ${flash.error}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+    #{field 'number'}
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="${field.id}">No. Caso</label>
+            <div class="col-sm-6">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+            </div>
+        </div>
+    #{/}
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'inspectionsList.search.form.search'} " />
+            <input type="submit" class="btn btn-default btn-block" name="all" value=" &{'inspectionsList.search.form.all'} " />
+        </div>
+    </div>
+</div>
+
+<div class="well">
+    <div class="overflow">
+
+
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered inspecciones-locales" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr class="table-head">
+                    <th class="first">&{'inspectionsList.table.incident.number'}</th>
+                    <th class="first">&{'guardsList.table.name'}</th>
+                    <th class="first">&{'guardsList.table.vehicle'}</th>
+                    <th class="first">&{'guardsList.table.creationdate'}</th>
+                    <th class="last textC" style="width:50px;">Aprobar</th>
+                    <th class="last textC" style="width:50px;">Denegar</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                #{paginate.list items:incidents , as:'current'}
+                <tr class="${current_parity}">
+                   <td class="first style2">${current?.number}</td>
+                    <td class="first style2">${current?.client?.getFullName()}</td>
+                    <td class="first style2">${current?.vehicle?.description()}</td>
+                    <td class="first style2">${current?.creationDate?.format("dd/MM/yy HH:mm")}</td>
+                    <td class="lasticon textC">
+                        <a href="@{Incidents.attendInspection(current?.id,1)}"  class="btn btn-xs">Aprobar Inspección</a>
+                    </td>
+                    <td class="lasticon textC">
+                        <a href="@{Incidents.attendInspection(current?.id,0)}"  class="btn btn-xs">Denegar Inspección</a>
+                    </td>
+                </tr>
+                #{/paginate.list}
+                </tbody>
+            </table>
+        </div>
+
+    #{if incidents?.getPageCount() > 1}
+        #{paginate.controls items:incidents /}
+        <div class="visible-xs text-center">
+            #{paginate.summary items:incidents /}
+        </div>
+    #{/if}
+    </div>
+</div>
+#{/form}

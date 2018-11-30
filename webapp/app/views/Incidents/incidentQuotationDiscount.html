@@ -1,0 +1,161 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'incident.title'} ${quotation?.incident?.number}</h1>
+		</span>
+	</div>
+
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	
+	%{currencySymbol = (quotation?.quotationDetail?.currencySymbol)?quotation?.quotationDetail?.currencySymbol+".":""}%
+	
+	#{form @saveQuotationDiscount(), method:"POST"}
+	<input type="hidden" value="${quotation?.id}" name="quotationId"/>
+	<div class="row">
+		<div class="col-sm-6">
+		  	<table class="table table-striped table-bordered table-condensed">
+				<tr>
+					<th style="text-align:center" colspan="2">&{'quotation.simulation.table.parameters'}</th>
+				</tr>
+				<tr>
+					<td>&{'quotation.simulation.table.product'}</td>
+					<td>${quotation?.product?.name}</td>
+				</tr>
+				
+				#{if quotation?.carValue}
+				<tr>
+					<td>&{'quotation.simulation.table.carValue'}</td>
+					<td>${currencySymbol} ${quotation?.carValue?.doubleValue()?.decimalFormat()}</td>
+				</tr>
+				#{/if}
+				
+				#{list quotation.parameters, as: 'parameter'}
+					<tr>
+						<td style="width:50%">${parameter?.productCoverage?.coverage?.fieldDescription}</td>
+						<td>${parameter?.valueString()}</td>
+					</tr>
+				#{/list}
+				#{if authorizedDiscount?.compareTo(BigDecimal.ZERO)>0 && quotation?.incident?.canModifyQuotations()}
+				<tr>
+					<td>&{'quotation.simulation.table.discount'} (${authorizedDiscount?.doubleValue()?.decimalFormat()}% &{'incident.quotation.discount.maximum'})</td>
+					<td>
+						<input type="text" class="form-control" name="discount" id="discount" value="${quotation?.discount}" maxlength="6" />
+					</td>
+				</tr>
+				#{/if}
+				#{elseif quotation?.discount?.compareTo(BigDecimal.ZERO)>0}
+					<tr>
+						<td>&{'quotation.simulation.table.discount'}</td>
+						<td>
+							${quotation?.discount?.doubleValue().decimalFormat()}%
+						</td>
+					</tr>
+				#{/elseif}
+			</table>
+		</div>
+		<div class="col-sm-6">	
+			<table class="table table-striped table-bordered table-condensed">
+				<tr>
+					<th style="text-align:center" colspan="5">&{'quotation.simulation.table.paymentoptions'}</th>
+				</tr>
+				#{list quotation.quotationDetail?.paymentOptions, as: 'option'}
+					#{if option.emissionFeeFirstPayment}
+						<tr>
+							<td style="vertical-align: middle;">
+								${option.numberOfPayments} &{'quotation.simulation.payment'}${(option.numberOfPayments>1)?'s':''} #{if option.frecuency}${option.frecuency?.toLowerCase()}#{if option.numberOfPayments>1}&{'quotation.simulation.frecuencysuffix'}#{/if}#{/if}
+							</td>
+							<td style="vertical-align: middle; text-align: center;">
+								${option.numberOfPaymentsWithTotalEmissionFee}er.
+							</td>
+							<td style="vertical-align: middle;">
+								${currencySymbol}${option.amountWithTotalEmissionFee.doubleValue().decimalFormat()}
+							</td>
+							<td style="vertical-align: middle; text-align: center;">
+								${option.numberOfPayments - 1}
+							</td>
+							<td style="vertical-align: middle;">
+								${currencySymbol}${option.amount.doubleValue().decimalFormat()}
+							</td>
+						</tr>
+					#{/if}
+					#{else}
+						<tr>
+							<td colspan="1" style="width:50%">
+								${option.numberOfPayments} &{'quotation.simulation.payment'}${(option.numberOfPayments>1)?'s':''} #{if option.frecuency}${option.frecuency?.toLowerCase()}#{if option.numberOfPayments>1}&{'quotation.simulation.frecuencysuffix'}#{/if}#{/if}
+							</td>
+							<td colspan="4">
+								${currencySymbol}${option.amount.doubleValue().decimalFormat()}
+							</td>
+						</tr>
+					#{/else}
+				#{/list}
+			</table>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-sm-3">
+			#{if authorizedDiscount?.compareTo(BigDecimal.ZERO)>0 && quotation?.incident?.canModifyQuotations()}
+			<input type="submit" class="btn btn-block btn-default" value="&{'incident.quotation.discount.apply'}"/>
+			#{/if}
+			<a href="@{incidentDetail(quotation?.incident?.id)}" class="btn btn-block btn-default">&{'incident.quotation.back'}</a>
+		</div>
+	</div>
+	#{/form}
+</div>
+
+#{if authorizedDiscount?.compareTo(BigDecimal.ZERO)>0 && quotation?.incident?.canModifyQuotations()}
+#{set 'moreScripts'}
+	<script type="text/javascript">
+
+		var currentDiscount = ${quotation?.discount?:0};
+		var maxDiscount = Number(${authorizedDiscount.doubleValue()});
+
+		setInterval(function() { 
+			ObserveInputValue($('#discount').val()); 
+		}, 100);
+
+		function ObserveInputValue(value, input) {
+			var discount = Number(value);
+			if (isNaN(discount)) {
+				$('#discount').val(0);
+				discount = 0;
+			}
+
+			if (currentDiscount!=discount) {
+				currentDiscount = discount;
+				if (currentDiscount>maxDiscount) {
+					currentDiscount = maxDiscount;
+					$('#discount').val(currentDiscount);
+				}
+
+				calculateDiscount(currentDiscount);
+			}
+		} 
+
+		function numberWithCommas(x) {
+			return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		}
+
+		*{
+		function calculateDiscount(discount) {
+			$("input.originalValue").each(function(){
+				var value = $(this);
+				var cell = $('#cell_'+value.attr('id'));
+				var total = parseFloat(Math.round(Number(value.val()) * (100-currentDiscount))/100).toFixed(2);
+				cell.html('${currencySymbol} ' + numberWithCommas(total));
+			});
+		}
+		}*
+	</script>
+#{/}
+#{/if}

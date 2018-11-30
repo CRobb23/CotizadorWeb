@@ -1,0 +1,236 @@
+#{extends 'admin.html' /}
+<div class="well">	
+	<div class="orange-title">
+		<span>
+			<h1>${channel?.id==null ? messages.get('createChannel.title') : messages.get('editChannel.title')}</h1>
+		</span>
+	</div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	#{form @saveChannel(), class:"form-horizontal", method:"POST", onsubmit:"submit_query_form()", role:"form"}	
+			#{if channel?.id}
+				<input type="hidden" name="channel.id" value="${channel?.id}" />
+			#{/if}
+		
+			#{field 'channel.name'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'channel.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:channel?.name}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'channel.transferCode'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'channel.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:channel?.transferCode}" class="form-control"/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'channel.isPublic'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">&{'channel.form.isPublic'}</label>
+					<div class="col-sm-6">
+						#{select field.name, id:field.id, value: flash.get(field.name) ? 0 : (channel?.isPublic) ? 1 : 0, class:'form-control'}
+							#{option 0}&{'form.no'}#{/option}
+							#{option 1}&{'form.yes'}#{/option}
+						#{/select}
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+
+			#{field 'channel.active'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">&{'channel.form.estado'}</label>
+					<div class="col-sm-6">
+	
+						#{select field.name, id:field.id, value:flash.get(field.name)?:(channel?.active)      ?1:0, class:'form-control'}
+						#{option 1}&{'channel.form.activo'}#{/option}
+						#{if channel?.id != null}
+						#{option 0}&{'channel.form.inactivo'}#{/option}
+						#{/if}
+						#{/select}
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+	
+	
+					</div>
+				</div>
+			#{/}
+
+			#{field 'channel.portfolioType'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">&{'channel.form.portfolio'}</label>
+					<div class="col-sm-6">
+						#{select 'channel.portfolioType.id', id:field.id, class:'form-control', value: field.flash?:channel?.portfolioType?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: portfolios, as: 'portfolioItem'}
+								#{option portfolioItem?.id}${portfolioItem?.name}#{/option}
+							#{/list}
+						#{/select}
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Administrators</label>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-6 text-center">
+							Administradores disponibles
+							<div class="input-group text-left">
+								<select class="height200 form-control" id="available" multiple>
+									#{list items:administrators, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+								</select>
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button" value=" > "/>			
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 text-center">
+							Administradores seleccionados
+							<div class="input-group text-left">
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button" value=" < "/>
+								</div>
+								#{select 'channel.administrators[].id', id:'assigned', multiple:'multiple', class:'form-control col-sm-6 height200'}
+									#{list items:assigned, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+								#{/select}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-6">
+					<input type="submit" class="btn btn-primary btn-block" value="${channel?.id==null ? messages.get('channel.form.create') : messages.get('channel.form.edit')}" />
+				</div>
+			</div>
+			
+			<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	#{/form}
+</div>
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+
+#{if controllers.Security.check('Administrador maestro')}
+	$(function (){
+		$("#channelId").change(function () {
+			var selectelement = $(this);
+			selectelement.prop('disabled', true);
+			$('#store_distributor').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+			var id = $(this).val();
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.distributorsForChannel()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#store_distributor').html('<option value="">'+"&{'form.none'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.distributors, function(index, distributor) {
+							html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+						});
+						$('#store_distributor').append(html);
+					} 
+				},
+				error: function() {
+					$('#store_distributor').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+		});
+	});
+#{/if}
+
+#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+	$(function (){
+		$("#store_distributor").change(function () {
+			var selectelement = $(this);
+			selectelement.prop('disabled', true);
+			$('#store_administrator').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+			$('#assigned').empty();
+			$('#available').empty();
+			var id = $(this).val();
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.administratorsAndSellersForDistributor()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#store_administrator').html('<option value="">'+"&{'form.none'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.administrators, function(index, administrator) {
+							html+= '<option value="'+administrator.id+'">'+administrator.name+'('+administrator.email+')</option>';
+						});
+						$('#store_administrator').append(html);
+						
+						var sellersHtml = "";
+						$.each(response.sellers, function(index, seller) {
+							sellersHtml+= '<option value="'+seller.id+'">'+seller.name+'</option>';
+						});
+						$('#available').html(sellersHtml);
+					} 
+				},
+				error: function() {
+					$('#store_administrator').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+		});
+	});
+#{/if}
+	
+	$(function (){
+		$("#select_button").click(
+			function (){
+				$('#available option:selected').appendTo("#assigned");
+			}
+		);
+	});
+	
+	$(function (){
+		$("#delete_button").click(
+			function (){
+				$('#assigned option:selected').appendTo("#available");
+			}
+		);
+	});
+	
+	function submit_query_form() {
+		obj = document.getElementById("assigned");
+		for(var i = 0; i < obj.options.length; i++){
+			obj.options[i].selected = true;
+		}
+	}
+</script>
+#{/}

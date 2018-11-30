@@ -1,0 +1,28 @@
+#{extends 'Mails/layout.html' /}
+ <layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody><tr>
+            <td class="w580" width="580">
+                <p align="left" class="article-title"><singleline label="Title">Estimado(a) ${reminder?.guard?.incident?.client?.getFullName()}:</singleline></p>
+                <div align="left" class="article-content">
+                    <multiline label="Description">
+                    
+                    	<p>
+                    		Le informamos que el resguardo que emitimos para el vehículo ${reminder?.guard?.incident?.vehicle?.line?.brand?.name} ${reminder?.guard?.incident?.vehicle?.line?.name} ${reminder?.guard?.incident?.vehicle?.year}, vence el próximo ${reminder?.guard?.expirationDate?.format("dd/M/yyyy")}, por lo que le solicitamos se ponga en contacto con su agente de seguros para completar la papelería correspondiente para la emisión de su póliza y así siga gozando de cobertura.
+                    	</p>
+                    	
+						<p>
+							Si ya recibió su póliza de seguro, sirva ignorar este aviso. 
+						</p>
+						
+                    	<p>
+						Atentamente<br>
+						Administración El Roble
+						</p>
+                    </multiline>
+                </div>
+            </td>
+        </tr>
+        <tr><td class="w580" width="580" height="10"></td></tr>
+    </tbody></table>
+</layout>

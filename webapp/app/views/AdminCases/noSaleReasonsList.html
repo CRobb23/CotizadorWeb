@@ -1,0 +1,58 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'noSaleReasons.title'}</h1>
+		</span>
+	</div>
+
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	<div class="overflow">
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editNoSaleReason()}" class="btn btn-default">&{'noSaleReasonsList.newReason'}</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered motivos-no-venta" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr class="table-head">
+						<th class="first">&{'noSaleReasonsList.table.reason'}</th>
+						<th>&{'noSaleReasonsList.table.description'}</th>
+						<th>&{'noSaleReasonsList.table.state'}</th>
+						<th class="last textC" style="width:50px;">&{'noSaleReasonsList.table.edit'}</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					#{paginate.list items:reasons, as:'current'}
+						<tr class="${current_parity}">
+							<td class="first style2">${current?.name}</td>
+							<td>${current?.description}</td>
+							<td>${current?.active?.yesno(messages.get('form.active'), messages.get('form.inactive'))}</td>
+							<td class="lasticon textC">
+								<a href="@{editNoSaleReason(current?.id)}"  class="btn btn-xs">Editar</a>
+							</td>
+						</tr>
+					#{/paginate.list}
+				</tbody>
+			</table>
+		</div>
+		
+		#{if reasons?.getPageCount() > 1}
+			#{paginate.controls items:reasons /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:reasons /}
+			</div>
+		#{/if}
+	</div>
+</div>

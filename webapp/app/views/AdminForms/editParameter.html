@@ -1,0 +1,255 @@
+#{extends 'admin.html' /}
+
+#{form @saveParameter(), class:"form-horizontal", method:"POST", onsubmit:"submitData()"}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>${parameter==null ? messages.get('createParameter.title') : messages.get('editParameter.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if parameter}
+			<input type="hidden" name="parameter.id" value="${parameter?.id}" />
+		#{/if}
+	
+		#{field 'parameter.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.type'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name+'.id', id:field.id, value: flash?.get(field.name+'.id')?:parameter?.type?.id, class:'form-control', onchange:'typeChanged()'}
+						#{list items: types, as: 'type'}
+							#{option type?.id}${type?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.identifier'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.required'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: (field.flash)?field.flash:(field.value!=null)?((field.value)?1:0):1, class:'form-control'}
+						#{option 1}&{'form.yes'}#{/option}
+						#{option 0}&{'form.no'}#{/option}
+					#{/select}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.active'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: (field.flash)?field.flash:(field.value!=null)?((field.value)?1:0):1, class:'form-control'}
+						#{option 1}&{'form.active'}#{/option}
+						#{option 0}&{'form.inactive'}#{/option}
+					#{/select}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.parameterOrder'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'parameter.maxLength'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div id="parameterOptions">
+			<h4 class="text-center">Opciones</h4>
+			
+			#{field 'parameter.multiple'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">&{'parameter.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<div class="checkbox">
+						<input type="checkbox" name="${field.name}" id="${field.id}" ${(field.flash?.equals('on'))?'checked':(field.value)?'checked':''} />
+						<input type="hidden" name="${field.name}" value="off" />
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{if parameter!=null && parameter.options!=null}
+				%{ i=0; }%
+				#{list items:parameter.options, as:'option'}
+					%{ field = parameter.options.get(i);}%
+					<div class="form-group optionsDiv ${errors.forKey('paramOptions['+(i)+'].id')?'has-error':''}" id="option_${i}">
+						<label class="col-sm-3 control-label" for="paramOptions_${i}">Opci&oacute;n ${option_index} (Id: ${option?.id})</label>
+						<div class="col-sm-6">
+							<input type="hidden" value="${option?.id}" name="paramOptions[${i}].id" class="parameter-option-id" />
+							<input type="hidden" value="${parameter?.id}" name="paramOptions[${i}].parameter.id" class="parameter-option-parameter" />
+							<input type="text" name="paramOptions[${i}].value" id="paramOptions_${i}.value" value="${errors.forKey('paramOptions['+(i)+'].value')?errors.forKey('paramOptions['+(i)+'].value'):option?.value}" class="form-control parameter-option-value"/>
+							
+						</div>
+						<input type="button" value="-" class="deleteBtn btn" onclick="deleteById(this)"/>
+						#{if errors.forKey('paramOptions['+(i)+'].value')}<span class="help-block">${errors.forKey('paramOptions['+(i)+'].value')}</span>#{/if}
+					</div>
+					%{ i++; }%
+				#{/list}
+			#{/if}
+			#{else}
+				<div class="form-group optionsDiv" id="option_0">
+					<label class="col-sm-3 control-label" for="paramOptions_0">Opci&oacute;n 1</label>
+					<div class="col-sm-6">
+						<input type="hidden" value="0" name="paramOptions[0].parameter.id" class="parameter-option-parameter" />
+						<input type="text" name="paramOptions[0].value" id="paramOptions_0" value="" class="form-control parameter-option-value"/>
+						
+					</div>
+					<input type="button" value="-" class="deleteBtn btn" onclick="deleteById(this)"/>
+				</div>
+			#{/else}
+			
+			<div class="form-group" id="optionsControl">
+				<div class="col-sm-offset-3 col-sm-6">
+					<input type="button" class="btn btn-block" id="adRow" value="Add Row" />
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${parameter==null ? messages.get('parameter.form.create') : messages.get('parameter.form.edit')}" />
+			</div>
+		</div>
+	</div>
+	
+#{/form}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+
+	$(function () {
+		$("#adRow").click(addOptionValue);
+		$("#submitTest").click(submit_query_form);
+		typeChanged(null);
+	});
+	function typeChanged(evt) {
+		var code = $('#parameter_type option:selected').val();
+		if(code == 4)//parameter_type = options
+		{
+			$("#parameterOptions").show();
+			//alert(code);
+		}
+		else
+			$("#parameterOptions").hide();
+	}
+	
+	function deleteById(element)
+	{
+		//alert($(element).parent());
+		parameterOptions = document.getElementsByClassName("parameter-option-value");
+		var numOptions = parameterOptions.length;
+		if(numOptions>1)
+		{
+			$(element).parent().remove();
+		}
+		numerizeOptionDivs();
+		submit_query_form();
+	}
+	
+	function numerizeOptionDivs()
+	{
+		optionsDivs = document.getElementsByClassName('optionsDiv');
+		for(var i = 0; i < optionsDivs.length; i++){
+			optionsDivs[i].id = "option_"+i;
+			//document.getElementsByClassName('deleteBtn')[i].onclick = deleteById("option_"+i);
+		}
+	}
+	
+	function addOptionValue(){
+		/*var code = $('#parameter_type option:selected').val();
+		alert(code);*/
+		parameterOptions = document.getElementsByClassName("parameter-option-value");
+		var correlative = parameterOptions.length;
+		
+		var html = '<div class="form-group optionsDiv" id="option_'+correlative+'">';
+		html += '<label class="col-sm-3 control-label" for="paramOptions_'+correlative+'">Opci&oacute;n '+(correlative+1)+'</label>';
+		html += '<div class="col-sm-6">';
+		html += '<input type="hidden" value="0" name="paramOptions['+correlative+'].parameter.id" class="parameter-option-parameter" />';
+		html += '<input type="text" name="paramOptions['+correlative+'].value" id="paramOptions_'+correlative+'" value="" class="form-control parameter-option-value"/>';
+		html += '</div>';
+		html += '<input type="button" value="-" class="btn" onclick="deleteById(this)"/>';
+		html += '</div>';
+		
+		$(html).insertBefore("#optionsControl");
+	}
+	
+	function removeOptionValues(){
+		var curRow = $(this).parents('div');
+		curRow.remove();
+	}
+	
+	function submit_query_form() {
+	
+		setIndexesByClass("parameter-option-id", "id");
+		setIndexesByClass("parameter-option-value", "value");
+		setIndexesByClass("parameter-option-parameter", "parameter.id");
+		numerizeOptionDivs();
+	}
+	
+	function setIndexesByClass(className, property)
+	{
+		parameterOptionsValues = document.getElementsByClassName(className);
+		for(var i = 0; i < parameterOptionsValues.length; i++){
+			parameterOptionsValues[i].name = "paramOptions["+i+"]."+property;
+			parameterOptionsValues[i].id = "paramOptions_"+i;
+		}
+	}
+	
+	function submitData()
+	{
+		submit_query_form();
+		var code = $('#parameter_type option:selected').val();
+		if(code != 4)//parameter_type = options
+		{
+			$("#parameterOptions").remove();
+		}
+	}
+	
+</script>	            
+#{/}

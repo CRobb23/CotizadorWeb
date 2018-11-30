@@ -1,0 +1,23 @@
+#{extends 'admin.html' /}
+
+<div class="well fixed-sidebar-parent">		
+
+	<div class="orange-title">
+		<span>
+			<h1>&{'quotation.vehicle'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+			<ul class="steps hidden-xs pull-right">
+				<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+				<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+				<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Envío</li>
+			</ul>
+		</span>
+	</div>
+	#{if errors}
+		<div class="alert alert-danger">
+			&{'quotation.form.vehicle.fielderrors'}
+		</div>	
+	#{/if}
+	<div class="alert alert-success">
+		&{'clientInformation.send'}
+	</div>
+</div>

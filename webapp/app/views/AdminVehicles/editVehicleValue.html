@@ -1,0 +1,123 @@
+#{extends 'admin.html' /}
+
+#{form @saveVehicleValue(), class:"form-horizontal", method:"POST", role:"form"}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>${vehicleValue==null ? messages.get('createVehicleValue.title') : messages.get('editVehicleValue.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if vehicleValue}
+			<input type="hidden" name="vehicleValue.id" value="${vehicleValue?.id}" />
+		#{/if}
+		
+		#{if line}
+			<input type="hidden" name="vehicleValue.line.id" value="${line?.id}" />
+			<input type="hidden" name="lineId" value="${line?.id}" />
+		#{/if}
+		#{else}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="coverage_category">#{required/} &{'vehicleValue.form.vehicleValue.brand'}</label>
+				<div class="col-sm-6">
+					#{select 'brand.id', id:'brand_line', value: flash?.get('brand.id') ? flash?.get('brand.id') : vehicleValue?.line?.brand?.id, class:'filter form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: brands, as: 'vehicleBrand'}
+							#{option vehicleBrand?.id}${vehicleBrand?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('brand.id')}<span class="help-block">${errors.forKey('brand.id')}</span>#{/if}
+				</div>
+			</div>
+			
+			<div class="form-group ${errors.forKey('vehicleValue.line') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="coverage_category">#{required/} &{'vehicleValue.form.vehicleValue.line'}</label>
+				<div class="col-sm-6">
+					#{select 'vehicleValue.line.id', id:'vehicleValue_line', value: flash?.get('vehicleValue.line.id') ? flash?.get('vehicleValue.line.id') : vehicleValue?.line?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: lines, as: 'vehicleLine'}
+							#{option vehicleLine?.id}${vehicleLine?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('vehicleValue.line')}<span class="help-block">${errors.forKey('vehicleValue.line')}</span>#{/if}
+				</div>
+			</div>
+		#{/else}
+	
+		#{field 'vehicleValue.year.id'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleValue.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: yearValue, class:'form-control'}
+							#{list items: years, as: 'year'}
+								#{option year?.id}${year?.year}#{/option}
+							#{/list}
+						#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'vehicleValue.value'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'vehicleValue.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${vehicleValue==null ? messages.get('vehicleValue.form.create') : messages.get('vehicleValue.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+
+<script type="text/javascript">
+	$(function (){
+	    $(".filter").change(function () {
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	$('#vehicleValue_line').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+	    	var id = $(this).val(); 
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceVehicles.vehicleLinesForBrand()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#vehicleValue_line').html('<option value="">'+"&{'form.none'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.lines, function(index, line) {
+							html+= '<option value="'+line.id+'">'+line.name+'</option>';
+						});
+						$('#vehicleValue_line').append(html);
+					} 
+				},
+				error: function() {
+					$('#vehicleValue_line').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    });
+	});
+</script>

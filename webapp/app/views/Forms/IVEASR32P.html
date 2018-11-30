@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>IVE-ASR-32</title>
+
+        <style>
+            .Border {
+                border-right:1px solid black !important;
+                border-left:1px solid black !important;
+                border-bottom: 1px solid black !important;
+                border-top: 1px solid black !important;
+                width: 720px;
+            }
+            td {
+                border-bottom: 1px solid black !important;
+                font-size: 14px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <img style="align-self: left; float: left;" src="@{'/public/images/ElRoble.png'}" width="150"/>
+        <div style="text-align: center; font-weight: bold; font-size: 20px; height: 60px;">
+            SEGUROS EL ROBLE, S.A. <br/> REGISTRO DE PERSONA JURÍDICA
+        </div>
+        <table class="Border">
+            <tbody>
+                <tr><td style="font-weight: bold;">Lugar y fecha:</td>                                     <td>Guatemala, ${new Date().format('dd/MM/yy HH:mm')}</td></tr>
+                <tr><td style="font-weight: bold;">Nombre comercial o denominación:</td>                   <td>${incident?.client?.payer?.companyName}</td></tr>
+                <tr><td style="font-weight: bold;">Razón social: </td>                                     <td>${incident?.client?.payer?.businessName}</td></tr>
+                <tr><td style="font-weight: bold;">Fecha de constitución:</td>                             <td>${incident?.client?.payer?.registrationDate}</td></tr>
+                <tr><td style="font-weight: bold;">Nacionalidad: </td>                                     <td>${incident?.client?.payer?.nationality?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">Actividad económica principal: </td>                    <td>${incident?.client?.payer?.economicActivity?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">NIT: </td>                                              <td>${incident?.client?.payer?.taxNumber}</td></tr>
+                <tr><td style="font-weight: bold;">Números de Teléfonos:</td>                              <td>${incident?.client?.payer?.phoneNumber1}</td></tr>
+                <tr><td> - Celular:</td>                                                    <td>${incident?.client?.payer?.phoneNumber2}</td></tr>
+                <tr><td> - Otro: </td>                                                      <td>${incident?.client?.payer?.phoneNumber3}</td></tr>
+                <tr><td style="font-weight: bold;">Dirección Particular, detalle: </td>                    <td>${incident?.client?.payer?.address}</td></tr>
+                <tr><td style="font-weight: bold;">Zona: </td>                                             <td>${incident?.client?.payer?.zone?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">Municipio: </td>                                        <td>${incident?.client?.payer?.municipality?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">Departamento: </td>                                     <td>${incident?.client?.payer?.department?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">País: </td>                                             <td>${incident?.client?.payer?.country?.name?.toUpperCase()}</td></tr>
+
+                <tr><th style="font-size: 16px; padding-bottom: 1em;">Información del Representante Legal</th></tr>
+                <tr><td style="font-weight: bold;">Nombres: </td>                                          <td>${incident?.client?.payer?.legalRepresentativePayer?.firstName} ${incident?.client?.legalRepresentative?.secondName}</td></tr>
+                <tr><td style="font-weight: bold;">Otros Nombres:</td>                                     <td></td></tr>
+                <tr><td style="font-weight: bold;">Apellidos: </td>                                        <td>${incident?.client?.payer?.legalRepresentativePayer?.firstSurname} ${incident?.client?.legalRepresentative?.secondSurname}</td></tr>
+                <tr><td style="font-weight: bold;">Apellido de casada: </td>                               <td>${incident?.client?.payer?.legalRepresentativePayer?.marriedSurname}</td></tr>
+                <tr><td style="font-weight: bold;">Profesión u Oficio: </td>                               <td>${incident?.client?.payer?.legalRepresentativePayer?.profession?.name?.toUpperCase()}</td></tr>
+                <tr><td style="font-weight: bold;">Tipo de documento de identificación: </td>              <td>${incident?.client?.payer?.legalRepresentativePayer?.identificationDocument? 'DPI':'Pasaporte'}</td></tr>
+                <tr><td style="font-weight: bold;">Número de documento de identificación: </td>            <td>${incident?.client?.payer?.legalRepresentativePayer?.identificationDocument? incident?.client?.payer?.legalRepresentativePayer?.identificationDocument: incident?.client?.payer?.legalRepresentativePayer?.passport}</td></tr>
+                <tr><td style="font-weight: bold;">NIT: </td>                                              <td>${incident?.client?.payer?.legalRepresentativePayer?.taxNumber}</td></tr>
+                <tr><td style="font-weight: bold;">Monto mensual de ingresos Q.</td><td style="font-weight: bold;">Egresos Q.</td></tr>
+                <tr><td style="font-weight: bold;">¿El solicitante actúa únicamente en nombre de la Entidad antes descrita?:</td><td></td></tr>
+                <tr><td style="font-weight: bold;">¿Es una persona expuesta políticamente?:                 </td><td></td></tr>
+                <tr><td style="font-weight: bold;">¿Tiene parentezco con una persona expuesta políticamente?:</td><td></td></tr>
+                <tr><td style="font-weight: bold;">¿Es asociado cercano a una persona expuesta políticamente?:</td><td></td></tr>
+                <tr><td style="font-weight: bold;">¿Es contratista o proveedor de Estados?</td><td></td></tr>
+            </tbody>
+        </table>
+        <p>Adjuntar:
+            <ul>
+                <li>Fotocopia del DPI o pasaporte del representante legal.</li>
+                <li>Fotocopia de patentes de la Entidad.</li>
+                <li>Para organizaciones no mercantiles, fotocopia del acuerdo gubernativo o documento en que se autorice su constitución.</li>
+                <li>Fotocopia de la inscripción del representante legal, en el registro mercantil.</li>
+                <li>Fotocopia de una factura, ya sea de luz o de agua, que registre la dirección de la Entidad solicitante.</li>
+            </ul>
+        </p>
+    </body>
+</html>

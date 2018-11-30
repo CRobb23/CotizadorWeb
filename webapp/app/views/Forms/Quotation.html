@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>COTIZACIÓN</title>
+        <style>	
+			body {
+				font-size:10px;
+				font-family:Arial;
+			}
+			
+			td.sectionTitle {
+				font-size:14px;
+				font-weight:bold;
+				font-style:italic;
+				background-color:#ff9900;
+				color:#ffffff;
+				border-bottom: 1px solid black;
+			}
+			
+			table.bordered.td {
+				white-space:nowrap;
+			}
+			
+			table.bordered {
+				border-width: 1px;
+				border-color: black;
+				border-style: solid;
+				border-spacing:0;
+			}
+			
+			table.singlepage {
+				page-break-inside:avoid;
+			}
+			
+			td.italic {
+				font-style:italic;
+			}
+			
+			td.bold {
+				font-weight:bold;
+			}
+			
+			td.center {
+				text-align:center;
+			}
+			
+			td.right {
+				text-align:right;
+			}
+			
+			td.left {
+				text-align:left;
+			}
+			
+			td.topBorder {
+				border-top:1px solid black;
+			}
+			        	
+		</style>
+    </head>
+    
+    %{currencySymbol = (quotation?.quotationDetail?.currencySymbol)? quotation?.quotationDetail?.currencySymbol + '.' :''}%
+    
+    <body>
+    	<img src="@{'/public/images/QuotationHeader.jpg'}" style="width:100%"/>
+    	    
+    	<table style="width:100%">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		<td style="width:11.0663983903421%;"></td>
+				<td style="width:8.35010060362173%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+    		</tr>
+    		
+    		<!--Fecha-->
+    		<tr>
+    			<td colspan="9" style="font-size:9px;" class="right">Fecha:</td>
+    			<td colspan="2" style="font-size:9px;" class="right">${quotation?.quotationDetail?.generationDate?.format('dd/MM/yy HH:mm')}</td>
+    		</tr>
+
+    		<!--Caso y tarifa-->
+    		<tr>
+    			#{if (quotation?.incident?.distributor || quotation?.incident?.channel) && (!quotation?.discount || quotation?.discount.doubleValue() < 0.00001)}
+    			<td colspan="5" style="font-size:9px;" class="left">${quotation?.incident?.channel?.name?.toUpperCase()} ${ (quotation?.incident?.creator?.showDistributorInQuotation()) ? quotation?.incident?.distributor?.name?.toUpperCase() : ''}</td>
+    			<td colspan="4" style="font-size:9px;" class="right">Caso / Tarifa:</td>
+    			#{/if}
+    			#{else}
+    				<td colspan="9" style="font-size:9px;" class="right">Caso / Tarifa:</td>
+    			#{/else}
+    			<td colspan="2" style="font-size:9px;" class="right">${quotation?.incident?.number} / ${quotation?.product?.remoteSystemCode}</td>
+    		</tr>
+    		
+    		<!-- Descuento -->
+    		#{if quotation?.discount && quotation?.discount.doubleValue() > 0.00001}
+    		<tr>
+    			#{if (quotation?.incident?.distributor || quotation?.incident?.channel)}
+    				<td colspan="5" style="font-size:9px;" class="left">${quotation?.incident?.channel?.name?.toUpperCase()} ${ (quotation?.incident?.creator?.showDistributorInQuotation()) ? quotation?.incident?.distributor?.name?.toUpperCase() : ''}</td>
+    				<td colspan="4" style="font-size:9px;" class="right">Descuento:</td>
+    			#{/if}
+    			#{else}
+    				<td colspan="9" style="font-size:9px;" class="right">Descuento:</td>
+    			#{/else}
+    			<td colspan="2" style="font-size:9px;" class="right">${quotation?.discount?.doubleValue().decimalFormat()}%</td>
+    		</tr>
+    		#{/if}
+
+            #{if quotation?.quotationDetail?.facultativeType != null}
+            <tr>
+                <td colspan="9" style="font-size:9px;" class="right">Deducible facultativo / Descuento:</td>
+                <td colspan="2" style="font-size:9px;" class="right">${quotation?.quotationDetail?.facultativeType} / ${quotation?.quotationDetail?.facultativeDiscount?.doubleValue().decimalFormat()}%</td>
+            </tr>
+            #{/if}
+    		
+    		<!--Titulo-->
+    		<tr><td colspan="11" style="font-size:16px;" class="bold">${quotation?.product?.name?.toUpperCase()}</td></tr>
+    		<tr><td colspan="11" style="font-size:11px;" class="italic">Nos complace presentarle nuestra propuesta de Seguros de Automóvil de acuerdo a las siguientes características y condiciones:</td></tr>
+    	</table>
+    	
+    	<!--Datos del cliente-->
+    	<table style="width:100%;border-bottom:none;" class="bordered">
+    		<tr>
+    			<td colspan="11" class="sectionTitle">Datos Cliente</td>
+    		</tr>
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		<td style="width:11.0663983903421%;"></td>
+				<td style="width:8.35010060362173%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+    		</tr>
+    		<tr>
+    			<td class="italic">Nombre:</td>
+    			<td class="bold" colspan="10">${quotation?.incident?.client?.getFullName()}</td>
+    		</tr> 
+    		<tr>
+    			<td class="italic">Teléfono:</td>
+    			<td class="bold" colspan="10">
+    				${quotation?.incident?.client?.phoneNumber1}
+    				#{if quotation?.incident?.client?.phoneNumber2 != null}
+    					- ${quotation?.incident?.client?.phoneNumber2}
+    				#{/if}
+    				#{if quotation?.incident?.client?.phoneNumber3 != null}
+    					- ${quotation?.incident?.client?.phoneNumber3}
+    				#{/if}
+    			</td>
+    		</tr>
+    		#{if quotation?.incident?.client?.email} 
+    		<tr>
+    			<td class="italic">Email:</td>
+    			<td class="bold" colspan="10">${quotation?.incident?.client?.email}</td>
+    		</tr> 
+    		#{/if}
+    		#{if quotation?.incident?.client?.taxNumber}
+    		<tr>
+    			<td class="italic">Nit:</td>
+    			<td class="bold" colspan="10">${quotation?.incident?.client?.taxNumber}</td>
+    		</tr> 
+    		#{/if}
+    	</table>
+    	
+    	<!--Datos del agente-->
+    	<table style="width:100%;" class="bordered">
+    		<tr>
+    			<td colspan="11" class="sectionTitle">Datos Agente</td>
+    		</tr>
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		<td style="width:11.0663983903421%;"></td>
+				<td style="width:8.35010060362173%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="1" class="italic">Nombre Agente:</td>
+    			<td colspan="6" class="bold">${quotation?.incident?.creator?.getFullName()}</td>
+    			<td colspan="1" class="italic">Teléfono:</td>
+    			<td colspan="3" class="bold">${quotation?.incident?.creator?.profile?.phoneNumber}</td>
+    		</tr> 
+    		<tr>
+    			<td colspan="1" class="italic">Código:</td>
+    			<td colspan="10" class="bold">${quotation?.incident?.creator?.profile?.agentCode}</td>
+    		</tr> 
+    	</table>
+    	
+    	<!--Datos del vehículo-->
+    	<table style="width:100%;margin-top:1em;" class="bordered">
+    		<tr>
+    			<td colspan="11" class="sectionTitle">Datos del Vehículo</td>
+    		</tr>
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		<td style="width:11.0663983903421%;"></td>
+				<td style="width:8.35010060362173%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+    		</tr>
+    		#{if quotation?.carValue}
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Valor del Vehículo</td>
+    			<td colspan="1" class="bold right">${currencySymbol} ${quotation?.carValue?.doubleValue()?.decimalFormat()}</td>
+    			<td colspan="2" class="bold" style="padding-left:10px;">#{if quotation!=null && quotation.garanteedValue} &{'quotation.simulation.table.averageValue'} #{/if}</td>
+    			<td colspan="3" class="bold" style="padding-left:10px;">${quotation?.quotationDetail?.getRequiresLoJack()?'SI SE INSTALA LO JACK EL DEDUCIBLE DE ROBO PUEDE SER REDUCIDO, CONSULTE A SU ASESOR DE SEGUROS':''}</td>
+    		</tr>
+    		#{/if}
+    		%{
+                theftValue = quotation?.getValueForCoverage(configuration?.theftCoverage);
+            }%
+    		#{if theftValue!=null} 
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Valor del Equipo Especial</td>
+    			<td colspan="1" class="bold right">${currencySymbol} ${theftValue?.doubleValue()?.decimalFormat()}</td>
+    			<td colspan="5"></td>
+    		</tr> 
+    		#{/if}
+    		<tr>
+    			<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+    		</tr> 
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Marca</td>
+    			<td colspan="1" class="bold left">${quotation?.quotationDetail?.vehicleBrand}</td>
+    			<td colspan="5"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Línea</td>
+    			<td colspan="1" class="bold left">${quotation?.quotationDetail?.vehicleLine}</td>
+    			<td colspan="5"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Modelo</td>
+    			<td colspan="1" class="bold left">${quotation?.incident?.vehicle?.erYear?.year}</td>
+    			<td colspan="5"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Tipo</td>
+    			<td colspan="5" class="bold left">${quotation?.incident?.vehicle?.line?.vehicleClass?.description?.toUpperCase()}</td>
+    			<td colspan="1"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="3" class="italic">Clase</td>
+    			<td colspan="1" class="bold left">${quotation?.quotationDetail?.vehicleClass}</td>
+    			<td colspan="5"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+    		</tr>
+    	</table>
+    	
+    	<!--Coberturas y deducibles-->
+    	<table style="width:100%;margin-top:1em;" class="bordered">
+    		<tr>
+    			<td colspan="11" class="sectionTitle">Coberturas y deducibles</td>
+    		</tr>
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		<td style="width:8.0663983903421%;"></td>
+				<td style="width:12.35010060362173%;"></td>
+				<td style="width:6.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="1"></td>
+    			<td colspan="4" class="center bold italic" style="font-size:12px;">Cobertura</td>
+    			<td colspan="2"></td>
+    			<td colspan="2" class="right bold italic" style="font-size:12px;">Suma Asegurada</td>
+    			<td colspan="1" class="center bold italic" style="font-size:12px;">%</td>
+    			<td colspan="1" class="right bold italic" style="font-size:12px;padding-right:5px;">Deducible</td>
+    		</tr>
+    		%{quotationCategories = quotation?.quotationDetail?.categories?.sort({it.name})}%
+    		#{list quotationCategories, as: 'quotationCoverage'}
+    			<tr>
+	    			<td colspan="1"></td>
+	    			<td colspan="10" class="bold italic" style="font-size:11px;">${quotationCoverage.name}${(!quotationCoverage.description?.isEmpty())?':':''} ${quotationCoverage?.description}</td>
+	    		</tr> <!--texto de las coberturas-->
+	    		#{list quotationCoverage.getCosts(), as: 'coverage'}
+		    		#{if coverage.coverageId?.equals(configuration?.injuriesCoverage?.id) || coverage.coverageId?.equals(configuration?.thirdInjuriesCoverage?.id)}
+		    			<tr>
+		    				%{
+		    					BigDecimal totalCoverage = (quotation?.incident?.vehicle?.numberOfPassengers)?coverage?.coverage?.multiply(quotation?.incident?.vehicle?.numberOfPassengers):coverage?.coverage;
+		    				}%
+			    			<td colspan="1"></td>
+			    			<td colspan="4">${coverage?.coverageName}</td>
+			    			<td colspan="2" class="left">(${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()} por ocupante)</td>
+			    			<td colspan="2" class="right">
+			    				#{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+			    					Por accidente: ${currencySymbol} ${totalCoverage?.doubleValue()?.decimalFormat()}
+			    				#{/if}
+			    			</td>
+			    			<td colspan="1" class="center">
+				    			#{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+				    				${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+				    			#{/if}
+			    			</td>
+			    			%{
+			    				BigDecimal hundred = new BigDecimal(100);
+			    				if (coverage?.damagesDeductible!=null) {
+		    						BigDecimal deductibleAmount = totalCoverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+		    					}
+			    			}%
+			    			<td colspan="1" class="right" style="padding-right:5px;">
+			    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+				    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+				    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+				    				#{/if}
+				    				#{else}
+				    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+				    				#{/else}
+			    				#{/if}
+			    			</td>
+			    		</tr>
+		    		#{/if}
+		    		#{elseif coverage.coverageId?.equals(configuration?.totalTheftCoverage?.id)}
+		    			<tr>
+		    				<td colspan="1"></td>
+		    				<td colspan="2">${coverage?.coverageName}</td>
+		    				<td colspan="4" class="center bold" style="font-size:8px;">${coverage?.coverageDescription}</td>
+		    				<td colspan="2" class="right">${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+		    				#{if quotation?.quotationDetail?.theftDeductible}
+	    						<td colspan="1" class="center">
+                                    #{if quotation?.loJackDeductible != null}
+                                        ${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+                                    #{/if}
+                                    #{elseif quotation?.quotationDetail?.theftDeductible.compareTo(BigDecimal.ZERO)>0}
+					    				${quotation?.quotationDetail?.theftDeductible?.doubleValue()?.numberFormat()}%
+					    			#{/elseif}
+		    					</td>
+
+		    					%{
+				    				BigDecimal hundred = new BigDecimal(100);
+				    				BigDecimal deductibleAmount = BigDecimal.ZERO;
+				    				if (quotation?.quotationDetail?.theftDeductible!=null) {
+                                        if (quotation.loJackDeductible != null) {
+                                            deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+                                        }else {
+                                            deductibleAmount = coverage?.coverage?.multiply(quotation?.quotationDetail?.theftDeductible?.divide(hundred));
+                                        }
+			    					}
+				    			}%
+				    			<td colspan="1" class="right" style="padding-right:5px;">
+				    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+					    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+					    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+					    				#{/if}
+					    				#{else}
+					    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+					    				#{/else}
+				    				#{/if}
+				    			</td>
+		    				#{/if}
+		    				#{else}
+		    					<td colspan="1" class="center">
+									#{if quotation?.loJackDeductible != null}
+										${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+									#{/if}
+									#{elseif coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+										${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+									#{/elseif}
+									</td>
+								%{
+									BigDecimal hundred = new BigDecimal(100);
+									BigDecimal deductibleAmount = BigDecimal.ZERO;
+									if (coverage?.damagesDeductible!=null) {
+										if (quotation.loJackDeductible != null) {
+											deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+										}else {
+											deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+										}
+									}
+								}%
+				    			<td colspan="1" class="right" style="padding-right:5px;">
+				    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+					    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+					    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+					    				#{/if}
+					    				#{else}
+					    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+					    				#{/else}
+				    				#{/if}
+				    			</td>
+		    				#{/else}
+		    			</tr>
+		    		#{/elseif}
+		    		#{else}
+		    			#{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+		    				<tr>
+			    			<td colspan="1"></td>
+			    			<td colspan="2">${coverage?.coverageName}</td>
+			    			<td colspan="4" class="center bold" style="font-size:8px;">${coverage?.coverageDescription}</td>
+			    			<td colspan="2" class="right">${currencySymbol} ${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+			    			<td colspan="1" class="center">
+				    			#{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+				    				${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+				    			#{/if}
+			    			</td>
+			    			%{
+			    				BigDecimal hundred = new BigDecimal(100);
+			    				BigDecimal deductibleAmount = BigDecimal.ZERO;
+			    				if (coverage?.damagesDeductible!=null) {
+		    						deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+		    					}
+			    			}%
+			    			<td colspan="1" class="right" style="padding-right:5px;">
+			    				#{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+				    				#{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+				    					${currencySymbol} ${deductibleAmount?.doubleValue()?.decimalFormat()}
+				    				#{/if}
+				    				#{else}
+				    					${currencySymbol} ${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+				    				#{/else}
+			    				#{/if}
+			    			</td>
+			    		</tr>
+			    		#{/if}
+		    		#{/else}
+	    		#{/list}
+	    		
+	    		<tr>
+	    			<td colspan="1"></td>
+	    			<td colspan="6">
+	    				%{i=0;}%
+	    				#{list quotationCoverage.getCosts(), as: 'coverage'}
+	    					#{if (coverage?.coverage==null) || (coverage.coverage?.compareTo(BigDecimal.ZERO)==0)}
+	    						#{if i!=0}
+	    							,&nbsp;
+	    						#{/if}
+	    						${coverage?.coverageName}
+	    						%{i++;}%
+	    					#{/if}
+	    				#{/list}
+	    			</td>
+	    			<td colspan="2"></td>
+			    	<td colspan="1"></td>
+	    		</tr>
+	    		
+	    		<tr>
+    				<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+    			</tr>
+	    	#{/list}
+    	</table>
+    	
+    	<!--Plan de pagos-->
+    	<table style="width:100%;margin-top:1em;" class="bordered singlepage">
+    		<tr>
+    			<td colspan="12" class="sectionTitle">Plan de pagos</td>
+    		</tr>
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr style="height:0px">
+	    		*{<td style="width:11.0663983903421%;"></td>
+				<td style="width:8.35010060362173%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:8.5513078470825%;"></td>
+				<td style="width:7.84708249496982%;"></td>
+				<td style="width:11.9718309859155%;"></td>
+				<td style="width:12.7263581488934%;"></td>
+				<td style="width:10.4627766599598%;"></td>
+				<td style="width:6.99195171026157%;"></td>
+				<td style="width:4.12474849094567%;"></td>
+				<td style="width:10.0603621730382%;"></td>}*
+				<td></td><td></td><td></td><td></td><td></td>
+				<td></td><td></td><td></td><td></td><td></td>
+				<td></td>
+    		</tr>
+    		
+    		%{
+    			Map<Integer, Object> map = new HashMap<Integer, Object>();
+    			int numberOfRows = (quotation?.quotationDetail?.paymentOptions?.size()+3-1)/3;
+    			int totalPayments = quotation?.quotationDetail?.paymentOptions?.size();
+    			for (int i=0; i<totalPayments;i++) {
+    				int row = i/numberOfRows;
+    				int pos = row + (i%numberOfRows)*3;
+    				map.put(i,quotation?.quotationDetail?.paymentOptions?.get(i));
+    			}
+    		}%
+
+    		#{list items:0..(totalPayments-1), as:'i'}
+    			%{
+    				Object payment = map.get(i);
+                    payment.discount = quotation.discount;
+                    payment.netPrime = quotation.quotationDetail.virginInternalPrime;
+                    if (payment.netPrime < quotation.quotationDetail.totalMinimumPrime){
+                             payment.netPrime = quotation.quotationDetail.totalMinimumPrime
+                    }
+                    payment.loJackFee = quotation.quotationDetail.loJackFee;
+
+    			}%
+
+				#{if payment.emissionFeeFirstPayment}
+    				<tr>
+						<td colspan="1" class="bold left">
+							${payment?.numberOfPayments} pago${(payment?.numberOfPayments>1)?'s':''} ${payment?.frecuency?.toLowerCase()}${(payment?.numberOfPayments>1)?'es':''}
+						</td>
+						<td colspan="1" class="bold right">
+							(${payment?.numberOfPaymentsWithTotalEmissionFee}er.)
+						</td>
+						<td colspan="1" class="left">
+							${currencySymbol} ${payment?.amountWithTotalEmissionFee?.decimalFormat()}
+						</td>
+						
+						<td colspan="2" class="bold right">
+							${payment?.numberOfPayments - 1}
+						</td>
+						<td colspan="2" class="left">
+							${currencySymbol} ${payment?.amount?.decimalFormat()}
+						</td>
+						
+						<td colspan="2" class="bold right">Total</td>
+						<td colspan="2" class="left">
+							${currencySymbol} ${(payment.total + Double.valueOf(payment.totalEmissionFee)).decimalFormat()}
+						</td>
+	
+						<td colspan="1"></td>
+					</tr>
+					<tr>
+						<td colspan="11">
+							<table style="width: 30%">
+								<tr>
+					    			<td colspan="3">Desglose de Prima</td>
+					    		</tr>
+					    		#{if quotation.discount == 0}
+						    		<tr>
+						    			<td style="width: 5%"></td>
+						    			<td>Prima Neta</td>
+						    			<td>${currencySymbol} ${Double.valueOf(payment.virginNetPrime).decimalFormat()}</td>
+						    		</tr>
+					    		#{/if}
+								#{else}
+						    		<tr>
+						    			<td style="width: 5%"></td>
+						    			<td>Prima Neta con descuento</td>
+						    			<td>${currencySymbol} ${Double.valueOf(payment.netPrimeDiscount).decimalFormat()}</td>
+						    		</tr>
+					    		#{/else}
+                                #{if payment.loJackFee != null}
+                                <tr>
+                                    <td style="width: 5%"></td>
+                                    <td>Recargo Alto Riesgo</td>
+                                    <td>${currencySymbol} ${Double.valueOf(payment.loJackFee).decimalFormat()}</td>
+                                </tr>
+                                #{/if}
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Gastos de Emisión</td>
+					    			<td>${currencySymbol} ${Double.valueOf(payment.totalEmissionFee).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Recargo de Pagos</td>
+					    			<td>${currencySymbol} ${Double.valueOf(payment.totalFractioningFee).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Asisto</td>
+					    			<td>${currencySymbol} ${Double.valueOf(asisto).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>IVA</td>
+					    			<td>${currencySymbol} ${Double.valueOf(payment.iva).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Prima Total</td>
+					    			<td>${currencySymbol} ${(payment.total + Double.valueOf(payment.totalEmissionFee)).decimalFormat()}</td>
+					    		</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="11"><br></td>
+					</tr>
+				#{/if}
+				#{else}
+					<tr>
+						<td colspan="5" class="bold left">${payment?.numberOfPayments} pago${(payment?.numberOfPayments>1)?'s':''} ${payment?.frecuency?.toLowerCase()}${(payment?.numberOfPayments>1)?'es':''}</td>
+						<td colspan="2" class="left">${currencySymbol} ${(payment?.payment).format('###,###,###.###')}</td>
+						<td colspan="2" class="bold right">Total</td>
+						<td colspan="2" class="left">${currencySymbol} ${ (payment?.total).decimalFormat() }</td>
+	
+						<td colspan="1"></td>
+					</tr>
+					<tr>
+						<td colspan="11">
+							<table style="width: 30%">
+								<tr>
+					    			<td colspan="2">Desglose de Prima</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>
+						    			#{if quotation.discount == 0}
+						    				Prima Neta
+						    			#{/if}
+										#{else}
+											Prima Neta con Descuento
+										#{/else}
+					    			</td>
+					    			<td>
+					    				${currencySymbol} ${(payment.netPrime).decimalFormat()}
+					    			</td>
+					    		</tr>
+                                #{if payment.loJackFee != null}
+                                <tr>
+                                    <td style="width: 5%"></td>
+                                    <td>Recargo Alto Riesgo</td>
+                                    <td>${currencySymbol} ${(payment.loJackFee).decimalFormat()}</td>
+                                </tr>
+                                #{/if}
+                                <tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Gastos de Emisión</td>
+					    			<td>${currencySymbol} ${(payment.totalEmissionFee).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Recargo de Pagos</td>
+					    			<td>${currencySymbol} ${(payment.totalFractioningFee).decimalFormat()}</td>
+					    		</tr>
+					    		#{list quotationCoverage.getCosts(), as: 'coverage'}
+					    			#{if coverage?.external}
+							    		<tr>
+							    			<td style="width: 5%"></td>
+							    			<td>${coverage?.coverageName?.toLowerCase().capitalize()}</td>
+							    			<td>${currencySymbol} ${(coverage?.originalCost).decimalFormat()}</td>
+							    		</tr>
+							    	#{/if}
+					    		#{/list}
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>IVA</td>
+					    			<td>${currencySymbol} ${(payment.iva).decimalFormat()}</td>
+					    		</tr>
+					    		<tr>
+					    			<td style="width: 5%"></td>
+					    			<td>Prima Total</td>
+					    			<td>${currencySymbol} ${(payment.total).decimalFormat()}</td>
+					    		</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="11"><br></td>
+					</tr>
+				#{/else}
+    		#{/list}			
+			
+    		<tr>
+    			<td colspan="11" class="center" style="font-size:0.8em;height:3em;vertical-align:bottom;">OPCIONES DE PAGO: BI EN LINEA, AGENCIAS DE BI, COBRADOR, DEBITO A CUENTAS DE BI, TARJETAS DE CREDITO</td>
+    		</tr>
+    		 
+    		<tr>
+    			<td colspan="11" style="height:1em;" class="italic">&nbsp;</td>
+    		</tr>
+    	</table>
+	<table style="width:100%">
+                <!--Caso y tarifa-->
+                <tr>
+                        <td colspan="9" style="font-size:9px;width:80%" class="right">Caso / Tarifa:</td>
+                        <td colspan="2" style="font-size:9px;width:20%" class="right">${quotation?.incident?.number} / ${quotation?.product?.remoteSystemCode}</td>
+                </tr>
+        </table>    	
+    	<!--Titulo beneficios adicionales-->
+    	#{if additionalBenefits != null}
+	    	<table style="width:100%;margin-top:1em;border-bottom:none;" class="bordered singlepage">
+	    		<tr>
+	    			<td class="sectionTitle">Beneficios adicionales</td>
+	    		</tr>
+	    	</table>
+    	#{/if}
+    	
+    	<!--Beneficios adicionales-->
+    	<table style="width:100%;border-spacing:0;margin-top:1em;">
+    	
+    		#{list additionalBenefitsArray, as: 'benefit'}
+    			<tr>
+    				<td style="vertical-align:top;">*</td>
+    				<td style="font-size:1.2em;">
+    				${benefit}
+    				</td>
+    			</tr>
+    		#{/list}
+    		
+    		#{if configuration?.observations}
+	    		<tr><td colspan="2" style="height:1em"></td></tr>
+	    		
+	    		<!--Observaciones-->
+	    		<tr>
+	    			<td colspan="2" class="bold" style="font-size:1.2em;">
+	    			Observaciones:
+	    			</td>
+	    		</tr>
+	    		#{list configuration?.observationsArray(), as: 'observation'}
+	    			<tr>
+	    				<td style="vertical-align:top;">*</td>
+	    				<td style="font-size:1.2em;">
+	    				${observation}
+	    				</td>
+	    			</tr>
+	    		#{/list}
+    		#{/if}
+    	</table>
+    	
+    	<!--Firmas-->
+    	<table style="width:100%;margin-top:3em;">
+    		<tr>
+	    		<td style="width:10%"></td>
+				<td style="width:30%;" class="center topBorder">FIRMA DE ACEPTACION DE CONDICIONES</td>
+				<td style="width:20%"></td>
+				<td style="width:30%;" class="center topBorder">NÚMERO DE DPI</td>
+				<td style="width:10%"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="5" style="height:1em;">&nbsp;</td>
+    		</tr>
+    	</table>
+    	
+    	<img src="@{'/public/images/QuotationFooter.jpg'}" style="width:100%"/>
+    	
+    </body>
+</html>

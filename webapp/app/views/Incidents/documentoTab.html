@@ -1,0 +1,415 @@
+		<h4 style="border-bottom: groove; text-align: center;"></h4>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'dpi'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlDPI != null && client?.multimedia?.urlDPI != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlDPI)}
+                                    <a style="text-align: center;" target="_download" href="@{getFile(client?.multimedia?.urlDPI)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a style="text-align: center;" target="_download" href="${client?.multimedia?.urlDPI}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#dpi').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlDPI" id="urlDPI" value="${client?.multimedia?.urlDPI}"/>
+                        </div>
+                    </div>
+				#{/}
+			</div>
+
+			<div class="col-sm-6">
+				#{field 'receiptServices'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlReceiptServices != null && client?.multimedia?.urlReceiptServices != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlReceiptServices)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlReceiptServices)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlReceiptServices}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#receiptServices').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlReceiptServices" id="urlReceiptServices" value="${client?.multimedia?.urlReceiptServices}"/>
+                            </div>
+					</div>
+                </div>
+				#{/}
+		</div>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'circulationCard'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlCirculationCard != null && client?.multimedia?.urlCirculationCard != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlCirculationCard)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlCirculationCard)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlCirculationCard}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#circulationCard').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlCirculationCard" id="urlCirculationCard" value="${client?.multimedia?.urlCirculationCard}"/>
+						</div>
+					</div>
+                </div>
+				#{/}
+
+			<div class="col-sm-6">
+				#{field 'driverLicence'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlDriverLicence != null && client?.multimedia?.urlDriverLicence != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlDriverLicence)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlDriverLicence)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlDriverLicence}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                    <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#driverLicence').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlDriverLicence" id="urlDriverLicence" value="${client?.multimedia?.urlDriverLicence}"/>
+					</div>
+                    </div>
+				#{/}
+			</div>
+        </div>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'carInvoiceNew'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'quotation.form.client.multimedia.' + field.name}
+                            <br> &{'quotation.form.client.multimedia.carInvoiceNew.alert'}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlCarInvoiceNew != null && client?.multimedia?.urlCarInvoiceNew != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlCarInvoiceNew)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlCarInvoiceNew)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlCarInvoiceNew}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#carInvoiceNew').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlCarInvoiceNew" id="urlCarInvoiceNew" value="${client?.multimedia?.urlCarInvoiceNew}"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'anotherCompanyPolicy'}
+					<div class="form-group">
+						<div class="col-sm-3 control-label">
+							<label for="${field.id}">&{'quotation.form.client.multimedia.' + field.name}
+								<br> &{'quotation.form.client.multimedia.anotherCompanyPolicy.alert'}</label>
+						</div>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlAnotherCompanyPolicy != null && client?.multimedia?.urlAnotherCompanyPolicy != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlCarInvoiceNew)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlAnotherCompanyPolicy)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlAnotherCompanyPolicy}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#anotherCompanyPolicy').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlAnotherCompanyPolicy" id="urlAnotherCompanyPolicy" value="${client?.multimedia?.urlAnotherCompanyPolicy}"/>
+						</div>
+					#{/}
+				</div>
+			</div>
+        </div>
+		<div class="row fieldsClient">
+            <div class="col-sm-6">
+			#{field 'authorizationForm'}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+                    <div class="col-sm-8" style="text-align: center;">
+                        <input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+						#{if client?.multimedia?.urlAuthorizationForm != null && client?.multimedia?.urlAuthorizationForm != ''}
+							#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlAuthorizationForm)}
+                                <a target="_download" href="@{getFile(client?.multimedia?.urlAuthorizationForm)}">DESCARGAR ARCHIVO</a>
+							#{/if}
+							#{else}
+                                <a target="_download" href="${client?.multimedia?.urlAuthorizationForm}">DESCARGAR ARCHIVO</a>
+							#{/else}
+						#{/if}
+                    </div>
+                    <div class="col-sm-0" style="text-align: left;">
+                        <button type="button" onclick="$('#authorizationForm').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+                        <input type="hidden" name="client.multimedia.urlAuthorizationForm" id="urlAuthorizationForm" value="${client?.multimedia?.urlAuthorizationForm}"/>
+
+                    </div>
+                </div>
+			#{/}
+            </div>
+			<div class="col-sm-6">
+				#{field 'depositReceipt'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'quotation.form.client.multimedia.depositReceipt'} Documentos           (Puede seleccionar varios archivos)</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}[]" id="${field.id}" class="form-control" multiple/>
+							#{if client?.multimedia?.hasAditionalFilesGD != null && client?.multimedia?.hasAditionalFilesGD == true}
+                                <ul>
+									#{list items:aditional_multimedia, as:'aditional' }
+										#{if aditional?.isLocalFile(aditional?.urlFile)}
+                                            <li>  <a target="_download" href="@{getFile(aditional?.urlFile)}">DESCARGAR ARCHIVO</a></li>
+										#{/if}
+										#{else}
+                                            <li>   <a target="_download" href="${aditional?.urlFile}">DESCARGAR ARCHIVO</a> </li>
+										#{/else}
+									#{/list}
+                                </ul>
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#depositReceipt').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'scanPatents'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlScanPatents != null && client?.multimedia?.urlScanPatents != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlScanPatents)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlScanPatents)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlScanPatents}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#scanPatents').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlScanPatents" id="urlScanPatents" value="${client?.multimedia?.urlScanPatents}"/>
+
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'scanLegalRepresentativeAppointment'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlScanLegalRepresentativeAppointment != null && client?.multimedia?.urlScanLegalRepresentativeAppointment != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlScanLegalRepresentativeAppointment)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlScanLegalRepresentativeAppointment)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlScanLegalRepresentativeAppointment}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#scanLegalRepresentativeAppointment').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlScanLegalRepresentativeAppointment" id="urlScanLegalRepresentativeAppointment" value="${client?.multimedia?.urlScanLegalRepresentativeAppointment}"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+        <div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'dpiLegalRepresentative'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlDPILegalRepresentative != null && client?.multimedia?.urlDPILegalRepresentative != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlDPILegalRepresentative)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlDPILegalRepresentative)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlDPILegalRepresentative}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#dpiLegalRepresentative').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlDPILegalRepresentative" id="urlDPILegalRepresentative" value="${client?.multimedia?.urlDPILegalRepresentative}"/>
+
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'carInvoiceNew'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'quotation.form.client.multimedia.' + field.name}
+							<br> &{'quotation.form.client.multimedia.carInvoiceNew.alert'} </label>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlCarInvoiceNew != null && client?.multimedia?.urlCarInvoiceNew != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlCarInvoiceNew)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlCarInvoiceNew)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlCarInvoiceNew}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#carInvoiceNew').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlCarInvoiceNew" id="urlCarInvoiceNew_business" value="${client?.multimedia?.urlCarInvoiceNew}"/>
+
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+        <div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'anotherCompanyPolicy'}
+					<div class="form-group">
+                        <div class="col-sm-3 control-label">
+                            <label for="${field.id}">&{'quotation.form.client.multimedia.' + field.name}
+                                <br> &{'quotation.form.client.multimedia.anotherCompanyPolicy.alert'}</label>
+                        </div>
+						<div class="col-sm-8" style="text-align: center;">
+							<input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlAnotherCompanyPolicy != null && client?.multimedia?.urlAnotherCompanyPolicy != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlAnotherCompanyPolicy)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlAnotherCompanyPolicy)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlAnotherCompanyPolicy}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#anotherCompanyPolicy').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlAnotherCompanyPolicy" id="urlAnotherCompanyPolicy_business" value="${client?.multimedia?.urlAnotherCompanyPolicy}"/>
+
+						</div>
+					</div>
+				#{/}
+			</div>
+            <div class="col-sm-6">
+			#{field 'authorizationForm'}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+                    <div class="col-sm-8" style="text-align: center;">
+                        <input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+						#{if client?.multimedia?.urlAuthorizationForm != null && client?.multimedia?.urlAuthorizationForm != ''}
+							#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlAuthorizationForm)}
+                                <a target="_download" href="@{getFile(client?.multimedia?.urlAuthorizationForm)}">DESCARGAR ARCHIVO</a>
+							#{/if}
+							#{else}
+                                <a target="_download" href="${client?.multimedia?.urlAuthorizationForm}">DESCARGAR ARCHIVO</a>
+							#{/else}
+						#{/if}
+                    </div>
+                    <div class="col-sm-0" style="text-align: left;">
+                        <button type="button" onclick="$('#authorizationForm').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+                        <input type="hidden" name="client.multimedia.urlAuthorizationForm" id="urlAuthorizationForm_business" value="${client?.multimedia?.urlAuthorizationForm}"/>
+
+                    </div>
+                </div>
+			#{/}
+            </div>
+		</div>
+        <div class="row fieldsLegal">
+            <div class="col-sm-6">
+			#{field 'depositReceipt'}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="${field.id}">&{'quotation.form.client.multimedia.' + field.name} Documentos           (Puede seleccionar varios archivos)</label>
+                    <div class="col-sm-8" style="text-align: center;">
+                        <input type="file" name="${field.name}" id="${field.id}" class="form-control"  multiple/>
+						#{if client?.multimedia?.hasAditionalFilesGD != null && client?.multimedia?.hasAditionalFilesGD == true}
+                            <ul>
+								#{list items:aditional_multimedia, as:'aditional' }
+									#{if aditional?.isLocalFile(aditional?.urlFile)}
+                                        <li>  <a target="_download" href="@{getFile(aditional?.urlFile)}">DESCARGAR ARCHIVO</a></li>
+									#{/if}
+									#{else}
+                                        <li>   <a target="_download" href="${aditional?.urlFile}">DESCARGAR ARCHIVO</a> </li>
+									#{/else}
+								#{/list}
+                            </ul>
+						#{/if}
+                    </div>
+                    <div class="col-sm-0" style="text-align: left;">
+                        <button type="button" onclick="$('#depositReceipt').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+                    </div>
+                </div>
+			#{/}
+            </div>
+
+            <div class="col-sm-6">
+                #{field 'rtu'}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+                        <div class="col-sm-8" style="text-align: center;">
+                            <input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlRTU != null && client?.multimedia?.urlRTU != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlRTU)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlRTU)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlRTU}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                            <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#rtu').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+                            <input type="hidden" name="client.multimedia.urlRTU" id="urlRTU" value="${client?.multimedia?.urlRTU}"/>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+            <div class="col-sm-6">
+                #{field 'receiptServicesLegal'}
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'quotation.form.client.multimedia.' + field.name}</label>
+                        <div class="col-sm-8" style="text-align: center;">
+                            <input type="file" name="${field.name}" id="${field.id}" class="form-control"/>
+							#{if client?.multimedia?.urlReceiptServicesLegal != null && client?.multimedia?.urlReceiptServicesLegal != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlReceiptServicesLegal)}
+                                    <a target="_download" href="@{getFile(client?.multimedia?.urlReceiptServicesLegal)}">DESCARGAR ARCHIVO</a>
+								#{/if}
+								#{else}
+                                    <a target="_download" href="${client?.multimedia?.urlReceiptServicesLegal}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+                        </div>
+                        <div class="col-sm-0" style="text-align: left;">
+                            <button type="button" onclick="$('#receiptServicesLegal').val('')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+                            <input type="hidden" name="client.multimedia.urlReceiptServicesLegal" id="urlReceiptServicesLegal" value="${client?.multimedia?.urlReceiptServicesLegal}"/>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+		</div>

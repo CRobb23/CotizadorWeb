@@ -1,0 +1,207 @@
+#{extends 'admin.html' /}
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+#{form @searchIncidents(), class:"form-horizontal", method:"POST"}	
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'incidents.title'}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="busqueda">Búsqueda Específica</label>
+			<div class="col-sm-6">
+				#{if multipleSearch == null || multipleSearch == 'false'}
+					<input type="checkbox" id="checkFiltrado" name="multipleSearch"/>
+				#{/if}
+				#{if multipleSearch=='true'}
+					<input type="checkbox" id="checkFiltrado" name="multipleSearch" checked="checked"/>
+				#{/if}
+			</div>
+		</div>
+		<div id="oneFieldSearch">
+			#{field 'searchField'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'incidentsList.search.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+				<div class="col-sm-3">
+					<input type="submit" class="btn btn-primary btn-block new-buttons" value="&{'incidentsList.search.form.search'}" />
+				</div>
+			</div>
+			#{/}
+		</div>
+		<div id="multipleFieldSearch">
+			#{field 'number_case'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">No. Caso</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			#{field 'number_policy'}
+                <div class="form-group">
+                    <label class="col-sm-3 control-label" for="${field.id}">No. póliza: <B>91-</B></label>
+                    <div class="col-sm-6">
+                        <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                    </div>
+                </div>
+			#{/}
+			#{field 'client_name'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Nombre Cliente</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			#{field 'vehicle_plate'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Placa</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			#{field 'vehicle_brand'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Marca</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			#{field 'vehicle_line'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Linea</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			#{field 'vehicle_year'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Año</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+				</div>
+			</div>
+			#{/}
+			
+			#{if !controllers.Security.check('Usuario Final')}
+				#{field 'case_status'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-3 control-label" for="${field.id}">Estado del Caso</label>
+						<div class="col-sm-6">
+							#{select field.name, id:field.id, value: field.value, class:'form-control'}
+								#{option}Todos#{/option}
+								#{list items: statuses, as: 'status'}
+									#{option status?.id}${status?.name}#{/option}
+								#{/list}
+							#{/select}
+							#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+						</div>
+					</div>
+				#{/}
+			#{/if}
+			#{field 'incident_date'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label" for="${field.id}">Fecha Creación</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"
+					placeholder="dd/mm/aaaa"/>
+				</div>
+				<div class="col-sm-3">
+					<input type="submit" class="btn btn-primary btn-block new-buttons" value="&{'incidentsList.search.form.search'}" />
+				</div>
+			</div>
+			#{/}
+		</div>
+		
+	</div>
+#{/form}
+
+%{canDelete = controllers.Security.check('Administrador maestro') }%
+
+#{if incidents?.size()>0}
+<div class="overflow well">
+	<table class="table table-striped table-bordered tablelist table-hover">
+		<thead>
+			<tr class="table-head">
+				<th>&{'incidentsList.table.number'}</th>
+				<th>&{'incidentsList.table.name'}</th>
+				<th>&{'incidentsList.table.vehicle'}</th>
+				<th>&{'incidentsList.table.status'}</th>
+				<th>&{'incidentsList.table.creationdate'}</th>
+				<th style="width:50px;">&{'incidentsList.table.detail'}</th>
+				#{if canDelete}
+				<th style="width:50px;">&{'incidentsList.table.delete'}</th>
+				#{/if}
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:incidents, as:'current'}
+				<tr class="${current_parity}">
+					<td data-title="&{'incidentsList.table.number'}">${current?.number}</td>
+					<td data-title="&{'incidentsList.table.name'}">${current?.client?.getFullName()}</td>
+					<td data-title="&{'incidentsList.table.vehicle'}">${current?.vehicle?.description()}</td>
+					<td data-title="&{'incidentsList.table.status'}">${current?.status?.name}</td>
+					<td data-title="&{'incidentsList.table.creationdate'}">${current?.creationDate?.format("dd/MM/yy HH:mm")}</td>
+					<td data-title="&{'incidentsList.table.detail'}"><a href="@{incidentDetail(current?.id)}" class="btn btn-xs">&{'incidentsList.table.detail'}</a></td>
+					#{if canDelete}
+					<td data-title="&{'incidentsList.table.detail'}"><a href="@{incidentDelete(current?.id)}" class="btn btn-xs" onclick="return confirm('¿Seguro que desea eliminar el caso permanentemente?')">&{'incidentsList.table.delete'}</a></td>
+					#{/if}
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	
+	#{if incidents?.getPageCount() > 1}
+		#{paginate.controls items:incidents /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:incidents /}
+		</div>
+	#{/if}
+</div>
+#{/if}
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('#checkFiltrado').click(function(){
+			enableMultipleSearch(jQuery(this).prop("checked"));
+		});
+		
+		enableMultipleSearch(jQuery('#checkFiltrado').prop('checked'));
+		
+	});
+	
+	function enableMultipleSearch(checkValue){
+		if(checkValue){
+			jQuery('#oneFieldSearch').hide();
+			jQuery('#multipleFieldSearch').show();
+			jQuery('#oneFieldSearch').find("input").prop('disabled',true);
+			jQuery('#multipleFieldSearch').find("input").prop('disabled',false);
+			
+		}else{
+			jQuery('#oneFieldSearch').show();
+			jQuery('#multipleFieldSearch').hide();
+			jQuery('#oneFieldSearch').find("input").prop('disabled',false);
+			jQuery('#multipleFieldSearch').find("input").prop('disabled',true);
+		}
+	}
+</script>

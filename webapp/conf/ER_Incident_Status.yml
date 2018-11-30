@@ -1,0 +1,19 @@
+ER_Incident_Status(is1):
+    code:               1
+    name:               En proceso
+
+ER_Incident_Status(is2):
+    code:               2
+    name:               Pendiente de completar
+
+ER_Incident_Status(is3):
+    code:               3
+    name:               Pendiente de inspección
+
+ER_Incident_Status(is4):
+    code:               4
+    name:               Pendiente de inspección
+    
+ER_Incident_Status(is5):
+    code:               5
+    name:               No Vendido

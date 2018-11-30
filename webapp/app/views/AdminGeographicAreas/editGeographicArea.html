@@ -1,0 +1,125 @@
+#{extends 'admin.html' /}
+
+#{form @saveGeographicArea(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'geographicArea.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'geographicArea.id'}
+		<input type="hidden" name="geographicAreaId" value="${field.value}"/>
+		#{/}
+		
+		<div class="form-group ${errors.forKey('line.brand') ? 'has-error' : ''}">
+			<label class="col-sm-3 control-label" for="geographicArea_country">&{'geographicArea.form.country'}</label>
+			<div class="col-sm-6">
+				#{select 'pais', id:'pais_id', 
+				value: geographicArea?.father?.father !=null ? geographicArea?.father?.father?.id : geographicArea?.father?.id, class:'form-control'}
+					#{option}&{'form.none'}#{/option}
+					#{list items: countries, as: 'country'}
+						#{option country?.id}${country?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if errors.forKey('geographicArea.country')}<span class="help-block">${errors.forKey('geographicArea.country')}</span>#{/if}
+			</div>
+		</div>
+		
+		#{if geographicArea?.father?.father != null || geographicArea == null}
+			<div class="form-group ${errors.forKey('line.brand') ? 'has-error' : ''}">
+				<label class="col-sm-3 control-label" for="geographicArea_departamento">&{'geographicArea.form.departamento'}</label>
+				<div class="col-sm-6">
+					#{select 'departamento', id:'departamento_id', value:geographicArea?.father?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: deps, as: 'dep'}
+							#{option dep?.id}${dep?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if errors.forKey('geographicArea.dep')}<span class="help-block">${errors.forKey('geographicArea.dep')}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'geographicArea.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'geographicArea.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'geographicArea.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'geographicArea.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(geographicArea?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'geographicAreasList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'geographicAreasList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${geographicArea?.id==null ? messages.get('geographicArea.form.create') : messages.get('geographicArea.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{geographicAreasList(null,true)}">&{'geographicArea.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}
+#{set 'moreScripts'}
+<script type="text/javascript">
+jQuery('document').ready(function(){
+	jQuery("#pais_id").change(function(){
+		jQuery.ajax({
+			url:'/geographicArea/getGeographicAreaChildren',
+			type:'post',
+			data:{id:jQuery(this).val()},
+			complete:function(result){
+				console.log(result);
+				jQuery('#departamento_id').html('<option value="">Ninguno</option>');
+				jQuery.each(result.responseJSON.areas,function(key,value){
+					console.log("<option value='"+value.id+"'>"+value.name+"</option>");
+					jQuery('#departamento_id').append("<option value='"+value.id+"'>"+value.name+"</option>");
+				});
+			}
+		});
+	});
+	
+	/*jQuery("#departamento_id").change(function(){
+		jQuery.ajax({
+			url:'/geographicArea/getGeographicAreaChildren',
+			type:'post',
+			data:{id:jQuery(this).val()},
+			complete:function(result){
+				console.log(result);
+				jQuery('#municipio_id').html('<option value="">Ninguno</option>');
+				jQuery.each(result.responseJSON.areas,function(key,value){
+					console.log("<option value='"+value.id+"'>"+value.name+"</option>");
+					jQuery('#departamento_id').append("<option value='"+value.id+"'>"+value.name+"</option>");
+				});
+			}
+		});
+	});*/
+});
+</script>
+#{/}

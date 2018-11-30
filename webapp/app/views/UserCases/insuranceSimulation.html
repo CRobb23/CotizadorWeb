@@ -1,0 +1,343 @@
+#{extends 'admin.html' /}
+<div class="panel-group well fixed-sidebar-parent" id="accordion">
+	<div class="orange-title">
+		<span>
+			<h1>&{'quotation.simulation'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+			<ul class="steps hidden-xs pull-right">
+				<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+				<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+				<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguro</li>
+				#{if controllers.Security.check('Usuario Final')}
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Simulación</li>
+				#{/if}
+				#{if !controllers.Security.check('Usuario Final')}
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Simulación</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguimiento</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Caso</li>
+				#{/if}
+			</ul>
+		</span>
+	</div>		
+	#{if flash.error}
+	    <div class="alert alert-danger">
+		    ${flash.error}
+	    </div>
+	#{/if}
+	#{if flash.success}
+        <div class="alert alert-success">
+            ${flash.success}
+        </div>
+	#{/if}
+	
+	<div class="row">
+		#{list quotations, as: 'quotation'}
+		
+			%{currencySymbol = (quotation?.product?.currency)? quotation?.product?.currency?.symbol + '.' :""}%
+			
+			<div class='col-sm-9'>
+				<div class="panel panel-default mt-10">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse_${quotation_index}" class="collapsed">
+								&{'quotation.simulation.quotation'} ${quotation_index}
+								<span class="panel-exp glyphicon glyphicon-circle-arrow-down pull-right"></span>
+								<span class="panel-col glyphicon glyphicon-circle-arrow-up pull-right"></span>
+							</a>
+						</h4>
+					</div>
+					
+					<div id="collapse_${quotation_index}" class="panel-collapse collapse ${quotation_index==1?'in':''}">
+						<div class="panel-body">
+							<div class="col-sm-6">
+								<table class="fixedLayout table table-striped table-bordered table-condensed " cellpadding="0" cellspacing="0">
+									<tr>
+										<th style="text-align:center" colspan="2">&{'quotation.simulation.table.parameters'}</th>
+									</tr>
+									<tr>
+										<td>&{'quotation.simulation.table.product'}</td>
+										<td>${quotation?.product?.name?.toUpperCase()}</td>
+									</tr>
+									#{if quotation.carValue}
+									<tr>
+										<td>&{'quotation.simulation.table.carValue'}</td>
+										<td>${currencySymbol}${quotation?.carValue?.doubleValue()?.decimalFormat()} #{if quotation.garanteedValue == true}<br/>&{'quotation.simulation.table.averageValue'} #{/if} </td>
+									</tr>
+									#{/if}
+                                    #{else}
+                                        <tr>
+                                            <td>&{'quotation.simulation.table.averageValue'}</td>
+                                            <td> No existe valor promedio para este vehiculo</td>
+                                        </tr>
+                                    #{/else}
+									#{list quotation.parameters, as: 'parameter'}
+									<tr>
+										<td style="width:50%">${parameter?.productCoverage?.coverage?.fieldDescription?.toUpperCase()}</td>
+										<td>${parameter?.valueString()}</td>
+									</tr>
+									#{/list}
+									#{if quotation.discount}
+									<tr>
+										<td>&{'quotation.simulation.table.discount'}</td>
+										<td>${quotation?.discount?.doubleValue()?.decimalFormat()}%</td>
+									</tr>
+									#{/if}
+								</table>
+							</div>
+							<div class="col-sm-6">
+								<table class="fixedLayout table table-striped table-bordered table-condensed" cellpadding="0" cellspacing="0">
+									<tr>
+										<th style="text-align:center" colspan="5">&{'quotation.simulation.table.paymentoptions'}</th>
+									</tr>
+									#{list quotation.quotationDetail?.paymentOptions, as: 'option'}
+										#{if option.emissionFeeFirstPayment}
+											<tr>
+												<td style="vertical-align: middle;">
+													${option.numberOfPayments} &{'quotation.simulation.payment'}${(option.numberOfPayments>1)?'s':''} #{if option.frecuency}${option.frecuency?.toLowerCase()}#{if option.numberOfPayments>1}&{'quotation.simulation.frecuencysuffix'}#{/if}#{/if}
+												</td>
+												<td style="vertical-align: middle; text-align: center;">
+													${option.numberOfPaymentsWithTotalEmissionFee}er.
+												</td>
+												<td style="vertical-align: middle;">
+													${currencySymbol}${option.amountWithTotalEmissionFee.doubleValue().decimalFormat()}
+												</td>
+												<td style="vertical-align: middle; text-align: center;">
+													${option.numberOfPayments - 1}
+												</td>
+												<td style="vertical-align: middle;">
+													${currencySymbol}${option.amount.doubleValue().decimalFormat()}
+												</td>
+											</tr>
+										#{/if}
+										#{else}
+											<tr>
+												<td colspan="1" style="width:50%">
+													${option.numberOfPayments} &{'quotation.simulation.payment'}${(option.numberOfPayments>1)?'s':''} #{if option.frecuency}${option.frecuency?.toLowerCase()}#{if option.numberOfPayments>1}&{'quotation.simulation.frecuencysuffix'}#{/if}#{/if}
+												</td>
+												<td colspan="4">
+													${currencySymbol}${option.amount.decimalFormat()}
+												</td>
+											</tr>
+										#{/else}
+									#{/list}
+								</table>
+							</div>
+
+                            <div class="col-sm-12">
+            <!--------------------------------------------------------------Coberturas y deducibles--------------------------------------------------->
+                                <div class="table-responsive">
+                                    <table class="fixedLayout table table-striped table-bordered table-condensed" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <th style="text-align:center" colspan="4">&{'quotation.simulation.table.deductibles'}</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-left">Cobertura</th>
+                                            <th class="text-center">Suma Asegurada</th>
+                                            <th class="text-center">%</th>
+                                            <th class="text-center">Deducible</th>
+                                        </tr>
+
+                                        %{quotationSort = quotation?.quotationDetail?.categories?.sort({it.name})}%
+                                        #{list quotationSort, as: 'quotationCoverage'}
+                                            <tr>
+                                                <td colspan="4">${quotationCoverage.name}${(!quotationCoverage.description?.isEmpty())?':':''} ${quotationCoverage?.description}</td>
+                                            </tr>
+                                            #{list quotationCoverage.getCosts(), as: 'coverage'}
+                                                #{if coverage.coverageId?.equals(configuration?.injuriesCoverage?.id) || coverage.coverageId?.equals(configuration?.thirdInjuriesCoverage?.id)}
+                                                    <tr>
+                                                    %{
+                                                    BigDecimal totalCoverage = (quotation?.incident?.vehicle?.numberOfPassengers)?coverage?.coverage?.multiply(quotation?.incident?.vehicle?.numberOfPassengers):coverage?.coverage;
+                                                    }%
+                                                    <td>${coverage?.coverageName}</td>
+                                                    <td class="text-right">
+                                                        #{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+                                                        Por accidente: ${currencySymbol}${totalCoverage?.doubleValue()?.decimalFormat()}
+                                                        #{/if}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        #{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+                                                        ${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+                                                        #{/if}
+                                                    </td>
+                                                    %{
+                                                    BigDecimal hundred = new BigDecimal(100);
+                                                    if (coverage?.damagesDeductible!=null) {
+                                                    BigDecimal deductibleAmount = totalCoverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+                                                    }
+                                                    }%
+                                                    <td class="text-right">
+                                                        #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                                            #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                                                ${currencySymbol}${deductibleAmount?.doubleValue()?.decimalFormat()}
+                                                            #{/if}
+                                                            #{else}
+                                                                ${currencySymbol}${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                                            #{/else}
+                                                        #{/if}
+                                                    </td>
+                                                </tr>
+                                                #{/if}
+                                                #{elseif coverage.coverageId?.equals(configuration?.totalTheftCoverage?.id)}
+                                                <tr>
+                                                    <td>${coverage?.coverageName}</td>
+                                                    <td class="text-right">${currencySymbol}${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+
+                                                <!------------------ MOSTRAR DATO DE loJack ------------------------------------------------------>
+                                                    #{if quotation?.quotationDetail?.theftDeductible}
+                                                        <td class="text-center">
+                                                            #{if quotation?.loJackDeductible != null}
+                                                                ${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+                                                            #{/if}
+                                                            #{elseif quotation?.quotationDetail?.theftDeductible.compareTo(BigDecimal.ZERO)>0}
+                                                                ${quotation?.quotationDetail?.theftDeductible?.doubleValue()?.numberFormat()}%
+                                                            #{/elseif}
+                                                        </td>
+
+                                                        %{
+                                                        BigDecimal hundred = new BigDecimal(100);
+                                                        BigDecimal deductibleAmount = BigDecimal.ZERO;
+                                                        if (quotation?.quotationDetail?.theftDeductible!=null) {
+                                                          if (quotation.loJackDeductible != null) {
+                                                              deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+                                                            }else {
+                                                              deductibleAmount = coverage?.coverage?.multiply(quotation?.quotationDetail?.theftDeductible?.divide(hundred));
+                                                            }
+                                                          }
+                                                        }%
+                                                <!------------------ ----------------------------------------------------------------------------------------->
+                                                        <td class="text-right">
+                                                        #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                                            #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                                                ${currencySymbol}${deductibleAmount?.doubleValue()?.decimalFormat()}
+
+                                                            #{/if}
+                                                            #{else}
+                                                                ${currencySymbol}${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                                            #{/else}
+                                                        #{/if}
+                                                    </td>
+                                                    #{/if}
+                                                    #{else}
+                                                        <td class="text-center">
+                                                        #{if quotation?.loJackDeductible != null}
+                                                            ${quotation?.loJackDeductible?.doubleValue()?.numberFormat()}%
+                                                        #{/if}
+                                                        #{elseif coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+                                                            ${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+                                                        #{/elseif}
+                                                        </td>
+                                                        %{
+                                                        BigDecimal hundred = new BigDecimal(100);
+                                                        BigDecimal deductibleAmount = BigDecimal.ZERO;
+                                                        if (coverage?.damagesDeductible!=null) {
+                                                          if (quotation.loJackDeductible != null) {
+                                                            deductibleAmount = coverage?.coverage?.multiply(quotation?.loJackDeductible?.divide(hundred));
+                                                          }else {
+                                                            deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+                                                          }
+                                                        }
+                                                        }%
+                                                        <td class="text-right">
+
+                                                        #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                                            #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                                                ${currencySymbol}${deductibleAmount?.doubleValue()?.decimalFormat()}
+                                                            #{/if}
+                                                            #{else}
+                                                                ${currencySymbol}${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                                            #{/else}
+                                                        #{/if}
+                                                    </td>
+                                                    #{/else}
+                                                </tr>
+                                                #{/elseif}
+                                                #{else}
+                                                    #{if coverage?.coverage?.compareTo(BigDecimal.ZERO)>0}
+                                                    <tr>
+                                                        <td>${coverage?.coverageName}</td>
+                                                        <td class="text-right">${currencySymbol}${coverage.coverage?.doubleValue()?.decimalFormat()}</td>
+                                                        <td class="text-center">
+                                                            #{if coverage.damagesDeductible?.compareTo(BigDecimal.ZERO)>0}
+                                                                ${coverage.damagesDeductible?.doubleValue()?.numberFormat()}%
+                                                            #{/if}
+                                                        </td>
+                                                        %{
+                                                        BigDecimal hundred = new BigDecimal(100);
+                                                        BigDecimal deductibleAmount = BigDecimal.ZERO;
+                                                        if (coverage?.damagesDeductible!=null) {
+                                                        deductibleAmount = coverage?.coverage?.multiply(coverage?.damagesDeductible?.divide(hundred));
+                                                        }
+                                                        }%
+                                                        <td class="text-right">
+
+                                                            #{if deductibleAmount?.compareTo(BigDecimal.ZERO)>0}
+                                                                #{if deductibleAmount?.compareTo(coverage?.minimumDeductible)>0}
+                                                                    ${currencySymbol}${deductibleAmount?.doubleValue()?.decimalFormat()}
+                                                                #{/if}
+                                                                #{else}
+                                                                    ${currencySymbol}${coverage?.minimumDeductible?.doubleValue()?.decimalFormat()} mínimo
+                                                                #{/else}
+                                                            #{/if}
+                                                        </td>
+                                                    </tr>
+                                                    #{/if}
+                                                #{/else}
+                                            #{/list}
+                                            %{coveragesText = ""}%
+                                            %{i=0;}%
+                                            #{list quotationCoverage.getCosts(), as: 'coverage'}
+                                                #{if (coverage?.coverage==null) || (coverage.coverage?.compareTo(BigDecimal.ZERO)==0)}
+                                                    #{if i!=0}
+                                                        %{coveragesText += ",&nbsp;"}%
+                                                    #{/if}
+                                                    %{coveragesText += coverage.coverageName}%
+                                                    %{i++;}%
+                                                #{/if}
+                                            #{/list}
+                                            #{if coveragesText.size() > 0}
+                                                <tr>
+                                                    <td>
+                                                       ${coveragesText.raw()}
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            #{/if}
+                                        #{/list}
+                                    </table>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		#{/list}
+
+		<div class="col-sm-3 fixed-sidebar mt-10">
+			#{if controllers.Security.check('Usuario Final')}
+				#{form @saveAndSendPublic(), method:"POST"}
+					#{list selectedFrecuencies?.toList(), as: 'frecuency'}
+						<input type="hidden" name="paymentFrecuencies" value="${frecuency}"/>
+					#{/list}
+					<input type="hidden" name="iField" value="${iField}"/>
+                    <input type="hidden" name="loJackId" value="${loJackId}"/>
+					<input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.createandsend'}" />
+					<input type="submit" class="btn btn-default btn-block back-btn" name="back" value="&{'quotation.form.back'}" />
+				#{/form}
+			#{/if}
+			#{if !controllers.Security.check('Usuario Final')}
+				#{form @simulationNext(), method:"POST"}
+					#{list selectedFrecuencies?.toList(), as: 'frecuency'}
+						<input type="hidden" name="paymentFrecuencies" value="${frecuency}"/>
+					#{/list}
+					<input type="hidden" name="iField" value="${iField}"/>
+                    <input type="hidden" name="loJackId" value="${loJackId}"/>
+					<!--input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.createandsend'}" /-->
+					<input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.next'}" />
+					<input type="submit" class="btn btn-default btn-block back-btn" name="back" value="&{'quotation.form.back'}" />
+				#{/form}
+			#{/if}
+		</div>			
+	</div>
+   <label> ***SI DESEA MODIFICAR LOS DATOS INGRESADOS SELECCIONE ANTERIOR *** </label>
+</div>

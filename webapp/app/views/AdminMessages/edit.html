@@ -1,0 +1,40 @@
+#{extends 'admin.html' /}
+
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/jquery-te-1.4.0.css'}" />
+<script src="@{'/public/javascripts/jquery-1.10.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/jquery-te-1.4.0.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+
+#{form @save(), class:"form-horizontal", method:"POST", role:'form'}
+
+    #{if flash.error}
+    <div class="alert alert-danger">
+    ${flash.error}
+    </div>
+    #{/if}
+    #{if flash.success}
+    <div class="alert alert-success">
+    ${flash.success}
+    </div>
+    #{/if}
+
+    #{field 'mail.id'}
+    <input type="hidden" name="Mailid" value="${field.value}"/>
+    #{/}
+<Span style="color:rgb(153,0,0); text-align: center;" > <h3><u> <b> ${mail.messageName} </b> </u></h3></Span>
+
+<Span> <h5><b> ${mensaje.raw()} </b> </h5></Span>
+
+    #{field 'mail.body'}
+    <textarea  class="editor" id="${field.id}" name="${field.name}">${field.value}</textarea>
+    #{/}
+
+<div class="text-center">
+    <input type="submit" class="btn btn-primary shadow6" value="Guardar"/>
+    <input type="submit" class="btn btn-primary shadow6" name="back" id="back" value="Regresar"/>
+</div>
+#{/form}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("textarea").jqte();
+    });
+</script>

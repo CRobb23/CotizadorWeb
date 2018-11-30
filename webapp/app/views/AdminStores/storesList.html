@@ -1,0 +1,191 @@
+#{extends 'admin.html' /}
+
+#{form @searchStores(), class:"form-horizontal", method:"POST", role:"form"}
+
+
+%{canDelete = controllers.Security.check('Administrador maestro') }%
+
+
+
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'storesList.title'}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		#{if controllers.Security.check('Administrador maestro')}
+		#{field 'channelId'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'storesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				#{select field.name, id:field.id, value:field.flash, class:'filter form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{list items: channels, as: 'channel'}
+						#{option channel?.id}${channel?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/}
+		#{/if}
+		
+		#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+		#{field 'distributorId'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'storesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				#{select field.name, id:field.id, value:field.flash, class:'form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{list items: distributors, as: 'distributor'}
+						#{option distributor?.id}${distributor?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/}
+		#{/if}
+		
+		#{field 'store'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'storesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+
+		#{field 'active'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'storesList.search.form.active'}</label>
+			<div class="col-sm-6">
+				#{select 'active', value: flash.active, class:'form-control', id:'active'}
+				#{option}&{'form.all'}#{/option}
+				#{option true}&{'storesList.table.state.active'}#{/option}
+				#{option false}&{'storesList.table.state.inactive'}#{/option}
+				#{/select}
+				#{if errors.forKey("active")}<span class="help-block">#{error 'active' /}</span>#{/if}
+			</div>
+		</div>
+		#{/}
+
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" name="search" value=" &{'storesList.search.form.search'} " />
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'storesList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editStore()}" class="btn btn-default">&{'storesList.newStore'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered tiendas" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'storesList.table.store'}</th>
+					<th>&{'storesList.table.distributor'}</th>
+					<th>&{'storesList.table.channel'}</th>				
+					<th>&{'storesList.table.administrator'}</th>
+					<th>&{'storesList.table.active'}</th>
+					<th class="last textC" style="width:50px;">&{'storesList.table.edit'}</th>
+					#{if canDelete}
+						<th>&{'storesList.table.delete'}</th>
+					#{/if}
+
+
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:stores, as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>${current?.distributor?.name}</td>
+						<td>${current?.distributor?.channel?.name}</td>
+						<td>
+							#{list items:current?.administrators, as:'i'}
+								${i?.getFullName()} ${(i?.email)?'('+i?.email+')':''}
+								</br>
+							#{/list}
+
+						</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+						<td class="lasticon textC">
+							<a href="@{editStore(current?.id)}"  class="btn btn-xs">&{'storesList.table.edit'}</a>
+						</td>
+
+						#{if canDelete}
+						<td>
+							<a href="@{deleteStore(current?.id)}" class="btn btn-xs" onclick="return confirm('¿Seguro que desea eliminar la tienda permanentemente?')">
+								&{'storesList.table.delete'}</a>
+						</td>
+						#{/if}
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if stores?.getPageCount() > 1}
+			#{paginate.controls items:stores /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:stores /}
+			</div>
+		#{/if}
+	</div>
+</div>
+	#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function (){
+		    $(".filter").change(function () {
+		    	var selectelement = $(this);
+		    	selectelement.prop('disabled', true);
+		    	$('#distributorId').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+		    	var id = $(this).val();
+		    	$.ajax({
+					type : 'POST',
+					url : '@{ServiceChannels.distributorsForChannel()}', 
+					data :  {id:id},
+					success: function(response) {
+						$('#distributorId').html('<option value="">'+"&{'form.all'}"+'</option>');
+						if (response.success) {
+							var html = "";
+							$.each(response.distributors, function(index, distributor) {
+								html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+							});
+							$('#distributorId').append(html);
+						} 
+					},
+					error: function() {
+						$('#distributorId').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+					},
+					complete: function() {
+						selectelement.prop('disabled', false);
+					}
+				});
+		    });
+		});
+	</script>
+	#{/}

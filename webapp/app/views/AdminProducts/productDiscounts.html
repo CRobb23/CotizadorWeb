@@ -1,0 +1,215 @@
+#{extends 'admin.html' /}
+
+#{form @saveProductDiscounts(), class:"form-horizontal", id:"form", method:"POST"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'product.productdiscounts.title'} ${product?.name}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<input type="hidden" name="productId" value="${product?.id}"/>
+		
+		#{field 'discountedByRange'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label">&{'product.productdiscounts.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<label class="radio-inline">
+						<input type="radio" value="false" name="${field.name}" id="${field.id}_0" ${((field.flash ?: product?.discountedByRange?.toString()) == "false")?'checked':''} />
+						&{'product.productdiscounts.form.rolediscount'}
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="true" name="${field.name}" id="${field.id}_1" ${((field.flash ?: product?.discountedByRange?.toString()) == "true")?'checked':''}/>
+						&{'product.productdiscounts.form.rangediscount'}
+					</label>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div id="discount_definition_role">
+			<div class="well productCoverage">
+			#{list discounts, as: 'discount'}
+				<input type="hidden" name="discounts[${discount_index-1}].id" value="${discount.id}"/>
+				<input type="hidden" name="discounts[${discount_index-1}].role.id" value="${discount.role?.id}"/>
+				#{field 'discounts['+(discount_index-1)+'].value'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-3 control-label" for="${field.id}">
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_COMMERCIAL_MANAGER}
+							&{'product.productdiscounts.commercialManager'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_CHANNEL_MANAGER}
+							&{'product.productdiscounts.channelManager'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_SUPERVISOR}
+							&{'product.productdiscounts.supervisor'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_CABIN_AGENT}
+							&{'product.productdiscounts.cabinUser'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_SALES_MAN}
+							&{'product.productdiscounts.seller'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_RUNNER_SELLER}
+							&{'product.productdiscounts.runnerSeller'}
+						#{/if}
+						#{if discount?.role?.code == helpers.ERConstants.USER_ROLE_FINAL_USER}
+							&{'product.productdiscounts.finalUser'}
+						#{/if}
+
+					</label>
+					<div class="col-sm-6">
+						<div class="input-group">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:discount.value?:0}" class="form-control"/>
+							<span class="input-group-addon">%</span>
+						</div>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					</div>
+				</div>
+				#{/}
+			#{/list}
+			</div>
+		</div>
+		
+		<div id="discount_definition_range">
+			#{list rangeDiscounts, as: 'discount'}
+			<div class="well productCoverage rangeDiscount">
+				<input type="hidden" name="rangeDiscounts[${discount_index-1}].id" value="${discount.id}"/>
+				#{field 'rangeDiscounts['+(discount_index-1)+'].lowRange'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'product.productdiscounts.form.lowRange'}</label>
+						<div class="col-sm-6">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:discount.lowRange?:0}" class="form-control"/>
+							#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+						</div>
+					</div>
+				#{/}
+				#{field 'rangeDiscounts['+(discount_index-1)+'].highRange'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'product.productdiscounts.form.highRange'}</label>
+						<div class="col-sm-6">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:discount.highRange}" class="form-control"/>
+							#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+						</div>
+					</div>
+				#{/}
+				#{field 'rangeDiscounts['+(discount_index-1)+'].value'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-3 control-label" for="${field.id}">&{'product.productdiscounts.form.discount'}</label>
+						<div class="col-sm-6">
+							<div class="input-group">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:discount.value?:0}" class="form-control"/>
+								<span class="input-group-addon">%</span>
+							</div>
+							#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+						</div>
+					</div>
+				#{/}
+				
+				
+				<div class="form-group">
+					<div class="col-sm-6 col-sm-offset-3">
+						<div class="btn btn-default btn-block deleteRange">Eliminar</div>
+					</div>
+				</div>
+				
+				
+			</div>
+			#{/list}
+			
+			<div class="form-group">
+				<div class="col-sm-6 col-sm-offset-3">
+					<div id="addRange" class="btn btn-default btn-block">+ Agregar rango</div>
+				</div>
+			</div>
+			
+		</div>
+	
+		<div class="form-group">
+			<div class="col-sm-6 col-sm-offset-3">
+				<input type="submit" class="btn btn-default btn-primary btn-block" value="&{'product.productdiscounts.savediscounts'}" />
+			</div>
+		</div>
+    </div>
+#{/form}
+
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function () {
+			
+			showSelectedType();
+			
+			$("input[name=discountedByRange]").change(function() {
+				showSelectedType();
+			});
+			
+			function showSelectedType() {
+				var value = $('input[name=discountedByRange]:checked', '#form').val();
+				if (value == "false") {
+					$("#discount_definition_role").show();
+					$("#discount_definition_range").hide();
+				} else {
+					$("#discount_definition_role").hide();
+					$("#discount_definition_range").show();
+				}
+			}
+			
+			$('#addRange').click(function(){
+				var discountDiv = $("div.rangeDiscount").last();
+				
+				var newRange = discountDiv.clone();
+				newRange.find(':input').each(function() {
+					this.name = this.name.replace(/rangeDiscounts\[(\d+)\]/, function(str,p1) {
+						return 'rangeDiscounts[' + (parseInt(p1) + 1) + ']';
+					});
+					
+					this.id = this.id.replace(/rangeDiscounts\[(\d+)\]/, function(str,p1) {
+						return 'rangeDiscounts[' + (parseInt(p1) + 1) + ']';
+					});
+					
+					this.value = "";
+				});
+				
+				newRange.find('label').each(function() {
+					$(this).attr("for", $(this).attr("for").replace(/rangeDiscounts\[(\d+)\]/, function(str,p1) {
+							return 'rangeDiscounts[' + (parseInt(p1) + 1) + ']';
+						}
+					));
+				});
+				
+				if (newRange.find('.deleteRange').length <= 0){
+					newRange.append('<div class="form-group"><div class="col-sm-6 col-sm-offset-3"><div class="btn btn-default btn-block deleteRange">Eliminar</div></div></div>');
+				}
+				
+				newRange.insertAfter(discountDiv);
+				
+			});
+			
+			$(document).on("click",".deleteRange",function(e) {		
+				var div = $(this).closest("div.rangeDiscount");
+				div.remove();
+				
+				$(document).find('div.rangeDiscount').each(function(index){
+					var div = $(this);
+					
+					div.find(':input').each(function() {
+						this.name = this.name.replace(/rangeDiscounts\[(\d+)\]/, function(str,p1) {
+							return 'rangeDiscounts[' + parseInt(index) + ']';
+						});
+					});
+		 		});
+			});
+			
+		});
+	</script>
+#{/}

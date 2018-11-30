@@ -1,0 +1,15 @@
+ER_Base_Field(b1):
+    name:           Moneda
+    code:           1
+    
+ER_Base_Field(b2):
+    name:           porcentaje suma asegurada
+    code:           2
+
+ER_Base_Field(b3):
+    name:           porcentaje prima
+    code:           3
+
+ER_Base_Field(b4):
+    name:           porcentaje monto ingresado
+    code:           4

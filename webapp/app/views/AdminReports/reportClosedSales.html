@@ -1,0 +1,246 @@
+#{extends 'admin.html' /}
+
+#{form @generateReportClosedSales(), class:"form-horizontal", method:"POST", role:"form",id:"reportQuotationForm"}
+
+<div class="well">
+    <div class="orange-title">
+			<span>
+				<h1>&{'reports.closedSales.title'}</h1>
+			</span>
+    </div>
+
+	#{if flash.error}
+        <div class="alert alert-danger">
+		${flash.error}
+        </div>
+	#{/if}
+	#{if flash.success}
+        <div class="alert alert-success">
+		${flash.success}
+        </div>
+	#{/if}
+
+	#{field 'search.export'}
+        <div style="display:none;" class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-2">
+                <input type="checkbox" name="${field.name}" value="export" class="form-control" checked="true"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'startDate'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" name="${field.name}" value="${field.value}" class="form-control" data-format="DD/MM/YYYY" id="startDatePicker"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'endDate'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" name="${field.name}" value="${field.value}" class="form-control" data-format="DD/MM/YYYY" id="endDatePicker"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.origin'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+				#{select field.name, id:field.id, value: field.flash, class:'form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{option}&{'Interno'}#{/option}
+					#{option}&{'Corredor'}#{/option}
+					#{option}&{'Auto Consulta'}#{/option}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.number'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" id="${field.id}" name="${field.name}" value="${field.flash}" class="form-control"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.inspectionNumber'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" id="${field.id}" name="${field.name}" value="${field.flash}" class="form-control"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.channel'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+				#{select field.name, id:field.id, value: field.flash, class:'form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{list items: channels, as: 'channel'}
+						#{option channel?.id}${channel?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.broker'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" id="${field.id}" name="${field.name}" value="${field.flash}" class="form-control"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+	#{field 'search.isIndividual'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'reports.quotations.form.'+field.name}</label>
+            <div class="col-sm-6">
+				#{select field.name, id:field.id, value: field.flash, class:'form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{option true}Linea Individual#{/option}
+					#{option false}Linea Empresarial#{/option}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+	#{/}
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <input type="submit" class="btn btn-primary btn-block" value="&{'reports.lostSales.generate'}" />
+        </div>
+    </div>
+
+</div>
+#{/form}
+
+*{<div class="well">
+    <div class="overflow">
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr class="table-head">
+                    <th class="first">&{'report.quotations.table.quotation.incident.number'}</th>
+                    <th>&{'report.quotations.table.quotation.incident.broker.name'}</th>
+                    <th>&{'report.quotations.table.quotation.product.name'}</th>
+                    <th>&{'report.quotations.table.quotation.incident.vehicle.brand'}</th>
+                    <th>&{'report.quotations.table.quotation.incident.vehicle.line'}</th>
+                    <th>&{'report.quotations.table.quotation.incident.vehicle.plate'}</th>
+                    <th>&{'report.quotations.table.quotation.origin'}</th>
+                    <th>&{'report.quotations.table.quotation.product.description'}</th>
+                    <th>&{'report.quotations.table.quotation.incident.inspection.inspectionNumber'}</th>
+                    <th>Cliente</th>
+                    <th class="thPoliza" >No. Poliza</th>
+                    <th class="thFechaPoliza">Fecha de Póliza</th>
+                    <th>Tienda</th>
+
+
+
+                </tr>
+                </thead>
+
+                <tbody>
+				#{paginate.list items:incidents , as:'current'}
+                <tr class="${current_parity}">
+                    <td class="first style2">${current?.number}</td>
+                    <td>
+					${current?.creator?.firstName + ' ' + current?.creator?.lastName }
+                    </td>
+                    <td>
+					${current?.selectedQuotation?.product?.name}
+                    </td>
+                    <td>
+					${current?.vehicle?.line?.brand?.name}
+                    </td>
+                    <td>
+					${current?.vehicle?.line?.name}
+                    </td>
+                    <td>
+					${current?.vehicle?.plate}
+                    </td>
+                    <td>
+					${current?.channel?.name}
+                    </td>
+                    <td>
+					${current?.policy}
+                    </td>
+                    <td>
+					${current?.inspection?.inspectionNumber}
+                    </td>
+                    <td>
+					${current?.client?.firstName + ' ' + current?.client?.secondName + ' ' + current?.client?.firstSurname + ' ' + current?.client?.secondSurname}
+                    </td>
+                    <td class="thPoliza">
+					${current?.policy}
+                    </td>
+                    <td class="thFechaPoliza">
+					${current?.policyValidity?.format("dd/MM/yyyy")}
+                    </td>
+                    <td>
+					${current?.creator?.getStore()}
+                    </td>
+
+                </tr>
+				#{/paginate.list}
+                </tbody>
+            </table>
+        </div>
+
+	#{if incidents?.getPageCount() > 1}
+		#{paginate.controls items:incidents /}
+        <div class="visible-xs text-center">
+			#{paginate.summary items:incidents /}
+        </div>
+	#{/if}
+    </div>
+</div>}*
+
+
+#{set 'moreScripts'}
+<script type="text/javascript" src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+<script type="text/javascript" src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#startDatePicker').datetimepicker({
+            locale: "es",
+            format: "DD/MM/YYYY"
+        });
+
+        $('#endDatePicker').datetimepicker({
+            locale: "es",
+            format: "DD/MM/YYYY"
+        });
+
+        $("#startDatePicker").on("dp.change",function (e) {
+            $('#endDatePicker').data("DateTimePicker").minDate(e.date);
+        });
+
+        $("#endDatePicker").on("dp.change",function (e) {
+            $('#startDatePicker').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+
+</script>
+#{/}

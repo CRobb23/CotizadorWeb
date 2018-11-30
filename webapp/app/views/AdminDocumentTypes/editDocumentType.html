@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @saveDocumentType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'documentType.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'documentType.id'}
+		<input type="hidden" name="documentTypeId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'documentType.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'documentType.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'documentType.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'documentType.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'documentType.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'documentType.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(documentType?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'documentTypesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'documentTypesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${documentType?.id==null ? messages.get('documentType.form.create') : messages.get('documentType.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{documentTypesList(null,true)}">&{'documentType.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

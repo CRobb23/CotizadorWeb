@@ -1,0 +1,67 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'quotation.incident'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+			<ul class="steps hidden-xs pull-right">
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguro</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Simulación</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguimiento</li>
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Caso</li>
+			</ul>
+		</span>
+	</div>
+	
+	#{if errorMessage==null}
+	<div class="panel panel-default">
+		<div class="panel-heading"><h4 class="panel-title">Caso creado con éxito:</h4></div>
+		<div class="panel-body">
+				<a href="@{Incidents.incidentDetail(incident?.id)}" class="btn btn-block ">${incident?.number}</a>
+	  	</div>
+	</div>
+	
+	<div class="panel panel-default panel-transparent">
+		<div class="panel-heading"><h4 class="panel-title">Cotizaciones</h4></div>
+		<table class="table table-striped tablelist table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th>&{'incident.quotations.table.product'}</th>
+					<th>&{'incident.quotations.table.carvalue'}</th>
+					<th>&{'incident.quotations.table.totalprime'}</th>
+					<th class="text-center">&{'incident.quotations.table.actions'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:incident?.quotations, as:'current'}
+					%{currencySymbol = (current?.quotationDetail?.currencySymbol)? current?.quotationDetail?.currencySymbol + '.' :''}%
+					<tr class="${current_parity}">
+						<td data-title="&{'incident.quotations.table.product'}">${current?.product?.name}</td>
+						<td data-title="&{'incident.quotations.table.carvalue'}">#{if current?.carValue}${currencySymbol} ${current?.carValue?.doubleValue()?.decimalFormat()}#{/if}#{else}&{'table.na'}#{/else}</td>
+						<td data-title="&{'incident.quotations.table.totalprime'}">${currencySymbol} ${current?.discountedPrime?.doubleValue()?.decimalFormat()}</td>
+						<td data-title="&{'incident.quotations.table.actions'}" class="text-center">
+							<a href="@{Incidents.viewQuotationPDF(current.id,current_index)}" class="btn btn-xs" target="_blank">&{'incident.quotations.table.view'}</a>
+						</td>
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>		
+	</div>
+	#{/if}
+	#{else}
+		<div class="panel panel-default panel-danger">
+		<div class="panel-heading"><h4 class="panel-title">${errorMessage}</h4></div>
+		<div class="panel-body">
+				<a href="@{UserCases.clientInformation()}" class="btn btn-block ">&{'quotation.form.quote'}</a>
+	  	</div>
+	</div>
+	#{/else}
+	
+</div>

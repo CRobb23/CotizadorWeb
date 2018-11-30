@@ -1,0 +1,104 @@
+#{extends 'admin.html' /}
+
+#{form @saveReminder(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'reminder.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'reminder.id'}
+		<input type="hidden" name="reminderId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'reminder.caseNumber'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.caseNumber'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminder.dayNumber'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.dayNumber'}</label>
+			<div class="col-sm-6">
+				<input type="number" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminder.customEmail'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.customEmail'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminder.hour'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.hour'}</label>
+			<div class="col-sm-6">
+				#{select field.name, id:field.id, value:field.value, class:'form-control'}
+					#{option 6}06#{/option}	#{option 7}07#{/option}	#{option 8}08#{/option}
+					#{option 9}09#{/option}	#{option 10}10#{/option} #{option 11}11#{/option}
+					#{option 12}12#{/option} #{option 13}13#{/option} #{option 14}14#{/option}
+					#{option 15}15#{/option} #{option 16}16#{/option} #{option 17}17#{/option}
+					#{option 18}18#{/option} #{option 19}19#{/option} #{option 20}20#{/option}
+				#{/select}
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminder.minute'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.minute'}</label>
+			<div class="col-sm-6">
+				#{select field.name, id:field.id, value:field.value, class:'form-control'}
+					#{option 0}00#{/option}	#{option 15}15#{/option} #{option 30}30#{/option}
+					#{option 45}45#{/option}
+				#{/select}
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminder.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminder.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(reminder?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'reminderList.table.state.active'}#{/option}
+					#{if reminder?.id != null}
+				    	#{option 0}&{'reminderList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${reminder?.id==null ? messages.get('reminder.form.create') : messages.get('reminder.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{remindersList(null,true)}">&{'reminder.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

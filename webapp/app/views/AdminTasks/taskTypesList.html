@@ -1,0 +1,58 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'tasks.types.title'}</h1>
+		</span>
+	</div>
+
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	<div class="overflow">
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editTaskType()}" class="btn btn-default">&{'tasks.types.new_type'}</a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered tipo" cellpadding="0" cellspacing="0">
+				<thead>
+					<tr class="table-head">
+						<th class="first">&{'tasks.types.table.name'}</th>
+						<th>&{'tasks.types.table.description'}</th>
+						<th>&{'tasks.types.table.state'}</th>
+						<th class="last textC" style="width:50px;">&{'tasks.types.table.edit'}</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					#{paginate.list items:types, as:'current'}
+						<tr class="${current_parity}">
+							<td class="first style2">${current?.name}</td>
+							<td>${current?.description}</td>
+							<td>${current?.active?.yesno(messages.get('form.active'), messages.get('form.inactive'))}</td>
+							<td class="lasticon textC">
+								<a href="@{editTaskType(current?.id)}"  class="btn btn-xs">Editar</a>
+							</td>
+						</tr>
+					#{/paginate.list}
+				</tbody>
+			</table>
+		</div>
+		
+		#{if types?.getPageCount() > 1}
+			#{paginate.controls items:types /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:reasons /}
+			</div>
+		#{/if}
+	</div>
+</div>

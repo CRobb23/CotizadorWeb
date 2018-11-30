@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+</head>
+<body>
+
+	<style>
+
+	body
+	{
+		font-size: 8px;
+		font-family: sans-serif;
+		
+	}
+
+	table {
+		width: 100%;
+		border-spacing:0;
+	}
+
+	td
+	{
+		/*padding-left: 1em;*/
+		width: 12.5%;
+		font-size: 8px;
+		border-spacing: 0;
+		border-collapse: collapse;
+		min-height: 1.5em;
+
+	}
+
+	.center{
+		text-align: center;
+		vertical-align: middle;
+	}
+
+	.left{
+		text-align: left;
+		vertical-align: middle;
+	}
+	.right{
+		text-align: right;
+		vertical-align: middle;
+	}
+	.colorGray{
+		background-color: gray;
+	}
+	.bold {
+		font-weight: bold;
+	}
+
+	.title{
+		font-weight: bold;
+		font-size: 14px;
+	}
+	.border{
+		border: solid 1px black;
+		border-bottom: none;
+	}
+	.space {
+		padding: 5px;
+	}
+	.yellow{
+		background-color: #ffff99;
+	}
+	.subtitle{
+		background-color: #c0c0c0;
+	}
+	.borderBottom{
+		border-bottom: solid 1px black;
+	}
+	.field {
+		font-weight: bold;
+	}
+
+	</style>
+
+	<table>
+
+		<thead>
+			<!-- INICIA HEADER -->
+			<tr>
+				<th colspan="8">
+					<img src="@{'/public/images/Detektor.jpg'}" alt="logo-seguros-el-roble" style="width:30%"/>
+				</th>
+			</tr>
+			<tr class="colorGray"> 
+				<th class="center title" colspan="8">
+					ORDEN DE INSTALACIÓN
+				</th>
+			</tr>
+			<!-- FINALIZA HEADER -->
+		</thead>
+		<tbody>
+
+		<tr>
+			<td colspan="8" class="space"></td>
+		</tr>
+
+			<!-- INICIA HEADER -->
+			<tr>
+				<td class="right">
+					Fecha:
+				</td>
+				<td class="border center borderBottom field" colspan="3">
+					${new Date().format('dd/MM/yyyy')}
+				</td>
+				<td></td>
+				<td class="right">
+					Dirigido a:
+				</td>
+				<td class="border center field" colspan="2">
+					NANCY
+				</td>
+			</tr>
+			<tr>
+				<td colspan="5"></td>
+				<td class="right">
+					Proyecto:
+				</td>
+				<td class="border center borderBottom field" colspan="2">
+					COMODATO ROBLE	
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="8" class="space"></td>
+			</tr>
+
+			<tr>
+				<td class="right field">
+					AGENCIA  SOLICITANTE
+				</td>
+				<td class="border center yellow borderBottom field" colspan="3">
+					${agenciaSolicitante}
+				</td>
+				<td></td>
+				<td class="right">
+					VIGENCIA POLIZA:
+				</td>
+				<td class="border center yellow borderBottom field" colspan="2">
+					NHD	
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan="8" class="space"></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="center subtitle" colspan="4">
+					DATOS DEL USUARIO
+				</td>
+				<td></td>
+				<td class="subtitle center" colspan="2">
+					DATOS DE FACTURACIÓN
+				</td>
+			</tr>
+
+			<tr>
+				<td class="right">Nit:</td>
+				<td class="yellow border field" style="border-bottom:none;"> 
+					${nit}
+				</td>
+				<td class="" colspan="2">
+
+				</td>
+				<td class="yellow border">
+				</td>
+				<td class="right">Nombre:</td>
+				<td colspan="2" class="yellow border field">
+					${nombreFactura}
+				</td>
+			</tr>
+
+			<tr>
+				<td class="right">Empresa/Cliente:</td>
+				<td class="yellow border field" colspan="4">
+					${primerNombre} ${segundoNombre} ${primerApellido} ${segundoApellido} ${(apellidoCasada)?'de ' + apellidoCasada:''}
+				</td>
+				<td class="right">Direccion:</td>
+				<td class="yellow border field" colspan="2">
+					${direccionFactura}
+				</td>
+			</tr>
+
+			<tr>
+				<td class="right">Contacto:</td>
+				<td class="yellow border field" colspan="4">
+					${contacto}
+				</td>
+				<td class="right">Nit:</td>
+				<td class="yellow border field" colspan="2">${nitFactura}</td>
+			</tr>
+
+			<tr>
+				<td class="right">Direccion:</td>
+				<td class="yellow border field" colspan="4">
+					${direccion} Zona ${zona} ${colonia}, ${municipio}, ${departamento}
+				</td>
+				<td class="right">Direc. Cobro:</td>
+				<td class="yellow border borderBottom field" colspan="2">
+					${direccionCobroFactura}
+				</td>
+			</tr>
+
+			<tr>
+				<td class="right">Teléfono:</td>
+				<td class="yellow border field" colspan="4">
+					${telefonoCasa} / ${celular}
+				</td>
+				<td colspan="3"></td>
+			</tr>
+
+			<tr>
+				<td class="right">E-mail:</td>
+				<td class="yellow border borderBottom field" colspan="4">
+					${email}
+				</td>
+				<td colspan="3"></td>
+			</tr>
+
+			<tr>
+				<td colspan="8" class="space"></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td class="center subtitle" colspan="4">
+					MEDIOS DE CONTACTO (VENDEDOR/CORREDOR)
+				</td>
+				<td></td>
+				<td class="subtitle center" colspan="2">
+					PRECIO DE VENTA
+				</td>
+			</tr>
+
+			<tr>
+				<td class="right">Nombre:</td>
+				<td class="yellow border field" colspan="2">
+					${incident?.finalizer?.getFullName()}
+				</td>
+
+				<td class="right">Casa:</td>
+				<td class="yellow border field center">
+					${telefonoVendedorCasa}
+				</td>
+				<td class="right">Producto:</td>
+				<td class="border center field" colspan="2">INSTALACIÓN LOJACK</td>
+			</tr>
+
+			<tr>
+				<td class="right">E-mail:</td>
+				<td class="yellow border borderBottom field" colspan="2">
+					${incident?.finalizer?.email}
+				</td>
+
+				<td class="right">Celular:</td>
+				<td class="yellow border field center">
+					${telefonoVendedorCelular}
+				</td>
+				<td class="right">Valor:</td>
+				<td class="border center field">$ ${precioEquipo}</td>
+				<td class="border center field">$ ${precioAfiliacion}</td>
+			</tr>
+
+			<tr>
+				<td colspan="3"></td>
+
+				<td class="right">Oficina:</td>
+				<td class="yellow border borderBottom field center">
+					${telefonoVendedorOficina}
+				</td>
+				<td class="right">T. de Cambio:</td>
+				<td class="border center field" colspan="2">${tasaCambio}</td>
+			</tr>
+
+			<tr>
+				<td colspan="5"></td>
+
+			</td>
+			<td class="right">Tipo de servicio:</td>
+			<td class="border borderBottom field" colspan="2">INSTALACIÓN LOJACK</td>
+		</tr>
+
+		<tr>
+			<td colspan="8" class="space"></td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td class="center subtitle" colspan="7">
+				DATOS DEL VEHICULO
+			</td>
+		</tr>
+
+		<tr>
+			<td class="center"></td>
+			<td class="center">Marca</td>
+			<td class="center">Modelo</td>
+			<td class="center">Año</td>
+			<td class="center">Color</td>
+			<td class="center">Placa</td>
+			<td class="center">Chasis</td>
+			<td class="center">Motor</td>
+		</tr>
+
+		<tr>
+			<td class="right">1</td>
+			<td class="yellow border borderBottom center field">${incident?.vehicle?.line?.brand?.name}</td>
+			<td class="yellow border borderBottom center field">${incident?.vehicle?.line?.name}</td>
+			<td class="yellow border borderBottom center field">${incident?.vehicle?.year}</td>
+			<td class="yellow border borderBottom center field">${colorVehiculo}</td>
+			<td class="yellow border borderBottom center field">${placa}</td>
+			<td class="yellow border borderBottom center field">${chasis}</td>
+			<td class="yellow border borderBottom center field">${motor}</td>
+		</tr>
+
+		<tr>
+			<td colspan="8" class="space"></td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td class="center subtitle" colspan="7">
+				Datos de Instalación
+			</td>
+		</tr>
+
+		<tr>
+			<td class="right">Fecha</td>
+			<td class="center yellow border field" colspan="3">
+					${fechaInstalacion}
+			</td>
+			<td></td>
+			<td class="center">Persona de contacto</td>
+			<td class="center yellow border field"  colspan="2">
+					${personaContacto}
+			</td>
+		</tr>
+
+		<tr>
+			<td class="right">Lugar</td>
+			<td class="center yellow border field" colspan="3">
+				${lugarInstalacion}
+			</td>
+			<td></td>
+			<td class="center">Teléfono</td>
+			<td class="center yellow border borderBottom field"  colspan="2">
+				${telefonoContacto}
+			</td>
+		</tr>
+
+		<tr>
+			<td class="right">Hora</td>
+			<td class="center yellow border borderBottom field" colspan="3">
+				${horaInstalacion}
+			</td>
+			<td colspan="5"></td>
+		</tr>
+
+
+
+		<tr>
+			<td colspan="8" class="space"></td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td class="center subtitle" colspan="7">
+				CONTACTOS DE EMERGENCIA
+			</td>
+		</tr>
+
+		<tr>
+			<td class="center"></td>
+			<td class="center" colspan="3">Nombre</td>
+			<td class="center">Telefono 1</td>
+			<td class="center">Telefono 2</td>
+			<td class="center" colspan="2">Correo Electronico</td>
+		</tr>
+
+		<tr>
+			<td class="right bold">1</td>
+			<td class="border center yellow field" colspan="3">${contactoEmergencia1}</td>
+			<td class="border center yellow field">${telefono1Contacto1}</td>
+			<td class="border center yellow field">${telefono2Contacto1}</td>
+			<td class="border center yellow field" colspan="2">${emailContacto1}</td>
+		</tr>
+
+		<tr>
+			<td class="right bold">2</td>
+			<td class="border center yellow borderBottom field" colspan="3">${contactoEmergencia2}</td>
+			<td class="border center yellow borderBottom field">${telefono1Contacto2}</td>
+			<td class="border center yellow borderBottom field">${telefono2Contacto2}</td>
+			<td class="border center yellow borderBottom field" colspan="2">${emailContacto2}</td>
+		</tr>
+
+		<tr>
+			<td colspan="8" class="space"></td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td class="center subtitle" colspan="7">
+				OBSERVACIONES
+			</td>
+		</tr>
+
+		
+		<tr>
+			<td class="center"></td>
+			<td class="border yellow borderBottom" colspan="7">${observacionesLoJack}</td>
+		</tr>
+	</tbody>
+
+</table>
+
+</body>
+</html>

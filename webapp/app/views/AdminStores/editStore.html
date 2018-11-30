@@ -1,0 +1,331 @@
+#{extends 'admin.html' /}
+
+#{form @saveStore(), class:"form-horizontal", method:"POST", onsubmit:"submit_query_form()", role:"form"}
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>${store?.id==null ? messages.get('createStore.title') : messages.get('editStore.title')}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		#{if store?.id}
+			<input type="hidden" name="storeId" value="${store?.id}" />
+		#{/if}
+		
+		#{if controllers.Security.check('Administrador maestro')}
+		#{field 'channelId'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'store.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: field.flash?:store?.distributor?.channel?.id, class:'form-control'}
+						#{list items: channels, as: 'channel'}
+							#{option channel?.id}${channel?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		#{/if}
+		
+		#{field 'store.distributor'}
+		#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'storesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				#{select field.name+'.id', id:field.id, value:flash.get(field.name+'.id')?:store?.distributor?.id, class:'form-control'}
+					#{list items: distributors, as: 'distributor'}
+						#{option distributor?.id}${distributor?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/if}
+		#{else}
+			<input type="hidden" name="${field.name}.id" value="${userDistributor?.id}"/>
+		#{/else}
+		#{/}
+		
+		#{field 'store.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'store.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+		#{field 'store.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'store.form.estado'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(store?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'storesList.table.state.active'}#{/option}
+					#{if store?.id != null}
+				    	#{option 0}&{'storesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+
+
+
+
+
+
+
+
+		#{field 'store.administrator'}
+			<div class="form-group">
+				<label class="col-sm-3 control-label">&{'store.administrator'}</label>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-6 text-center">
+							&{'store.available.administrators'}
+							<div class="input-group text-left">
+								<select class="height200 form-control" id="store_administrator" multiple>
+									#{list items:administrators, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+								</select>
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button_admin" value=" > "/>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 text-center">
+							&{'store.selected.administrators'}
+							<div class="input-group text-left">
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button_admin" value=" < "/>
+								</div>
+                                <select name="store.administrators[].id"  id="assigned_admin"  multiple="multiple"  class="form-control col-sm-6 height200">
+									#{list items:store?.administrators, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+                                </select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		#{/}
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">&{'store.form.sellers'}</label>
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-6 text-center">
+						&{'store.form.availablesellers'}
+						<div class="input-group text-left">
+							<select class="height200 form-control" id="available" multiple>
+								#{list items:sellers, as:'seller'}
+									<option value="${seller.id}">${seller.getFullName()}</option>
+								#{/list}
+							</select>
+							<div class="input-group-btn">
+								<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button" value=" > "/>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 text-center">
+						&{'store.form.assignedsellers'}
+						<div class="input-group text-left">
+							<div class="input-group-btn">
+								<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button" value=" < "/>
+							</div>
+                            <select name="store.sellers[].id"  id="assigned"  multiple="multiple"  class="form-control col-sm-6 height200">
+								#{list items:assigned, as:'seller'}
+									<option value="${seller.id}">${seller.getFullName()}</option>
+								#{/list}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${store?.id==null ? messages.get('store.form.create') : messages.get('store.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+
+#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+
+	    function loadStore(selectelement) {
+	        selectelement.prop('disabled', true);
+			$('#store_administrator').html('');
+			$('#assigned').empty();
+			$('#available').empty();
+
+            $('#store_administrator').empty();
+            $('#assigned_admin').empty();
+			var id = selectelement.val();
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.administratorsAndSellersForDistributor()}',
+				data :  {id:id},
+				success: function(response) {
+					$('#store_administrator').html('');
+					if (response.success) {
+						var html = "";
+						$.each(response.administrators, function(index, administrator) {
+							html+= '<option value="'+administrator.id+'">'+administrator.name+'('+administrator.email+')</option>';
+						});
+						$('#store_administrator').append(html);
+
+						var sellersHtml = "";
+						$.each(response.sellers, function(index, seller) {
+							sellersHtml+= '<option value="'+seller.id+'">'+seller.name+'</option>';
+						});
+						$('#available').html(sellersHtml);
+					}
+				},
+				error: function() {
+					$('#store_administrator').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    }
+
+    $(function (){
+
+		$("#store_distributor").change(function () {
+			loadStore($(this));
+		});
+	});
+#{/if}
+
+#{if controllers.Security.check('Administrador maestro')}
+	$(function (){
+
+	    function loadChannel(selectelement) {
+			selectelement.prop('disabled', true);
+
+			var storeDistributor = $('#store_distributor');
+
+			storeDistributor.html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+			var id = selectelement.val();
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.distributorsForChannel()}',
+				data :  {id:id},
+				success: function(response) {
+					storeDistributor.html('');
+					if (response.success) {
+						var html = "";
+						$.each(response.distributors, function(index, distributor) {
+							html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+						});
+
+						storeDistributor.append(html);
+
+						if (storeDistributor.val()!=null && storeDistributor.val()!=="") {
+						    loadStore(storeDistributor);
+						}
+					}
+				},
+				error: function() {
+					storeDistributor.html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    }
+
+		$("#channelId").change(function () {
+		    loadChannel($(this));
+		});
+
+        #{if !store?.id}
+		var select = $("#channelId");
+		if (select.val()!=null && select.val()!=="") {
+		    loadChannel(select);
+		}
+		#{/if}
+
+	});
+#{/if}
+
+
+	
+	$(function (){
+		$("#select_button").click(
+			function (){
+				$('#available option:selected').appendTo("#assigned");
+			}
+		);
+	});
+	
+	$(function (){
+		$("#delete_button").click(
+			function (){
+				$('#assigned option:selected').appendTo("#available");
+			}
+		);
+	});
+
+    $(function (){
+        $("#select_button_admin").click(
+                function (){
+                    $('#store_administrator option:selected').appendTo("#assigned_admin");
+                }
+        );
+    });
+
+    $(function (){
+        $("#delete_button_admin").click(
+                function (){
+                    $('#assigned_admin option:selected').appendTo("#store_administrator");
+                }
+        );
+    });
+
+	function submit_query_form() {
+		obj = document.getElementById("assigned");
+		for(var i = 0; i < obj.options.length; i++){
+			obj.options[i].selected = true;
+		}
+
+        obj = document.getElementById("assigned_admin");
+        for(var i = 0; i < obj.options.length; i++){
+            obj.options[i].selected = true;
+        }
+	}
+
+
+</script>
+#{/}
