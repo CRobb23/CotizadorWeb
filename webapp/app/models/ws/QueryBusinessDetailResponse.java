@@ -1,112 +1,96 @@
 package models.ws;
 
-import javax.xml.bind.annotation.*;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaDatosClienteEmpresarial")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryBusinessDetailResponse extends BaseResponse {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 781;
 
-    @XmlElement(name="msgRespuesta")
-    private String message;
+	@Expose
+	private String message;
 
-    public QueryBusinessDetailResponse() {}
-    public QueryBusinessDetailResponse(String message) {
-        this.message = message;
-    }
-
-    @XmlElement(name="nitEmpresa")
+	@Expose
 	private String taxNumber;
-	@XmlElement(name="tipoSociedad")
+	@Expose
 	private String societyType;
-	@XmlElement(name="nombreEmpresa")
+	@Expose
 	private String companyName;
-	@XmlElement(name="razonSocial")
+	@Expose
 	private String businessName;
-	@XmlElement(name="actividadEconomica")
+	@Expose
 	private String economicActivity;
-	@XmlElement(name="nacionalidadEmpresa")
+	@Expose
 	private String nationality;
-	@XmlElement(name="dpiEmpresa")
+	@Expose
 	private String dpiCompany;
-	@XmlElement(name="proveedorEstado")
+	@Expose
 	private String stateProvider;
-	@XmlElement(name="emailEmpresa")
+	@Expose
 	private String email;
-	@XmlElement(name="numeroEscritura")
+	@Expose
 	private String writeNumber;
-	@XmlElement(name="fechaEscritura")
+	@Expose
 	private String writeDate;
-	@XmlElement(name="fechaConstitucion")
+	@Expose
 	private String registrationDate;
-	@XmlElement(name="codigoCifBanco")
+	@Expose
 	private String condeCifBank;
-	@XmlElement(name="codigoCliente")
+	@Expose
 	private String codeClient;
-    
-	@XmlElement(name="datosRepresentanteLegal")
-    private LegalRepresentative legalRepresentative;
-    @XmlElement(name="direcciones")
-    private Address address;
 
-    @Override
-    public Integer getTransaction() {
-        return TRANSACTION;
-    }
+	@Expose
+	private LegalRepresentative legalRepresentative;
+	@Expose
+	private Address address;
 
     @Override
     public String getMessage() {
         return message;
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
     public static class LegalRepresentative{
-    	@XmlElement(name="primerNombreRep")
-    	private String firstName;
-    	@XmlElement(name="segundoNombreRep")
-    	private String secondName;
-    	@XmlElement(name="primerApellidoRep")
-    	private String firstSurname;
-    	@XmlElement(name="segundoApellidoRep")
-    	private String secondSurname;
-    	@XmlElement(name="apellidoCasadaRep")
-    	private String marriedSurname;
-    	@XmlElement(name="nacionalidadRep")
-    	private String nationality;
-    	@XmlElement(name="registroRep")
-    	private String register;
-    	@XmlElement(name="expedienteRep")
-    	private String caseFile;
-    	@XmlElement(name="extendidaEn")
-    	private String extendedIn;
-    	@XmlElement(name="fechaInscripcion")
-    	private String registrationDate;
-    	@XmlElement(name="fechaNacimiento")
-    	private String birthdate;
-    	@XmlElement(name="profesionRep")
-    	private String profession;
-    	@XmlElement(name="libro")
-    	private String book;
-    	@XmlElement(name="folio")
-    	private String folio;
-    	@XmlElement(name="dpiRep")
-    	private String dpi;
-    	@XmlElement(name="nitRep")
-    	private String taxNumber;
-    	@XmlElement(name="pasaporteRep")
-    	private String passport;
-    	@XmlElement(name="sexoRep")
-    	private String sex;
-    	@XmlElement(name="estadoCivilRep")
-    	private String civilStatus;
-    	@XmlElement(name="emailRep")
-    	private String email;
-    	@XmlElement(name="montoMensualIngresosRep")
-    	private String monthlyAmountIncome;
-    	@XmlElement(name="montoMensualEgresosRep")
-    	private String monthlyAmountOfIncome;
+		@Expose
+		private String firstName;
+		@Expose
+		private String secondName;
+		@Expose
+		private String firstSurname;
+		@Expose
+		private String secondSurname;
+		@Expose
+		private String marriedSurname;
+		@Expose
+		private String nationality;
+		@Expose
+		private String register;
+		@Expose
+		private String caseFile;
+		@Expose
+		private String extendedIn;
+		@Expose
+		private String registrationDate;
+		@Expose
+		private String birthdate;
+		@Expose
+		private String profession;
+		@Expose
+		private String book;
+		@Expose
+		private String folio;
+		@Expose
+		private String dpi;
+		@Expose
+		private String taxNumber;
+		@Expose
+		private String passport;
+		@Expose
+		private String sex;
+		@Expose
+		private String civilStatus;
+		@Expose
+		private String email;
+		@Expose
+		private String monthlyAmountIncome;
+		@Expose
+		private String monthlyAmountOfIncome;
     	
 		public String getFirstName() {
 			return firstName;
@@ -242,34 +226,32 @@ public class QueryBusinessDetailResponse extends BaseResponse {
 		}
     }
 	
-    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Address{
-        @XmlElement(name="direccionEmpresa")
-        private WorkAddress workAddress;
+		@Expose
+		private WorkAddress workAddress;
+
+		@Expose
+		private RepresentativeLegalAddress representativeLegalAddress;
     	
-        @XmlElement(name="direccionRepresentanteLegal")
-        private RepresentativeLegalAddress representativeLegalAddress;
-    	
-        @XmlAccessorType(XmlAccessType.FIELD)
         public static class WorkAddress{
-    		@XmlElement(name="direccionE")
-    		private String address;
-    		@XmlElement(name="paisE")
-    		private String country;
-    		@XmlElement(name="departamentoE")
-    		private String department;
-    		@XmlElement(name="municipioE")
-    		private String municipality;
-    		@XmlElement(name="zonaE")
-    		private String zone;
-    		@XmlElement(name="telefono1")
-    		private String phone1;
-    		@XmlElement(name="telefono2")
-    		private String phone2;
-    		@XmlElement(name="telefono3")
-    		private String phone3;
-    		@XmlElement(name="coloniaE")
-    		private String colony;
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
+			@Expose
+			private String colony;
     		
 			public String getAddress() {
 				return address;
@@ -327,26 +309,25 @@ public class QueryBusinessDetailResponse extends BaseResponse {
 			}
     	}
         
-    	@XmlAccessorType(XmlAccessType.FIELD)
-        public static class RepresentativeLegalAddress{
-    		@XmlElement(name="direccionR")
-    		private String address;
-    		@XmlElement(name="paisR")
-    		private String country;
-    		@XmlElement(name="departamentoR")
-    		private String department;
-    		@XmlElement(name="municipioR")
-    		private String municipality;
-    		@XmlElement(name="zonaR")
-    		private String zone;
-    		@XmlElement(name="telefono1R")
-    		private String phone1;
-    		@XmlElement(name="telefono2R")
-    		private String phone2;
-    		@XmlElement(name="telefono3R")
-    		private String phone3;
-    		@XmlElement(name="coloniaR")
-    		private String colony;
+    	public static class RepresentativeLegalAddress{
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
+			@Expose
+			private String colony;
     		
 			public String getAddress() {
 				return address;

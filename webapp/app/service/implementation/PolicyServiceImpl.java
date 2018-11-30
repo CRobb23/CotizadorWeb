@@ -3,15 +3,8 @@ package service.implementation;
 import models.ws.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import corpbi.PolizasRoble;
-import corpbi.PolizasRoble_Service;
 import play.modules.guice.InjectSupport;
 import service.PolicyService;
-import utils.MessageHolder;
-import utils.StringUtil;
-import utils.WSClientFactory;
-import utils.XmlMarshalUtil;
 
 @InjectSupport
 public class PolicyServiceImpl implements PolicyService{
@@ -20,7 +13,7 @@ public class PolicyServiceImpl implements PolicyService{
 	private final String CONNECTION_ERROR = "Ha ocurrido un error en la conexión.";
 
 	public QueryClientResponse queryClient(QueryClientRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -33,7 +26,7 @@ public class PolicyServiceImpl implements PolicyService{
 //            String response = "701<consultaCliente><msgRespuesta>SATISFACTORIO</msgRespuesta><listaClientes><cliente><nit>123456</nit><dpi>123456789</dpi><passaporte>987654321</passaporte><nombreCliente>GUSTAVO GOMEZ</nombreCliente><cifCliente>111222</cifCliente><codigoCliente>321</codigoCliente></cliente><cliente><nit>123456</nit><dpi>123456789</dpi><passaporte>654798321</passaporte><nombreCliente>GUSTAVO ADOLFO GOMEZ</nombreCliente><cifCliente>222333</cifCliente><codigoCliente>322</codigoCliente></cliente></listaClientes></consultaCliente>";
 
             LOG.info("queryClient SOAP RESPONSE:\n\n" + response + "\n");
-            
+
             MessageHolder.printData(null);
             int responseIndex = response.indexOf(QueryClientResponse.TRANSACTION.toString());
             if(responseIndex >= 0){
@@ -46,11 +39,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new QueryClientResponse(CONNECTION_ERROR);
+        return new QueryClientResponse(CONNECTION_ERROR);*/
+        return null;
     }
-	
+
 	public QueryAverageValueVehicleResponse queryAverageValueVehicle(QueryAverageValueVehicleRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -75,12 +69,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        
-        return new QueryAverageValueVehicleResponse(CONNECTION_ERROR);
+        return new QueryAverageValueVehicleResponse(CONNECTION_ERROR);*/
+        return null;
     }
 	
 	public QueryVehicleResponse queryInsurableVehicle(QueryVehicleRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -108,11 +102,12 @@ public class PolicyServiceImpl implements PolicyService{
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
         
-        return new QueryVehicleResponse(CONNECTION_ERROR);
+        return new QueryVehicleResponse(CONNECTION_ERROR);*/
+        return null;
     }
 	
     public PersonClientResponse sendPersonClient(PersonClientRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -137,11 +132,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new PersonClientResponse(CONNECTION_ERROR);
+        return new PersonClientResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public BusinessClientResponse sendBusinessClient(BusinessClientRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -166,11 +162,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new BusinessClientResponse(CONNECTION_ERROR);
+        return new BusinessClientResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public PayerResponse sendDataPayer(PayerRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -195,11 +192,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new PayerResponse(CONNECTION_ERROR);
+        return new PayerResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public PolicyResponse sendDataPolicy(PolicyRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -224,11 +222,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new PolicyResponse(CONNECTION_ERROR);
+        return new PolicyResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public VehicleResponse sendDataVehicle(VehicleRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -252,11 +251,12 @@ public class PolicyServiceImpl implements PolicyService{
         } finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new VehicleResponse(CONNECTION_ERROR);
+        return new VehicleResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public CoveragesResponse sendListCoverages(CoveragesRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -281,11 +281,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new CoveragesResponse(CONNECTION_ERROR);
+        return new CoveragesResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public PrimeResponse sendPrimeList(PrimeRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -310,11 +311,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new PrimeResponse(CONNECTION_ERROR);
+        return new PrimeResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public YoungerResponse sendCoveragesYounger(YoungerRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -339,11 +341,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new YoungerResponse(CONNECTION_ERROR);
+        return new YoungerResponse(CONNECTION_ERROR);*/
+        return null;
     }
    
     public PaymentMethodResponse sendPaymentMethod(PaymentMethodRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -368,11 +371,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new PaymentMethodResponse(CONNECTION_ERROR);
+        return new PaymentMethodResponse(CONNECTION_ERROR);*/
+        return null;
     }
     
     public WorkFlowResponse sendDataWorkFlow(WorkFlowRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -397,11 +401,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new WorkFlowResponse(CONNECTION_ERROR);
+        return new WorkFlowResponse(CONNECTION_ERROR);*/
+        return null;
     }
 
     public QueryPersonDetailResponse queryPersonDetail(QueryPersonDetailRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -428,11 +433,12 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new QueryPersonDetailResponse(CONNECTION_ERROR);
+        return new QueryPersonDetailResponse(CONNECTION_ERROR);*/
+        return null;
     }
 
     public QueryBusinessDetailResponse queryBusinessDetail(QueryBusinessDetailRequest criteria) {
-        PolizasRoble service = null;
+        /*PolizasRoble service = null;
 	    try{
             String request = XmlMarshalUtil.toXml(criteria.getClass(), criteria);
             request = criteria.TRANSACTION + StringUtil.prepareXmlRequest(request);
@@ -459,7 +465,8 @@ public class PolicyServiceImpl implements PolicyService{
         finally {
             WSClientFactory.closeService(PolizasRoble_Service.class, service);
         }
-        return new QueryBusinessDetailResponse(CONNECTION_ERROR);
+        return new QueryBusinessDetailResponse(CONNECTION_ERROR);*/
+        return null;
     }
 
 }

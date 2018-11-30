@@ -1,5 +1,7 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,47 +12,42 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="listaCoberturas")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class CoveragesRequest {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 740;
 
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 740;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="codigoAgente")
+	@Expose
 	private String codeAgent;
-	@XmlElement(name="tipoCliente")
+	@Expose
 	private String typeClient;
-	
-	@XmlElementWrapper(name="lista")
-    @XmlElement(name="coberturas")
+
+	@Expose
 	private List<Coverage> coverages;
 	
-	@XmlAccessorType(XmlAccessType.FIELD)
-    public static class Coverage{
-		@XmlElement(name="cobertura")
+	public static class Coverage{
+		@Expose
 		private String coverage;
-		@XmlElement(name="tasa")
+		@Expose
 		private BigDecimal rate;
-		@XmlElement(name="sumaAsegurada")
+		@Expose
 		private BigDecimal sumAssured;
-		@XmlElement(name="prima")
+		@Expose
 		private BigDecimal prime;
-		@XmlElement(name="minimo")
+		@Expose
 		private BigDecimal minimun;
-		@XmlElement(name="porcdeducible")
+		@Expose
 		private BigDecimal percDeductible;
-		@XmlElement(name="recgoCobertur")
+		@Expose
 		private BigDecimal recgoCoverage;
-		@XmlElement(name="desctoCobertura")
+		@Expose
 		private BigDecimal desctoCoverage;
-		@XmlElement(name="tasaDeclaracion")
+		@Expose
 		private BigDecimal declarationRate;
-		@XmlElement(name="descuento")
+		@Expose
 		private BigDecimal discount;
 		
 		public String getCoverage() {

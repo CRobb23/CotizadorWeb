@@ -1,5 +1,7 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -9,37 +11,31 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="consultaCliente")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryClientResponse extends BaseResponse {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 701;
-	
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
-	@XmlElement(name="nit")
+	@Expose
 	private String taxNumber;
-	@XmlElement(name="dpi")
+	@Expose
 	private String identificationDocument;
-	@XmlElement(name="passaporte")
+	@Expose
 	private String pasport;
-	@XmlElement(name="nombreCliente")
+	@Expose
 	private String name;
-	@XmlElement(name="cifCliente")
+	@Expose
 	private String cifClient;
-	@XmlElement(name="codigoCliente")
+	@Expose
 	private String codeClient;
-    @XmlElement(name="tipoPersona")
-    private String personType;
+	@Expose
+	private String personType;
 
     public QueryClientResponse() {}
 	public QueryClientResponse(String message) {
 		this.message = message;
 	}
-	
-    @XmlElementWrapper(name="listaClientes")
-    @XmlElement(name="cliente")
+
+	@Expose
 	private List<QueryClientResponse> clients;
 	
 	public String getMessage() {
@@ -89,9 +85,6 @@ public class QueryClientResponse extends BaseResponse {
 	}
 	public void setClients(List<QueryClientResponse> clients) {
 		this.clients = clients;
-	}
-	public Integer getTransaction() {
-		return TRANSACTION;
 	}
 
     public String getPersonType() {

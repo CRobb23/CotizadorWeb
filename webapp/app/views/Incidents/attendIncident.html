@@ -182,6 +182,72 @@
                         </div>
                     </div>
 				#{/}
+
+				<div id="inspection_auto_questions">
+					#{field 'inspectionAutoQ1'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿Es propietario del vehículo?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ2'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿El vehículo tiene una antigüedad menor a los 20 años?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ3'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿Se encuentra en un lugar apropiado para realizar la inspección (con espacio suficiente e iluminado)?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ4'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿El vehículo se encuentra en buenas condiciones generales?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ5'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿Dispone de los documentos de identificación personales y del vehículo para realizar la auto inspección?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ6'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿Dispone de un celular inteligente (smartphone) con cámara funcional y plan de datos para realizar la auto inspección?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+					#{field 'inspectionAutoQ7'}
+                        <div class="form-group ${field.error?'has-error':''}" id="${field.id}">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} ¿Acepta las condiciones y términos de realizar la auto inspección?</label>
+                            <div class="col-sm-2">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                            </div>
+                        </div>
+					#{/}
+				</div>
 			</div>
          </div>
 		

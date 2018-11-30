@@ -1,19 +1,16 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="mediosdePago")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentMethodResponse extends BaseResponse {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 756;
 
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
 	
 	public PaymentMethodResponse() {}
@@ -26,8 +23,5 @@ public class PaymentMethodResponse extends BaseResponse {
 	}
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	public Integer getTransaction() {
-		return TRANSACTION;
 	}
 }

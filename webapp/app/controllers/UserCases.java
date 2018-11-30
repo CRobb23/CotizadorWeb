@@ -34,6 +34,8 @@ import play.i18n.Messages;
 import play.modules.pdf.PDF;
 import play.modules.pdf.PDF.Options;
 import play.mvc.With;
+import service.AverageValueQueryWebService;
+import service.InsurableVehicleQueryWebService;
 import service.PolicyService;
 import utils.StringUtil;
 
@@ -42,7 +44,11 @@ public class UserCases extends AdminBaseController {
 	
 	@Inject
 	static PolicyService policyService;
-	
+	@Inject
+	static AverageValueQueryWebService averageValueServiceBus;
+	@Inject
+	static InsurableVehicleQueryWebService insurableVehicleServiceBus;
+
 	/*
 	 * ************************************************************************************************************************
 	 * Ingreso de datos de cliente
@@ -263,7 +269,7 @@ public class UserCases extends AdminBaseController {
 		request.setCurrency("Q");
 		request.setLine(vehicle.line.transferCode);
     	request.setYearVehicle(erYear.year);
-    	QueryVehicleResponse queryVehicle = policyService.queryInsurableVehicle(request);
+    	QueryVehicleResponse queryVehicle = insurableVehicleServiceBus.insurableVehicleQuery(request);
     	Long lineId = null;
     	Long brandId = null;
     	if(vehicle.line != null){
@@ -482,7 +488,7 @@ public class UserCases extends AdminBaseController {
                         request.setLine(line.name);
                         request.setYear(erYear.year);
                         request.setCurrency("Q");
-                        QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+                        QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
                         if(!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.carValue != null){
                             // Garanteed value check
                             BigDecimal garanteedValueParam = new BigDecimal(0.15);
@@ -654,7 +660,7 @@ public class UserCases extends AdminBaseController {
 	        		request.setLine(line.name);
 	        		request.setYear(erYear.year);
 	        		request.setCurrency("Q");
-	        		QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+	        		QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
 	        		if(!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.carValue != null){
 	        		    // Garanteed value check
                         BigDecimal garanteedValueParam = new BigDecimal(0.15);
@@ -793,7 +799,7 @@ public class UserCases extends AdminBaseController {
 	        		request.setLine(line.name);
 	        		request.setYear(erYear.year);
 	        		request.setCurrency("Q");
-	        		QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+	        		QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
 	        		if(queryAverage != null && queryAverage.getAverageValue() != null && quotation.carValue != null){
 	        			BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15));
 	        			BigDecimal min = queryAverage.getAverageValue().subtract(diff);
@@ -892,7 +898,7 @@ public class UserCases extends AdminBaseController {
     		request.setLine(data[1]);
     		request.setYear(data[2]);
     		request.setCurrency("Q");
-    		QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+    		QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
     		if(queryAverage != null && queryAverage.getAverageValue() != null){
 	    		response.put("averageValue", currencyFormatter.format(queryAverage.getAverageValue()));
 	    		response.put("success", true);
