@@ -1,0 +1,679 @@
+		
+		<div class="row" style="min-height: 0px;">
+			<div class="col-sm-12">
+				#{field 'client.isIndividual'}
+					<div class="form-group">
+						<div class="col-sm-12" style="text-align: center;">
+							<label class="radio-inline">
+								<input type="radio" value="true" name="${field.name}" id="clienteIndividual" class="typeClient" ${field.value ? 'checked' : ''} />
+								&{'quotation.form.client.individual'}
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="false" name="${field.name}" id="clienteJuridico" class="typeClient" ${!field.value ? 'checked' : ''} />
+								&{'quotation.form.client.juridico'}
+							</label>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 id="titleFieldsAll" style="border-bottom: groove; text-align: center;"></h4>
+        <div class="row">
+            <div class="col-sm-6">
+                #{field 'client.taxNumber'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" maxlength="10" class="form-control" validate="true"/>
+                            <button id="checkClientTaxNumber"><img src="/public/images/lupa.png" border="0" width="20" height="20" />Buscar en base de datos de Seguros El Roble</button>
+						</div>
+                    </div>
+                #{/}
+            </div>
+            <div class="col-sm-6 fieldsClient">
+                #{field 'client.identificationDocument'}
+                    <div class="form-group ">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name} <h6>&{'quotation.form.client.messageDPI'}</h6></label>
+                        <div class="col-sm-8">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            <button id="checkClientIdentificationDoc"><img src="/public/images/lupa.png" border="0" width="20" height="20" />Buscar en base de datos de Seguros El Roble</button>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+
+            <div class="col-sm-6">
+                #{field 'client.nationality'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            #{select 'client.nationality.id', class:'form-control', id:'client_nationality', value: client?.nationality?.id}
+                                    #{option}&{'form.select'}#{/option}
+                                    #{list items: nationalities, as: 'nationalityItem'}
+                                #{option nationalityItem?.id}${nationalityItem?.name}#{/option}
+                            #{/list}
+                                #{/select}
+                        </div>
+                    </div>
+                #{/}
+            </div>
+            <div class="col-sm-6">
+                #{field 'client.email'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+
+            <div class="col-sm-6" style="display:none;">
+                #{field 'client.codeCifBank'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+            <div class="col-sm-6">
+                #{field 'client.expose'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <div class="checkbox">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+                                <input type="hidden" name="${field.name}" id="hidExpose" value=false>
+								*{Valido si esta chequeado}*
+                                <script>
+                                    $("#client_expose").change(function() {
+                                        if ($('#client_expose').is(':checked'))
+                                        {
+                                            $("#hidExpose").attr("disabled", "disabled");
+                                        }
+                                        else {
+                                            $("#hidExpose").removeAttr("disabled");
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+        </div>
+
+        <h4 id="titleFieldsClient" class="fieldsClient" style="border-bottom: groove; text-align: center;"></h4>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'client.firstName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.secondName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+			<div class="col-sm-6">
+				#{field 'client.firstSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.secondSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+			<div class="col-sm-6">
+				#{field 'client.marriedSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.birthdate'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.sex'}</label>
+					<div class="col-sm-8">
+						#{select 'client.sex.id', class:'form-control', id:'sex', value: client?.sex?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: sex, as: 'sexItem'}
+								#{option sexItem.id}${sexItem.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.profession'}</label>
+					<div class="col-sm-8">
+						#{select 'client.profession.id', class:'form-control', id:'profession', value: client?.profession?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: professions, as: 'professionItem'}
+								#{option professionItem?.id}${professionItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+
+			<div class="col-sm-6">
+				#{field 'client.passport'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/}  &{'quotation.form.client.civilStatus'}</label>
+					<div class="col-sm-8">
+						#{select 'client.civilStatus.id', class:'form-control', id:'civilStatus', value: client?.civilStatus?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: statuses, as: 'civilStatusItem'}
+								#{option civilStatusItem?.id}${civilStatusItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+
+            <div class="col-sm-6">
+				#{field 'client.licenseType'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							#{select 'client.licenseType.id', class:'form-control', id:'client_licenseType', value: client?.licenseType?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: licenseTypes, as: 'licenseTypeItem'}
+									#{option licenseTypeItem?.id}${licenseTypeItem?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.licenseNumber'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 class="fieldsClient" style="border-bottom: groove; text-align: center;">
+			DIRECCIÓN DE CORRESPONDENCIA
+		</h4>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'client.address'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.address'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+							<label id="clientAddressLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.country'}</label>
+					<div class="col-sm-8">
+						#{select 'client.country.id', class:'form-control', id:'country', value: client?.country?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: countries, as: 'countryItem'}
+								#{option countryItem?.id}${countryItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.department'}</label>
+					<div class="col-sm-8">
+						#{select 'client.department.id', class:'form-control', id:'department', value: client?.department?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: departments, as: 'departmentItem'}
+								#{option departmentItem?.id}${departmentItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.municipality'}</label>
+					<div class="col-sm-8">
+						#{select 'client.municipality.id', class:'form-control', id:'municipality', value: client?.municipality?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: municipalities, as: 'municipalityItem'}
+								#{option municipalityItem?.id}${municipalityItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="zone">#{required/} &{'quotation.form.client.zone'}</label>
+					<div class="col-sm-8">
+						#{select 'client.zone.id', class:'form-control', id:'zone', value: client?.zone?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: zones, as: 'zoneItem'}
+								#{option zoneItem?.id}${zoneItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber1'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.phoneNumber1'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientPhoneNumberLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber2'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.phoneNumber2'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientPhoneNumberLbl2"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber3'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.client.phoneNumber3'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientPhoneNumberLbl3"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		<h4 class="fieldsClient" style="border-bottom: groove; text-align: center;">
+			DIRECCIÓN DE COBRO
+		</h4>
+        <div class="row " style="min-height: 0px;">
+          <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-4 control-label" for="useSameAddress" id="lblUseSameAddress">Utilizar mismos datos de correspondencia</label>
+                    <div class="col-sm-8">
+                        <div class="checkbox">
+                            <input type="checkbox" name="useSameAddress" id="useSameAddress">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'client.addressWork'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.address'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            <label id="clientWorkAddressLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.country'}</label>
+					<div class="col-sm-8">
+						#{select 'client.countryWork.id', class:'form-control', id:'country_work', value: client?.countryWork?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: countries, as: 'country'}
+								#{option country?.id}${country?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.department'}</label>
+					<div class="col-sm-8">
+						#{select 'client.workDepartment.id', class:'form-control', id:'work_department', value: client?.workDepartment?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: workDepartments, as: 'department'}
+								#{option department?.id}${department?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.municipality'}</label>
+					<div class="col-sm-8">
+						#{select 'client.workMunicipality.id', class:'form-control', id:'work_municipality', value: client?.workMunicipality?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: workMunicipalities, as: 'municipality'}
+								#{option municipality?.id}${municipality?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="work_zone">#{required/} &{'quotation.form.client.zone'}</label>
+					<div class="col-sm-8">
+						#{select 'client.workZone.id', class:'form-control', id:'work_zone', value: client?.workZone?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: workZones, as: 'zoneItem'}
+								#{option zoneItem?.id}${zoneItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumberWork1'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.phoneNumber1'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientWorkPhoneNumberLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumberWork2'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.phoneNumber2'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientWorkPhoneNumberLbl2"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumberWork3'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.client.phoneNumber3'}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientWorkPhoneNumberLbl3"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		<h4 id="titleFieldsLegal" class="fieldsLegal" style="border-bottom: groove; text-align: center;"></h4>
+		<div class="row fieldsLegal">
+            <div class="col-sm-6">
+				#{field 'client.companyName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.businessName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+            <div class="col-sm-6">
+                #{field 'client.societyType'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                        <div class="col-sm-8">
+                            #{select 'client.societyType.id', class:'form-control', id:'society_type', value: client?.societyType?.id}
+                                    #{option}&{'form.select'}#{/option}
+                                    #{list items: societyTypes, as: 'societyType'}
+                                #{option societyType?.id}${societyType?.name}#{/option}
+                            #{/list}
+                                #{/select}
+                        </div>
+                    </div>
+                #{/}
+            </div>
+            <div class="col-sm-6">
+				#{field 'client.economicActivity'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							#{select 'client.economicActivity.id', class:'form-control', id:'client_economic_activity', value: client?.economicActivity?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: economicActivities, as: 'economicActivityItem'}
+									#{option economicActivityItem?.id}${economicActivityItem?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				#{/}
+			</div>
+
+			<div class="col-sm-6">
+				#{field 'client.stateProvider'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							#{select 'client.stateProvider', class:'form-control', id:'stateProvider', value: client?.stateProvider}
+								#{option 'N'}NO#{/option}
+								#{option 'S'}SI#{/option}
+							#{/select}
+						</div>
+					</div>
+				#{/}
+			</div>
+            <div class="col-sm-6">
+                #{field 'client.registrationDate'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+
+            <div class="col-sm-6">
+				#{field 'client.writeNumber'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.writeDate'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+		</div>
+		<h4 id="titleFieldsLegal" class="fieldsLegal" style="border-bottom: groove; text-align: center;">
+			DIRECCIÓN EMPRESA
+		</h4>
+		<div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'client.address'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="client_address_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="client_address_business" value="${field.value}" class="form-control"/>
+                            <label id="clientBussinessWorkAddressLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.country'}</label>
+					<div class="col-sm-8">
+						#{select 'client.country.id', class:'form-control', id:'country_business', value: client?.country?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: countries, as: 'countryItem'}
+								#{option countryItem?.id}${countryItem?.name}#{/option}
+
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.department'}</label>
+					<div class="col-sm-8">
+						#{select 'client.department.id', class:'form-control', id:'department_business', value: client?.department?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: departments, as: 'departmentItem'}
+								#{option departmentItem?.id}${departmentItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.municipality'}</label>
+					<div class="col-sm-8">
+						#{select 'client.municipality.id', class:'form-control', id:'municipality_business', value: client?.municipality?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: municipalities, as: 'municipalityItem'}
+								#{option municipalityItem?.id}${municipalityItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="zone_business">#{required/} &{'quotation.form.client.zone'}</label>
+					<div class="col-sm-8">
+						#{select 'client.zone.id', class:'form-control', id:'zone_business', value: client?.zone?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: zones, as: 'zoneItem'}
+								#{option zoneItem?.id}${zoneItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber1'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="client_phoneNumber1_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="client_phoneNumber1_business" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientBussinessPhoneNumberLbl"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber2'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="client_phoneNumber2_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="client_phoneNumber2_business" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientBussinessPhoneNumberLbl2"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber3'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="client_phoneNumber3_business"> &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="client_phoneNumber3_business" value="${field.value}" class="form-control" maxlength="10"/>
+                            <label id="clientBussinessPhoneNumberLbl3"></label>
+						</div>
+					</div>
+				#{/}
+			</div>
+
+		</div>
+        <div class="col-sm-12">
+            <br>
+            <br>
+        &{'quotation.form.client.phone.Authorization'}
+        </div>
+		#{include '/Incidents/legalRepresentative.html' /}
+
+        #{include '/Incidents/clientSelection.html' /}
+
+		#{include '/Incidents/clientPEP.html' /}

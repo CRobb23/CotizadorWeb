@@ -1,0 +1,29 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'incident.title'} ${incident?.number}</h1>
+		</span>
+	</div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	#{if flash.get('incident.quotation.send.warning')}
+		<div class="alert alert-warning">
+			${flash.get('incident.quotation.send.warning')}
+		</div>
+	#{/if}
+	
+</div>

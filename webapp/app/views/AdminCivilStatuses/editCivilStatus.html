@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @saveCivilStatus(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'civilStatus.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'civilStatus.id'}
+		<input type="hidden" name="civilStatusId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'civilStatus.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'civilStatus.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'civilStatus.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'civilStatus.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'civilStatus.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'civilStatus.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(civilStatus?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'civilStatusesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'civilStatusesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${civilStatus?.id==null ? messages.get('civilStatus.form.create') : messages.get('civilStatus.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{civilStatusesList(null,true)}">&{'civilStatus.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

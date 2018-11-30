@@ -1,0 +1,72 @@
+#{extends 'admin.html' /}
+
+#{form @saveIncidentInspection(), class:"form-horizontal", method:"POST", role:"form", id:"form"}	
+
+	<div class="well fixed-sidebar-parent">
+		<div class="orange-title">
+			<span>
+				<h1>&{'incident.title'} ${incident?.number}</h1>
+			</span>
+		</div>
+
+		#{if errors}
+		<div class="alert alert-danger">
+			&{'incident.attend.fielderrors'}
+		</div>	
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<input type="hidden" name="id" value="${incident?.id}"/>
+        <input type="hidden" name="isApproved" value="${isApproved}"/>
+    #{if isApproved == 0 }
+			#{field 'noSaleReason'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-4 control-label" for="${field.id}">Motivo:</label>
+                    <div class="col-sm-6">
+						#{select field.name, items:reasons, valueProperty:'id', labelProperty:'name', value:field.flash?:field.value, class:'form-control' /}
+						#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                    </div>
+                </div>
+			#{/}
+    #{/if}
+    #{if isApproved == 1 }
+        #{field 'inspectionDate'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-4 control-label" for="${field.id}">Fecha de inspección:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+                    #{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+                </div>
+            </div>
+        #{/}
+    #{/if}
+		<div class="form-group">
+			<div class="col-sm-offset-4 col-sm-6">
+                <a href="@{AdminIncidents.pendingIncidents()}"  class="btn btn-primary btn-block">&{'quotation.form.back'}</a>
+				<input type="submit" class="btn btn-primary btn-block" value="&{'incident.attend.save'}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-4 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>		
+#{/form}
+<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+<script type="text/javascript">
+$(".datePicker").datetimepicker({
+locale: "es",
+format: "DD/MM/YYYY",
+dayViewHeaderFormat: "MMMM YYYY"
+});
+</script>
+
+
+

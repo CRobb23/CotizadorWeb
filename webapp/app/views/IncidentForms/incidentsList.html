@@ -1,0 +1,81 @@
+#{extends 'admin.html' /}
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+#{form @searchIncidents(), class:"form-horizontal", method:"POST"}	
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'incidents.title'}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'searchField'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'incidentsList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash}" class="form-control"/>
+			</div>
+			<div class="col-sm-3">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'incidentsList.search.form.search'}" />
+			</div>
+		</div>
+		#{/}
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+#{if incidents?.size()>0}
+<div class="overflow well">
+	<table class="table table-striped table-bordered tablelist table-hover">
+		<thead>
+			<tr class="table-head">
+				<th>&{'incidentsList.table.number'}</th>
+				<th>&{'incidentsList.table.name'}</th>
+				<th>&{'incidentsList.table.vehicle'}</th>
+				<th>&{'incidentsList.table.status'}</th>
+				<th>&{'incidentsList.table.creationdate'}</th>
+				<th>&{'incidentsList.table.saledate'}</th>
+				<th style="width:50px;">&{'incidentsList.table.forms'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:incidents, as:'current'}
+				<tr class="${current_parity}">
+					<td data-title="&{'incidentsList.table.number'}">${current?.number}</td>
+					<td data-title="&{'incidentsList.table.name'}">${current?.client?.getFullName()}</td>
+					<td data-title="&{'incidentsList.table.vehicle'}">${current?.vehicle?.description()}</td>
+					<td data-title="&{'incidentsList.table.status'}">${current?.status?.name}</td>
+					<td data-title="&{'incidentsList.table.creationdate'}">${current?.creationDate?.format("dd/MM/yy HH:mm")}</td>
+					<td data-title="&{'incidentsList.table.saledate'}">${current?.saleDate?.format("dd/MM/yy HH:mm")}</td>
+					<td data-title="&{'incidentsList.table.forms'}"><a href="@{showAvailForms(current?.id)}" class="btn btn-xs">&{'incidentsList.table.forms'}</a></td>
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	
+	#{if incidents?.getPageCount() > 1}
+		#{paginate.controls items:incidents /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:incidents /}
+		</div>
+	#{/if}
+</div>
+#{/if}

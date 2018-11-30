@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @saveReminderType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'reminderType.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'reminderType.id'}
+		<input type="hidden" name="reminderTypeId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'reminderType.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminderType.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminderType.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminderType.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'reminderType.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reminderType.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(reminderType?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'reminderTypesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'reminderTypesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${reminderType?.id==null ? messages.get('reminderType.form.create') : messages.get('reminderType.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{reminderTypesList(null,true)}">&{'reminderType.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

@@ -1,0 +1,539 @@
+#{extends 'admin.html' /}
+
+#{form @saveProduct(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>${product?.id==null || copy ? messages.get('createProduct.title') : messages.get('editProduct.title')}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if product?.id && !copy}
+			<input type="hidden" name="product.id" value="${product?.id}" />
+		#{/if}
+		
+		#{if copy!=null}
+			<input type="hidden" name="copy" value="${copy}">
+		#{/if}	
+	
+		#{field 'product.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.description'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" maxlength="150" cols="1" class="form-control">${field.flash ? field.flash : (!copy)?field.value:''}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.currency.id'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, items:currencies, valueProperty:'id', labelProperty:'name', value:field.flash?:product?.currency?.id, class:'form-control', id:field.id /}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.remoteSystemCode'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.rateTypeTransferCode'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.active'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, value: field.flash ? field.flash : (product) ? (field.value) ? 1: 0 : "", class:'form-control'}
+						#{option 1}&{'productsList.table.state.active'}#{/option}
+						#{option 0}&{'productsList.table.state.inactive'}#{/option}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'product.hasFacultative'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+					#{select field.name, value: field.flash ?: (product) ? (field.value) ? 1: 0 : "", class:'form-control'}
+						#{option 1}&{'form.yes'}#{/option}
+						#{option 0}&{'form.no'}#{/option}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+		#{field 'product.additionalBenefits'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}"> &{'product.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" cols="1" class="form-control">${field.flash ? field.flash : (!copy)?field.value:''}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/field}
+		<hr />
+		<h4 class="text-center">&{'product.form.product.montosAdicionales'}</h4>
+		#{field 'product.montoRestarSumaAseg'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}"> &{'product.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/field}
+		#{field 'product.montoAgregarPrima'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}"> &{'product.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/field}
+
+
+
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+	<div class="well">
+		#{list categories, as: 'category'}
+			<h5 class="pull-left">
+				${category.name}
+			</h5>
+			<a data-toggle="modal" href="#" class="pull-right btn btn-xs addCoverage" id="${category?.id}">&{'product.form.coveragecategory.define'}</a>
+			<div class="clearfix"></div>
+			<div id="category_${category.id}">
+			#{list product?.coverages, as: 'coverage'}
+				#{if coverage?.coverage?.category?.id?.equals(category.id)}
+					<div id="coverage_${coverage.coverage?.id}" class="well productCoverage">
+						#{if (!copy && coverage?.id!=null)}
+							<input type="hidden" name="coverages[${(coverage_index - 1)}].id" value="${coverage.id}">
+						#{/if}
+						<input type="hidden" value="${coverage.coverage?.id}" name="coverages[${(coverage_index - 1)}].coverage.id"/>
+						<h5>${coverage.coverage?.name}</h5>
+						
+						#{field 'coverages['+(coverage_index-1)+'].valueBase'}
+							<div class="form-group ${field.error?'has-error':''}">
+								<label class="col-sm-3 control-label" for="${field.id}">&{'product.form.valueBase'}</label>
+								<div class="col-sm-6">
+									*{#{if coverage.coverage?.type?.code != 1}}*
+										#{select field.name+'.id', value: flash.value?:coverage.valueBase?.id, class:'form-control', id:field.id}
+											#{list baseFields, as: 'baseField'}
+												#{if baseField.appliesForType(coverage.coverage?.type?.code, category?.code)}
+													#{option baseField.id}${baseField.name}#{/option}
+												#{/if}
+											#{/list}
+										#{/select}
+									*{#{/if}}*
+									#{else}
+										<p class="form-control-static">&{'product.form.amountpercentage'}</p>
+									#{/else}
+									#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+								</div>
+							</div>
+						#{/}
+						
+						<div class="table-responsive">
+						<table class="fixedLayout table table-striped editar-productos" id="table_coverage_${coverage.coverage?.id}">
+							<thead>
+								<tr>
+									#{if coverage.fieldsDescription()}
+										<th>
+											${coverage.fieldsDescription()}
+										</th>
+									#{/if}
+									
+									#{list vehicleClasses, as: 'vehicleClass'}
+										<th><div style="text-align:center;" class="tip" data-toggle="tooltip" data-placement="top" data-original-title="${vehicleClass.description}">${vehicleClass.code}</div></th>
+									#{/list}
+									
+									<th>
+										#{if coverage?.coverage?.canHaveMultipleValues()}
+											<button type="button" class="btn btn-default addButton">+</button>
+										#{/if}
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								#{list coverage.values, as: 'coverageValue'}
+								<tr class="coverageValue">
+									#{if (!copy && coverageValue.id!=null)}
+										<input type="hidden" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].id" value="${coverageValue.id}" class="notClonable">
+									#{/if}
+									#{if coverage.coverage?.type?.code == 2}
+										<td class="double-input-td">
+											<input type="text" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].lowRange" class="input-mini input-mini-double form-control" 
+											value="${flash.get('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].lowRange')?:coverageValue.lowRange}"/>
+											<span class="label label-danger center-block">${errors.forKey('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].lowRange')}</span>
+											 a
+											<input type="text" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].highRange" class="input-mini input-mini-double form-control" 
+											value="${flash.get('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].highRange')?:coverageValue.highRange}"/>
+											<span class="label label-danger center-block">${errors.forKey('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].highRange')}</span>
+										</td>
+									#{/if}
+									#{if coverage.coverage?.type?.code == 3}
+										<td>
+											<input type="text" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].lowRange" 
+											class="input-medium form-control ${errors.forKey('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].lowRange') ? 'has-error' : ''}" 
+											value="${flash.get('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].lowRange')?:coverageValue.lowRange}"/>
+											<span class="label label-danger center-block">${errors.forKey('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].lowRange')}</span>
+										</td>
+									#{/if}
+									#{if coverage.coverage?.type?.code == 4}
+										<td>
+											<input type="text" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].optionName" class="input-medium form-control" value="${coverageValue.optionName}"/>
+										</td>
+									#{/if}
+							
+									#{list vehicleClasses, as: 'vehicleClass'}
+										%{
+											classValue = null;
+										}%
+										#{list coverageValue.values, as: 'value'}
+											#{if value.vehicleClass?.equals(vehicleClass)}
+												%{
+													classValue = value;
+												}%
+											#{/if}
+										#{/list}
+											<td>
+											#{if (!copy && classValue?.id!=null)}
+												<input type="hidden" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].values[${(vehicleClass_index-1)}].id" value="${classValue?.id}" class="notClonable"/>
+											#{/if}
+											<input type="hidden" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].values[${(vehicleClass_index-1)}].vehicleClass.id" value="${vehicleClass?.id}"/>
+											<input type="text" class="input-mini form-control" name="coverages[${(coverage_index - 1)}].values[${(coverageValue_index-1)}].values[${(vehicleClass_index-1)}].value" value="${classValue?.value?.doubleValue()?:0}"/>
+											<span class="label label-danger center-block">${errors.forKey('coverages['+(coverage_index - 1)+'].values['+(coverageValue_index-1)+'].values['+(vehicleClass_index-1)+'].value')}</span>
+											</td>
+										
+									#{/list}
+									<td>
+										<button type="button" class="btn btn-default deleteButton">-</button>
+									</td>
+								#{/list}
+								</tr>
+							</tbody>		
+						</table>
+						</div>
+						
+						Opcional <input type="checkbox" name="coverages[${(coverage_index - 1)}].optional" ${(coverage?.optional)?'checked':''}/>
+					</div>
+				#{/if}
+			#{/list}
+			</div>
+			<div class="clearfix"></div>
+			<hr />
+		#{/list}
+	</div>
+	<div class="well">
+		<div class="form-group">
+
+			<div class="col-sm-6 col-md-offset-3">
+				<input type="submit" class="btn btn-default btn-primary btn-block" name="save" value="&{'product.form.save'}" />
+				*{
+				#{if product?.id==null}
+					<input type="submit" class="btn btn-default btn-block" value="&{'product.form.savecontinue'}" />
+				#{/if}
+				#{else}
+					<input type="submit" class="btn btn-default btn-block" name="save" value="&{'product.form.save'}" />
+					<input type="submit" class="btn btn-default btn-block" name="savecontinue" value="&{'product.form.savecontinue'}" />
+				#{/else}
+				}*
+			</div>
+		</div>
+	</div>
+#{/form}
+
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="modalTitle">Modal title</h4>
+			</div>
+			<div class="modal-body" id="modalBody"></div>
+        	<div class="modal-footer">
+          		<button type="button" class="btn btn-default" data-dismiss="modal">&{'product.form.coverage.close'}</button>
+          		<button type="button" class="btn btn-primary" id="addCoveragesButton">&{'product.form.coverage.edit'}</button>
+        	</div>
+      	</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var totalCoverages = ${(product?.coverages?.size()) ?:0};
+
+	$(function(){
+		$("div.tip").tooltip();
+	
+		$('.addCoverage').click(function() {
+			var category_id = $(this).attr('id');
+			var categorydiv = 'category_' + category_id;
+			
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceCoverages.getCoverages()}', 
+				data :  'id='+ category_id, 
+				success: function(response) {
+					if (response.success) {
+						var html = '';
+						html += '<div class="table-responsive">';
+						html += '<table class="fixedLayout table table-striped">';
+						html += '<thead><tr class="table-head">';
+						html += '<th>' + "&{'product.form.coverage.name'}" + '</th>';
+						html += '<th>' + "&{'product.form.coverage.description'}" + '</th>';
+						html += '<th></th>';
+						html += '</tr></thead>';
+						
+						$.each(response.coverages, function(index, coverage) {
+							html+= '<tr>';
+							html+= '<td>' + coverage.name + '</td>';
+							html+= '<td>' + coverage.description + '</td>';
+							var checked = '';
+							var coveragediv = 'coverage_'+coverage.id;
+							if ($('#' + coveragediv).length > 0) {
+								checked = 'checked';
+							}
+							html+= '<td style="text-align:center;"><label><input type="checkbox" name="coverage" value="'+coverage.id+'" '+checked+'/></label></td>';
+						});
+						html += '</table>';
+						html += '</div>';
+				
+						$('#modalBody').html(html);
+					} else {
+						$('#modalBody').html(response.message);
+					}
+					
+					$('#modalTitle').html("&{'product.form.coverage.title'}");
+					$('#myModal').modal('show');
+				}
+           });
+		});
+		
+		$('#addCoveragesButton').click(function() {
+			var ids = [];
+			$('input:checkbox[name="coverage"]:checked').each(function() {
+				ids.push($(this).val());
+			});
+			
+			$.ajax({
+				type : 'POST',
+				url : '@{ServiceCoverages.getCoveragesFields()}', 
+				data :  {ids:ids}, 
+				success: function(response) {
+					if (response.success) {
+						$.each(response.fields, function(index, field) {
+							var categorydiv = 'category_' + field.category;
+							var coveragediv = 'coverage_'+field.id;
+							var tableid = 'table_'+coveragediv;
+							
+							if ($('#' + coveragediv).length == 0) {
+								
+								var html = '<div id="'+coveragediv+'" class="well productCoverage">';
+								html += '<input type="hidden" value="'+field.id+'" name="coverages['+totalCoverages+'].coverage.id" />';
+								html += '<h5>' + field.coverageName + '</h5>';
+								
+								html += '<div class="form-group">';
+								html += '<label class="col-sm-3 control-label" for="coverages['+totalCoverages+']_valueBase">&{'product.form.valueBase'}</label>';
+								html += '<div class="col-sm-6">';
+								html += '<select id="coverages['+totalCoverages+']_valueBase" name="coverages['+totalCoverages+'].valueBase.id" class="form-control">';
+								
+								$.each(field.baseFields, function(index, baseField) {
+									html +='<option value="'+baseField.id+'">'+baseField.name+'</option>';
+								});
+								html +='</select>';
+								html+= '</div>';
+								html+= '</div>';
+								
+								html += '<div class="table-responsive">';
+								html += '<table class="fixedLayout table table-striped" id="'+tableid+'">';
+								var numberOfFields = field.fields;
+								html += '<thead>';
+								html += '<tr>';
+								if (field.fieldTitle != null) {
+									html += '<th>';
+									html += field.fieldTitle;
+									html += '</th>';
+								}
+								
+								#{list vehicleClasses, as: 'vehicleClass'}
+									html += '<th><div style="text-align:center;" class="tip" data-toggle="tooltip" data-placement="top" data-original-title="${vehicleClass.description}">${vehicleClass.code}</div></th>';
+								#{/list}
+								
+								html += '<th>';
+								if (field.multiple) {
+									html += '<button type="button" class="btn addButton">+</button>';
+								}
+								html += '</th>';
+								html += '</tr>';
+								html += '</thead>';
+								
+								html += '<tbody>';
+								html += '<tr class="coverageValue">';
+								
+								if (field.fields == 2) {
+									html+= '<td class="double-input-td">';
+									html+= '<input type="text" name="coverages['+totalCoverages+'].values[0].lowRange" class="input-mini input-mini-double form-control"/>';
+									html+= ' a ';
+									html+= '<input type="text" name="coverages['+totalCoverages+'].values[0].highRange" class="input-mini input-mini-double form-control"/>';
+									html+= '</td>';
+								}
+								
+								if (field.fields == 3) {
+									html+= '<td>';
+									html+= '<input type="text" name="coverages['+totalCoverages+'].values[0].lowRange" class="input-medium form-control"/>';
+									html+= '</td>';
+								}
+								
+								if (field.fields == 4) {
+									html+= '<td>';
+									html+= '<input type="text" name="coverages['+totalCoverages+'].values[0].optionName" class="input-medium form-control"/>';
+									html+= '</td>';
+								}
+								
+								#{list vehicleClasses, as: 'vehicleClass'}
+									html += '<td>';
+									html += '<input type="hidden" name="coverages['+totalCoverages+'].values[0].values[${(vehicleClass_index-1)}].vehicleClass.id" value="${vehicleClass.id}"/>';
+									html += '<input type="text" class="input-mini form-control" name="coverages['+totalCoverages+'].values[0].values[${(vehicleClass_index-1)}].value" value="0"/>';
+									html += '</td>';
+								#{/list}
+								
+								html += '<td><button type="button" class="btn btn-default deleteButton">-</button></td>';
+								html += '</tr>';
+								html += '</tbody>';
+								html += '</table>';
+								html += '</div>';
+								html += 'Opcional <input type="checkbox" name="coverages['+totalCoverages+'].optional"/>'
+								html += '</div>';
+								
+								totalCoverages++;
+								
+								$('#'+categorydiv).append(html);
+								
+								$("div.tip").tooltip();	
+							}
+							
+						});
+					}
+					
+					$('input:checkbox[name="coverage"]:not(:checked)').each(function() {
+						var coveragediv = 'coverage_'+$(this).val();
+						$('#'+coveragediv).remove();
+					});
+					
+					$(document).find('.productCoverage').each(function(index){
+			 			$(this).find(':input').each(function() {
+			 				this.name = this.name.replace(/coverages\[(\d+)\]/, function(str,p1) {
+			 					return 'coverages[' + parseInt(index) + ']';
+							});
+						});
+		 			});
+						
+					$('#myModal').modal('hide');
+				}
+           });
+		});
+		
+		$(document).on("click",".deleteButton",function(e) {
+			
+			var row = $(this).closest("tr");
+			var table = $(this).closest("table");
+			var tableId = table.attr("id");
+			var div = $(this).closest("div.productCoverage");
+			
+		 	row.remove(); 
+		 	
+		 	var rowCount = $('#' + tableId +' tr').length;
+		 	if (rowCount <= 1) {
+		 		div.remove();
+		 		$(document).find('.productCoverage').each(function(index){
+		 			$(this).find(':input').each(function() {
+						this.name = this.name.replace(/coverages\[(\d+)\]/, function(str,p1) {
+							return 'coverages[' + parseInt(index) + ']';
+						});
+					});
+		 		});
+		 		
+		 		totalCoverages --;
+		 	} else {
+		 		table.find('.coverageValue').each(function(index){
+		 			$(this).find(':input').each(function() {
+						this.name = this.name.replace(/values\[(\d+)\]/, function(str,p1) {
+							return 'values[' + parseInt(index) + ']';
+						});
+					});
+		 		});
+		 	}
+		 });
+		 
+		 $(document).on("click",".addButton",function(e) {
+			var tableId = $(this).closest("table").attr("id");
+			
+			var row = $("#"+tableId+" tr:last");
+			var newRow = row.clone();
+			
+			newRow.find(':input').each(function() {
+				this.name = this.name.replace(/values\[(\d+)\]/, function(str,p1) {
+					return 'values[' + (parseInt(p1) + 1) + ']';
+				});
+			});
+			
+			newRow.find('span').each(function() {
+				$(this).empty();
+			});
+			
+			newRow.find(".notClonable").each(function(i){
+			     this.remove();
+ 			}) ;
+	    	
+	    	newRow.insertAfter(row);
+		});
+	});
+</script>

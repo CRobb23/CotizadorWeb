@@ -1,0 +1,72 @@
+#{extends 'admin.html' /}
+
+#{form @searchForms(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'formsList.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'form'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'formsList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.flash}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'formsList.search.form.search'} " />		
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'formsList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editForm()}" class="btn btn-default">&{'formsList.newForm'}</a>
+		</div>
+
+		<table class="table table-striped table-bordered formulario" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'formsList.table.form'}</th>
+					<th style="width:150px;">&{'formsList.table.path'}</th>
+					<th class="last textC" style="width:50px;">&{'formsList.table.edit'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:forms, as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>${current?.templatePath}</td>
+						<td class="lasticon textC">
+							<a href="@{editForm(current?.id)}" class="btn btn-xs">&{'formsList.table.edit'}</a>
+						</td>
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		
+		#{if forms?.getPageCount() > 1}
+			#{paginate.controls items:forms /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:forms /}
+			</div>
+		#{/if}
+	</div>
+</div>

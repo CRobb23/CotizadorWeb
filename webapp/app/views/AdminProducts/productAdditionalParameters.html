@@ -1,0 +1,72 @@
+#{extends 'admin.html' /}
+
+#{form @saveAdditionalParameters(), class:'form-horizontal', method:"POST"}
+	<input type="hidden" name="productId" value="${product?.id}"/>
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>&{'product.additionalParameters'} ${product?.name}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		<div class="table-responsive">
+		<table class="table table-striped" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'product.additionalParameters.coverage'}</th>
+					<th style="width:100px">&{'product.additionalParameters.emissionFee'}</th>
+					<th style="width:100px">&{'product.additionalParameters.iva'}</th>
+					<th style="width:100px">&{'product.additionalParameters.fraccioningFee'}</th>
+					<th style="width:100px">&{'product.additionalParameters.applyInNetPrime'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				#{list coverages, as: 'coverage'}
+						<tr>
+							<td>
+								<input type="hidden" name="coverages[${(coverage_index-1)}].id" value="${coverage.id}"/>
+								${coverage.coverage?.name}
+							</td>
+							<td style="text-align:center;">
+								<input type="checkbox" name="coverages[${(coverage_index-1)}].applyEmissionFee" ${coverage.applyEmissionFee?'checked':''}/>
+								<input type="hidden" name="coverages[${(coverage_index-1)}].applyEmissionFee" value="false"/>
+							</td>
+							<td style="text-align:center;">
+								<input type="checkbox" name="coverages[${(coverage_index-1)}].applyVAT" ${coverage.applyVAT?'checked':''}/>
+								<input type="hidden" name="coverages[${(coverage_index-1)}].applyVAT" value="false"/>
+							</td>
+							<td style="text-align:center;">
+								<input type="checkbox" name="coverages[${(coverage_index-1)}].applyFractioningFee" ${coverage.applyFractioningFee?'checked':''}/>
+								<input type="hidden" name="coverages[${(coverage_index-1)}].applyFractioningFee" value="false"/>
+							</td>
+							<td style="text-align:center;">
+								#{if coverage?.valueBase?.code != helpers.ERConstants.CALCULATION_BASE_NET_PRIME_PERCENTAGE}
+								<input type="checkbox" name="coverages[${(coverage_index-1)}].applyInNetPrime" ${coverage.isPartOfNetPrime()?'checked':''} />
+								#{/if}
+								<input type="hidden" name="coverages[${(coverage_index-1)}].applyInNetPrime" value="false"/>
+							</td>
+						</tr>
+				#{/list}
+			</tbody>
+		</table>
+		</div>
+	</div>
+	
+	<div class="well">
+		<div class="form-group">
+			<div class="col-sm-6 col-md-offset-3">
+				<input type="submit" class="btn btn-default btn-primary btn-block" value="&{'product.form.parameters.save'}" />
+			</div>
+		</div>
+	</div>	
+#{/form}

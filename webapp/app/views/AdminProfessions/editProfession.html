@@ -1,0 +1,59 @@
+#{extends 'admin.html' /}
+
+#{form @saveProfession(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'profession.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'profession.id'}
+		<input type="hidden" name="professionId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'profession.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'profession.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'profession.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'profession.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(profession?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'professionsList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'professionsList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${profession?.id==null ? messages.get('profession.form.create') : messages.get('profession.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{professionsList(null,true)}">&{'profession.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

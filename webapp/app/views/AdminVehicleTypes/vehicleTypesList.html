@@ -1,0 +1,85 @@
+#{extends 'admin.html' /}
+
+#{form @searchVehicleType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'vehicleTypesList.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'vehicleType'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'vehicleTypesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'vehicleTypesList.search.form.search'} " />		
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'vehicleTypesList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="float:right; padding-left: 5px; text-align:right; margin-bottom:10pt">
+			<a href="@{editVehicleType()}" class="btn btn-default">&{'vehicleTypesList.new'}</a>
+		</div>
+		
+		<div style="float:right; text-align:right; margin-bottom:10pt">
+			<a href="@{newVehicleTypeFromExcel()}" class="btn btn-default">&{'vehicleTypesList.newExcel'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'vehicleTypesList.table.name'}</th>
+					<th>&{'vehicleTypesList.table.active'}</th>
+					<th class="last textC" style="width:50px;">&{'vehicleTypesList.table.edit'}</th>
+					<th class="last textC" style="width:50px;">&{'vehicleTypesList.table.delete'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:vehicleTypes , as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+						<td class="lasticon textC">
+							<a href="@{editVehicleType(current?.id)}"  class="btn btn-xs">&{'vehicleTypesList.table.edit'}</a>
+						</td>
+						<td class="lasticon textC">
+							<a href="@{deleteVehicleType(current?.id)}"  class="btn btn-xs">&{'vehicleTypesList.table.delete'}</a>
+						</td>
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if vehicleTypes?.getPageCount() > 1}
+			#{paginate.controls items:vehicleTypes /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:vehicleTypes /}
+			</div>
+		#{/if}
+	</div>
+</div>

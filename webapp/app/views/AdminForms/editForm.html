@@ -1,0 +1,109 @@
+#{extends 'admin.html' /}
+
+#{form @saveForm(), class:"form-horizontal", method:"POST", onsubmit:"submit_query_form()"}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>${form==null ? messages.get('createForm.title') : messages.get('editForm.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if form}
+			<input type="hidden" name="formId" value="${form?.id}" />
+		#{/if}
+	
+		#{field 'form.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'form.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'form.templatePath'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'form.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-6 text-center">
+							&{'form.parameters.availableparameters'}
+							<div class="input-group text-left">
+								<select class="height200 form-control" id="available" multiple>
+									#{list formParams, as: 'formParameter'}
+										<option value="${formParameter.id}">${formParameter?.name}</option>
+									#{/list}
+								</select>
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button" value=" > "/>			
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 text-center">
+							&{'form.parameters.assignedparameters'}
+							<div class="input-group text-left">
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button" value=" < "/>
+								</div>
+								#{select 'form.parameters[].id', id:'assigned', multiple:'multiple', class:'form-control col-sm-6 height200'}
+									#{list assigned, as: 'formParameter'}
+										<option value="${formParameter.id}">${formParameter?.name}</option>
+									#{/list}
+								#{/select}
+							</div>
+						</div>
+					</div>			
+				</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${form==null ? messages.get('form.form.create') : messages.get('form.form.edit')}" />
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+	$(function (){
+	    $("#select_button").click(
+	    	function (){
+	    		$('#available option:selected').appendTo("#assigned");
+	    	}
+	    );
+	});
+	
+	$(function (){
+	    $("#delete_button").click(
+	    	function (){
+	    		$('#assigned option:selected').appendTo("#available");
+	    	}
+	    );
+	});
+	
+	function submit_query_form() {
+		obj = document.getElementById("assigned");
+		for(var i = 0; i < obj.options.length; i++){
+			obj.options[i].selected = true;
+		}
+	}
+</script>
+#{/}

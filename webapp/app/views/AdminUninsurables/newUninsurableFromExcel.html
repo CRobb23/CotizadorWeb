@@ -1,0 +1,47 @@
+#{extends 'admin.html' /}
+
+<form action="@{loadUninsurableFromExcel()}" method="POST" class="form-horizontal" enctype="multipart/form-data" role="form">
+
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'uninsurable.excel.title'}</h1>
+			</span>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="template">Plantilla</label>
+			<div class="col-sm-6">
+		  		<p class="form-control-static"><a href="@{downloadNewUninsurableTemplate()}" class="btn btn-block">Descargar Plantilla</a></p>
+			</div>
+		</div>
+
+		#{field 'excelFile'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'uninsurable.excel.excelFile.label'}</label>
+				<div class="col-sm-6">
+					<input type="file" name="${field.name}" id="${field.id}" class="form-control" />
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'uninsurable.excel.button.load'}" />
+				<a href="/uninsurables" class="btn btn-primary btn-block">&{'uninsurable.excel.button.cancel'}</a>
+			</div>
+		</div>
+	</div>
+</form>

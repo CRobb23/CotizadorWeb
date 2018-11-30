@@ -1,0 +1,58 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'coveragesList.title'}</h1>
+		</span>
+	</div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	<div class="overflow">
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editCoverage()}" class="btn btn-default">&{'coveragesList.newCoverage'}</a>
+		</div>
+
+	<div class="table-responsive">
+	<table class="table table-striped table-bordered coberturas" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr class="table-head">
+				<th class="first">&{'coveragesList.table.order'}</th>
+				<th>&{'coveragesList.table.name'}</th>
+				<th>&{'coveragesList.table.description'}</th>
+				<th>&{'coveragesList.table.category'}</th>
+				<th class="last textC" style="width:50px;">&{'coveragesList.table.edit'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:coverages, as:'current'}
+				<tr class="${current_parity}">
+					<td class="first style2">${current?.coverageOrder}</td>
+					<td>${current?.name}</td>
+					<td>${current?.description}</td>
+					<td>${current?.category?.name}</td>
+					<td class="lasticon textC">
+						<a href="@{editCoverage(current?.id)}" class="btn btn-xs">Editar</a>
+					</td>
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	</div>
+	
+	#{if coverages?.getPageCount() > 1}
+		#{paginate.controls items:coverages /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:coverages /}
+		</div>
+	#{/if}
+</div>

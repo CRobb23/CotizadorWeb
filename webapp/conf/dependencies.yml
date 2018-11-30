@@ -1,0 +1,15 @@
+# Application dependencies
+
+require:
+    - play
+    - play -> pdf 0.7
+    - play -> paginate 0.14
+    - play -> excel 1.2.3
+    - play -> guice 1.2
+    - be.objectify -> objectify-led 1.6
+    - net.sourceforge.jexcelapi -> jxl 2.6
+    - com.microsoft.sqlserver -> mssql-jdbc 6.2.2.jre7
+    - org.eclipse.persistence -> eclipselink 2.5.0
+    - com.jcraft -> jsch 0.1.54
+    - commons-net -> commons-net 2.2
+    

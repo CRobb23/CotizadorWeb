@@ -1,0 +1,50 @@
+#{extends 'admin.html' /}
+
+#{form @saveBeneficiaries(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'beneficiaries.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'beneficiaries.id'}
+		<input type="hidden" name="beneficiariesId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'beneficiaries.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'beneficiaries.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'beneficiaries.transferCode'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'beneficiaries.form.transferCode'}</label>
+			<div class="col-sm-6">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${beneficiaries?.id==null ? messages.get('beneficiaries.form.create') : messages.get('beneficiaries.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{beneficiariesList(null,true)}">&{'beneficiaries.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

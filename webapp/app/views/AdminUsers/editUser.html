@@ -1,0 +1,215 @@
+#{extends 'admin.html' /}
+
+#{form @saveUser(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title"><span>
+			<h1>${user==null ? messages.get('createUser.title') : messages.get('editUser.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if user}
+			<input type="hidden" name="user.id" value="${user?.id}" />
+		#{/if}
+	
+		*{#{if user?.id==null}}*
+		#{field 'user.email'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		*{#{/if}}*
+		
+		#{field 'user.firstName'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'user.lastName'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'user.role'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select 'user.role.id', value: flash.get(field.name+'.id')?: user?.role?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: roles, as: 'role'}
+							#{option role?.id}${role?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'user.active'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, value: field.flash ? field.flash : (user) ? (field.value) ? 1: 0 : "", class:'form-control'}
+						#{option 1}&{'usersList.table.state.active'}#{/option}
+						#{option 0}&{'usersList.table.state.inactive'}#{/option}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{if controllers.Security.check('Administrador maestro')}
+		#{field 'user.channel'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name+'.id', id:'channel', value: flash.get(field.name+'.id')?: user?.channel?.id?: '', class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list channels, as: 'channel'}
+							#{option channel?.id}${channel?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		#{/if}
+		
+		#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+			#{field 'user.distributor'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'user.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name+'.id', id:'distributor', value: flash.get(field.name+'.id')?: user?.distributor?.id?: '', class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list distributors, as: 'distributor'}
+							#{option distributor?.id}${distributor?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		#{/if}
+
+        #{field 'agentCode'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'profile.form.profile.'+field.name}</label>
+            <div class="col-sm-6">
+              <input type="text" name="${field.name}" id="${field.id}" value="${user?.profile?.agentCode}" class="form-control"/>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+
+        #{field 'phoneNumber'}
+          <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'profile.form.profile.'+field.name}</label>
+            <div class="col-sm-6">
+              <input type="text" name="${field.name}" id="${field.id}" value="${user?.profile?.phoneNumber}" class="form-control"/>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+          </div>
+        #{/}
+
+		#{if controllers.Security.check('Administrador maestro') }
+			#{field 'user.selectedBroker'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-3 control-label" for="${field.id}">&{'user.form.'+field.name}</label>
+                    <div class="col-sm-6">
+						#{select field.name, id:'broker', value: flash.get(field.name)?: user?.selectedBroker?: '', class:'form-control'}
+							#{option}&{'form.none'}#{/option}
+							#{list brokers, as: 'broker'}
+								#{option broker?.key}${broker?.value}#{/option}
+							#{/list}
+						#{/select}
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                    </div>
+                </div>
+			#{/}
+
+			#{field 'isQAUser'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-3 control-label" for="${field.id}">&{'user.form.user.isQAUser'}</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" name="${field.name}" id="${field.id}" ${user?.isQAUser?.value == true ? 'checked' : ''}/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                    </div>
+                </div>
+			#{/}
+		#{/if}
+
+
+      <div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${user==null ? messages.get('user.form.create') : messages.get('user.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+#{set 'moreScripts'}
+<script type="text/javascript">
+$(function (){
+	    $("#channel").change(function () {
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	$('#distributor').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+	    	var id = $(this).val();
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.distributorsForChannel()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#distributor').html('<option value="">'+"&{'form.none'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.distributors, function(index, distributor) {
+							html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+						});
+						$('#distributor').append(html);
+					} 
+				},
+				error: function() {
+					$('#distributor').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    });
+	});
+</script>
+#{/}
+#{/if}

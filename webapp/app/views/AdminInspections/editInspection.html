@@ -1,0 +1,91 @@
+#{extends 'admin.html' /}
+
+#{form @saveInspection(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'inspection.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'inspection.id'}
+		<input type="hidden" name="inspectionId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'inspection.inspectionNumber'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'inspection.form.inspectionNumber'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'inspection.address'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'inspection.form.address'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'inspection.appointmentDate'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'inspection.form.appointmentDate'}</label>
+			<div class="col-sm-6">
+				<input type="datetime-local" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'type'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'inspection.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: flash.field?:type?.id, class:'form-control'}
+						#{list items: inspectionTypes, as: 'inspectionType'}
+							#{option inspectionType?.id}${inspectionType?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'inspection.inspected'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'inspection.form.inspected'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(inspection?.inspected)      ?1:0, class:'form-control'}
+					#{option 1}&{'inspectionList.table.state.active'}#{/option}
+					#{if inspection?.id != null}
+				    	#{option 0}&{'inspectionList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${inspection?.id==null ? messages.get('inspection.form.create') : messages.get('inspection.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{inspectionsList(null,true)}">&{'inspection.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

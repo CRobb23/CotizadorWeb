@@ -1,0 +1,59 @@
+#{extends 'admin.html' /}
+
+#{form @saveVehicleType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'vehicleType.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'vehicleType.id'}
+		<input type="hidden" name="vehicleTypeId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'vehicleType.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'vehicleType.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'vehicleType.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'vehicleType.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(vehicleType?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'vehicleTypeList.table.state.active'}#{/option}
+					#{if vehicleType?.id != null}
+				    	#{option 0}&{'vehicleTypeList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${vehicleType?.id==null ? messages.get('vehicleType.form.create') : messages.get('vehicleType.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{vehicleTypesList(null,true)}">&{'vehicleType.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

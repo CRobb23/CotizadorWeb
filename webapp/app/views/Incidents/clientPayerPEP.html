@@ -1,0 +1,204 @@
+<h4 id="titleFieldsPEP" class="fieldsClientPayerPEP" style="border-bottom: groove; text-align: center;">
+    PERSONA EXPUESTA POLITICAMENTE
+</h4>
+<div class="row fieldsClientPayerPEP">
+    <input type="hidden" name="clientPayerPEP.id" value="${clientPayerPEP?.id}">
+    <div class="row" style="min-height: 0px;">
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.typeOfrelationship'}
+            <div class="form-group">
+                <div class="col-sm-12" style="text-align: center;">
+                    <div id="recoverRads">
+                    <label class="radio-inline">
+                        <input type="radio" value="Parentesco" name="${field.name}" id="radPEPPayerParentesco" class="typePayerPEP" ${field.value.equals("Parentesco") ? 'checked' : ''} />
+                        Tiene parentesco con una Persona Expuesta Políticamente (PEP)
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="Asociado" name="${field.name}" id="radPEPPayerAsociado" class="typePayerPEP" ${field.value.equals("Asociado") ? 'checked' : ''} />
+                        Es asociado cercano de una Persona Expuesta Políticamente (PEP)
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" value="Ninguno" name="${field.name}" id="radPEPPayerNinguno" class="typePayerPEP" ${field.value.equals("Ninguno") ? 'checked' : ''} />
+                        Ninguno
+                    </label>
+                    </div>
+                    *{Selecciona si no existe ninguno seleccionado}*
+                    <script>
+                        $(document).ready(function() {
+                        var bolCheck = false;
+                        $('#recoverRads input[type=radio]').each(function() {
+                            if (this.checked) {
+                                bolCheck = true;
+                            }
+                        });
+                        if (bolCheck == false)
+                            $("#radPEPPayerParentesco").attr('checked', true);
+                            $(".typePayerPEP").trigger("change");
+                        });
+                    </script>
+                </div>
+            </div>
+        #{/}
+        </div>
+    </div>
+    <div id="divRelativePayer">
+        <!--Parentesco  Payer PEP -->
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationship'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}" id="lblRelationshipPayer"></label>
+                <div class="col-sm-8">
+                    #{select 'clientPayerPEP.relationship', class:'form-control relationPayerPEP', id:"${field.id}", value: clientPayerPEP?.relationship}
+                        <script>
+                            $(document).ready(function() {
+                                if ("${field.value}" == "C&oacute;nyuge"){
+                                    document.getElementById("${field.id}").value = "Cónyuge";
+                                }
+                                else if ("${field.value}" == "Pol&iacute;ticos")
+                                    document.getElementById("${field.id}").value = "Políticos";
+                                else if ("${field.value}" != "")
+                                    document.getElementById("${field.id}").value = "${field.value}";
+                                $(".relationPayerPEP").trigger("change");
+                            });
+                        </script>
+
+                    #{/select}
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6" id="divOtroPayer">
+        #{field 'clientPayerPEP.specificRelationship'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">#{required/} Especifique:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" value="${field.value}" id="${field.id}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationFirstSurname'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.firstSurname'}</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationSecondSurname'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="brand_line">&{'quotation.form.client.secondSurname'}</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationMarriedSurname'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="brand_line">&{'quotation.form.client.marriedSurname'}</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationFirtName'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.client.firstName'}</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationSecondName'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="brand_line"> &{'quotation.form.client.secondName'}</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationOtherName'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="brand_line"> Otros Nombres</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationIsNational'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.client.nationality'}</label>
+                <div class="col-sm-8">
+                    #{select 'clientPayerPEP.relationIsNational', class:'form-control', id:"${field.id}", value: clientPayerPEP?.relationIsNational}
+                        #{option true}Nacional#{/option}
+                        #{option false}Extranjero#{/option}
+                    #{/select}
+                </div>
+            </div>
+        #{/}
+        </div>
+
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationSex'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">Género:</label>
+                <div class="col-sm-8">
+                    #{select 'clientPayerPEP.relationSex', class:'form-control', id:"${field.id}", value: clientPayerPEP?.relationSex}
+                        #{option 'M'}M#{/option}
+                        #{option 'F'}F#{/option}
+                    #{/select}
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationCompanyName'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">Nombre de la institución o ente donde trabaja:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.relationJob'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">Puesto que desempeña:</label>
+                <div class="col-sm-8">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                </div>
+            </div>
+        #{/}
+        </div>
+        <div class="col-sm-6">
+        #{field 'clientPayerPEP.idRelationCompanyCountry'}
+            <div class="form-group">
+                <label class="col-sm-4 control-label" for="${field.id}">País de la institución o ente:</label>
+                <div class="col-sm-8">
+                    #{select 'clientPayerPEP.idRelationCompanyCountry.id', class:'form-control', id:"${field.id}", value: clientPayerPEP?.idRelationCompanyCountry?.id}
+                                    #{option}&{'form.select'}#{/option}
+                                    #{list items: nationalities, as: 'nationalityItem'}
+                        #{option nationalityItem?.id}${nationalityItem?.name}#{/option}
+                    #{/list}
+                                #{/select}
+                </div>
+            </div>
+        #{/}
+        </div>
+    </div>
+</div>

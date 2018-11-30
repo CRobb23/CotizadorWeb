@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @saveAccountLine(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'accountLine.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'accountLine.id'}
+		<input type="hidden" name="accountLineId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'accountLine.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'accountLine.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'accountLine.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'accountLine.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'accountLine.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'accountLine.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(accountLine?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'accountLinesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'accountLinesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${accountLine?.id==null ? messages.get('accountLine.form.create') : messages.get('accountLine.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{accountLinesList(null,true)}">&{'accountLine.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

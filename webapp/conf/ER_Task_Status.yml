@@ -1,0 +1,7 @@
+ER_Task_Status(ts1):
+    code:               1
+    name:               Pendiente
+
+ER_Task_Status(ts2):
+    code:               2
+    name:               Completada

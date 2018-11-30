@@ -1,0 +1,110 @@
+#{extends 'admin.html' /}
+
+#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor')}
+#{form @UserProfile.saveProfile(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title"><span>
+			<h1>&{'userProfile.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'profile.phoneNumber'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-2 control-label" for="${field.id}">&{'profile.form.'+field.name}</label>
+				<div class="col-sm-3">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'profile.agentCode'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-2 control-label" for="${field.id}">&{'profile.form.'+field.name}</label>
+				<div class="col-sm-3">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'profile.mailSignature'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-2 control-label" for="${field.id}">&{'profile.form.'+field.name}</label>
+				<div class="col-sm-3">
+					<textarea name="${field.name}" id="${field.id}" maxlength="150" cols="1" class="form-control">${field.flash ? field.flash : (!copy)?field.value:''}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-3">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'profile.form.profile.save'}" />
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+#{/if}
+
+#{form @AdminProfile.savePassword(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">
+	
+	#{if !controllers.Security.check('Administrador maestro') && !controllers.Security.check('Gerente comercial') && !controllers.Security.check('Gerente de canal') && !controllers.Security.check('Vendedor') && !controllers.Security.check('Supervisor')}
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	#{/if}
+	
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="password">#{required/} &{'profile.changepassword.form.password'}</label>
+			<div class="col-sm-3">
+				<input type="password" name="password" id="password" class="form-control"/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="newPassword">#{required/} &{'profile.changepassword.form.newPassword'}</label>
+			<div class="col-sm-3">
+				<input type="password" name="newPassword" id="newPassword" class="form-control"/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label" for="confirmPassword">#{required/} &{'profile.changepassword.form.confirmPassword'}</label>
+			<div class="col-sm-3">
+				<input type="password" name="confirmPassword" id="confirmPassword" class="form-control"/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-3">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'profile.changepassword.form.change'}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-2 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+#{/form}

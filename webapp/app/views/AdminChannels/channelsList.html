@@ -1,0 +1,121 @@
+#{extends 'admin.html' /}
+
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'channelsList.title'}</h1>
+		</span>
+	</div>	
+
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+
+	*{
+		#{form @searchChannels(), class:"form-horizontal well", method:"POST"}	
+		
+			#{field 'channel'}
+			<div class="form-group">
+				<label class="col-sm-2 control-label" for="${field.id}">&{'channelsList.search.form.'+field.name}</label>
+				<div class="col-sm-3">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash}" />
+				</div>
+			</div>
+			#{/}
+			
+			#{field 'adminId'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-2 control-label" for="${field.id}">&{'channelsList.search.form.'+field.name}</label>
+				<div class="col-sm-3">
+					#{select field.name, id:field.id, value:field.flash}
+						#{option}&{'form.all'}#{/option}
+						#{list items: administrators, as: 'administrator'}
+							#{option administrator?.id}${administrator?.getFullName()} (${administrator?.email})#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+			#{/}
+			
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-3">
+					<input type="submit" class="btn btn-default" name="search" value=" &{'channelsList.search.form.search'} " />		
+					<input type="submit" class="btn btn-default" name="all" value=" &{'channelsList.search.form.all'} " />
+				</div>
+			</div>
+			
+		#{/form}
+	</div>
+	}*
+
+	<div class="overflow">
+
+		<div style="text-align:right; margin-bottom:10pt">
+			<a href="@{editChannel()}" class="btn btn-default">&{'channelsList.newChannel'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered canal" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'channelsList.table.channel'}</th>
+					<th class="first">&{'channelsList.table.administrator'}</th>
+					<th class="first">&{'channelsList.table.administratoremail'}</th>
+					<th class="last textC" style="width:50px;">&{'channelsList.table.estado'}</th>
+					<th class="last textC" style="width:50px;">&{'channelsList.table.edit'}</th>
+					<th class="last textC" style="width:50px;">&{'channelsList.table.delete'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:channels, as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>
+							#{list items:current?.administrators, as:'administrator'}
+							${administrator?.getFullName()}
+								#{if !administrator_islast}
+								<br>
+								#{/if}
+							#{/list}
+						</td>
+						<td>
+							#{list items:current?.administrators, as:'administrator'}
+							${administrator?.email}
+								#{if !administrator_islast}
+								<br>
+								#{/if}
+							#{/list}
+						</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+
+						<td class="lasticon textC">
+							<a href="@{editChannel(current?.id)}" class="btn btn-xs">&{'channelsList.table.edit'}</a>
+						</td>
+						<td class="lasticon textC">
+							<a href="@{deleteChannel(current?.id)}" class="btn btn-xs" onclick="return confirm('�Seguro que desea eliminar el usuario permanentemente?')">&{'channelsList.table.delete'}</a>
+						</td>
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if channels?.getPageCount() > 1}
+			#{paginate.controls items:channels /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:channels /}
+			</div>
+		#{/if}
+	</div>

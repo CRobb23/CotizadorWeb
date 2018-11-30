@@ -1,0 +1,176 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+<div class="well">
+	<div class="orange-title"><span>
+			<h1>&{'incident.title'} ${incident?.number}</h1>
+	</span></div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	#{if flash.get('incident.quotation.send.warning')}
+		<div class="alert alert-warning">
+			${flash.get('incident.quotation.send.warning')}
+		</div>
+	#{/if}
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-default panel-transparent">
+				<div class="panel-heading">
+				</div>
+				<table class="table table-bordered table-striped">
+					<tr>
+						<th>&{'incident.field.client'}</th>
+						<td>${incident?.client?.getFullName()}</td>
+					</tr>
+					<tr>
+						<th>&{'incident.field.email'}</th>
+						<td>${incident?.client?.email}</td>
+					</tr>
+					<tr>
+						<th>&{'incident.field.phone'}</th>
+						<td>${incident?.client?.phoneNumber}</td>
+					</tr>
+					<tr>
+						<th>&{'incident.field.taxNumber'}</th>
+						<td>${incident?.client?.taxNumber}</td>
+					</tr>
+					<tr>
+						<th>&{'incident.field.vehicle'}</th>
+						<td>${incident?.vehicle?.description()}</td>
+					</tr>
+					<tr>
+						<th>&{'incident.field.status'}</th>
+						<td>${incident?.status?.name}</td>
+					</tr>
+					#{if incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_PENDING_INSPECTION}
+					<tr>
+						<th>&{'incident.field.inspectionType'}</th>
+						#{if incident?.inspection?.type?.code == helpers.ERConstants.INSPECTION_TYPE_ADDRESS}
+							<td>${incident?.inspection?.type?.name} - ${incident?.inspection?.address}</td>
+							</tr>
+							<th>&{'incident.field.date'}</th>
+							<td>${incident?.inspection?.appointmentDate?.format('dd/MM/yyyy HH:mm')}</td>
+						#{/if}
+						#{elseif incident?.inspection?.type?.code == helpers.ERConstants.INSPECTION_TYPE_CENTER}
+							<td>${incident?.inspection?.type?.name}</td>
+						#{/elseif}
+					</tr>
+					#{/if}
+					<tr>
+						<th>&{'incident.field.creator'}</th>
+						<td>${incident?.creator?.getFullName()}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		#{if !incident?.isFinalized() && isOwner}
+		<div class="col-sm-6">
+			<div class="panel panel-default panel-transparent">
+				<div class="panel-heading">
+					<h4 class="panel-title">&{'incident.tasks.title'}</h4>
+				</div>
+				#{if tasks?.size()>0}
+				<table class="table table-striped tablelist">
+					#{list tasks, as: 'task'}
+					<tr>
+						<td data-title="&{'incident.task.dueDate'}" class="${(task?.dueDate?.compareTo(new Date())<=0)?'expired':''}">${task.dueDate?.format('dd/MM/yyyy HH:mm')}</td>
+						<td data-title="&{'incident.task.task'}">${task.type?.name}: ${task.description}</td>
+						#{if isOwner}
+						<td data-title="&{'incident.task.action'}" class="text-center">
+							<a href="@{UserTasks.completeTask(task.id)}" class="btn btn-xs" onclick="return confirm('&{'tasks.list.table.complete.confirmation'}')">&{'incident.field.complete'}</a>
+						</td>
+						#{/if}
+					</tr>
+					#{/list}
+				</table>
+				#{/if}
+				#{else}
+					<div class="panel-body">
+						<a href="@{UserTasks.newTask(incident?.id)}" class="btn btn-large btn-block">&{'incident.task.new'}</a>
+					</div>
+				#{/else}
+			</div>
+		</div>
+		#{/if}
+	</div>
+	
+	#{if !incident?.isFinalized() && isOwner}
+	<div class="row">
+		<div class="col-sm-6">
+			<a href="@{attendIncident(incident?.id)}" class="btn btn-block btn-large">&{'incident.attend'}</a>
+		</div>
+	</div>
+	#{/if}
+	
+</div>
+
+<div class="overflow well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'incident.quotations'}</h1>
+		</span>
+	</div>
+	
+	#{if incident?.canModifyQuotations() && isOwner}
+	<div style="text-align:right; margin-bottom:10pt">
+		<a href="@{newQuotation(incident?.id)}" class="btn btn-default">&{'incident.quotations.newQuotation'}</a>
+	</div>
+	#{/if}
+	
+	<table class="table table-striped tablelist table-bordered">
+		<thead>
+			<tr class="table-head">
+				<th>&{'incident.quotations.table.date'}</th>
+				<th>&{'incident.quotations.table.product'}</th>
+				<th>&{'incident.quotations.table.carvalue'}</th>
+				<th>&{'incident.quotations.table.totalprime'}</th>
+				%{
+					int totalActions = 3;
+					if (incident?.isFinalized()) {
+						totalActions--;
+					}
+				}%
+				
+				<th colspan="${totalActions}" class="text-center">&{'incident.quotations.table.actions'}</th>
+			</tr>
+		</thead>
+		
+		*{
+		<tbody>
+			#{paginate.list items:incident.quotations.sort{it.creationDate}, as:'current'}
+				%{currencySymbol = (current?.quotationDetail?.currencySymbol)? current?.quotationDetail?.currencySymbol + '.' :''}%
+				<tr class="${current_parity}">
+					<td data-title="&{'incident.quotations.table.date'}">${current?.creationDate?.format("dd/MM/yyyy HH:mm")}&nbsp;</td>
+					<td data-title="&{'incident.quotations.table.product'}">${current?.product?.name}</td>
+					<td data-title="&{'incident.quotations.table.carvalue'}">#{if current?.carValue}${currencySymbol} ${current?.carValue?.doubleValue()?.decimalFormat()}#{/if}#{else}&{'table.na'}#{/else}</td>
+					<td data-title="&{'incident.quotations.table.totalprime'}">${currencySymbol} ${current?.discountedPrime?.doubleValue()?.decimalFormat()}</td>
+					<td data-title="&{'incident.quotations.table.actions'}" class="text-center">
+						<a href="@{viewQuotationPDF(current.id,3)}" class="btn btn-xs">&{'incident.quotations.table.view'}</a>
+					</td>
+					<td class="text-center">
+						<a href="@{incidentQuotationDiscount(current.id)}" class="btn btn-xs">&{'incident.quotations.table.detail'}</a>
+					</td>
+					#{if !incident?.isFinalized()}
+					<td class="text-center">
+						<a href="@{resendQuotation(current.id)}" class="btn btn-xs" >&{'incident.quotations.table.resend'}</a>
+					</td>
+					#{/if}
+				</tr>
+			#{/paginate.list}
+		</tbody>
+		*}
+	</table>
+</div>

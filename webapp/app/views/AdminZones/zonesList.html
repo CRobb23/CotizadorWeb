@@ -1,0 +1,85 @@
+#{extends 'admin.html' /}
+
+#{form @searchZones(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'zonesList.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'zone'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'zonesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'zonesList.search.form.search'} " />		
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'zonesList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="float:right; padding-left: 5px; text-align:right; margin-bottom:10pt">
+			<a href="@{editZone()}" class="btn btn-default">&{'zonesList.new'}</a>
+		</div>
+		
+		<div style="float:right; text-align:right; margin-bottom:10pt">
+			<a href="@{newZoneFromExcel()}" class="btn btn-default">&{'zonesList.newExcel'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'zonesList.table.name'}</th>
+					<th>&{'zonesList.table.active'}</th>
+					<th class="last textC" style="width:50px;">&{'zonesList.table.edit'}</th>
+					<th class="last textC" style="width:50px;">&{'zonesList.table.delete'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:zones , as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+						<td class="lasticon textC">
+							<a href="@{editZone(current?.id)}"  class="btn btn-xs">&{'zonesList.table.edit'}</a>
+						</td>
+						<td class="lasticon textC">
+							<a href="@{deleteZone(current?.id)}"  class="btn btn-xs">&{'zonesList.table.delete'}</a>
+						</td>
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if zones?.getPageCount() > 1}
+			#{paginate.controls items:zones /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:zones /}
+			</div>
+		#{/if}
+	</div>
+</div>

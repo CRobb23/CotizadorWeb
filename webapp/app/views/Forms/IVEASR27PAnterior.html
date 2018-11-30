@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>IVE</title>
+        <style>
+        	
+        	table {
+        		border-collapse: collapse;
+    			border-spacing: 0; 
+    			margin-bottom:8px;
+    			font-family:sans-serif;
+        	}
+        	
+        	td {
+        		height:14px;
+        	}
+        	
+        	.header {
+			    width: 100%;
+			    overflow: auto;
+			}
+			
+			.leftTitle {
+			    float: left;
+			    width: 42.14%;
+			}
+			
+			.headerTable {
+				font-size:9px;
+        		font-weight:bold;
+			}
+			
+			.top {
+				vertical-align:top;
+			}
+			
+			.right {
+				text-align:right;
+			}
+			
+			.center {
+				text-align:center;
+			}
+			
+			.bordered {
+				border: 0.5px solid black;
+			}
+			
+			.bottomBorder {
+				border-bottom: 0.5px solid black;
+			}
+			
+			.title {
+				font-size:16px !important;
+        		font-weight:bold !important;
+        		font-family:sans-serif !important;
+			}
+			
+			.formTable {
+				border: 2px solid black;
+			}
+			
+			.headerCell {
+				font-size:8px !important;
+        		font-weight:bold !important;
+        		text-align:center;
+        		background:#DAE4BC;
+			}
+			
+			.headerTopCell {
+				font-size:8px !important;
+        		font-weight:bold !important;
+        		text-align:center;
+        		background:#FEFECD;
+			}
+			
+			.headerBottomCell {
+				font-size:8px !important;
+        		font-weight:bold !important;
+        		text-align:center;
+        		background:#FEFECD;
+			}
+			
+			.thickBorderTop {
+				border-top:2px solid black;
+			}
+			
+			.thickBorderBottom {
+				border-bottom:2px solid black !important;
+			}
+			
+			.thickBorderLeft {
+				border-left:2px solid black !important;
+			}
+			
+			.thickBorderRight {
+				border-right:2px solid black !important;
+			}
+			
+			.medBorderLeft {
+				border-left:1px solid black !important;
+			}
+			
+			.medBorderRight {
+				border-right:1px solid black !important;
+			}
+			
+			.medBorderBottom {
+				border-bottom:1px solid black !important;
+			}
+			
+			.thickBorderAll {
+				border:2px solid black !important;
+			}
+			
+			.fieldCell {
+				font-size:8px !important;
+        		text-align:center;
+        		border-bottom: 0.75px dotted black;
+			}
+			        	
+		</style>
+    </head>
+    
+    <body>
+    
+    	<table style="width:100%">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr>
+	    		<td style="width:10.43%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+    		</tr>
+    	</table>
+    	
+    	<!--Encabezado-->
+    	<table style="width:100%" class="headerTable">
+    		<!--Se colocan los anchos de las columnas-->
+    		<tr>
+	    		<td style="width:10.43%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+	    		<td style="width:11.20%;"></td>
+    		</tr>
+    		<tr>
+    			<td rowspan="4" class="center top"><img src="@{'/public/images/SIB.png'}" width="30"/></td>
+    			<td colspan="8">Superintendencia de Bancos</td>
+    		</tr>
+    		<tr>
+    			<td colspan="8">Intendencia de Verificación Especial -IVE-</td>
+    		</tr>
+    		<tr>
+    			<td colspan="8">Formulario para Registro de Inicio de Relaciones para seguros por prima menor a US$ 2,500.00 o su equivalente en moneda nacional.</td>
+    		</tr>
+    		<tr>
+    			<td colspan="8">Datos de la Persona Obligada</td>
+    		</tr>
+    		<tr>
+    			<td colspan="1"></td>
+    			<td colspan="1" class="right">Razón social:</td>
+    			<td colspan="2" class="bottomBorder center"></td>
+    			<td colspan="1" class="right">Nombre comercial:</td>
+    			<td colspan="3" class="bottomBorder center"></td>
+    			<td colspan="1"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:9px;"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="1"></td>
+    			<td colspan="1" class="right">Código IVE:</td>
+    			<td colspan="1" class="bottomBorder center"></td>
+    			<td colspan="6"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:18px;"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="1"></td>
+    			<td colspan="1">Periodo:</td>
+    			<td colspan="1">del</td>
+    			<td colspan="1" class="bordered center">${periodoInicio}</td>
+    			<td colspan="1" class="center">al</td>
+    			<td colspan="1" class="bordered center">${periodoInicio}</td>
+    			<td colspan="3"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="1"></td>
+    			<td colspan="8">Formulario IVE-ASR-27</td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:9px;"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="2"></td>
+    			<td colspan="5" class="center title">Formulario para Registros de Inicio de Relaciones Compañías de Seguros</td>
+    			<td colspan="2"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:9px;"></td>
+    		</tr>
+    	</table>
+    	
+    	<!--Fecha, información del producto e información del solicitante -->
+    	<table style="width:100%;">
+    		<tr>
+    			<td colspan="1" class="headerCell thickBorderAll">a) FECHA</td>
+    			<td colspan="5" class="headerCell thickBorderAll">b) INFORMACIÓN DEL PRODUCTO O SERVICIO</td>
+    			<td colspan="3" class="headerCell thickBorderAll">c) INFORMACIÓN DEL SOLICITANTE</td>
+    		</tr>
+    		<tr>
+	    		<td style="width:10.43%;" class="headerTopCell thickBorderRight thickBorderLeft">a.1</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">b.1</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">b.2</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">b.3</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">b.4</td>
+	    		<td style="width:11.20%;" class="headerTopCell thickBorderRight">b.5</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.1</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.2</td>
+	    		<td style="width:11.20%;" class="headerTopCell thickBorderRight">c.3</td>
+    		</tr>
+    		<tr>
+	    		<td class="headerTopCell thickBorderRight thickBorderLeft medBorderBottom">Fecha Inicio de Relaciones</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Tipo de Producto o Servicio</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Tipo de Moneda de la prima </td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Monto de la prima</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Número de póliza de seguro</td>
+	    		<td class="headerTopCell thickBorderRight medBorderBottom">Monto de la suma asegurada</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Tipo de Persona</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Número de Identificación Tributaria -NIT-</td>
+	    		<td class="headerTopCell thickBorderRight medBorderBottom">Tipo de Documento de Identificación</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell thickBorderRight thickBorderLeft">${fechaRelaciones}</td>
+	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.name}</td>
+	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.currency?.name}</td>
+	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.discountedPrime?.doubleValue()?.decimalFormat()}</td>
+	    		<td class="fieldCell medBorderRight">${numeroPoliza}</td>
+	    		<td class="fieldCell thickBorderRight">${incident?.selectedQuotation?.carValue?.doubleValue()?.decimalFormat()}</td>
+	    		<td class="fieldCell medBorderRight">${personType}</td>
+	    		<td class="fieldCell medBorderRight">${nit}</td>
+	    		<td class="fieldCell thickBorderRight">${tipoDocumento}</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell thickBorderRight thickBorderLeft"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell thickBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell thickBorderRight"></td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell thickBorderRight thickBorderLeft thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell thickBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell thickBorderRight thickBorderBottom"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:18px;"></td>
+    		</tr>
+    	</table>
+    	
+    	<!--Información del solicitante-->
+    	<table style="width:100%;">
+    		<tr>
+    			<td colspan="9" class="headerCell thickBorderAll">c) INFORMACIÓN DEL SOLICITANTE (Continuación)</td>
+    		</tr>
+    		<tr>
+	    		<td style="width:10.43%;" class="headerTopCell medBorderRight thickBorderLeft">c.4</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.5</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.6</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.7</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.8</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.9</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.10</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.11</td>
+	    		<td style="width:11.20%;" class="headerTopCell thickBorderRight">c.12</td>
+    		</tr>
+    		<tr>
+	    		<td class="headerTopCell medBorderRight thickBorderLeft medBorderBottom">Número de identificación</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Nacionalidad</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Fecha de nacimiento o constitución</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Primer apellido</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Segundo apellido</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Apellido de casada</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Primer nombre</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Segundo  Nombre</td>
+	    		<td class="headerTopCell thickBorderRight medBorderBottom">Otros nombres</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft">${numeroIdentificacion}</td>
+	    		<td class="fieldCell medBorderRight">${nacionalidad}</td>
+	    		<td class="fieldCell medBorderRight">${fechaNacimiento}</td>
+	    		<td class="fieldCell medBorderRight">${primerApellido}</td>
+	    		<td class="fieldCell medBorderRight">${segundoApellido}</td>
+	    		<td class="fieldCell medBorderRight">${apellidoCasada}</td>
+	    		<td class="fieldCell medBorderRight">${primerNombre}</td>
+	    		<td class="fieldCell medBorderRight">${segundoNombre}</td>
+	    		<td class="fieldCell thickBorderRight">${otrosNombres}</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell thickBorderRight"></td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell thickBorderRight thickBorderBottom"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:18px;"></td>
+    		</tr>
+    	</table>
+    	
+    	<!--Información del solicitante y dirección-->
+    	<table style="width:100%;">
+    		<tr>
+    			<td colspan="5" class="headerCell thickBorderAll">c) INFORMACIÓN DEL SOLICITANTE (Continuación)</td>
+    			<td colspan="4" class="headerCell thickBorderAll">d) DIRECCIÓN DEL SOLICITANTE</td>
+    		</tr>
+    		<tr>
+	    		<td style="width:10.43%;" class="headerTopCell medBorderRight thickBorderLeft">c.13</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.14</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.15</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">c.16</td>
+	    		<td style="width:11.20%;" class="headerTopCell thickBorderRight">c.17</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">d.1</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">d.2</td>
+	    		<td style="width:11.20%;" class="headerTopCell medBorderRight">d.3</td>
+	    		<td style="width:11.20%;" class="headerTopCell thickBorderRight">d.4</td>
+    		</tr>
+    		<tr>
+	    		<td class="headerTopCell medBorderRight thickBorderLeft medBorderBottom">Nombre Persona Jurídica</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Actividad Económica o profesión u oficio</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Es Persona Expuesta Políticamente</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Actúa en nombre propio</td>
+	    		<td class="headerTopCell thickBorderRight medBorderBottom">Número de teléfono (línea fija o teléfono móvil)</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Detalle</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Zona</td>
+	    		<td class="headerTopCell medBorderRight medBorderBottom">Municipio</td>
+	    		<td class="headerTopCell thickBorderRight medBorderBottom">Departamento</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft">${nombrePersonaJuridica}</td>
+	    		<td class="fieldCell medBorderRight">${profesion}</td>
+	    		<td class="fieldCell medBorderRight">${(pep=="1")?'Sí':(pep=="0")?'No':''}</td>
+	    		<td class="fieldCell medBorderRight">${(nombrePropio=="1")?'Sí':(nombrePropio=="0")?'No':''}</td>
+	    		<td class="fieldCell thickBorderRight">${telefono}</td>
+	    		<td class="fieldCell medBorderRight">${direccion}</td>
+	    		<td class="fieldCell medBorderRight">${zona}</td>
+	    		<td class="fieldCell medBorderRight">${municipio}</td>
+	    		<td class="fieldCell thickBorderRight">${departamento}</td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell thickBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell medBorderRight"></td>
+	    		<td class="fieldCell thickBorderRight"></td>
+    		</tr>
+    		<tr>
+	    		<td class="fieldCell medBorderRight thickBorderLeft thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell thickBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell medBorderRight thickBorderBottom"></td>
+	    		<td class="fieldCell thickBorderRight thickBorderBottom"></td>
+    		</tr>
+    		<tr>
+    			<td colspan="9" style="height:18px;"></td>
+    		</tr>
+    	</table>
+    	
+    </body>
+</html>

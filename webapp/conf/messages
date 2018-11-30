@@ -1,0 +1,2849 @@
+# You can specialize this file for each language.
+# For example, for French create a messages.fr file
+#
+
+play-paginate.first=&laquo;&nbsp;Primero
+play-paginate.prev=&lsaquo;&nbsp;Anterior
+play-paginate.next=Siguiente&nbsp;&rsaquo;
+play-paginate.last=&Uacute;ltimo&nbsp;&raquo;
+
+play-paginate.summary.display=Mostrando filas
+play-paginate.summary.to=a
+play-paginate.summary.from=de
+play-paginate.summary.entries=registros
+
+#######################################################################
+# Login page messages
+#######################################################################
+
+secure.title= ACCESO
+secure.username = Correo electrónico
+secure.password = Contraseña
+secure.signin = Ingresar
+secure.required = El usuario y contraseña son requeridos
+secure.incorrect = El usuario y/o contraseña son incorrectos
+secure.blocked = El usuario se encuentra bloqueado
+secure.inuse = El usuario tiene sesión iniciada en otro dispositivo.
+secure.logout=La sesión ha sido finalizada exitosamente
+
+#######################################################################
+# Validation messages
+#######################################################################
+
+validation.invalid = Valor incorrecto
+validation.required = Requerido
+validation.email = Dirección de correo inválida
+validation.future = Debe ser en el futuro
+validation.min = No puede ser menor que %2$d
+validation.max = No puede ser mayor que %2$d
+validation.maxSize = El tamaño máximo es %2$d
+validation.minSize = El tamaño mínimo es %2$d
+validation.invalidNit = El NIT es inválido
+validation.numeric = El valor debe ser un número
+
+#######################################################################
+# General messages 
+#######################################################################
+
+form.none = Ninguno
+form.all = Todos
+form.yes = Sí
+form.no = No
+form.active = Activo
+form.inactive = Inactivo
+form.select.loading = Consultando...
+form.select.error = Error al consultar
+table.na = N/A
+
+required.leyend = Indica que es un campo requerido.
+
+#######################################################################
+# Menu messages
+#######################################################################
+
+menu.guards.title = Resguardos
+
+menu.users.title = Usuarios
+menu.products.title = Productos
+menu.products.coverages = Coberturas
+menu.products.products = Productos
+menu.channels.title = Canales
+menu.forms.title = Formularios
+menu.forms.parameters = Parámetros
+menu.forms.forms = Configurar formularios
+
+menu.channels.channels = Canales
+menu.channels.distributors = Distribuidores
+menu.channels.stores = Tiendas / Agencias
+
+menu.vehicles.title = Vehículos
+menu.vehicles.brands = Marcas
+menu.vehicles.lines = Líneas
+menu.vehicles.values = Valores sugeridos
+menu.vehicles.valuesmassiveupdate = Actualización masiva
+
+menu.cases.title = Casos
+menu.cases.incidents = Casos
+menu.cases.newquotation = Cotizar
+menu.cases.nosalereasons = Motivos de no venta
+
+menu.tasks.title = Seguimiento
+menu.tasks.activity_types = Tipos de actividades
+menu.inspection.inspectioncenters = Centros de inspección
+menu.inspection.inspectionsList = Listado Inspecciones
+menu.task.guards = Envío Automático de Resguardos
+menu.task.pendingIncidents = Cotizaciones Pendientes Inspección
+menu.task.adminMessages = Administración de mensajes
+
+menu.reports.title = Reportes
+menu.reports.appliedDiscounts = Descuentos aplicados por canal
+menu.reports.closedSales = Ventas realizadas
+menu.reports.closedSales.QA = Ventas realizadas con control de calidad
+menu.reports.quotations = Reporte General de Cotizaciones
+menu.reports.quotationsUser = Reporte de Cotizaciones Autoconsultas
+menu.reports.quotationsException = Reporte de Excepciones
+menu.reports.lostSales = Ventas perdidas
+
+menu.configuration.title= Configuración general
+
+menu.profile.userprofile = Perfil
+menu.profile.changepassword = Cambio de contraseña
+menu.profile.signout = Salir
+
+#######################################################################
+# User messages
+#######################################################################
+
+# Users
+usersList.newUser = Nuevo usuario
+
+# Users Search form
+usersList.title = Usuarios
+usersList.search.form.email = Correo electrónico
+usersList.search.form.firstName = Nombres
+usersList.search.form.lastName = Apellidos
+usersList.search.form.role = Rol
+usersList.search.form.state = Estado
+usersList.search.form.search = Buscar
+usersList.search.form.all = Todos
+
+# Users list table
+usersList.table.name = Nombre
+usersList.table.email = Correo electrónico
+usersList.table.role = Rol
+usersList.table.state = Estado
+user.form.user.channel = Canal
+user.form.user.isQAUser = Usuario puede revisar casos
+user.form.user.distributor = Distribuidor
+usersList.table.state.active = Activo
+usersList.table.state.inactive = Inactivo
+usersList.table.edit = Editar
+usersList.table.signOff = Cerrar Sesión
+usersList.table.delete = Eliminar
+
+# Users creation and editing
+createUser.title = Crear usuario
+editUser.title = Modificar usuario
+
+user.form.user.email = Correo electrónico
+user.form.user.firstName = Nombres
+user.form.user.lastName = Apellidos
+user.form.user.role = Rol
+user.form.user.active = Estado
+
+user.form.create = Crear usuario
+user.form.edit = Modificar usuario
+user.form.resetpassword = Reiniciar contraseña
+user.form.user.selectedBroker = Corredor a asociar para Inspeccion: (Dejar en blanco para uso interno)
+
+user.create.emailnotunique = Ya existe un usuario con el correo electrónico %s
+user.create.fielderrors = Existen errores en el formulario. Por favor revisar
+user.create.success = El usuario ha sido creado exitosamente
+user.edit.success = El usuario ha sido modificado exitosamente
+user.edit.signOffSuccess = Se cerró la sesión exitosamente.
+user.create.error = Ha ocurrido un error al crear el usuario, por favor intente de nuevo más tarde
+user.create.erroremail = Ha ocurrido un error al enviar el correo electrónico, el usuario no ha sido creado
+user.edit.error = Ha ocurrido un error al modificar el usuario, por favor intente de nuevo más tarde
+user.delete.error = No fue posible eliminar el usuario,por favor revisar
+user.delete.success = El usuario ha sido eliminado exitosamente
+user.create.notauthorized = No está autorizado para crear el usuario
+adminusers.resetpassword.error = Ha ocurrido un error al reiniciar la contraseña.
+adminusers.resetpassword.success = Se ha generado una nueva contraseña y se ha enviado al correo electrónico del usuario
+adminusers.resetpassword.erroremail = Ha ocurrido un error al enviar el correo electrónico, la contraseña no fue reiniciada
+
+#######################################################################
+# Profile messages
+#######################################################################
+
+profile.changepassword.title = Cambio de contraseña
+profile.changepassword.form.password = Contraseña actual
+profile.changepassword.form.newPassword = Nueva contraseña
+profile.changepassword.form.confirmPassword = Confirmar nueva contraseña
+profile.changepassword.form.change = Cambiar contraseña
+
+profile.changepassword.fielderrors = Existen errores en el formulario. Por favor revisar
+profile.changepassword.error.allfieldsrequired = Todos los campos son requeridos
+profile.changepassword.error.wrongpassword = La contraseña actual es incorrecta
+profile.changepassword.error.passwordnomatch = Las nuevas contraseñas no coinciden
+profile.changepassword.error.passwordincorrectlength = La nueva contraseña debe poseer al menos 6 caracteres
+profile.changepassword.success = La contraseña fue actualizada exitosamente
+
+userProfile.title = Perfil
+profile.form.profile.phoneNumber = Número telefónico
+profile.form.profile.agentCode = Código de vendedor
+profile.form.profile.mailSignature = Firma en correo
+profile.form.profile.save = Guardar perfil
+
+profile.userprofile.success = Su perfil se ha modificado exitosamente
+profile.userprofile.error = Ha ocurrido un error al actualizar su perfil
+
+#######################################################################
+# Password reset messages
+#######################################################################
+
+adminpasswordreset.resetpassword.title = Reiniciar contraseña
+adminpasswordreset.resetpassword.username = Correo electrónico
+adminpasswordreset.resetpassword.reset = Reiniciar y Enviar
+adminpasswordreset.resetpassword.error = El correo electrónico ingresado es inválido
+adminpasswordreset.resetpassword.success = Su nueva contraseña ha sido enviada a su correo electrónico
+adminpasswordreset.resetpassword.erroremail = Ha ocurrido un error al enviar el correo electrónico, la contraseña no fue reiniciada
+adminpasswordreset.resetpassword.forgot = Olvidé mi contraseña
+
+#######################################################################
+# Configuration messages
+#######################################################################
+
+configuration.title = Configuración general
+configuration.form.configuration.coverages = Coberturas
+configuration.form.configuration.quotations = Cotizaciones
+
+configuration.form.configuration.partialTheftPercentage = Porcentaje máximo de robo parcial (%%)
+configuration.form.totalTheftCoverage = Cobertura robo total
+configuration.form.carValueCoverage = Cobertura daños propios
+configuration.form.theftCoverage = Cobertura robo parcial
+configuration.form.civilResponsability = Cobertura responsabilidad civil
+configuration.form.injuriesCoverage = Cobertura gastos de curación
+configuration.form.thirdInjuriesCoverage = Cobertura ocupantes del vehículo
+configuration.form.configuration.fractionFee = Recargo de fraccionamiento
+configuration.form.configuration.ivaPercentage = IVA (%%)
+configuration.form.configuration.emissionFeePercentage = Gastos de emisión (%%)
+configuration.form.configuration.agentCodeAS400 = Código Agente AS400
+configuration.form.configuration.emissionFeeFirstPayment = Gastos de emisión en primer pago
+configuration.form.configuration.taskReminderTime = Horas para recordatorios de tareas
+configuration.form.configuration.guardReminderTime = Horas para recordatorios de inspección
+configuration.form.configuration.guardValidityDays = Vigencia de resguardo (Días)
+configuration.form.configuration.maxValueWithoutLoJack = Valor máximo sin Lo Jack (US$)
+configuration.form.configuration.theftDeductibleWithoutLowJack = Deducible de robo para Lo Jack
+configuration.form.configuration.minimumCarYear = Año mínimo de cotización
+configuration.form.configuration.maximumCarYear = Año máximo de cotización
+
+configuration.form.configuration.additionalBenefits = Beneficios adicionales (Beneficio por línea)
+configuration.form.configuration.observations = Observaciones (Observación por línea)
+
+configuration.form.configuration.garanteedValueConfig = Valor Garantizado (%%)
+configuration.form.configuration.averageValueConfig = Limite Valor Promedio (%%)
+configuration.form.configuration.sessionTimeout = Tiempo Máximo sin Actividad
+configuration.form.configuration.fullAccess = Switch de Acceso a Aplicación
+
+configuration.form.configuration.exchangeRate = Tasa de cambio
+configuration.exchangeRate.title = Tasa de cambio %s (%s)
+
+configuration.payment.frecuency = Tipo de pago
+configuration.payment.fraccioning = Recargo
+configuration.payment.title = %s pagos %ses
+
+configuration.form.configuration.facultativeDeductible = Deducible facultativo
+configuration.facultativeDeductible.primediscount = Descuento en prima
+configuration.facultativeDeductible.deductibleincrement = Incremento en deducible
+
+configuration.form.save = Guardar configuración
+configuration.form.validationerror = Existen errores en el formulario. Por favor revisar
+configuration.form.error = Ha ocurrido un error al guardar la configuración, por favor intente de nuevo más tarde
+configuration.form.success = La configuración fue guardada exitosamente
+
+#######################################################################
+# Vehicle brands messages
+#######################################################################
+
+brandsList.title = Marcas
+
+brandsList.search.form.brand = Marca
+brandsList.search.form.search = Buscar
+brandsList.search.form.all = Todos
+
+brandsList.newBrand = Nueva Marca
+brandsList.newBrandFromExcel = Cargar Excel
+
+brandsList.table.brand = Marca
+brandsList.table.theftDeductible = %% Deducible por robo
+brandsList.table.edit = Editar
+brandsList.table.lines = Líneas
+
+brand.form.brand.name = Nombre
+brand.form.brand.transferCode = Codigo AS/400
+brand.form.brand.theftDeductible = %% Deducible por robo
+
+createBrand.title = Crear marca
+editBrand.title = Modificar marca
+
+brand.create.fielderrors = Existen errores en el formulario. Por favor revisar
+brand.create.success = La marca fue creada exitosamente
+brand.edit.success = La marca fue modificada exitosamente
+brand.create.duplicate = La marca ya existe
+brand.form.create = Crear marca
+brand.form.edit = Modificar marca
+
+
+vehiculeBrand.excel.title = Marcas de Vehículos
+vehiculeBrand.create.success = Se han cargado con éxito los valores promedio del archivo excel, %s cargados.
+vehiculeBrand.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+vehiculeBrand.excel.excelFile.label = Cargar Archivo
+vehiculeBrand.excel.button.load = Procesar
+vehiculeBrand.excel.button.cancel = Cancelar
+
+#######################################################################
+# Vehicle lines messages
+#######################################################################
+
+linesList.title = Líneas
+
+linesList.search.form.brandId = Marca
+linesList.search.form.line = Línea
+
+linesList.table.line = Línea
+linesList.table.brand = Marca
+linesList.table.class = Clase
+linesList.table.insurable = Asegurable
+linesList.table.requiresLoJack = Instalación Lo Jack
+linesList.table.loJackYear = Año mínimo con Lo Jack obligatorio
+linesList.table.theftDeductible = %% Deducible por robo
+linesList.table.vehicles = Vehículos
+linesList.table.edit = Editar
+linesList.table.lojack = LoJack
+
+linesList.newLine = Nueva línea
+linesList.newLineFromExcel = Cargar Archivo
+
+ 
+createLine.title = Crear línea
+editLine.title = Modificar línea
+line.form.line.brand = Marca
+line.form.line.name = Nombre
+line.form.line.transferCode = Codigo AS/400
+line.form.line.vehicleClass = Clase
+line.form.line.insurable = Asegurable
+line.form.line.requiresLoJack = Instalación Lo Jack
+line.form.line.loJackYear = Año mínimo con Lo Jack obligatorio
+line.form.line.theftDeductible = %% Deducible por robo
+ 
+line.form.create = Crear línea
+line.form.edit = Modificar línea
+ 
+line.create.fielderrors = Existen errores en el formulario. Por favor revisar
+line.create.success = La línea fue creada exitosamente
+line.edit.success = La línea fue modificada exitosamente
+line.create.duplicate = La línea ya existe
+
+vehiculeLine.excel.title = Líneas de Vehículos
+vehiculeLine.create.success = Se han cargado con éxito las líneas de Vehículos del archivo excel, %s cargados.
+vehiculeLine.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+vehiculeLine.excel.excelFile.label = Cargar Archivo
+vehiculeLine.excel.button.load = Procesar
+vehiculeLine.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# Vehicle values messages
+#######################################################################
+
+vehicleValuesList.title = Valores de vehículos
+vehicleValuesList.newVehicle = Nuevo valor
+vehicleValuesList.table.brand = Marca
+vehicleValuesList.table.line = Línea
+vehicleValuesList.table.year = Año
+vehicleValuesList.table.value = Valor
+vehicleValuesList.table.edit = Editar
+
+createVehicleValue.title = Crear valor
+editVehicleValue.title = Modificar valor
+
+vehicleValue.form.vehicleValue.brand = Marca
+vehicleValue.form.vehicleValue.line = Línea
+vehicleValue.form.vehicleValue.year.id = Año
+vehicleValue.form.vehicleValue.value = Valor
+
+vehicleValue.form.create = Crear valor
+vehicleValue.form.edit = Modificar valor
+
+vehicleValue.create.fielderrors = Existen errores en el formulario. Por favor revisar
+vehicleValue.edit.success = El valor ha sido modificado exitosamente
+vehicleValue.create.success = El valor ha sido creado exitosamente
+vehicleValue.create.duplicate = El valor para este año ya existe
+
+#######################################################################
+# Vehicle LoJack messages
+#######################################################################
+
+vehicleLoJackList.title = LoJack de vehículos
+vehicleLoJackList.newVehicle = Nueva config
+vehicleLoJackList.table.brand = Marca
+vehicleLoJackList.table.line = Línea
+vehicleLoJackList.table.yearInit = Año Inicial
+vehicleLoJackList.table.yearEnd = Año Final
+vehicleLoJackList.table.withLoJack = C/LoJack 
+vehicleLoJackList.table.withoutLoJack = S/LoJack 
+vehicleLoJackList.table.withoutLoJackPlus10 = S/LoJack + 10%%
+vehicleLoJackList.table.withoutLoJackPlus15 = S/LoJack + 15%%
+vehicleLoJackList.table.withoutLoJackPlusHalf = S/LoJack + Q500
+vehicleLoJackList.table.withoutLoJackPlusFull = S/LoJack + Q850
+vehicleLoJackList.table.edit = Editar
+
+createVehicleLoJack.title = Crear valor
+editVehicleLoJack.title = Modificar valor
+
+vehicleLoJack.form.vehicleLoJack.brand = Marca
+vehicleLoJack.form.vehicleLoJack.line = Línea
+vehicleLoJack.form.vehicleLoJack.yearInit = Año Inicial
+vehicleLoJack.form.vehicleLoJack.yearEnd = Año Final
+vehicleLoJack.form.vehicleLoJack.withLoJack = Recargo Con LoJack
+vehicleLoJack.form.vehicleLoJack.withoutLoJack = Recargo Sin LoJack
+vehicleLoJack.form.vehicleLoJack.withoutLoJackPlus10 = Recargo S/LoJack + 10%% prima
+vehicleLoJack.form.vehicleLoJack.withoutLoJackPlus15 = Recargo S/LoJack + 15%% prima
+vehicleLoJack.form.vehicleLoJack.withoutLoJackPlusHalf = Recargo S/LoJack + Q500 prima
+vehicleLoJack.form.vehicleLoJack.withoutLoJackPlusFull = Recargo S/LoJack + Q850 prima
+
+vehicleLoJack.form.create = Crear valor
+vehicleLoJack.form.edit = Modificar valor
+
+vehicleLoJack.create.fielderrors = Existen errores en el formulario. Por favor revisar
+vehicleLoJack.edit.success = La configuración LoJack ha sido modificado exitosamente
+vehicleLoJack.create.success = La configuración LoJack ha sido creado exitosamente
+vehicleLoJack.create.duplicate = La configuración LoJack para este año ya existe
+
+
+#######################################################################
+# Vehicle masive update messages
+#######################################################################
+
+vehicleValuesMassiveUpdate.title = Actualización masiva
+
+vehicleValue.form.template = Plantilla
+vehicleValue.form.downloadTemplate = Descargar plantilla
+vehicleValue.form.valuesFile = Archivo de líneas y valores
+vehicleValue.form.upload = Procesar
+
+vehicleValue.masiveupdate.error = No se adjuntaron archivos para procesar
+
+vehicleValuesList.table.fileLine = Fila
+vehicleValuesList.table.error = Error
+
+vehicleValue.massiveupdate.nobrand = La marca %s no existe
+vehicleValue.massiveupdate.noline = La línea %s no existe
+vehicleValue.massiveupdate.allrequiredvalue = Todos los campos son requeridos
+vehicleValue.massiveupdate.allrequiredline = Todos los campos son requeridos
+
+#######################################################################
+# Coverages messages
+#######################################################################
+
+coveragesList.title = Coberturas
+coveragesList.search.form.name = Nombre
+coveragesList.search.form.search = Buscar
+coveragesList.search.form.all = Todos
+
+coveragesList.table.order = Órden
+coveragesList.table.name = Nombre
+coveragesList.table.description = Descripción
+coveragesList.table.coverageAmount = Monto de cobertura
+coveragesList.table.edit = Editar
+
+coveragesList.newCoverage = Nueva cobertura
+
+createCoverage.title = Crear cobertura
+coverage.form.coverage.name = Nombre
+coverage.form.coverage.transferCode = Código AS400
+coverage.form.coverage.coverageOrder = Órden
+coverage.form.coverage.description = Descripción
+coverage.form.coverage.quotationName = Nombre en cotización
+coverage.form.coverage.quotationDescription = Descripción en cotización
+coverage.form.coverage.fieldDescription = Nombre del campo
+coverage.form.coverage.category = Categoría
+coverage.form.coverage.type = Tipo de Cálculo
+
+coverage.form.coverage.applyDiscount = Aplica descuento
+coverage.form.coverage.partOfNetPrime = Parte de prima neta
+coverage.form.coverage.externals = Cobertura externa
+
+coverage.form.coverage.coverageAmount = Monto de cobertura
+
+editCoverage.title = Modificar cobertura
+
+coverage.form.create = Crear cobertura
+coverage.form.edit = Modificar cobertura
+
+coveragesList.table.category = Categoría de cobertura
+
+coverage.edit.success = Cobertura modificada exitosamente
+coverage.create.success = Cobertura creada exitosamente
+
+coverage.type.field.ranges = Rangos de cobertura
+coverage.type.field.amounts = Monto de cobertura
+coverage.type.field.options = Opción de cobertura
+
+#######################################################################
+# Products messages
+#######################################################################
+
+product.form.savecontinue = Guardar y continuar
+product.form.save = Guardar
+
+createProduct.title = Crear producto
+editProduct.title = Modificar producto
+
+product.create.success = Producto creado exitosamente
+product.edit.success = Producto modificado exitosamente
+product.create.fielderrors = Existen errores en el formulario, por favor revisar
+product.save.error = Ocurrió un error al guardar el producto
+product.delete.error = Ocurrió un error al eliminar el producto, por favor revisar
+product.delete.success= Producto eliminado exitosamente
+
+product.form.product.name = Nombre
+product.form.product.currency.id = Moneda
+product.form.product.description = Descripción
+product.form.product.remoteSystemCode = Código AS400
+product.form.product.rateTypeTransferCode = Tipo Tarifa Código AS400
+product.form.product.active = Estado
+product.form.valueBase = Base de cálculo
+product.form.product.additionalBenefits = Beneficios adicionales
+
+product.form.product.montoRestarSumaAseg = Monto a restar en suma asegurada
+product.form.product.montoAgregarPrima = Monto a agregar en prima
+product.form.product.montosAdicionales=Depreciación antes del impuesto
+
+product.form.create = Crear producto
+product.form.edit = Modificar producto
+
+product.form.coverage.title = Coberturas
+product.form.coverage.name = Cobertura
+product.form.coverage.description = Descripción
+
+product.coverage.error = Ha ocurrido un error al obtener las coberturas
+product.coverage.empty = No hay coberturas disponibles
+
+product.form.coveragecategory.define = Definir coberturas
+product.form.amountpercentage = %% de la suma asegurada de la cobertura
+
+product.form.coverage.close = Cerrar
+product.form.coverage.edit = Modificar
+
+productsList.search.form.name = Nombre
+productsList.search.form.state = Estado
+productsList.search.form.search = Buscar
+productsList.table.state.active = Activo
+productsList.table.state.inactive = Inactivo
+product.form.product.hasFacultative = Permite deducible facultativo
+
+productsList.title = Productos
+productsList.table.name = Producto
+productsList.table.description = Descripción
+productsList.table.permissions = Permisos
+productsList.table.channelpermissions = Canales
+productsList.table.distributorpermissions = Distribuidores
+productsList.table.deductibles = Deducibles
+productsList.table.parameters = Parámetros
+productsList.table.discounts = Descuentos
+productsList.table.edit = Editar
+productsList.table.copy = Copiar
+productsList.table.delete = Eliminar
+productsList.newProduct = Nuevo producto
+
+product.additionalParameters = Parametros adicionales
+product.deductibles = Deducibles
+product.additionalParameters.coverage = Cobertura
+product.additionalParameters.deductiblePercentage = %% Deducible Clase
+product.additionalParameters.minDeductible = Deducible mínimo
+product.additionalParameters.minPrime = Prima mínima
+product.additionalParameters.emissionFee = Gastos de emisión
+product.additionalParameters.iva = IVA
+product.additionalParameters.fraccioningFee = Recargo fraccionamiento
+product.additionalParameters.applyInNetPrime = Aplica en prima neta
+product.additionalParameters.discount = Descuento
+product.additionalParameters.damages = Daños
+product.additionalParameters.theft = Robo
+
+product.form.parameters.save = Guardar parámetros
+product.form.deductibles.save = Guardar deducibles
+
+product.parameters.save.success = Los parámetros fueron guardados exitosamente
+product.parameters.error = Existen errores en el formulario, por favor revisar
+
+product.deductibles.save.success = Los deducibles fueron guardados exitosamente
+product.deductibles.error = Existen errores en el formulario, por favor revisar
+
+product.channelpermissions.availablechannels = Canales disponibles
+product.channelpermissions.assignedchannels = Canales asignados
+
+product.channelpermissions.title = Permisos por canal
+product.channelpermissions.savepermissions = Guardar permisos
+product.channelpermissions.error = Ha ocurrido un error al modificar los permisos.
+product.channelpermissions.success = Los permisos por canal fueron modificados exitosamente
+
+product.distributorpermissions.title = Permisos por distribuidor
+product.distributorpermissions.field.channel = Canal
+product.distributorpermissions.availabledistributors = Distribuidores disponibles
+product.distributorpermissions.assigneddistributors = Distribuidores asignados
+
+form.selectchannel = Seleccione un canal
+product.distributorpermissions.savepermissions = Guardar permisos
+product.distributorpermissions.error = Ha ocurrido un error al modificar los permisos.
+product.distributorpermissions.success = Los permisos por distribuidor fueron modificados exitosamente
+
+product.productdiscounts.title = Descuentos autorizados
+product.productdiscounts.form.discountedByRange = Tipo de descuento
+product.productdiscounts.form.rolediscount = Rol
+product.productdiscounts.form.rangediscount = Rango
+
+product.productdiscounts.commercialManager = Gerente Comercial
+product.productdiscounts.channelManager = Gerente de Canal
+product.productdiscounts.supervisor = Supervisor
+product.productdiscounts.cabinUser = Usuario de cabina
+product.productdiscounts.seller = Ejecutivo / Vendedor
+
+product.productdiscounts.form.lowRange = Límite inferior
+product.productdiscounts.form.highRange = Límite superior
+product.productdiscounts.form.discount = Descuento
+
+product.productdiscounts.savediscounts = Guardar descuentos
+product.productdiscounts.error = Ha ocurrido un error al modificar los descuentos autorizados
+product.productdiscounts.success = Los descuentos autorizados fueron modificados exitosamente
+
+copyProduct.title = Copiar producto
+product.form.savecopy = Guardar copia
+
+product.copy.fielderrors = Existen errores en el formulario, por favor revisar
+product.copy.success = El producto ha sido copiado exitosamente
+product.copy.error = No se pudo copiar el producto seleccionado
+
+
+#######################################################################
+# No sale Reasons messages
+#######################################################################
+
+noSaleReasons.title = Motivos de no venta
+noSaleReasonsList.table.reason = Motivo
+noSaleReasonsList.table.description = Descripción
+noSaleReasonsList.table.state = Estado
+noSaleReasonsList.table.edit = Editar
+noSaleReasonsList.newReason = Nuevo motivo
+
+createNoSaleReason.title = Crear motivo de no venta
+editNoSaleReason.title = Modificar motivo de no venta
+
+nosalereason.form.reason.name = Nombre
+nosalereason.form.reason.description = Descripción
+nosalereason.form.reason.active = Estado
+
+nosalereason.form.create = Crear motivo
+nosalereason.form.edit = Modificar motivo
+
+nosalereason.create.fielderrors = Existen errores en el formulario, por favor revisar
+nosalereason.create.success = El motivo ha sido creado exitosamente
+nosalereason.edit.success = El motivo ha sido modificado exitosamente
+
+#######################################################################
+# Quotation messages
+#######################################################################
+
+quotation.title = Cotizar
+quotation.client = Cliente
+quotation.vehicle = Vehículo
+quotation.insurance = Seguro
+quotation.simulation = Simulación
+quotation.task = Seguimiento
+quotation.incident = Éxito
+
+quotation.form.next = Siguiente
+quotation.form.back = Anterior
+quotation.form.simulate = Siguiente
+
+quotation.form.client.firstName = Nombre
+quotation.form.client.lastName = Apellido
+quotation.form.client.phoneNumber = Teléfono
+quotation.form.client.email = Correo Electrónico
+quotation.form.client.taxNumber = NIT
+quotation.form.client.additionalEmails = Correos Adicionales
+quotation.form.client.messageDPI = (Sin espacios - Sin guiones)
+
+quotation.form.client.fielderrors = Existen errores en el formulario, por favor revisar
+quotation.form.vehicle.fielderrors = Existen errores en el formulario, por favor revisar
+
+quotation.form.vehicle.brand = Marca
+quotation.form.vehicle.line = Línea
+quotation.form.vehicle.year = Año
+quotation.form.vehicle.plate = Número de Placa
+quotation.form.vehicle.numberOfPassengers = Número de pasajeros
+quotation.form.vehicle.alreadyInsured = Vehículo ya asegurado
+
+quotation.form.inspection.address = Dirección de Inspección
+quotation.form.inspection.appointmentDate = Fecha Inspección
+quotation.form.quotation.labelProduct= PRODUCTO
+quotation.form.quotation.product = SEGURO
+quotation.form.quotation.frecuencies = FRECUENCIAS DE PAGO
+quotation.form.discount = DESCUENTO
+
+quotation.form.facultative = DEDUCIBLE FACULTATIVO
+quotation.form.facultative.value = %s%% menos en prima, %s del deducible
+
+quotation.form.insurance.fielderrors = Existen errores en el formulario, por favor revisar
+quotation.form.quotation.required = Requerido
+quotation.form.quotation.carValue = SUMA ASEGURADA DAÑOS PROPIOS
+quotation.form.quotation.theftcoverageerror = El monto es mayor al %.2f%s de la suma asegurada
+quotation.form.quotation.theftcoveragleyend = La suma asegurada de la cobertura de robo parcial debe ser menor o igual al %.2f%s de la suma asegurada
+quotation.form.quotation.armoredGlassesLimit = Hasta un límite máximo de Q.40, 000.00
+quotation.form.quotation.carvaluerange = El valor del vehiculo se excede de los parametros establecidos.
+quotation.form.quotation.carvaluerangecoverage = El valor del vehiculo se excede de los parametros establecidos en la cobertura.
+
+quotation.simulation.quotation = Cotización
+quotation.simulation.table.parameters = Parámetros
+quotation.simulation.table.product = PRODUCTO
+quotation.simulation.table.carValue = SUMA ASEGURADA
+quotation.simulation.table.paymentoptions = Opciones de pago
+quotation.simulation.table.discount = Descuento
+quotation.simulation.table.deductibles = Coberturas y deducibles
+quotation.simulation.table.averageValue = VALOR GARANTIZADO
+
+quotation.simulation.payment = pago
+quotation.simulation.frecuencysuffix = es
+
+quotation.form.task.dueDate = Fecha de vencimiento
+quotation.form.task.type = Tipo de actividad
+quotation.form.form.task.description = Descripción
+
+quotation.form.task.fielderrors = Existen errores en el formulario, por favor revisar 
+
+quotation.form.createandsend = Crear caso y enviar
+quotation.form.create.error = No se pudo crear el caso, por favor intente de nuevo
+quotation.form.quote = Cotizar
+
+#######################################################################
+# Channels messages
+#######################################################################
+
+channelsList.title = Canales
+
+channelsList.search.form.channel = Canal
+channelsList.search.form.adminId = Administrador
+channelsList.search.form.search = Buscar
+channelsList.search.form.all = Todos 
+
+channelsList.table.channel = Canal
+channelsList.table.administrator = Administrador
+channelsList.table.administratoremail = Email administrador
+channelsList.table.estado = Estado
+channelsList.table.edit = Editar
+channelsList.table.delete = Eliminar
+
+channelsList.newChannel = Nuevo canal
+
+createChannel.title = Crear canal
+editChannel.title = Modificar canal
+
+
+channel.form.channel.name = Canal
+channel.form.channel.transferCode = Código AS400
+channel.form.channel.administrator = Administrador
+channel.form.estado = Estado
+channel.form.isPublic = Es Público
+channel.form.activo = Activo
+channel.form.inactivo = Inactivo
+channel.form.portfolio = Tipo Cartera
+
+channel.form.create = Crear canal
+channel.form.edit = Modificar canal
+
+channel.create.fielderrors = Existen errores en el formulario, por favor revisar
+channel.edit.success = El canal ha sido modificado exitosamente
+channel.create.success = El canal ha sido modificado exitosamente
+channel.create.duplicate = El canal ya existe
+channel.delete.error = No fue posible eliminar el canal,por favor revisar
+channel.delete.success = El canal ha sido eliminado exitosamente
+#######################################################################
+# Distributors messages
+#######################################################################
+
+distributorsList.title = Distribuidores
+distributorsList.search.form.channelId = Canal
+distributorsList.search.form.distributor = Distribuidor
+distributorsList.search.form.active = Estado
+distributorsList.search.form.search = Buscar
+distributorsList.search.form.all = Todos
+
+distributorsList.table.channel = Canal
+distributorsList.table.distributor = Distribuidor
+distributorsList.table.administrator = Administrador
+distributorsList.table.authorizeddiscount = Descuento autorizado
+distributorsList.table.edit = Editar
+distributorsList.table.delete = Eliminar
+distributorsList.table.state.active = Activo
+distributorsList.table.state.inactive = Inactivo
+distributorsList.table.active = Estado
+
+
+distributorsList.newDistributor = Nuevo distribuidor
+
+createDistributor.title = Crear distribuidor
+editDistributor.title = Modificar distribuidor
+distributor.form.distributor.name = Nombre
+distributor.form.distributor.channel = Canal
+distributor.form.distributor.administrator = Administrador
+distributor.form.distributor.authorizedDiscount = Descuento autorizado (%%)
+distributor.form.distributor.inspectionEmail = Correo para notificación de inspección
+distributor.form.estado = Estado
+distributor.table.state.inactive = Inactivo
+distributor.table.state.active = Activo
+
+
+distributor.form.create = Crear distribuidor
+distributor.form.edit = Modificar distribuidor
+
+distributor.create.fielderrors = Existen errores en el formulario, por favor revisar
+distributor.edit.success = El distribuidor ha sido modificado exitosamente
+distributor.create.success = El distribuidor ha sido modificado exitosamente
+distributor.create.duplicate = El distribuidor ya existe
+distributor.delete.success= El distribuidor ha sido eliminado exitosamente
+distributor.delete.error= No ha sido eliminado el distribuidor, por favor revisar
+
+#######################################################################
+# Stores messages
+#######################################################################
+
+storesList.title = Tiendas / Agencias
+
+storesList.search.form.channelId = Canal
+storesList.search.form.distributorId = Distribuidor
+storesList.search.form.store = Tienda
+storesList.search.form.search = Buscar
+storesList.search.form.all = Todos
+storesList.search.form.active = Estado
+
+
+storesList.table.store = Tienda
+storesList.table.distributor = Distribuidor
+storesList.table.channel = Canal
+storesList.table.administrator = Supervisor
+storesList.table.edit = Editar
+storesList.table.delete = Eliminar
+storesList.table.state.active = Activo
+storesList.table.state.inactive = Inactivo
+storesList.table.active = Estado
+
+storesList.newStore = Nueva tienda
+
+
+createStore.title = Crear Tienda
+editStore.title = Modificar Tienda
+store.form.channelId = Canal
+storesList.search.form.store.distributor = Distribuidor
+store.form.store.name = Nombre
+store.form.store.administrator = Supervisor
+store.form.sellers = Vendedores
+store.form.availablesellers = Vendedores disponibles
+store.form.assignedsellers = Vendedores asignados
+store.form.estado  = Estado
+
+
+store.form.create = Crear tienda
+store.form.edit = Editar tienda
+
+store.administrator = Administrador
+store.available.administrators = Administradores Disponibles
+store.selected.administrators = Administradores Seleccionados
+
+store.create.success = La agencia ha sido creada exitosamente
+store.create.fielderrors = Existen errores en el formulario, por favor revisar
+store.edit.success = La agencia ha sido modificada exitosamente
+store.delete.success = La agencia ha sido eliminada exitosamente
+store.delete.error =No fue posible eliminar la tienda, por favor revisar
+
+#######################################################################
+# Incidents messages
+#######################################################################
+
+incidents.title = Casos
+
+incidentsList.search.form.incidentNumber = No. Caso
+incidentsList.search.form.firstName = Nombre
+incidentsList.search.form.lastName = Apellido
+incidentsList.search.form.plate = Placa
+incidentsList.search.form.searchField = No. Caso, Nombre o Placa
+
+incidentsList.table.number = No. Caso
+incidentsList.table.name = Cliente
+incidentsList.table.vehicle = Vehículo
+incidentsList.table.status = Estado
+incidentsList.table.creationdate = Fecha creación
+incidentsList.table.saledate = Fecha de venta
+incidentsList.table.detail = Detalle
+incidentsList.table.delete = Eliminar
+incidentsList.table.forms = Formularios
+
+
+incident.title = Caso No.
+
+incident.detail.title = Detalle
+
+incident.tasks.title = Actividades pendientes
+incident.field.complete = Completar
+incident.support.title = Soporte
+incident.support.request = Solicitar
+incident.support.request.send = Su solicitud está siendo procesada en un momento uno de nuestros agentes se pondrá en contacto.
+
+incident.task.dueDate = Fecha
+incident.task.task = Tarea
+incident.task.action = Acción
+
+incident.task.new = Crear actividad
+
+incident.field.policy = No. Póliza
+incident.field.client = Cliente
+incident.field.email = Email
+incident.field.phone = Teléfono
+incident.field.taxNumber = NIT
+incident.field.vehicle = Vehículo
+incident.field.status = Estado
+incident.field.inspectionType = Tipo de inspección
+incident.field.date = Fecha inspección
+incident.field.creator = Creador
+incident.field.user.review = Revisado por
+incident.field.user.review.status = Dictamen revisión
+incident.field.user.date.review = Fecha de revisiòn
+incident.field.edit = Editar cliente
+
+incident.payment.option = Opción de Pago
+incident.review = Revisar caso
+incident.attend = Paso 2: Actualizar estado
+incident.attend.form.state = Estado del caso
+incident.attend.form.selectedQuotation = Opción seleccionada
+incident.attend.form.selectedPaymentForm = Opción de pago
+incident.attend.form.requiresInspection = Requiere inspección 
+incident.attend.form.requiresInspection.alert = (Solo vehículos nuevos de agencia NO requiere inspección)
+incident.attend.form.inspectionType = Tipo de inspección
+incident.attend.form.inspectionAddress = Dirección
+incident.attend.form.inspection.inspectionAddress = Dirección
+incident.attend.form.appointmentDate = Fecha tentativa de inspección
+incident.attend.form.inspection.appointmentDate = Fecha tentativa de inspección
+incident.attend.form.inspectionNumber = Número de inspección
+incident.attend.form.inspection.inspectionNumber = Número de inspección
+incident.attend.form.inspection.type = Tipo de Inspección
+incident.attend.form.sold = Venta
+incident.attend.form.lost = No Venta
+incident.attend.form.noSaleReason = Motivo de no venta
+incident.attend.save = Guardar
+incident.attend.complete = Paso 1: Completar Datos
+incident.attend.inspection = Agregar Inspección
+incident.attend.forms = Paso 3: Formularios
+incident.attend.policy = Paso 4: Generar Póliza
+incident.attend.downloadpolicy = Descargar Póliza
+incident.attend.sendpolicyByMail = Enviar Póliza por e-mail
+incident.attend.confirm = Confirmar Póliza
+incident.attend.mails = Actualizar E-mails
+incident.attend.policySendMessage = EN EL TRANSCURSO DEL DÍA, ESTARÁ RECIBIENDO SU PÓLIZA NUEVA.
+incident.attend.edit.mails =  Agregar y/o Modificar correos electrónicos (Opcional)
+
+incident.attend.fielderrors = Existen errores en el formulario, por favor revisar
+incident.finalized.success = El caso fue finalizado exitosamente
+incident.updated.success = El caso fue actualizado exitosamente
+incident.finalized.error = No se pudo finalizar el caso
+
+incident.finalized.viewforms = Ver formularios
+incident.finalized.viewincident = Ver caso
+incident.finalized.viewincidents = Buscar casos
+incident.finalized.incidentDetail = Detalle de Caso
+
+incident.quotations = Cotizaciones
+incident.quotations.table.date = Fecha
+incident.quotations.table.product = Producto
+incident.quotations.table.carvalue = Suma asegurada
+incident.quotations.table.totalprime = Prima total
+incident.quotations.table.actions = Acciones
+incident.quotations.table.view = Ver PDF
+incident.quotations.table.discount = Descuento
+incident.quotations.table.detail = Detalle
+incident.quotations.table.resend = Reenviar
+
+incident.quotations.newQuotation = Nueva cotización
+
+incident.quotation.discount.maximum = Máximo
+
+incident.quotation.back = Regresar
+incidents.list.searcherror = Debe ingresar al menos un criterio de búsqueda
+incidents.list.noentries = No se encontraron coincidencias
+incidentsList.search.form.search = Buscar  
+
+incident.quotation.send.warning = La cotización fue creada exitosamente. Sin embargo, no se ha podido enviar el correo electrónico
+incident.quotation.send.error = La cotización no pudo enviarse, asegurese que el cliente posea una dirección de correo válida
+incident.quotation.send.success = La cotización fue enviada exitosamente
+incident.quotation.sendAS400.success = Los datos de cotización han sido enviados a nuestro sistema.
+
+incident.quotation.discount.apply = Aplicar
+incident.quotation.discount.unauthorized = El descuento a aplicar no puede ser mayor al %s
+incident.quotation.discount.error = Los datos ingresados son inválidos
+incident.quotation.discount.success = El descuento fue aplicado exitosamente
+incident.quotation.discount.no_authorized_discount = No posee un descuento autorizado para esta cotización
+
+#######################################################################
+# Client messages
+#######################################################################
+
+client.edit.title = Editar cliente
+client.edit.form.client.firstName = Nombre
+client.edit.form.client.lastName = Apellido
+client.edit.form.client.phoneNumber = Teléfono
+client.edit.form.client.email = Correo electrónico
+client.edit.form.client.taxNumber = NIT
+
+client.edit.fielderrors = Existen errores en el formulario, por favor revisar
+client.edit.save = Modificar cliente
+client.edit.update = Actualizar
+client.edit.cancel = Salir
+client.edit.complete = Guardar y Salir
+client.edit.partial = Guardar Parcial
+
+client.edit.success = El cliente fue modificado exitosamente
+
+#######################################################################
+# Reports messages
+#######################################################################
+
+reports.appliedDisounts.title = Descuentos aplicados por canal
+
+reports.search.form.channelId = Canal
+reports.search.form.distributorId = Distribuidor
+reports.form.startDate = Fecha de inicio
+reports.form.endDate = Fecha de finalización
+
+reports.appliedDiscounts.generate = Generar reporte
+reports.appliedDiscounts.dateserror = El rango de fechas es inválido
+reports.appliedDiscounts.fieldsError = Debe ingresar una fecha de inicio y finalización
+reports.appliedDiscounts.norecords = No existen resultados para la busqueda realizada
+reports.appliedDiscounts.error = Ocurrió un error al generar el reporte. Intente de nuevo mas tarde
+
+reports.closedSales.title = Ventas realizadas
+reports.closedSalesQA.title = Ventas realizadas con control de calidad
+
+reports.closedSales.form.channelId = Canal
+reports.closedSales.user = Usuario 
+reports.closedSales.startDate = Fecha de inicio
+reports.closedSales.endDate = Fecha de finalización
+
+reports.closedSales.generate = Generar reporte
+reports.closedSales.dateserror = El rango de fechas es inválido
+reports.closedSales.fieldsError = Debe ingresar una fecha de inicio y finalización
+reports.closedSales.norecords = No existen resultados para la busqueda realizada
+reports.closedSales.error = Ocurrió un error al generar el reporte. Intente de nuevo mas tarde
+
+reports.lostSales.title = Ventas perdidas
+reports.lostSales.form.channelId = Canal
+
+reports.lostSales.startDate = Fecha de inicio
+reports.lostSales.endDate = Fecha de finalización
+
+reports.lostSales.generate = Generar reporte
+reports.lostSales.dateserror = El rango de fechas es inválido
+reports.lostSales.fieldsError = Debe ingresar una fecha de inicio y finalización
+reports.lostSales.norecords = No existen resultados para la busqueda realizada
+reports.lostSales.error = Ocurrió un error al generar el reporte. Intente de nuevo mas tarde
+
+reports.quotations.title = Reporte General de Cotizaciones
+reports.quotations.form.startDate = Fecha Inicio
+reports.quotations.form.endDate = Fecha Fin
+reports.quotations.form.search.status = Estado de Cotización
+reports.quotations.form.search.origin = Origen
+reports.quotations.form.search.number = No. Cotización
+reports.quotations.form.search.name = Nombre de Cotización
+reports.quotations.form.search.inspectionNumber = No. de Inspección
+reports.quotations.form.search.channel = Canal
+reports.quotations.form.search.isIndividual = Tipo de Línea
+reports.quotations.form.search.broker = Corredor
+reports.quotations.form.search.export = Exportar a Excel
+
+report.quotations.table.quotation.incident.number = No. Cotización
+report.quotations.table.quotation.incident.broker.name = Corredores
+report.quotations.table.quotation.product.name = Producto
+report.quotations.table.quotation.incident.vehicle.description = Datos Vehículo
+report.quotations.table.quotation.incident.vehicle.brand = Marca
+report.quotations.table.quotation.incident.vehicle.line = Linea
+report.quotations.table.quotation.incident.vehicle.plate = No. Placa
+report.quotations.table.quotation.incident.status.name = Estado
+report.quotations.table.quotation.origin = Orígen
+report.quotations.table.quotation.product.description = Datos Poliza
+report.quotations.table.quotation.incident.inspection.inspectionNumber = No. de Inspección
+
+report.quotations.form.search.success = Búsqueda ha devuelto resultados
+report.quotations.form.search.successExcel = Se ha exportado exitosamente el reporte.
+report.quotations.form.search.error = No hay resultados para la búsqueda
+
+
+reports.quotationsUser.title = Reporte Cotizaciones de Auto Consultas
+reports.quotationsUser.form.startDate = Fecha Inicio
+reports.quotationsUser.form.endDate = Fecha Fin
+reports.quotationsUser.form.search.name = Nombre de Cliente
+reports.quotationsUser.form.search.channel = Canal
+reports.quotationsUser.form.search.export = Exportar a Excel
+
+report.quotationsUser.table.quotation.incident.client.fullname = Nombre Cliente
+report.quotationsUser.table.quotation.incident.client.phoneNumber = Teléfono
+report.quotationsUser.table.quotation.incident.client.email = Email 
+report.quotationsUser.table.quotation.incident.client.taxNumber = NIT
+report.quotationsUser.table.quotation.incident.vehicle.description = Datos Vehículo
+report.quotationsUser.table.quotation.product.description = Datos Poliza
+report.quotationsUser.table.quotation.incident.channel.name = Canal
+report.quotationsUser.table.quotation.incident.status.name = Estado
+
+report.quotationsUser.form.search.success = Búsqueda ha devuelto resultados
+report.quotationsUser.form.search.successExcel = Se ha exportado exitosamente el reporte.
+report.quotationsUser.form.search.error = No hay resultados para la búsqueda
+
+
+reports.quotationsException.title = Reporte de Excepciones
+reports.quotationsException.form.startDate = Fecha Inicio
+reports.quotationsException.form.endDate = Fecha Fin
+reports.quotationsException.form.search.status = Estado de Cotización
+reports.quotationsException.form.search.origin = Origen
+reports.quotationsException.form.search.number = No. Cotización
+reports.quotationsException.form.search.name = Nombre de Cotización
+reports.quotationsException.form.search.inspectionNumber = No. de Caso
+reports.quotationsException.form.search.channel = Canal
+reports.quotationsException.form.search.isIndividual = Tipo de Línea
+reports.quotationsException.form.search.broker = Corredor
+reports.quotationsException.form.search.export = Exportar a Excel
+
+report.quotationsException.table.quotation.incident.number = No. Cotización
+report.quotationsException.table.quotation.incident.client.fullname = Nombre Cliente
+report.quotationsException.table.quotation.incident.client.phoneNumber = Teléfono
+report.quotationsException.table.quotation.incident.client.email = Email
+report.quotationsException.table.quotation.incident.client.taxNumber = NIT
+report.quotationsException.table.quotation.incident.broker.name = Corredores
+report.quotationsException.table.quotation.product.name = Nombre Cotización
+report.quotationsException.table.quotation.incident.vehicle.description = Datos Vehículo
+report.quotationsException.table.quotation.incident.status.name = Estado
+report.quotationsException.table.quotation.incident.client.isIndividual = Tipo de Cliente
+report.quotationsException.table.quotation.product.description = Datos Poliza
+report.quotationsException.table.quotation.incident.declinedReason.name = Mensaje de Excepción
+
+report.quotationsException.form.search.success = Búsqueda ha devuelto resultados
+report.quotationsException.form.search.successExcel = Se ha exportado exitosamente el reporte.
+report.quotationsException.form.search.error = No hay resultados para la búsqueda
+
+#######################################################################
+# Tasks messages
+#######################################################################
+
+tasks.types.title = Tipos de actividades
+
+tasks.types.table.name = Nombre
+tasks.types.table.description = Descripción
+tasks.types.table.state = Estado
+tasks.types.table.edit = Editar
+
+tasks.types.new_type = Nuevo tipo
+
+tasks.type.create.title = Crear tipo
+tasks.type.edit.title = Modificar tipo
+
+tasks.type.form.type.name = Nombre
+tasks.type.form.type.description = Descripción
+tasks.type.form.type.active = Estado
+
+tasks.type.form.create = Crear tipo
+tasks.type.form.edit = Modificar tipo
+
+tasks.types.form.fielderrors = Existen errores en el formulario, por favor revisar
+tasks.types.create.success = El tipo de actividad fue creado exitosamente
+tasks.types.edit.success = El tipo de actividad fue modificado exitosamente
+
+#######################################################################
+# Tasks list messages
+#######################################################################
+
+tasks.list.empty = No existen actividades pendientes
+tasks.list.title = Actividades
+tasks.list.expired.title = Actividades vencidas
+tasks.list.pending.title = Actividades pendientes
+
+tasks.list.table.type = Tipo
+tasks.list.table.client = Cliente
+tasks.list.table.note = Descripción
+tasks.list.table.date = Fecha y Hora
+tasks.list.table.actions = Acciones
+tasks.list.table.incident = Ver caso
+tasks.list.table.complete = Completar
+
+tasks.list.table.complete.confirmation = ¿Está seguro que desea marcar la actividad como completada?
+
+tasks.list.complete.error = Ocurrió un error al completar la actividad.
+tasks.list.complete.success = Actividad completada exitosamente
+
+tasks.list.complete.case = Ver caso
+tasks.list.complete.newTask = Crear nueva actividad
+tasks.list.complete.attend = Finalizar caso
+
+tasks.list.newTask = Crear actividad
+task.form.fielderrors = Existen errores en el formulario, por favor revisar 
+task.form.task.dueDate = Fecha de vencimiento
+task.form.task.type = Tipo de actividad
+task.form.task.description = Descripción
+task.form.create = Crear actividad
+
+tasks.list.create.success = La actividad fue creada exitosamente
+
+#######################################################################
+# Forms messages
+#######################################################################
+formsList.title = Formularios
+
+formsList.search.form.form = Formulario
+formsList.search.form.search = Buscar
+formsList.search.form.all = Todos
+
+formsList.newForm = Nuevo Formulario
+
+formsList.table.form = Formulario
+formsList.table.edit = Editar
+formsList.table.path = Ruta
+
+formsList.table.actions = Acciones
+formsList.table.fill = Llenar
+formsList.table.print = Imprimir
+
+form.form.form.name = Nombre
+form.form.form.templatePath = Ruta
+
+createForm.title = Crear formulario
+editForm.title = Modificar formulario
+
+form.create.fielderrors = Existen errores en el formulario. Por favor revisar
+form.create.success = El formulario fue creado exitosamente
+form.edit.success = El formulario fue modificado exitosamente
+form.create.duplicate = El formulario ya existe
+form.form.create = Crear formulario
+form.form.edit = Modificar formulario
+form.form.print = Imprimir
+
+form.parameters.availableparameters = Parámetros disponibles
+form.parameters.assignedparameters = Parámetros asignados
+
+form.printForm.title = Formularios
+
+#######################################################################
+# Parameters messages
+#######################################################################
+parametersList.title = Parámetros de formularios
+
+parametersList.search.form.form = Parámetros
+parametersList.search.form.search = Buscar
+parametersList.search.form.all = Todos
+
+parametersList.newForm = Nuevo Parámetro
+
+parametersList.table.order = Orden
+parametersList.table.name = Nombre
+parametersList.table.type = Tipo
+parametersList.table.state = Estado
+parametersList.table.active = Activo
+parametersList.table.inactive = Inactivo
+parametersList.table.edit = Editar
+
+parameter.form.parameter.name = Nombre
+parameter.form.parameter.active = Activo
+parameter.form.parameter.identifier = Identificador
+parameter.form.parameter.parameterOrder = Orden
+parameter.form.parameter.required = Requerido
+parameter.form.parameter.type = Tipo de dato
+parameter.form.parameter.multiple = Permitir múltiple selección
+parameter.form.parameter.maxLength = Longitud máxima
+
+#######################################################################
+# Incident parameters messages
+#######################################################################
+incidentParameter.form.save = Guardar
+
+createParameter.title = Crear parámetro
+editParameter.title = Modificar parámetro
+
+parameter.create.fielderrors = Existen errores en el formulario. Por favor revisar
+parameter.create.success = El parámetro fue creado exitosamente
+parameter.edit.success = El parámetro fue modificado exitosamente
+parameters.edit.success = Los parámetros fueron almacenados exitosamente
+parameter.create.duplicate = El parámetro ya existe
+parameter.form.create = Crear parámetro
+parameter.form.edit = Modificar parámetro
+
+#######################################################################
+# Parameter Options
+#######################################################################
+parameter.form.option = option
+
+#######################################################################
+# Reminders messages
+#######################################################################
+
+reminders.task.subject = Recordatorio: %s
+
+#######################################################################
+# Inspection centers messages
+#######################################################################
+
+centersList.title = Centros de inspección
+
+centersList.search.form.name = Nombre
+centersList.search.form.state = Estado
+
+centersList.table.state.active = Activo
+centersList.table.state.inactive = Inactivo
+
+centersList.search.form.search = Buscar
+
+centersList.table.name = Nombre
+centersList.table.address = Dirección
+centersList.table.schedule = Horario
+centersList.table.edit = Editar
+
+centersList.newCenter = Nuevo Centro
+
+createCenter.title = Crear centro
+editCenter.title = Modificar centro
+
+center.form.center.name = Nombre
+center.form.center.address = Dirección
+coverage.form.center.schedule = Horario
+coverage.form.form.state = Estado
+center.create.fielderrors = Existen errores en el formulario, por favor revisar
+
+center.form.create = Crear
+center.form.edit = Modificar
+
+center.edit.success = El centro fue editado exitosamente
+center.create.success = El centro fue creado exitosamente
+
+createCenters.title = Listado de centros de inspección
+centers.form.storedFile = Archivo actual
+centers.form.file = Actualizar archivo
+centers.form.update = Actualizar archivo
+
+centers.update.success = El listado de centros fue actualizado exitosamente 
+centers.update.failed = Ocurrió un error al actualizar el listado de centros
+
+#######################################################################
+# Guards messages
+#######################################################################
+
+guards.title = Búsqueda de resguardos
+
+guardsList.search.form.searchField = No. Caso, Nombre o Placa
+guardsList.search.form.search = Buscar
+
+guardsList.table.number = No. Caso
+guardsList.table.name = Cliente
+guardsList.table.vehicle = Vehículo
+guardsList.table.status = Estado
+guardsList.table.creationdate = Fecha de creación
+guardsList.table.expirationdate = Fecha de vencimiento
+guardsList.table.detail = Detalle
+
+guards.list.noentries = No se encontraron coincidencias
+guards.list.searcherror = Debe ingresar al menos un criterio de búsqueda
+
+#######################################################################
+# Professions Messages
+#######################################################################
+
+professionsList.title = Listado de Profesiones
+
+professionsList.search.form.profession = Nombre
+professionsList.search.form.search = Buscar
+professionsList.search.form.all = Todos
+professionsList.new = Nueva Profesión
+professionsList.newExcel = Carga Archivo Excel
+
+professionsList.table.name = Nombre
+professionsList.table.active = Estado
+professionsList.table.edit = Editar
+professionsList.table.delete = Eliminar
+professionsList.table.state.active = Activo
+professionsList.table.state.inactive = Inactivo
+
+profession.form.title = Profesiones
+profession.form.name = Nombre
+profession.form.active = Estado
+profession.form.create = Guardar
+profession.form.edit = Actualizar
+profession.form.cancel = Cancelar
+
+
+profession.excel.title = Crear Profesiones desde Archivo Excel
+profession.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+profession.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+profession.excel.excelFile.label = Carga de Archivo
+profession.excel.button.load = Procesar
+profession.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# Zones Messages
+#######################################################################
+
+zonesList.title = Listado de Zonas
+
+zonesList.search.form.zone = Nombre
+zonesList.search.form.search = Buscar
+zonesList.search.form.all = Todos
+zonesList.new = Nueva Zona
+zonesList.newExcel = Carga Archivo Excel
+
+zonesList.table.name = Nombre
+zonesList.table.active = Estado
+zonesList.table.edit = Editar
+zonesList.table.delete = Eliminar
+zoneList.table.state.active = Activo
+zoneList.table.state.inactive = Inactivo
+
+zone.form.title = Zonas
+zone.form.name = Nombre
+zone.form.active = Estado
+zone.form.create = Guardar
+zone.form.edit = Actualizar
+zone.form.cancel = Cancelar
+
+
+zone.excel.title = Crear Profesiones desde Archivo Excel
+zone.create.success = Se han cargado con éxito las zonas del archivo excel, %s cargados.
+zone.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+zone.excel.excelFile.label = Carga de Archivo
+zone.excel.button.load = Procesar
+zone.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# Product Types Messages
+#######################################################################
+
+productTypesList.title = Listado de Tipos de Producto
+
+productTypesList.search.form.productType = Nombre
+productTypesList.search.form.search = Buscar
+productTypesList.search.form.all = Todos
+productTypesList.new = Nuevo Tipo Producto
+productTypesList.newExcel = Carga Archivo Excel
+
+productTypesList.table.name = Nombre
+productTypesList.table.active = Estado
+productTypesList.table.edit = Editar
+productTypesList.table.delete = Eliminar
+productTypeList.table.state.active = Activo
+productTypeList.table.state.inactive = Inactivo
+
+productType.form.title = Tipos de Producto
+productType.form.name = Nombre
+productType.form.active = Estado
+productType.form.create = Guardar
+productType.form.edit = Actualizar
+productType.form.cancel = Cancelar
+
+
+productType.excel.title = Crear Tipos de Producto desde Archivo Excel
+productType.create.success = Se han cargado con éxito los tipos de producto del archivo excel, %s cargados.
+productType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+productType.excel.excelFile.label = Carga de Archivo
+productType.excel.button.load = Procesar
+productType.excel.button.cancel = Cancelar
+
+#######################################################################
+# Vehicle Types Messages
+#######################################################################
+
+vehicleTypesList.title = Listado de Tipos de Vehículo
+
+vehicleTypesList.search.form.vehicleType = Nombre
+vehicleTypesList.search.form.search = Buscar
+vehicleTypesList.search.form.all = Todos
+vehicleTypesList.new = Nuevo Tipo Vehículo
+vehicleTypesList.newExcel = Carga Archivo Excel
+
+vehicleTypesList.table.name = Nombre
+vehicleTypesList.table.active = Estado
+vehicleTypesList.table.edit = Editar
+vehicleTypesList.table.delete = Eliminar
+vehicleTypeList.table.state.active = Activo
+vehicleTypeList.table.state.inactive = Inactivo
+
+vehicleType.form.title = Tipos de Vehículo
+vehicleType.form.name = Nombre
+vehicleType.form.active = Estado
+vehicleType.form.create = Guardar
+vehicleType.form.edit = Actualizar
+vehicleType.form.cancel = Cancelar
+
+
+vehicleType.excel.title = Crear Tipos de Vehículo desde Archivo Excel
+vehicleType.create.success = Se han cargado con éxito los tipos de producto del archivo excel, %s cargados.
+vehicleType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+vehicleType.excel.excelFile.label = Carga de Archivo
+vehicleType.excel.button.load = Procesar
+vehicleType.excel.button.cancel = Cancelar
+
+#######################################################################
+# Rates Messages
+#######################################################################
+
+ratesList.title = Listado de Tipos de Tarifa
+
+ratesList.search.form.rate = Nombre
+ratesList.search.form.search = Buscar
+ratesList.search.form.all = Todos
+ratesList.new = Nuevo Tipo de Tarifa
+ratesList.newExcel = Carga Archivo Excel
+
+ratesList.table.name = Nombre
+ratesList.table.active = Estado
+ratesList.table.edit = Editar
+ratesList.table.delete = Eliminar
+rateList.table.state.active = Activo
+rateList.table.state.inactive = Inactivo
+
+rate.form.title = Tipos de Tarifa
+rate.form.name = Nombre
+rate.form.active = Estado
+rate.form.create = Guardar
+rate.form.edit = Actualizar
+rate.form.cancel = Cancelar
+
+
+rate.excel.title = Crear Tipos de Tarifa desde Archivo Excel
+rate.create.success = Se han cargado con éxito los tipos de tarifa del archivo excel, %s cargados.
+rate.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+rate.excel.excelFile.label = Carga de Archivo
+rate.excel.button.load = Procesar
+rate.excel.button.cancel = Cancelar
+
+#######################################################################
+# Years Messages
+#######################################################################
+
+yearsList.title = Listado de Años
+
+yearsList.search.form.year = Año
+yearsList.search.form.search = Buscar
+yearsList.search.form.all = Todos
+yearsList.new = Nuevo Año
+yearsList.newExcel = Carga Archivo Excel
+
+yearsList.table.name = Año
+yearsList.table.active = Estado
+yearsList.table.edit = Editar
+yearsList.table.delete = Eliminar
+yearList.table.state.active = Activo
+yearList.table.state.inactive = Inactivo
+
+year.form.title = Año
+year.form.name = Año
+year.form.active = Estado
+year.form.create = Guardar
+year.form.edit = Actualizar
+year.form.cancel = Cancelar
+
+
+year.excel.title = Crear Años desde Archivo Excel
+year.create.success = Se han cargado con éxito los años del archivo excel, %s cargados.
+year.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+year.excel.excelFile.label = Carga de Archivo
+year.excel.button.load = Procesar
+year.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# Uninsurables Messages
+#######################################################################
+
+uninsurablesList.title = Listado de No Asegurables
+
+uninsurablesList.search.form.uninsurable = Nombre
+uninsurablesList.search.form.search = Buscar
+uninsurablesList.search.form.all = Todos
+uninsurablesList.new = Nuevo No Asegurable
+uninsurablesList.newExcel = Carga Archivo Excel
+
+uninsurablesList.table.name = Nombre
+uninsurablesList.table.active = Estado
+uninsurablesList.table.edit = Editar
+uninsurablesList.table.delete = Eliminar
+uninsurableList.table.state.active = Activo
+uninsurableList.table.state.inactive = Inactivo
+
+uninsurable.form.title = No Asegurable
+uninsurable.form.name = Nombre
+uninsurable.form.active = Estado
+uninsurable.form.create = Guardar
+uninsurable.form.edit = Actualizar
+uninsurable.form.cancel = Cancelar
+
+
+uninsurable.excel.title = Crear No Asegurable desde Archivo Excel
+uninsurable.create.success = Se han cargado con éxito los no asegurables del archivo excel, %s cargados.
+uninsurable.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+uninsurable.excel.excelFile.label = Carga de Archivo
+uninsurable.excel.button.load = Procesar
+uninsurable.excel.button.cancel = Cancelar
+
+#######################################################################
+# Deductibles Messages
+#######################################################################
+
+deductiblesList.title = Listado de Deducibles Alto Riesgo
+
+deductiblesList.search.form.deductible = Nombre
+deductiblesList.search.form.search = Buscar
+deductiblesList.search.form.all = Todos
+deductiblesList.new = Nuevo Deducible
+deductiblesList.newExcel = Carga Archivo Excel
+
+deductiblesList.table.name = Nombre
+deductiblesList.table.cost = Valor
+deductiblesList.table.active = Estado
+deductiblesList.table.edit = Editar
+deductiblesList.table.delete = Eliminar
+deductibleList.table.state.active = Activo
+deductibleList.table.state.inactive = Inactivo
+
+deductible.form.title = Deducible Alto Riesgo
+deductible.form.name = Nombre
+deductible.form.cost = Valor
+deductible.form.active = Estado
+deductible.form.create = Guardar
+deductible.form.edit = Actualizar
+deductible.form.cancel = Cancelar
+deductible.form.create.success = Se ha almacenado el registro.
+
+
+deductible.excel.title = Crear No Asegurable desde Archivo Excel
+deductible.create.success = Se han cargado con éxito los deducibles del archivo excel, %s cargados.
+deductible.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+deductible.excel.excelFile.label = Carga de Archivo
+deductible.excel.button.load = Procesar
+deductible.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# AverageValues Messages
+#######################################################################
+
+averageValuesList.title = Listado de Valores Promedio
+
+averageValuesList.search.form.averageValue = Nombre
+averageValuesList.search.form.search = Buscar
+averageValuesList.search.form.all = Todos
+averageValuesList.new = Nuevo Valor Promedio
+averageValuesList.newExcel = Carga Archivo Excel
+
+averageValuesList.table.name = Nombre
+averageValuesList.table.value = Valor
+averageValuesList.table.active = Estado
+averageValuesList.table.edit = Editar
+averageValuesList.table.delete = Eliminar
+averageValueList.table.state.active = Activo
+averageValueList.table.state.inactive = Inactivo
+
+averageValue.form.title = Valor Promedio
+averageValue.form.name = Nombre
+averageValue.form.value = Valor
+averageValue.form.active = Estado
+averageValue.form.create = Guardar
+averageValue.form.edit = Actualizar
+averageValue.form.cancel = Cancelar
+averageValue.form.create.success = Se ha almacenado el registro.
+
+
+averageValue.excel.title = Crear Valor Promedio desde Archivo Excel
+averageValue.create.success = Se han cargado con éxito los valores promedio del archivo excel, %s cargados.
+averageValue.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+averageValue.excel.excelFile.label = Carga de Archivo
+averageValue.excel.button.load = Procesar
+averageValue.excel.button.cancel = Cancelar
+averageValue.create.fielderrors = Ha ocurrido un error con la carga del Archivo, por favor intente de nuevo.
+averageValue.update.success = El registro se ha actualizado exitosamente.
+averageValue.delete.success = El registro se ha eliminado exitosamente.
+
+pendingIncidentsList.title = Listado de incidentes pendientes de inspección
+#######################################################################
+# Inspections Messages
+#######################################################################
+
+inspectionsList.title = Listado de Inspecciones Locales
+
+inspectionsList.search.form.number = No. Inspección
+inspectionsList.search.form.search = Buscar
+inspectionsList.search.form.all = Todos
+inspectionsList.new = Nueva Inspección
+
+
+inspectionsList.table.incident.number = No. de Caso
+inspectionsList.table.inspectionNumber = No. de Inspección
+inspectionsList.table.value = 
+inspectionsList.table.active = Estado
+inspectionsList.table.edit = Editar
+inspectionsList.table.delete = Eliminar
+inspectionList.table.state.active = Activo
+inspectionList.table.state.inactive = Inactivo
+
+inspection.form.title = Nueva Inspección
+inspection.form.inspectionNumber = No. de Inspección
+inspection.form.address = Dirección para Inspección
+inspection.form.appointmentDate = Fecha de Visita
+inspection.form.type = Tipo de Inspección
+inspection.form.inspected = Inspeccionado
+inspection.form.create = Guardar
+inspection.form.edit = Actualizar
+inspection.form.cancel = Cancelar
+inspection.form.create.success = Se ha almacenado el registro.
+
+
+inspection.excel.title = Crear Valor Promedio desde Archivo Excel
+inspection.create.success = Se han cargado con éxito los valores promedio del archivo excel, %s cargados.
+inspection.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+inspection.excel.excelFile.label = Carga de Archivo
+inspection.excel.button.load = Procesar
+inspection.excel.button.cancel = Cancelar
+inspection.create.fielderrors = Ha ocurrido un error con la carga del Archivo, por favor intente de nuevo.
+inspection.update.success = El registro se ha actualizado exitosamente.
+inspection.delete.success = El registro se ha eliminado exitosamente.
+
+#######################################################################
+# Reminders Messages
+#######################################################################
+
+remindersList.title = Listado de Recordatorios
+
+remindersList.search.form.reminder = No. Caso
+remindersList.search.form.search = Buscar
+remindersList.search.form.all = Todos
+remindersList.new = Nuevo Recordatorio
+remindersList.newExcel = Carga Archivo Excel
+
+remindersList.table.caseNumber = No. Caso
+remindersList.table.email = Destinatario
+remindersList.table.dayNumber =  No. de días
+remindersList.table.hour = Hora
+remindersList.table.minute = Minuto
+remindersList.table.active = Estado
+remindersList.table.edit = Editar
+remindersList.table.delete = Eliminar
+reminderList.table.state.active = Activo
+reminderList.table.state.inactive = Inactivo
+
+reminder.form.title = Recordatorio
+reminder.form.caseNumber = No. Caso
+reminder.form.dayNumber = No. de días
+reminder.form.customEmail = Email destinatario
+reminder.form.hour = Hora
+reminder.form.minute = Minuto
+reminder.form.active = Estado
+reminder.form.create = Guardar
+reminder.form.edit = Actualizar
+reminder.form.cancel = Cancelar
+reminder.form.create.success = Se ha almacenado el registro.
+reminder.update.success = Se actualizó exitosamente el registro.
+
+#######################################################################
+# Catalogs Messages
+#######################################################################
+
+menu.catalogs.title = Catálogos
+menu.catalogs.professions = Profesiones
+menu.catalogs.zones = Zonas de Emisión
+menu.catalogs.productTypes = Tipos de Producto
+menu.catalogs.rates = Tarifas
+menu.catalogs.years = Años
+menu.catalogs.uninsurables = No Asegurables
+menu.catalogs.deductibles = Deducibles Alto Riesgo
+menu.catalogs.averageValues = Valores Promedio
+menu.catalogs.nationalities = Nacionalidades
+menu.catalogs.licenseTypes = Tipos de Licencia
+menu.catalogs.reminderTypes = Tipos de Alarma
+menu.catalogs.plateTypes = Tipos de Placa
+menu.catalogs.vehiclePromotionTypes = Tipos de Promoción Vehículos Nuevos
+menu.catalogs.chargeTypes = Medios de Cobro
+menu.catalogs.societyTypes = Tipos de Sociedad
+menu.catalogs.paymentTypes = Formas de Pago
+menu.catalogs.coverageCodes = Códigos de Cobertura
+menu.catalogs.bankAccountTypes = Tipos de Cuenta Bancos
+menu.catalogs.cardTypes = Tipos de Tarjetas de Crédito/Debito
+menu.catalogs.sexTypes = Sexo
+menu.catalogs.civilStatuses = Estado Civil
+menu.catalogs.economicActivitiesTypes = Actividad Económica
+menu.catalogs.productionTypes = Tipos de Producción
+menu.catalogs.portfolioTypes = Tipos de Cartera
+menu.catalogs.accountLines = Tipos de Línea
+menu.catalogs.agentCodes = Códigos de Agente
+menu.catalogs.workFlowMovementTypes = Tipos de Movimiento WorkFlow
+menu.catalogs.documentTypes = Tipos de Documentos
+menu.catalogs.vehicleTypes = Tipos de Vehículo
+menu.catalogs.rates = Tipos de Tarifa
+menu.catalogs.geographicAreas = Área Geográfica
+menu.catalogs.beneficiaries = Clausulas de Beneficiarios
+beneficiariesList.search.form.beneficiary = Buscar
+menu.payment_catalogs.title = Catálogos Pagos
+menu.vehicle_catalogs.title = Catálogos Vehículos
+
+# Phase II
+
+form.select = Seleccionar
+
+# Client
+quotation.form.client.isIndividual =			Cliente Individual
+quotation.form.client.individual =				Cliente Individual
+quotation.form.client.juridico =				Cliente Jurídico
+quotation.form.client.firstName = 				Primer Nombre
+quotation.form.client.secondName = 				Segundo Nombre
+quotation.form.client.firstSurname = 			Primer Apellido
+quotation.form.client.secondSurname = 			Segundo Apellido
+quotation.form.client.marriedSurname = 			Apellido Casada
+quotation.form.client.birthdate = 				Fecha de Nacimiento
+quotation.form.client.identificationDocument = 	DPI
+quotation.form.client.passport = 				Pasaporte
+quotation.form.client.nationality = 			Nacionalidad
+quotation.form.client.licenseType = 			Tipo Licencia
+quotation.form.client.licenseNumber = 			Número Licencia
+quotation.form.client.address = 				Dirección
+quotation.form.client.civilStatus = 			Estado Civil
+quotation.form.client.sex = 					Sexo
+quotation.form.client.profession =	 			Profesión
+quotation.form.client.codeCifBank = 			Código Cif Banco
+quotation.form.client.country =	 		        País
+quotation.form.client.department =          	Departamento
+quotation.form.client.municipality=     		Municipio
+quotation.form.client.zone  = 		    		Zona 
+quotation.form.client.phoneNumber1 = 			Teléfono de Casa
+quotation.form.client.phoneNumber2 = 			Celular
+quotation.form.client.phoneNumber3 = 			Teléfono de Oficina
+quotation.form.client.phone.Authorization =     + Autorizo a Seguros El Roble enviar mensajes de texto a mi teléfono móvil y correos electrónicos a mi e-mail, con el propósito de brindarme información relevante a la póliza de seguro contratada.
+quotation.form.client.useDataClientPayer = 		Utilizar Datos del Cliente
+
+# Business Client
+quotation.form.business.client.taxNumber = 				NIT
+quotation.form.business.client.societyType = 			Tipo Sociedad
+quotation.form.business.client.companyName = 			Nombre Compañia
+quotation.form.business.client.businessName = 			Razon Social
+quotation.form.business.client.economicActivity = 		Actividad Económica
+quotation.form.business.client.nationality = 			Nacionalidad
+quotation.form.business.client.identificationDocument = DPI
+quotation.form.business.client.email = 					Correo Electrónico
+quotation.form.business.client.stateProvider = 			Proveedor Estado
+quotation.form.business.client.writeNumber = 			Número Escritura
+quotation.form.business.client.writeDate = 				Fecha Escritura
+quotation.form.business.client.registrationDate = 		Fecha Constitución
+quotation.form.business.client.codeCifBank = 			Código Cif Banco
+quotation.form.business.client.address = 				Dirección
+quotation.form.business.client.country =	 			País
+quotation.form.business.client.department = 			Departamento
+quotation.form.business.client.municipality = 			Municipio
+quotation.form.business.client.zone = 					Zone
+quotation.form.business.client.phoneNumber1 = 			Teléfono Principal
+quotation.form.business.client.phoneNumber2 = 			Celular 
+quotation.form.business.client.phoneNumber3 = 			Otro Teléfono
+quotation.form.business.client.additionalEmails =       Correos electrónicos adicionales (separados por coma)
+
+# Legal Representative
+quotation.form.legalRepresentative.taxNumber = 				NIT
+quotation.form.legalRepresentative.firstName = 				Primer Nombre
+quotation.form.legalRepresentative.secondName = 			Segundo Nombre
+quotation.form.legalRepresentative.firstSurname = 			Primer Apellido
+quotation.form.legalRepresentative.secondSurname = 			Segundo Apellido
+quotation.form.legalRepresentative.marriedSurname = 		Apellido Casada
+quotation.form.legalRepresentative.birthdate = 				Fecha de Nacimiento
+quotation.form.legalRepresentative.identificationDocument = DPI
+quotation.form.legalRepresentative.passport = 				Pasaporte
+quotation.form.legalRepresentative.nationality = 			Nacionalidad
+quotation.form.legalRepresentative.email = 					Correo Electrónico
+quotation.form.legalRepresentative.address = 				Dirección
+quotation.form.legalRepresentative.civilStatus = 			Estado Civil
+quotation.form.legalRepresentative.sex = 					Sexo
+quotation.form.legalRepresentative.profession =	 			Profesión
+quotation.form.legalRepresentative.country =	 			País
+quotation.form.legalRepresentative.department = 			Departamento
+quotation.form.legalRepresentative.municipality = 			Municipio
+quotation.form.legalRepresentative.zone = 					Zona
+quotation.form.legalRepresentative.registry = 				Registro
+quotation.form.legalRepresentative.caseFile = 				Expediente
+quotation.form.legalRepresentative.extendedIn = 			Extendida en
+quotation.form.legalRepresentative.registrationDate = 		Fecha Inscripción
+quotation.form.legalRepresentative.book = 					Libro
+quotation.form.legalRepresentative.folio = 					Folio
+quotation.form.legalRepresentative.phoneNumber1 = 			Teléfono de Casa
+quotation.form.legalRepresentative.phoneNumber2 = 			Celular
+quotation.form.legalRepresentative.phoneNumber3 = 			Teléfono de Oficina
+
+quotation.form.client.phoneNumbers = 			TELEFONOS
+quotation.form.client.phoneLabel = 				Etiqueta
+quotation.form.client.phoneNumber = 			Número
+
+# Client Payer
+quotation.form.payer.taxNumber = 				NIT
+quotation.form.payer.firstName = 				Primer Nombre
+quotation.form.payer.secondName = 				Segundo Nombre
+quotation.form.payer.firstSurname = 			Primer Apellido
+quotation.form.payer.secondSurname = 			Segundo Apellido
+quotation.form.payer.marriedSurname = 			Apellido Casada
+quotation.form.payer.birthdate = 				Fecha de Nacimiento
+quotation.form.payer.sex = 						Sexo
+quotation.form.payer.profession =	 			Profesión
+quotation.form.payer.identificationDocument = 	DPI
+quotation.form.payer.passport = 				Pasaporte
+quotation.form.payer.nationality = 				Nacionalidad
+quotation.form.payer.licenseType = 				Tipo Licencia
+quotation.form.payer.licenseNumber = 			Número Licencia
+quotation.form.payer.address = 					Dirección
+quotation.form.payer.civilStatus = 				Estado Civil
+quotation.form.payer.email = 					Correo electrónico
+quotation.form.payer.codeCifBank = 				Código Cif Banco
+quotation.form.payer.country =	 				País
+quotation.form.payer.department = 				Departamento
+quotation.form.payer.municipality = 			Municipio
+quotation.form.payer.zone = 					Zona
+quotation.form.payer.phoneNumber1 = 			Teléfono de Casa
+quotation.form.payer.phoneNumber2 = 			Celular
+quotation.form.payer.phoneNumber3 = 			Teléfono de Oficina
+quotation.form.payer.societyType=Tipo Sociedad
+quotation.form.payer.companyName=Nombre Compañia
+quotation.form.payer.businessName=Razon Social
+quotation.form.payer.economicActivity=Actividad Económica
+quotation.form.payer.stateProvider=Proveedor Estado
+quotation.form.payer.writeNumber=Numero Escritura
+quotation.form.payer.writeDate=Fecha Escritura
+quotation.form.payer.registrationDate=Fecha Constitución
+# Vehicle
+quotation.form.vehicle.type = 				Tipo
+quotation.form.vehicle.rate = 				Tarifa
+quotation.form.vehicle.erYear = 			Año
+quotation.form.vehicle.chassis = 			Chasis
+quotation.form.vehicle.engine = 			Motor
+quotation.form.vehicle.armor = 				Blindaje
+quotation.form.vehicle.color = 				Color
+quotation.form.vehicle.mileage = 			Recorrido
+quotation.form.vehicle.loanNumber = 		Número de Prestamo
+quotation.form.vehicle.warranty = 			Garantía
+quotation.form.vehicle.beneficiaryCode = 	Código de Beneficiario
+quotation.form.vehicle.isNew = 				Es Nuevo
+quotation.form.vehicle.inspectionNumber = 	Número de Inspección
+quotation.form.vehicle.reminderType = 		Tipo Alarma
+quotation.form.vehicle.plateType = 			Tipo Placa
+quotation.form.vehicle.owner =              Propietario de Vehiculo
+quotation.form.vehicle.armorValue = 		Valor Blindaje
+quotation.form.vehicle.cubicCentimeter = 	Centímetros Cúbicos
+quotation.form.vehicle.numberCylinders = 	Número de Cilindros
+quotation.form.vehicle.numberAxes = 		Número de Ejes
+quotation.form.vehicle.numberDoor = 		Número de Puertas
+quotation.form.vehicle.helmetClass = 		Clase Casco
+quotation.form.vehicle.typeMileage = 		Tipo de Recorrido
+quotation.form.vehicle.fuelType = 			Tipo Combustible
+quotation.form.vehicle.tonnage = 			Tonelaje
+quotation.form.vehicle.selection =			Selección
+quotation.form.vehicle.preExistingDamage = 	Daños Pre-Existentes
+quotation.form.vehicle.promotionCode = 		Código Promoción
+quotation.form.vehicle.specialTeam = 		Equipo Especial
+
+# Multimedia Client
+quotation.form.client.multimedia.dpi = 									DPI
+quotation.form.client.multimedia.receiptServices = 						Recibo de Servicios
+quotation.form.client.multimedia.circulationCard = 						Tarjeta de Circulación
+quotation.form.client.multimedia.driverLicence = 						Licencia de Conducir
+quotation.form.client.multimedia.carInvoiceNew = 						Factura de Carro Nuevo
+quotation.form.client.multimedia.carInvoiceNew.alert =                  (Máximo 30 días)
+quotation.form.client.multimedia.anotherCompanyPolicy = 				Póliza de otra Compañia
+quotation.form.client.multimedia.anotherCompanyPolicy.alert =           (Debe estar vigente para obviar inspección)
+quotation.form.client.multimedia.depositReceipt = 						Otros
+quotation.form.client.multimedia.authorizationForm = 					Boleta de Deposito / Formulario de Autorización de Cobro
+
+# Multimedia Business Client
+quotation.form.client.multimedia.scanPatents = 							Scan Patentes
+quotation.form.client.multimedia.scanLegalRepresentativeAppointment = 	Scan Nombramiento Representante Legal
+quotation.form.client.multimedia.dpiLegalRepresentative = 				DPi Representate Legal
+quotation.form.client.multimedia.rtu = RTU
+quotation.form.client.multimedia.receiptServicesLegal = Recibo de Servicios
+
+# User Registration
+userRegistration.user.newUser = 			Registrar Usuario
+userRegistration.user.email = 				Correo Electrónico
+userRegistration.user.password = 			Contraseña
+userRegistration.user.confirmPassword = 	Confirmar Contraseña
+userRegistration.user.firstName = 			Nombre
+userRegistration.user.lastName = 			Apellido
+userRegistration.user.register =			Registrar
+userRegistration.user.cancel =				Cancelar
+userRegistration.user.login =				Ingresar
+userRegistration.user.ok =					Aceptar
+userRegistration.user.activate =			Activar Cuenta
+userRegistration.user.emailConfirmation =	Se ha enviado un Correo Electrónico para activar su cuenta.
+userRegistration.user.emailActivation =		Su cuenta ya ha sido activada exitosamente.
+
+clientInformation.send = La información ha sido enviada, un agente se pondra en contacto.
+quotation.form.button.send = Enviar
+
+quotation.form.payment.chargeType = 		Medio de Pago
+quotation.form.payment.bankAccountType = 	Tipo Cuenta Bancaria
+quotation.form.payment.bank = 				Cuenta Bancaria
+quotation.form.payment.cardType = 			Tipo Tarjeta de Crédito/Débito
+quotation.form.payment.cardClass = 			Clase Tarjeta de Crédito/Débito
+quotation.form.payment.numberAccountCard =	Número
+quotation.form.payment.codeAccountCard =	Código
+quotation.form.payment.expirationDate =		Fecha de Expiración
+
+# Phase II
+
+#######################################################################
+# Nationalities Messages
+#######################################################################
+
+nationalitiesList.title = Listado de Nacionalidades
+
+nationalitiesList.search.form.nationality = Nombre
+nationalitiesList.search.form.search = Buscar
+nationalitiesList.search.form.all = Todos
+nationalitiesList.new = Nueva Nacionalidad
+nationalitiesList.newExcel = Carga Archivo Excel
+
+nationalitiesList.table.name = Nombre
+nationalitiesList.table.active = Estado
+nationalitiesList.table.edit = Editar
+nationalitiesList.table.delete = Eliminar
+nationalitiesList.table.state.active = Activo
+nationalitiesList.table.state.inactive = Inactivo
+
+nationality.form.title = Nacionalidades
+nationality.form.name = Nombre
+nationality.form.description = Descripción
+nationality.form.active = Estado
+nationality.form.create = Guardar
+nationality.form.edit = Actualizar
+nationality.form.cancel = Cancelar
+
+
+nationality.excel.title = Crear Nacionalidades desde Archivo Excel
+nationality.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+nationality.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+nationality.excel.excelFile.label = Carga de Archivo
+nationality.excel.button.load = Procesar
+nationality.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# Sex Model Messages
+#######################################################################
+
+sexList.title = Listado de Sexos
+
+sexList.search.form.sex = Nombre
+sexList.search.form.search = Buscar
+sexList.search.form.all = Todos
+sexList.new = Nuevo 
+sexList.newExcel = Carga Archivo Excel
+
+sexList.table.name = Nombre
+sexList.table.active = Estado
+sexList.table.edit = Editar
+sexList.table.delete = Eliminar
+sexList.table.state.active = Activo
+sexList.table.state.inactive = Inactivo
+
+sex.form.title = Nacionalidades
+sex.form.name = Nombre
+sex.form.description = Descripción
+sex.form.active = Estado
+sex.form.create = Guardar
+sex.form.edit = Actualizar
+sex.form.cancel = Cancelar
+
+
+sex.excel.title = Crear Nacionalidades desde Archivo Excel
+sex.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+sex.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+sex.excel.excelFile.label = Carga de Archivo
+sex.excel.button.load = Procesar
+sex.excel.button.cancel = Cancelar
+
+#######################################################################
+# CivilStatuses Messages
+#######################################################################
+
+civilStatusesList.title = Listado de Estados Civiles
+
+civilStatusesList.search.form.civilStatus = Nombre
+civilStatusesList.search.form.search = Buscar
+civilStatusesList.search.form.all = Todos
+civilStatusesList.new = Nuevo Estado Civil
+civilStatusesList.newExcel = Carga Archivo Excel
+
+civilStatusesList.table.name = Nombre
+civilStatusesList.table.active = Estado
+civilStatusesList.table.edit = Editar
+civilStatusesList.table.delete = Eliminar
+civilStatusesList.table.state.active = Activo
+civilStatusesList.table.state.inactive = Inactivo
+
+civilStatus.form.title = Estados Civiles
+civilStatus.form.name = Nombre
+civilStatus.form.description = Descripción
+civilStatus.form.active = Estado
+civilStatus.form.create = Guardar
+civilStatus.form.edit = Actualizar
+civilStatus.form.cancel = Cancelar
+
+
+civilStatus.excel.title = Crear Estado Civil desde Archivo Excel
+civilStatus.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+civilStatus.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+civilStatus.excel.excelFile.label = Carga de Archivo
+civilStatus.excel.button.load = Procesar
+civilStatus.excel.button.cancel = Cancelar
+
+#######################################################################
+# EconomicActivities Messages
+#######################################################################
+
+economicActivitiesList.title = Listado de Actividades Económicas
+
+economicActivitiesList.search.form.economicActivity = Nombre
+economicActivitiesList.search.form.search = Buscar
+economicActivitiesList.search.form.all = Todos
+economicActivitiesList.new = Nueva Actividad Económica
+economicActivitiesList.newExcel = Carga Archivo Excel
+
+economicActivitiesList.table.name = Nombre
+economicActivitiesList.table.active = Estado
+economicActivitiesList.table.edit = Editar
+economicActivitiesList.table.delete = Eliminar
+economicActivitiesList.table.state.active = Activo
+economicActivitiesList.table.state.inactive = Inactivo
+
+economicActivity.form.title = Actividades Económicas
+economicActivity.form.name = Nombre
+economicActivity.form.description = Descripción
+economicActivity.form.active = Estado
+economicActivity.form.create = Guardar
+economicActivity.form.edit = Actualizar
+economicActivity.form.cancel = Cancelar
+
+
+economicActivity.excel.title = Crear Actividad Económica desde Archivo Excel
+economicActivity.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+economicActivity.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+economicActivity.excel.excelFile.label = Carga de Archivo
+economicActivity.excel.button.load = Procesar
+economicActivity.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# ProductionTypes Messages
+#######################################################################
+
+productionTypesList.title = Listado de Tipos de Producción
+
+productionTypesList.search.form.productionType = Nombre
+productionTypesList.search.form.search = Buscar
+productionTypesList.search.form.all = Todos
+productionTypesList.new = Nuevo Tipo de Producción
+productionTypesList.newExcel = Carga Archivo Excel
+
+productionTypesList.table.name = Nombre
+productionTypesList.table.active = Estado
+productionTypesList.table.edit = Editar
+productionTypesList.table.delete = Eliminar
+productionTypesList.table.state.active = Activo
+productionTypesList.table.state.inactive = Inactivo
+
+productionType.form.title = Tipos de Producción
+productionType.form.name = Nombre
+productionType.form.description = Descripción
+productionType.form.active = Estado
+productionType.form.create = Guardar
+productionType.form.edit = Actualizar
+productionType.form.cancel = Cancelar
+
+
+productionType.excel.title = Crear Tipo de Producción desde Archivo Excel
+productionType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+productionType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+productionType.excel.excelFile.label = Carga de Archivo
+productionType.excel.button.load = Procesar
+productionType.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# PortfolioTypes Messages
+#######################################################################
+
+portfolioTypesList.title = Listado de Tipos de Cartera
+
+portfolioTypesList.search.form.portfolioType = Nombre
+portfolioTypesList.search.form.search = Buscar
+portfolioTypesList.search.form.all = Todos
+portfolioTypesList.new = Nuevo Tipo de Cartera
+portfolioTypesList.newExcel = Carga Archivo Excel
+
+portfolioTypesList.table.name = Nombre
+portfolioTypesList.table.active = Estado
+portfolioTypesList.table.edit = Editar
+portfolioTypesList.table.delete = Eliminar
+portfolioTypesList.table.state.active = Activo
+portfolioTypesList.table.state.inactive = Inactivo
+
+portfolioType.form.title = Tipos de Cartera
+portfolioType.form.name = Nombre
+portfolioType.form.description = Descripción
+portfolioType.form.active = Estado
+portfolioType.form.create = Guardar
+portfolioType.form.edit = Actualizar
+portfolioType.form.cancel = Cancelar
+
+
+portfolioType.excel.title = Crear Tipo de Cartera desde Archivo Excel
+portfolioType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+portfolioType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+portfolioType.excel.excelFile.label = Carga de Archivo
+portfolioType.excel.button.load = Procesar
+portfolioType.excel.button.cancel = Cancelar
+
+#######################################################################
+# AccountLines Messages
+#######################################################################
+
+accountLinesList.title = Listado de Tipos de Línea
+
+accountLinesList.search.form.accountLine = Nombre
+accountLinesList.search.form.search = Buscar
+accountLinesList.search.form.all = Todos
+accountLinesList.new = Nuevo Tipo de Cartera
+accountLinesList.newExcel = Carga Archivo Excel
+
+accountLinesList.table.name = Nombre
+accountLinesList.table.active = Estado
+accountLinesList.table.edit = Editar
+accountLinesList.table.delete = Eliminar
+accountLinesList.table.state.active = Activo
+accountLinesList.table.state.inactive = Inactivo
+
+accountLine.form.title = Tipos de Línea
+accountLine.form.name = Nombre
+accountLine.form.description = Descripción
+accountLine.form.active = Estado
+accountLine.form.create = Guardar
+accountLine.form.edit = Actualizar
+accountLine.form.cancel = Cancelar
+
+
+accountLine.excel.title = Crear Tipo de Línea desde Archivo Excel
+accountLine.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+accountLine.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+accountLine.excel.excelFile.label = Carga de Archivo
+accountLine.excel.button.load = Procesar
+accountLine.excel.button.cancel = Cancelar
+
+#######################################################################
+# AgentCodes Messages
+#######################################################################
+
+agentCodesList.title = Listado de Códigos de Agente
+
+agentCodesList.search.form.agentCode = Nombre
+agentCodesList.search.form.search = Buscar
+agentCodesList.search.form.all = Todos
+agentCodesList.new = Nuevo Código
+agentCodesList.newExcel = Carga Archivo Excel
+
+agentCodesList.table.name = Nombre
+agentCodesList.table.active = Estado
+agentCodesList.table.edit = Editar
+agentCodesList.table.delete = Eliminar
+agentCodesList.table.state.active = Activo
+agentCodesList.table.state.inactive = Inactivo
+
+agentCode.form.title = Código de Agente
+agentCode.form.name = Nombre
+agentCode.form.description = Descripción
+agentCode.form.active = Estado
+agentCode.form.create = Guardar
+agentCode.form.edit = Actualizar
+agentCode.form.cancel = Cancelar
+
+
+agentCode.excel.title = Crear Código de Agente desde Archivo Excel
+agentCode.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+agentCode.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+agentCode.excel.excelFile.label = Carga de Archivo
+agentCode.excel.button.load = Procesar
+agentCode.excel.button.cancel = Cancelar
+
+#######################################################################
+# DocumentTypes Messages
+#######################################################################
+
+documentTypesList.title = Listado de Tipos de Documento
+
+documentTypesList.search.form.documentType = Nombre
+documentTypesList.search.form.search = Buscar
+documentTypesList.search.form.all = Todos
+documentTypesList.new = Nuevo Tipo
+documentTypesList.newExcel = Carga Archivo Excel
+
+documentTypesList.table.name = Nombre
+documentTypesList.table.active = Estado
+documentTypesList.table.edit = Editar
+documentTypesList.table.delete = Eliminar
+documentTypesList.table.state.active = Activo
+documentTypesList.table.state.inactive = Inactivo
+
+documentType.form.title = Código de Agente
+documentType.form.name = Nombre
+documentType.form.description = Descripción
+documentType.form.active = Estado
+documentType.form.create = Guardar
+documentType.form.edit = Actualizar
+documentType.form.cancel = Cancelar
+
+
+documentType.excel.title = Crear Tipo de Documento desde Archivo Excel
+documentType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+documentType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+documentType.excel.excelFile.label = Carga de Archivo
+documentType.excel.button.load = Procesar
+documentType.excel.button.cancel = Cancelar
+
+#######################################################################
+# WorkFlowMovementTypes Messages
+#######################################################################
+
+workFlowMovementTypesList.title = Listado de Tipos de Movimiento WF
+
+workFlowMovementTypesList.search.form.workFlowMovementType = Nombre
+workFlowMovementTypesList.search.form.search = Buscar
+workFlowMovementTypesList.search.form.all = Todos
+workFlowMovementTypesList.new = Nuevo Tipo
+workFlowMovementTypesList.newExcel = Carga Archivo Excel
+
+workFlowMovementTypesList.table.name = Nombre
+workFlowMovementTypesList.table.active = Estado
+workFlowMovementTypesList.table.edit = Editar
+workFlowMovementTypesList.table.delete = Eliminar
+workFlowMovementTypesList.table.state.active = Activo
+workFlowMovementTypesList.table.state.inactive = Inactivo
+
+workFlowMovementType.form.title = Tipo de Movimiento WF
+workFlowMovementType.form.name = Nombre
+workFlowMovementType.form.description = Descripción
+workFlowMovementType.form.active = Estado
+workFlowMovementType.form.create = Guardar
+workFlowMovementType.form.edit = Actualizar
+workFlowMovementType.form.cancel = Cancelar
+
+workFlowMovementType.excel.title = Crear Tipo de Movimiento WF desde Archivo Excel
+workFlowMovementType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+workFlowMovementType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+workFlowMovementType.excel.excelFile.label = Carga de Archivo
+workFlowMovementType.excel.button.load = Procesar
+workFlowMovementType.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# CoverageCodes Messages
+#######################################################################
+
+coverageCodesList.title = Listado de Códigos de Cobertura
+
+coverageCodesList.search.form.coverageCode = Nombre
+coverageCodesList.search.form.search = Buscar
+coverageCodesList.search.form.all = Todos
+coverageCodesList.new = Nuevo Código
+coverageCodesList.newExcel = Carga Archivo Excel
+
+coverageCodesList.table.name = Nombre
+coverageCodesList.table.active = Estado
+coverageCodesList.table.edit = Editar
+coverageCodesList.table.delete = Eliminar
+coverageCodesList.table.state.active = Activo
+coverageCodesList.table.state.inactive = Inactivo
+
+coverageCode.form.title = Código de Cobertura
+coverageCode.form.name = Nombre
+coverageCode.form.description = Descripción
+coverageCode.form.active = Estado
+coverageCode.form.create = Guardar
+coverageCode.form.edit = Actualizar
+coverageCode.form.cancel = Cancelar
+
+coverageCode.excel.title = Crear Código de Cobertura desde Archivo Excel
+coverageCode.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+coverageCode.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+coverageCode.excel.excelFile.label = Carga de Archivo
+coverageCode.excel.button.load = Procesar
+coverageCode.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# CardTypes Messages
+#######################################################################
+
+cardTypesList.title = Listado de Tipos de Tarjeta
+
+cardTypesList.search.form.cardType = Nombre
+cardTypesList.search.form.search = Buscar
+cardTypesList.search.form.all = Todos
+cardTypesList.new = Nuevo Tipo
+cardTypesList.newExcel = Carga Archivo Excel
+
+cardTypesList.table.name = Nombre
+cardTypesList.table.active = Estado
+cardTypesList.table.edit = Editar
+cardTypesList.table.delete = Eliminar
+cardTypesList.table.state.active = Activo
+cardTypesList.table.state.inactive = Inactivo
+
+cardType.form.title = Tipo de Tarjeta
+cardType.form.name = Nombre
+cardType.form.description = Descripción
+cardType.form.active = Estado
+cardType.form.create = Guardar
+cardType.form.edit = Actualizar
+cardType.form.cancel = Cancelar
+
+cardType.excel.title = Crear Tipo de Tarjeta desde Archivo Excel
+cardType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+cardType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+cardType.excel.excelFile.label = Carga de Archivo
+cardType.excel.button.load = Procesar
+cardType.excel.button.cancel = Cancelar
+
+#######################################################################
+# LicenseTypes Messages
+#######################################################################
+
+licenseTypesList.title = Listado de Tipos de Licencia
+
+licenseTypesList.search.form.licenseType = Nombre
+licenseTypesList.search.form.search = Buscar
+licenseTypesList.search.form.all = Todos
+licenseTypesList.new = Nuevo Tipo
+licenseTypesList.newExcel = Carga Archivo Excel
+
+licenseTypesList.table.name = Nombre
+licenseTypesList.table.active = Estado
+licenseTypesList.table.edit = Editar
+licenseTypesList.table.delete = Eliminar
+licenseTypesList.table.state.active = Activo
+licenseTypesList.table.state.inactive = Inactivo
+
+licenseType.form.title = Tipo de Licencia
+licenseType.form.name = Nombre
+licenseType.form.description = Descripción
+licenseType.form.active = Estado
+licenseType.form.create = Guardar
+licenseType.form.edit = Actualizar
+licenseType.form.cancel = Cancelar
+
+licenseType.excel.title = Crear Tipo de Licencia desde Archivo Excel
+licenseType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+licenseType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+licenseType.excel.excelFile.label = Carga de Archivo
+licenseType.excel.button.load = Procesar
+licenseType.excel.button.cancel = Cancelar
+
+#######################################################################
+# ReminderTypes Messages
+#######################################################################
+
+reminderTypesList.title = Listado de Tipos de Alarma
+
+reminderTypesList.search.form.reminderType = Nombre
+reminderTypesList.search.form.search = Buscar
+reminderTypesList.search.form.all = Todos
+reminderTypesList.new = Nuevo Tipo
+reminderTypesList.newExcel = Carga Archivo Excel
+
+reminderTypesList.table.name = Nombre
+reminderTypesList.table.active = Estado
+reminderTypesList.table.edit = Editar
+reminderTypesList.table.delete = Eliminar
+reminderTypesList.table.state.active = Activo
+reminderTypesList.table.state.inactive = Inactivo
+
+reminderType.form.title = Tipo de Alarma
+reminderType.form.name = Nombre
+reminderType.form.description = Descripción
+reminderType.form.active = Estado
+reminderType.form.create = Guardar
+reminderType.form.edit = Actualizar
+reminderType.form.cancel = Cancelar
+
+reminderType.excel.title = Crear Tipo de Alarma desde Archivo Excel
+reminderType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+reminderType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+reminderType.excel.excelFile.label = Carga de Archivo
+reminderType.excel.button.load = Procesar
+reminderType.excel.button.cancel = Cancelar
+
+#######################################################################
+# PlateTypes Messages
+#######################################################################
+
+plateTypesList.title = Listado de Tipos de Placa
+
+plateTypesList.search.form.plateType = Nombre
+plateTypesList.search.form.search = Buscar
+plateTypesList.search.form.all = Todos
+plateTypesList.new = Nuevo Tipo
+plateTypesList.newExcel = Carga Archivo Excel
+
+plateTypesList.table.name = Nombre
+plateTypesList.table.active = Estado
+plateTypesList.table.edit = Editar
+plateTypesList.table.delete = Eliminar
+plateTypesList.table.state.active = Activo
+plateTypesList.table.state.inactive = Inactivo
+
+plateType.form.title = Tipo de Placa
+plateType.form.name = Nombre
+plateType.form.description = Descripción
+plateType.form.active = Estado
+plateType.form.create = Guardar
+plateType.form.edit = Actualizar
+plateType.form.cancel = Cancelar
+
+plateType.excel.title = Crear Tipo de Placa desde Archivo Excel
+plateType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+plateType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+plateType.excel.excelFile.label = Carga de Archivo
+plateType.excel.button.load = Procesar
+plateType.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# VehiclePromotionTypes Messages
+#######################################################################
+
+vehiclePromotionTypesList.title = Listado de Tipos de Promociones
+
+vehiclePromotionTypesList.search.form.vehiclePromotionType = Nombre
+vehiclePromotionTypesList.search.form.search = Buscar
+vehiclePromotionTypesList.search.form.all = Todos
+vehiclePromotionTypesList.new = Nuevo Tipo
+vehiclePromotionTypesList.newExcel = Carga Archivo Excel
+
+vehiclePromotionTypesList.table.name = Nombre
+vehiclePromotionTypesList.table.active = Estado
+vehiclePromotionTypesList.table.edit = Editar
+vehiclePromotionTypesList.table.delete = Eliminar
+vehiclePromotionTypesList.table.state.active = Activo
+vehiclePromotionTypesList.table.state.inactive = Inactivo
+
+vehiclePromotionType.form.title = Tipo de Promoción
+vehiclePromotionType.form.name = Nombre
+vehiclePromotionType.form.description = Descripción
+vehiclePromotionType.form.active = Estado
+vehiclePromotionType.form.create = Guardar
+vehiclePromotionType.form.edit = Actualizar
+vehiclePromotionType.form.cancel = Cancelar
+
+vehiclePromotionType.excel.title = Crear Tipo de Promoción desde Archivo Excel
+vehiclePromotionType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+vehiclePromotionType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+vehiclePromotionType.excel.excelFile.label = Carga de Archivo
+vehiclePromotionType.excel.button.load = Procesar
+vehiclePromotionType.excel.button.cancel = Cancelar
+
+#######################################################################
+# ChargeTypes Messages
+#######################################################################
+
+chargeTypesList.title = Listado de Métodos de Cobro
+
+chargeTypesList.search.form.chargeType = Nombre
+chargeTypesList.search.form.search = Buscar
+chargeTypesList.search.form.all = Todos
+chargeTypesList.new = Nuevo Tipo
+chargeTypesList.newExcel = Carga Archivo Excel
+
+chargeTypesList.table.name = Nombre
+chargeTypesList.table.active = Estado
+chargeTypesList.table.edit = Editar
+chargeTypesList.table.delete = Eliminar
+chargeTypesList.table.state.active = Activo
+chargeTypesList.table.state.inactive = Inactivo
+
+chargeType.form.title = Método de Cobro
+chargeType.form.name = Nombre
+chargeType.form.description = Descripción
+chargeType.form.active = Estado
+chargeType.form.create = Guardar
+chargeType.form.edit = Actualizar
+chargeType.form.cancel = Cancelar
+
+chargeType.excel.title = Crear Método de Cobro desde Archivo Excel
+chargeType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+chargeType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+chargeType.excel.excelFile.label = Carga de Archivo
+chargeType.excel.button.load = Procesar
+chargeType.excel.button.cancel = Cancelar
+
+#######################################################################
+# SocietyTypes Messages
+#######################################################################
+
+societyTypesList.title = Listado de Tipos de Sociedad
+
+societyTypesList.search.form.societyType = Nombre
+societyTypesList.search.form.search = Buscar
+societyTypesList.search.form.all = Todos
+societyTypesList.new = Nuevo Tipo
+societyTypesList.newExcel = Carga Archivo Excel
+
+societyTypesList.table.name = Nombre
+societyTypesList.table.active = Estado
+societyTypesList.table.edit = Editar
+societyTypesList.table.delete = Eliminar
+societyTypesList.table.state.active = Activo
+societyTypesList.table.state.inactive = Inactivo
+
+societyType.form.title = Tipos de Sociedad
+societyType.form.name = Nombre
+societyType.form.description = Descripción
+societyType.form.active = Estado
+societyType.form.create = Guardar
+societyType.form.edit = Actualizar
+societyType.form.cancel = Cancelar
+
+societyType.excel.title = Crear Tipos de Sociedad desde Archivo Excel
+societyType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+societyType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+societyType.excel.excelFile.label = Carga de Archivo
+societyType.excel.button.load = Procesar
+societyType.excel.button.cancel = Cancelar
+
+
+#######################################################################
+# PaymentTypes Messages
+#######################################################################
+
+paymentTypesList.title = Listado de Métodos de Pago
+
+paymentTypesList.search.form.paymentType = Nombre
+paymentTypesList.search.form.search = Buscar
+paymentTypesList.search.form.all = Todos
+paymentTypesList.new = Nuevo Tipo
+paymentTypesList.newExcel = Carga Archivo Excel
+
+paymentTypesList.table.name = Nombre
+paymentTypesList.table.active = Estado
+paymentTypesList.table.edit = Editar
+paymentTypesList.table.delete = Eliminar
+paymentTypesList.table.state.active = Activo
+paymentTypesList.table.state.inactive = Inactivo
+
+paymentType.form.title = Métodos de Pago
+paymentType.form.name = Nombre
+paymentType.form.description = Descripción
+paymentType.form.active = Estado
+paymentType.form.create = Guardar
+paymentType.form.edit = Actualizar
+paymentType.form.cancel = Cancelar
+
+paymentType.excel.title = Crear Métodos de Pago desde Archivo Excel
+paymentType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+paymentType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+paymentType.excel.excelFile.label = Carga de Archivo
+paymentType.excel.button.load = Procesar
+paymentType.excel.button.cancel = Cancelar
+
+#######################################################################
+# BankAccountTypes Messages
+#######################################################################
+
+bankAccountTypesList.title = Listado de Tipos de Cuentas Bancarias
+
+bankAccountTypesList.search.form.bankAccountType = Nombre
+bankAccountTypesList.search.form.search = Buscar
+bankAccountTypesList.search.form.all = Todos
+bankAccountTypesList.new = Nuevo Tipo
+bankAccountTypesList.newExcel = Carga Archivo Excel
+
+bankAccountTypesList.table.name = Nombre
+bankAccountTypesList.table.active = Estado
+bankAccountTypesList.table.edit = Editar
+bankAccountTypesList.table.delete = Eliminar
+bankAccountTypesList.table.state.active = Activo
+bankAccountTypesList.table.state.inactive = Inactivo
+
+bankAccountType.form.title = Tipo de Cuenta Bancaria
+bankAccountType.form.name = Nombre
+bankAccountType.form.description = Descripción
+bankAccountType.form.active = Estado
+bankAccountType.form.create = Guardar
+bankAccountType.form.edit = Actualizar
+bankAccountType.form.cancel = Cancelar
+
+bankAccountType.excel.title = Crear Tipo de Cuenta Bancaria desde Archivo Excel
+bankAccountType.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+bankAccountType.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+bankAccountType.excel.excelFile.label = Carga de Archivo
+bankAccountType.excel.button.load = Procesar
+bankAccountType.excel.button.cancel = Cancelar
+
+#######################################################################
+# GeographicAreas Messages
+#######################################################################
+
+geographicAreasList.title = Listado de Áreas Geográficas
+
+geographicAreasList.search.form.geographicArea = Nombre
+geographicAreasList.search.form.tipo = Tipo
+geographicAreasList.search.form.search = Buscar
+geographicAreasList.search.form.all = Todos
+geographicAreasList.new = Nueva Área Geográfica
+geographicAreasList.newExcel = Carga Archivo Excel
+
+geographicAreasList.table.name = Nombre
+geographicAreasList.table.active = Estado
+geographicAreasList.table.zones = Zonas
+geographicAreasList.table.edit = Editar
+geographicAreasList.table.delete = Eliminar
+geographicAreasList.table.state.active = Activo
+geographicAreasList.table.state.inactive = Inactivo
+
+geographicArea.form.title = Nueva Área Geográfica
+geographicArea.form.name = Nombre
+geographicArea.form.country = País
+geographicArea.form.departamento = Departamento
+geographicArea.form.description = Descripción
+geographicArea.form.active = Estado
+geographicArea.form.create = Guardar
+geographicArea.form.edit = Actualizar
+geographicArea.form.cancel = Cancelar
+
+geographicArea.excel.title = Crear Área Geográfica desde Archivo Excel
+geographicArea.create.success = Se han cargado con éxito las profesiones del archivo excel, %s cargados.
+geographicArea.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+geographicArea.excel.excelFile.label = Carga de Archivo
+geographicArea.excel.button.load = Procesar
+geographicArea.excel.button.cancel = Cancelar
+
+quotation.form.incident.emissionZone = Zona de Emisión
+
+incidents.client.incomplete = Datos del cliente individual incompleto, complete la informacion e intente de nuevo.
+
+incidents.sendClient.error	= Ha ocurrido un error en el envio de la informacion del cliente.
+incidents.sendPayer.AS400.error		= Ha ocurrido un error en el envio de la informacion del pagador.
+incidents.sendPolicy.AS400.error	= Ha ocurrido un error en el envio de la informacion de la poliza.
+incidents.sendVehicle.AS400.error	= Ha ocurrido un error en el envio de la informacion del vehiculo..
+incidents.sendCoverages.AS400.error = Ha ocurrido un error en el envio de la informacion de las coverturas.
+incidents.sendPrimes.AS400.error	= Ha ocurrido un error en el envio de la informacion de la prima.
+incidents.sendPayment.AS400.error	= Ha ocurrido un error en el envio de la informacion de la forma de pago.incidents.sendWorkFlow.AS400.error	= Ha ocurrido un error en el envio de la informacion del workflow.
+
+
+quotation.form.client.expose=Expuesto Politicamente
+quotation.form.business.payer.taxNumber=NIT
+quotation.form.business.payer.societyType=Tipo Sociedad
+quotation.form.business.payer.companyName=Nombre Compañia
+quotation.form.business.payer.businessName=Razon Social
+quotation.form.business.payer.economicActivity=Actividad Económica
+quotation.form.business.payer.nationality=Nacionalidad
+quotation.form.business.payer.identificationDocument=DPI
+quotation.form.business.payer.email=Correo Electrónico
+quotation.form.business.payer.stateProvider=Proveedor Estado
+quotation.form.business.payer.writeNumber=Numero Escritura
+quotation.form.business.payer.writeDate=Fecha Escritura
+quotation.form.business.payer.registrationDate=Fecha Constitución
+quotation.form.business.payer.codeCifBank=Código Cif Banco
+quotation.form.business.payer.address=Dirección
+quotation.form.business.payer.phoneNumber1=Teléfono Principal
+quotation.form.business.payer.phoneNumber2=Celular
+quotation.form.business.payer.phoneNumber3=Otro Telefono
+
+quotation.form.loJack=Alto Riesgo
+
+menu.vehicles.lojack.valuesmassiveupdate=Alto Riesgo Masivo
+vehicleLoJackMassiveUpdate.title=Actualizacion Masiva Alto Riesgo
+vehicleLoJack.form.template=Plantilla
+vehicleLoJack.form.downloadTemplate=Descargar Plantilla
+vehicleLoJack.form.lojackFile=Archivo de Valores
+vehicleLoJack.form.upload=Procesar
+vehicleLoJack.massiveupdate.nobrand = La marca %s no existe
+vehicleLoJack.massiveupdate.noline = La línea %s no existe
+vehicleLoJack.massiveupdate.allrequiredvalue = Todos los campos son requeridos
+vehicleLoJack.massiveupdate.allrequiredline = Todos los campos son requeridos
+
+#######################################################################
+# Beneficiaries Messages
+#######################################################################
+
+beneficiariesList.title = Listado de Clausulas de Beneficiario
+
+beneficiariesList.search.form.beneficiaries = Nombre
+beneficiariesList.search.form.search = Buscar
+beneficiariesList.search.form.all = Todos
+beneficiariesList.new = Nueva Clausula de Beneficiario
+beneficiariesList.newExcel = Carga Archivo Excel
+
+beneficiariesList.table.name = Nombre
+beneficiariesList.table.transferCode = Codigo AS/400
+beneficiariesList.table.edit = Editar
+beneficiariesList.table.delete = Eliminar
+
+beneficiaries.form.title = Clausula de Beneficiario
+beneficiaries.form.name = Nombre
+beneficiaries.form.transferCode = Codigo AS/400
+beneficiaries.form.create = Guardar
+beneficiaries.form.edit = Actualizar
+beneficiaries.form.cancel = Cancelar
+quotation.form.vehicle.beneficiaries = Clausula a favor de
+
+
+beneficiaries.excel.title = Crear Clausula de Beneficiario desde Archivo Excel
+beneficiaries.create.success = Se han cargado con éxito las clausulas de beneficiario del archivo excel, %s cargados.
+beneficiaries.create.emptyFile = El archivo Excel está vacio o no se pudo cargar ningún registro.
+beneficiaries.excel.excelFile.label = Carga de Archivo
+beneficiaries.excel.button.load = Procesar
+beneficiaries.excel.button.cancel = Cancelar
+
+# Legal Representative
+quotation.form.legalRepresentativePayer.taxNumber = 				NIT
+quotation.form.legalRepresentativePayer.firstName = 				Primer Nombre
+quotation.form.legalRepresentativePayer.secondName = 			    Segundo Nombre
+quotation.form.legalRepresentativePayer.firstSurname = 			    Primer Apellido
+quotation.form.legalRepresentativePayer.secondSurname = 			Segundo Apellido
+quotation.form.legalRepresentativePayer.marriedSurname = 		    Apellido Casada
+quotation.form.legalRepresentativePayer.birthdate = 				Fecha de Nacimiento
+quotation.form.legalRepresentativePayer.identificationDocument =    DPI
+quotation.form.legalRepresentativePayer.passport = 				    Pasaporte
+quotation.form.legalRepresentativePayer.nationality = 			    Nacionalidad
+quotation.form.legalRepresentativePayer.email = 					Correo Electrónico
+quotation.form.legalRepresentativePayer.address = 				    Dirección
+quotation.form.legalRepresentativePayer.civilStatus = 			    Estado Civil
+quotation.form.legalRepresentativePayer.sex = 					    Sexo
+quotation.form.legalRepresentativePayer.profession =	 			Profesión
+quotation.form.legalRepresentativePayer.country =	 			    País
+quotation.form.legalRepresentativePayer.department = 			    Departamento
+quotation.form.legalRepresentativePayer.municipality = 			    Municipio
+quotation.form.legalRepresentativePayer.zone = 					    Zona
+quotation.form.legalRepresentativePayer.registry = 				    Registro
+quotation.form.legalRepresentativePayer.caseFile = 				    Expediente
+quotation.form.legalRepresentativePayer.extendedIn = 			    Extendida en
+quotation.form.legalRepresentativePayer.registrationDate = 		    Fecha Inscripción
+quotation.form.legalRepresentativePayer.book = 					    Libro
+quotation.form.legalRepresentativePayer.folio = 					Folio
+quotation.form.legalRepresentativePayer.phoneNumber1 = 			    Teléfono de Casa
+quotation.form.legalRepresentativePayer.phoneNumber2 = 			    Celular
+quotation.form.legalRepresentativePayer.phoneNumber3 = 			    Teléfono de Oficina
+
+
+vehicleLoJack.form.valuesFile = Archivo de líneas y valores
+vehicleLoJack.masiveupdate.error = No se adjuntaron archivos para procesar
+vehicleLoJackList.table.fileLine = Fila
+vehicleLoJackList.table.error = Error
+

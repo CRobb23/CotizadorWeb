@@ -1,0 +1,14 @@
+ER_Currency(gtq):
+    code:               1
+    name:               Quetzales
+    symbol:             Q
+    active:             1
+    exchangeRate:       1
+
+ER_Currency(usd):
+    code:               2
+    name:               Dólares
+    symbol:             $
+    active:             1
+    exchangeRate:       8
+
