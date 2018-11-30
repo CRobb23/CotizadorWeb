@@ -1,0 +1,70 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title"><span>
+		<h1>&{'vehicleLoJackList.title'} ${line?.brand?.name} ${line?.name}</h1>
+	</span></div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	<div style="text-align:right; margin-bottom:10pt">
+		<a href="@{editVehicleLoJack(null, line?.id)}" class="btn btn-default">&{'vehicleLoJackList.newVehicle'}</a>
+	</div>
+
+	<div class="table-responsive">
+	<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr class="table-head">
+				#{if line==null}
+				<th>&{'vehicleLoJackList.table.brand'}</th>
+				<th>&{'vehicleLoJackList.table.line'}</th>
+				#{/if}
+				<th>&{'vehicleLoJackList.table.yearInit'}</th>
+                <th>&{'vehicleLoJackList.table.yearEnd'}</th>
+				<th>&{'vehicleLoJackList.table.withLoJack'}</th>
+                <th>&{'vehicleLoJackList.table.withoutLoJack'}</th>
+                <th>&{'vehicleLoJackList.table.withoutLoJackPlus10'}</th>
+                <th>&{'vehicleLoJackList.table.withoutLoJackPlus15'}</th>
+                <th>&{'vehicleLoJackList.table.withoutLoJackPlusHalf'}</th>
+                <th>&{'vehicleLoJackList.table.withoutLoJackPlusFull'}</th>
+				<th class="last textC" style="width:50px;">&{'vehicleLoJackList.table.edit'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:vehicleLoJack, as:'current'}
+				<tr class="${current_parity}">
+					#{if line==null}
+					<td>${current?.line?.brand?.name}</td>
+					<td>${current?.line?.name}</td>
+					#{/if}
+					<td>${current?.yearInit}</td>
+                    <td>${current?.yearEnd}</td>
+					<td>${current?.withLoJack?.decimalFormat()}%</td>
+                    <td>${current?.withoutLoJack?.decimalFormat()}%</td>
+                    <td>${current?.withoutLoJackPlus10?.decimalFormat()}%</td>
+                    <td>${current?.withoutLoJackPlus15?.decimalFormat()}%</td>
+                    <td>${current?.withoutLoJackPlusHalf?.decimalFormat()}%</td>
+                    <td>${current?.withoutLoJackPlusFull?.decimalFormat()}%</td>
+					<td class="lasticon textC">
+						<a href="@{editVehicleLoJack(current?.id, line?.id)}" class="btn btn-xs">&{'vehicleLoJackList.table.edit'}</a>
+					</td>
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	</div>
+
+	#{if vehicleLoJack?.getPageCount() > 1}
+		#{paginate.controls items:vehicleLoJack /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:vehicleLoJack /}
+		</div>
+	#{/if}
+</div>

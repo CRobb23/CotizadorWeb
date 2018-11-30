@@ -1,0 +1,88 @@
+#{extends 'admin.html' /}
+#{form @searchReminders(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'remindersList.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'reminder'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'remindersList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'remindersList.search.form.search'} " />		
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'remindersList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="float:right; padding-left: 5px; text-align:right; margin-bottom:10pt">
+			<a href="@{editReminder()}" class="btn btn-default">&{'remindersList.new'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'remindersList.table.caseNumber'}</th>
+					<th>&{'remindersList.table.email'}</th>
+					<th>&{'remindersList.table.dayNumber'}</th>
+					<th>&{'remindersList.table.hour'}</th>
+					<th>&{'remindersList.table.minute'}</th>
+					<th>&{'remindersList.table.active'}</th>
+					<th class="last textC" style="width:50px;">&{'remindersList.table.edit'}</th>
+					<th class="last textC" style="width:50px;">&{'remindersList.table.delete'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:reminders , as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.caseNumber}</td>
+						<td>${current?.customEmail}</td>
+						<td>${current?.dayNumber}</td>
+						<td>${current?.hour}</td>
+						<td>${current?.minute}</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+						<td class="lasticon textC">
+							<a href="@{editReminder(current?.id)}"  class="btn btn-xs">&{'remindersList.table.edit'}</a>
+						</td>
+						<td class="lasticon textC">
+							<a href="@{deleteReminder(current?.id)}"  class="btn btn-xs">&{'remindersList.table.delete'}</a>
+						</td>
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if reminders?.getPageCount() > 1}
+			#{paginate.controls items:reminders /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:reminders /}
+			</div>
+		#{/if}
+	</div>
+</div>

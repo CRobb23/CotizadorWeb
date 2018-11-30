@@ -1,0 +1,38 @@
+.Border {
+    border-right:1px solid black !important;
+    border-left:1px solid black !important;
+    border-bottom: 1px solid black !important;
+    border-top: 1px solid black !important;
+    width: 720px;
+}
+td {
+
+}
+.Title {
+    background: #444444;
+    font-size: 15px;
+    color: white;
+    width:auto;
+}
+.Fields {
+    background: #d3d3d3;
+    font-size: 14px;
+    width:auto;
+    border: 0px;
+}
+.FillFields {
+    background: #ffffff;
+    font-size: 14px;
+    width:auto;
+    height: 15px;
+    border-right:1px solid black !important;
+    border-left:1px solid black !important;
+    border-bottom: 1px solid black !important;
+}
+.BorderGeneral {
+    border-right:1px solid black !important;
+    border-left:1px solid black !important;
+    border-bottom: 1px solid black !important;
+    border-top: 1px solid black !important;
+}
+

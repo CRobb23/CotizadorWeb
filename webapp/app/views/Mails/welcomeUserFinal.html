@@ -1,0 +1,25 @@
+#{extends 'Mails/layout.html' /}
+ <layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody><tr>
+            <td class="w580" width="580">
+                <p align="left" class="article-title"><singleline label="Title">Estimado(a) ${user?.getFullName()}:</singleline></p>
+                <div align="left" class="article-content">
+                    <multiline label="Description">
+                    	<p>Su cuenta del Cotizador Web El Roble ha sido creada.</p>
+						<p>
+							Para activar su cuenta siga el siguiente enlace:
+							<a href="${serverUrl}@{UserRegistration.active(user?.token)}">&{'userRegistration.user.activate'}</a>
+						</p>
+						<p>
+							Atentamente
+							<br>
+							Cotizador Web El Roble
+						</p>
+					</multiline>
+                </div>
+            </td>
+        </tr>
+        <tr><td class="w580" width="580" height="10"></td></tr>
+    </tbody></table>
+</layout>

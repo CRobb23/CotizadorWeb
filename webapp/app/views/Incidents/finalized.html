@@ -1,0 +1,48 @@
+#{extends 'admin.html' /}
+
+<div class="well fixed-sidebar-parent">
+	<div class="orange-title">
+		<span>
+			<h1>&{'incident.title'} ${incident?.number}</h1>
+		</span>
+	</div>
+	
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	
+	<div class="panel ${success?'panel-success':'panel-danger'}">
+		<div class="panel-heading">
+			<h4 class="panel-title">
+				#{if success}
+					#{if incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_COMPLETED || incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_ANULLED}
+						&{'incident.finalized.success'}
+					#{/if}
+					#{else}
+						&{'incident.updated.success'}
+					#{/else}
+				#{/if}
+				#{else}
+					&{'incident.finalized.error'}
+				#{/else}
+			</h4>
+		</div>
+		<div class="panel-body">
+				<a href="@{Incidents.incidentDetail(incident?.id)}" class="btn btn-block ">&{'incident.finalized.viewincident'}</a>
+				#{if success}
+					<a href="@{IncidentForms.showAvailForms(incident?.id)}" class="btn btn-block ">&{'incident.finalized.viewforms'}</a>
+				#{/if}
+				<a href="@{Incidents.incidentsList()}" class="btn btn-block ">&{'incident.finalized.viewincidents'}</a>
+				
+			</div>
+	  	</div>
+	</div>
+	
+</div>

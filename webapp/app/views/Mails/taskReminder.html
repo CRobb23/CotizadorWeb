@@ -1,0 +1,39 @@
+#{extends 'Mails/layout.html' /}
+ <layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody><tr>
+            <td class="w580" width="580">
+                <p align="left" class="article-title"><singleline label="Title">${reminder?.subject}</singleline></p>
+                <div align="left" class="article-content">
+                    <multiline label="Description">
+                    
+                    	<p>
+                    		<b>Cliente: </b> 
+                    		${reminder?.task?.incident?.client?.getFullName()} <br>
+                    		
+							<b>Fecha de vencimiento: </b>
+							${reminder?.task?.dueDate?.format("dd/MM/yyyy HH:mm")} <br>
+							
+							<b>Teléfono: </b> 
+							${reminder?.task?.incident?.client?.phoneNumber} <br>
+							
+							<b>Correo electrónico: </b>
+							${reminder?.task?.incident?.client?.email}
+						</p>
+						
+						<p>
+							<b>Descripción: </b><br>
+							${reminder?.task?.description}
+						</p>
+						
+                    	<p>
+						Atentamente<br>
+						Administración El Roble
+						</p>
+                    </multiline>
+                </div>
+            </td>
+        </tr>
+        <tr><td class="w580" width="580" height="10"></td></tr>
+    </tbody></table>
+</layout>

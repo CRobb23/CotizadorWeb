@@ -1,0 +1,236 @@
+#{extends 'admin.html' /}
+
+#{form @saveIncidentStatePublic(), class:"form-horizontal", method:"POST", role:"form", id:"form"}	
+
+	<div class="well fixed-sidebar-parent">
+		<div class="orange-title">
+			<span>
+				<h1>&{'incident.title'} ${incident?.number}</h1>
+			</span>
+		</div>
+
+		#{if errors}
+		<div class="alert alert-danger">
+			&{'incident.attend.fielderrors'}
+		</div>	
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<input type="hidden" name="id" value="${incident?.id}"/>
+		<div id="sold_div">
+			#{field 'selectedQuotation'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
+					<div class="col-sm-6">
+						#{select field.name, value:incident?.selectedQuotation?.id, class:'form-control', id:"selectedQuotation"}
+							#{list incident?.quotations, as: 'quotation'}
+								%{currencySymbol = (quotation?.product?.currency)? quotation.product.currency?.symbol + '.' : ''}%
+								#{option quotation.id} ${quotation?.product?.name} - Fecha: ${quotation?.creationDate?.format("dd/MM/yyyy HH:mm")} #{/option}
+							#{/list}
+						#{/select}
+						#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+					</div>
+				</div>
+			#{/}
+			
+			#{field 'selectedPaymentForm'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
+					<div class="col-sm-6">
+						#{select field.name, value:incident?.selectedPaymentFrecuency?.id, class:'form-control', id:'quotationOptions'}
+							#{list selectedQuotation?.quotationDetail?.paymentOptions, as: 'option'}
+								%{currencySymbol = (selectedQuotation?.product?.currency)? selectedQuotation.product.currency?.symbol + '.' : ''}%
+								#{option option.frecuencyId?:0}${option.numberOfPayments} pago${(option.numberOfPayments>1)?'s':''} ${option.frecuency?.toLowerCase()}${(option.numberOfPayments>1)?'es':''} - ${currencySymbol} ${option?.amount?.doubleValue().decimalFormat()} - Prima Total: ${currencySymbol} ${(option?.amount * option.numberOfPayments).doubleValue().decimalFormat()} #{/option}
+							#{/list}
+						#{/select}
+						#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+					</div>
+				</div>
+			#{/}
+		
+			<div>
+				#{field 'inspectionType'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
+						<div class="col-sm-6">
+							#{list items:types, as:'type'}
+								<label class="radio">
+									<input type="radio" value="${type?.code}" name="inspectionType" id="inspection_true" ${(field.flash  == type?.code?.toString() || inspectionType == type.code)?'checked':''} />
+									${type?.name}
+								</label>
+							#{/list}
+							#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+						</div>
+					</div>
+				#{/}
+				
+				#{if inspectionNumber != null && inspectionNumber != ''}
+					<div class="form-group" style="vertical-align: middle;">
+						<label class="col-sm-4 control-label"></label>
+						<div class="col-sm-6">
+							<label style="margin-bottom: 0px;">
+								Inspecci&oacute;n N&uacute;mero <span style="font-weight: bold;">${inspectionNumber}</span> Finalizada
+							</label>
+						</div>
+					</div>
+				#{/if}
+				
+				<div id="inspection_address">
+					#{field 'inspectionAddress'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
+							<div class="col-sm-6">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ?: field.value}" class="form-control enabled"/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+							</div>
+						</div>
+					#{/}
+					#{field 'appointmentDate'}
+						<div class="form-group ${field.error?'has-error':''}">
+							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
+							<div class="col-sm-6">
+								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ?: field.value}" class="form-control enabled"/>
+								#{if field.error}#{if field.error}<span class="help-block">${field.error}</span>#{/if}#{/if}
+							</div>
+						</div>
+					#{/}
+				</div>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-4	 col-sm-2">
+				<a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs">&{'client.edit.cancel'}</a>
+			</div>
+			#{if incident?.status?.code == 2 || incident?.status?.code == 3 || incident?.status?.code == 4}
+				<div class="col-sm-2">
+					<input type="submit" class="btn btn-primary btn-block" value="&{'incident.attend.save'}" />
+				</div>
+			#{/if}
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-4 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>		
+#{/form}
+
+#{set 'moreStyles'}
+
+<link href="@{'/public/mobiscroll/css/mobiscroll.scroller.css'}" rel="stylesheet" type="text/css" />
+<link href="@{'/public/mobiscroll/css/mobiscroll.animation.css'}" rel="stylesheet" type="text/css" />
+<link href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'}"/>
+<link href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'}"/>
+
+#{/}
+
+#{set 'moreScripts'}
+
+<script src="@{'/public/mobiscroll/js/mobiscroll.core.js'}"></script>
+<script src="@{'/public/mobiscroll/js/mobiscroll.scroller.js'}" type="text/javascript"></script>
+<script src="@{'/public/mobiscroll/js/mobiscroll.datetime.js'}" type="text/javascript"></script>
+<script src="@{'/public/mobiscroll/js/i18n/mobiscroll.i18n.es.js'}" type="text/javascript"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+
+	<script type="text/javascript">
+		$(function(){
+
+		    *{
+			$('#appointmentDate').scroller({
+				theme: 'default',
+				mode: 'scroller',
+				lang: 'es',
+				display: 'modal',
+				animate: 'slideup',
+				preset: 'datetime',
+	            minDate: new Date(${new Date().getTime() + 15*60*1000}),
+            	stepMinute: 15
+			});
+			}*
+
+			if (isTouchDevice()) {
+                $('#appointmentDate').scroller({
+                    theme: 'default',
+                    mode: 'scroller',
+                    lang: 'es',
+                    display: 'modal',
+                    animate: 'slideup',
+                    preset: 'datetime',
+                    minDate: new Date(${new Date().getTime() + 15*60*1000}),
+                    stepMinute: 15
+                });
+            } else {
+                $('#appointmentDate').datetimepicker({
+                    locale: "es",
+                    minDate: new Date(${new Date().getTime()}),
+                    defaultDate: new Date(${new Date().getTime() + 15*60*1000}),
+                    stepping: 15,
+                    sideBySide: true
+                });
+            }
+		
+			showSelectedInspectionType();
+			
+			$("input[name=inspectionType]").change(function() {
+				showSelectedInspectionType();
+			});
+			
+			
+			function showSelectedInspectionType() {
+				var value = $('input[name=inspectionType]:checked', '#form').val();
+				if (value == "${helpers.ERConstants.INSPECTION_TYPE_ADDRESS}") {
+					$("#inspection_address").show();
+					$("#inspection_number").hide();
+				} else if (value=="${helpers.ERConstants.INSPECTION_TYPE_CENTER}") {
+					$("#inspection_address").hide();
+					$("#inspection_number").hide();
+				} else if (value=="${helpers.ERConstants.INSPECTION_TYPE_SELLER}"){
+					$("#inspection_address").hide();
+					$("#inspection_number").show();
+				} else {
+					$("#inspection_address").hide();
+					$("#inspection_number").hide();
+				}
+			}
+			
+			$('#selectedQuotation').change(function(){
+				var id = $(this).val();
+				var selectelement = $(this);
+				var select = $("#quotationOptions");
+				select.html("<option>&{'form.select.loading'}</option>");
+				$.ajax({
+					type : 'POST',
+					url : '@{ServiceQuotations.paymentOptionsForQuotation()}', 
+					data :  {id:id}, 
+					success: function(response) {
+						var html = "";
+						select.empty();
+						if (response.success) {
+							$.each(response.options, function(index, option) {
+								html += '<option value="'+option.value+'">'+option.name+'</option>';
+							});
+							select.html(html);
+						} else {
+							select.html("<option>&{'form.select.error'}</option>");
+						}
+					},
+					error: function() {
+						select.html("<option>&{'form.select.error'}</option>");
+					},
+					complete: function() {
+						selectelement.prop('disabled', false);
+					}
+				});
+				
+			});
+		});
+	</script>
+#{/}

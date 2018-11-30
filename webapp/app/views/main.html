@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>El Roble</title>		
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/bootstrap3/css/bootstrap.min.css'}" />
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/theme.css'}">
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}" />
+        
+        #{get 'moreStyles' /}
+        
+        <script src="@{'/public/javascripts/respond.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+		<script src="@{'/public/javascripts/jquery-1.10.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+		<script src="@{'/public/bootstrap3/js/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+		
+		#{get 'moreScripts' /}
+    </head>
+    <body>
+    	<div class="container">
+		#{doLayout /}
+		</div>
+    </body>
+</html>

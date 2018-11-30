@@ -1,0 +1,110 @@
+#{extends 'admin.html' /}
+
+#{form @saveQAComments(), class:"form-horizontal", method:"POST", role:"form", id:"form"}
+<div class="well fixed-sidebar-parent">
+    <div class="orange-title">
+			<span>
+				<h1>&{'incident.title'} ${incident?.number}</h1>
+			</span>
+    </div>
+
+    #{if errors}
+        <div class="alert alert-danger">
+        &{'incident.attend.fielderrors'}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+    <div class="form-group">
+
+        <h3>BITACORA DE COMENTARIOS: </h3>
+        <ul>
+        #{if incident?.review != null}
+            <b>FECHA: </b>${incident.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${incident.reviewUser.getFullName()}  </br><p> <b>COMENTARIO: </b> ${incident.review}</p>
+        #{/if}
+        </ul>
+
+            <ul>
+            #{list items:comments, as:'comment' }
+                <b>FECHA: </b>${comment.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${comment.user.getFullName()}              </br><p> <b>COMENTARIO: </b> ${comment.comment}</p></li>
+            #{/list}
+        </ul>
+
+    </div>
+
+    #{if incident?.reviewAccepted == null}
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="isAccepted">#{required/} Aceptar Caso:</label>
+                <div class="col-sm-9">
+                    <select class="form-control" id="isAccepted" name="isAccepted">
+                        <option value= true> Aceptar </option>
+                        <option value= false>Denegar </option>
+                    </select>
+                </div>
+            </div>
+    #{/if}
+
+    <div class="form-group">
+    #{field 'comments'}
+        <div>
+            <label class="col-sm-2 control-label" for="comments">Agregar comentario al caso:</label>
+            <textarea  class="col-sm-9 text-area autoExpand" id="${field.id}" name="${field.id}"  rows='3' data-min-rows='3'></textarea>
+        </div>
+    #{/}
+    </div>
+
+    <div class="form-group">
+
+            <div class="col-sm-offset-4	 col-sm-2">
+                <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs">&{'client.edit.cancel'}</a>
+            </div>
+         <div class="col-sm-2">
+         #{if isQAUser}
+            <input type="submit" class="btn btn-primary btn-block" value="&{'incident.attend.save'}" />
+         #{/if}
+            <input type="hidden" name="id" value="${incident?.id}"/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-offset-4 col-sm-6">
+            #{requiredleyend/}
+        </div>
+    </div>
+</div>
+#{/form}
+<style type="text/css">
+
+    textarea{
+        display: block;
+        box-sizing: padding-box;
+        overflow: hidden;
+        padding: 10px;
+        width: 250px;
+        font-size: 14px;
+        margin: 50px auto;
+        border-radius: 6px;
+        border:2px solid #556677;
+    }
+</style>
+
+
+
+<script type="text/javascript">
+    $(document)
+            .one('focus.autoExpand', 'textarea.autoExpand', function(){
+                var savedValue = this.value;
+                this.value = '';
+                this.baseScrollHeight = this.scrollHeight;
+                this.value = savedValue;
+            })
+            .on('input.autoExpand', 'textarea.autoExpand', function(){
+                var minRows = this.getAttribute('data-min-rows')|0, rows;
+                this.rows = minRows;
+                rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
+                this.rows = minRows + rows;
+            });
+</script>

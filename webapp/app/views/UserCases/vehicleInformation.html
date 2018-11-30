@@ -1,0 +1,457 @@
+|    #{extends 'admin.html' /}
+
+
+#{form @vehicleInformationNext(), id:"formVehicle", class:"form-horizontal", method:"POST"}	
+	<div class="well fixed-sidebar-parent">		
+
+		<div class="orange-title">
+			<span>
+				<h1>&{'quotation.vehicle'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+				<ul class="steps hidden-xs pull-right">
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguro</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Simulación</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguimiento</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Caso</li>
+				</ul>
+			</span>
+		</div>
+		
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if errors}
+			<div class="alert alert-danger">
+				&{'quotation.form.vehicle.fielderrors'}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<div class="row">
+			<input type="hidden" name="iField" value="${iField}"/>
+			
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.vehicle.brand'}</label>
+					<div class="col-sm-8">
+						#{select 'vehicle.brand.id', class:'form-control', id:'brand_line', value: vehicle?.line?.brand?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: brands, as: 'vehicleBrand'}
+								#{option vehicleBrand?.id}${vehicleBrand?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">	
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="line">#{required/} &{'quotation.form.vehicle.line'}</label>
+					<div class="col-sm-8">
+						#{select 'vehicle.line.id',  class:'form-control', id:'line', value: vehicle?.line?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: lines, as: 'vehicleLine'}
+								#{option vehicleLine?.id} ${vehicleLine?.name} #{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="type">#{required/} &{'quotation.form.vehicle.type'}</label>
+					<div class="col-sm-8">
+						#{select 'vehicle.type.id', class:'form-control', id:'type', value: vehicle?.type?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: vehicleTypes, as: 'vehicleType'}
+								#{option vehicleType?.id} ${vehicleType?.name} #{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="erYear">#{required/} &{'quotation.form.vehicle.erYear'}</label>
+					<div class="col-sm-8">
+						#{select 'vehicle.erYear.id', class:'form-control', id:'erYear', value: vehicle?.erYear?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: erYears, as: 'year'}
+                                #{if  Integer.parseInt(year?.year) >= configuration?.minimumCarYear?.value && Integer.parseInt(year?.year) <= configuration?.maximumCarYear?.value}
+                                    #{option year?.id} ${year?.year} #{/option}
+                                #{/if}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="plateType">#{required/} &{'quotation.form.vehicle.plateType'}</label>
+					<div class="col-sm-8">
+						#{select 'vehicle.plateType.id', class:'form-control', id:'plateType', value: vehicle?.plateType?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: vehiclePlateTypes, as: 'vehiclePlateType'}
+								#{option vehiclePlateType?.id}${vehiclePlateType?.name}#{/option}
+							#{/list}
+						#{/select}
+                        <span>Seleccione pendiente si es vehículo nuevo de agencia.</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6">
+				#{field 'vehicle.plate'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" maxlength="6"/>
+							<span>Ingrese únicamente mayúsculas sin vocales.</span>
+						</div>
+					</div>
+				#{/}
+			</div>
+			
+			<div class="col-sm-6">	
+				#{field 'vehicle.numberOfPassengers'}
+					<div class="form-group ${field.error?'has-error':''}">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6" style="display:none;">
+				#{field 'vehicle.alreadyInsured'}
+				<div class="form-group ${field.error?'has-error':''}">
+					<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+					<div class="col-sm-6">
+						<label class="radio-inline">
+							<input type="radio" value="true" name="${field.name}" id="alreadyInsured" ${(field.flash  == "true")?'checked':''}/>
+							&{'form.yes'}
+						</label>
+						<label class="radio-inline">
+							<input type="radio" value="false" name="${field.name}" id="alreadyInsured" ${(field.flash == "false" || field.flash == null)?'checked':''} />
+							&{'form.no'}
+						</label>
+					</div>
+				</div>
+				#{/}
+			</div>
+		</div>
+		
+		<br>
+		<div class="row" style="min-height:auto">
+			<label class="col-sm-6 control-label" for="averageValue">Valor Garantizado:</label>
+			<label id="averageValueAmount" class="col-sm-6 control-label" for="averageValueAmount" style="text-align:left"></label>
+			<input type="hidden" id="averageValue" name="averageValue" value=""></input>
+            <label class="col-sm-6 control-label" for="averageValue">SI COLOCA UNA SUMA ASEGURADA CON MAS O MENOS DEL 15% PUEDE OPTAR A ESTE BENEFICIO</label>
+		</div>
+		
+		<div class="col-sm-3 fixed-sidebar">
+			<input type="submit" class="btn btn-primary btn-block next-btn" value="&{'quotation.form.next'}" />
+			<input type="submit" class="btn btn-default btn-block back-btn" name="back" id="back" value="&{'quotation.form.back'}" />
+		</div>
+		
+		<br>
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+<style>
+    .ui-autocomplete {
+        max-height: 100px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+    }
+    /* IE 6 doesn't support max-height
+     * we use height instead, but this forces the menu to always be this tall
+     */
+    * html .ui-autocomplete {
+        height: 100px;
+    }
+</style>
+
+#{set 'moreStyles'}
+<link href="@{'/public/mobiscroll/css/mobiscroll.scroller.css'}" rel="stylesheet" type="text/css" />
+<link href="@{'/public/mobiscroll/css/mobiscroll.animation.css'}" rel="stylesheet" type="text/css" />
+<link href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'}"/>
+<link rel="stylesheet" href="@{'/public/stylesheets/custom-theme/jquery-ui.css'}" type="text/css">
+
+#{/}
+
+#{set 'moreScripts'}
+	<script src="@{'/public/javascripts/jquery.validate.min.js'}" type="text/javascript"></script>
+	<script src="@{'/public/javascripts/vehicle.js'}" type="text/javascript"></script>
+	<script src="@{'/public/mobiscroll/js/mobiscroll.core.js'}"></script>
+	<script src="@{'/public/mobiscroll/js/mobiscroll.scroller.js'}" type="text/javascript"></script>
+	<script src="@{'/public/mobiscroll/js/mobiscroll.datetime.js'}" type="text/javascript"></script>
+	<script src="@{'/public/mobiscroll/js/i18n/mobiscroll.i18n.es.js'}" type="text/javascript"></script>
+	<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+	<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+    <script src="@{'/public/javascripts/vehicle.js'}" type="text/javascript"></script>
+    <script src="@{'/public/javascripts/jquery-ui.js'}" type="text/javascript"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			let args =  {
+				urlGetLinesForBrand: "@{ServiceVehicles.vehicleLinesForBrand()}",
+				formSelect:	"&{'form.select'}",
+				formSelectLoading: "&{'form.select.loading'}",
+				formSelectError: "&{'form.select.error'}"
+			}
+			init(args);
+		});
+	</script>
+
+<script>
+    $( function() {
+        $.widget( "custom.combobox", {
+            _create: function() {
+                this.wrapper = $( "<span>" )
+                        .addClass( "custom-combobox" )
+                        .insertAfter( this.element );
+                this.element.hide();
+                var id = this.element.attr("id");
+                if  (id == "brand_line"){
+                    this._createAutocompleteforBrand();
+                }
+                else if  (id == "erYear"){
+                    this._createAutocompleteforYear();
+                }
+                else {
+                    this._createAutocomplete();
+                }
+                this._createShowAllButton();
+            },
+
+            _createAutocomplete: function() {
+                var selected = this.element.children( ":selected" ),
+                        value = selected.val() ? selected.text() : "";
+
+                this.input = $( "<input>" )
+                        .appendTo( this.wrapper )
+                        .val( value )
+                        .attr( "title", "" )
+                        .addClass( "form-control custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+                        .attr("id",this.element.attr("id") + 2)
+                        .attr("name",this.element.attr("id") +2)
+                        .autocomplete({
+                            delay: 100,
+                            minLength: 0,
+                            source: $.proxy( this, "_source" ),
+                            })
+                        .tooltip({
+                            classes: {
+                                "ui-tooltip": "ui-state-highlight"
+                            }
+                        });
+
+                this._on( this.input, {
+                    autocompleteselect: function( event, ui ) {
+                        ui.item.option.selected = true;
+                        this._trigger( "select", event, {
+                            item: ui.item.option
+                        });
+                    },
+
+                    autocompletechange: "_removeIfInvalid"
+                });
+            },
+
+            _createAutocompleteforYear: function() {
+                var selected = this.element.children( ":selected" ),
+                        value = selected.val() ? selected.text() : "";
+
+                this.input = $( "<input>" )
+                        .appendTo( this.wrapper )
+                        .val( value )
+                        .attr( "title", "" )
+                        .addClass( "form-control custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+                        .attr("id",this.element.attr("id") + 2)
+                        .attr("name",this.element.attr("id") + 2)
+                        .autocomplete({
+                            delay: 100,
+                            minLength: 0,
+                            source: $.proxy( this, "_source" ),
+                            change: function( event, ui ,id) {
+                                let brand = $("#brand_line option:selected").text().trim();
+                                let line = $("#line option:selected").text().trim();
+                                let year = $("#erYear option:selected").text().trim();
+
+                                $.ajax({
+                                    url:"/incident/getByInfo",
+                                    type:"post",
+                                    data:{information:brand+"|"+line+"|"+year},
+                                    complete:function(result){
+                                        console.log(result.responseJSON);
+                                        if(result.responseJSON.success){
+                                            $("#averageValueAmount").html(result.responseJSON.averageValue);
+                                            $("#averageValue").val(result.responseJSON.averageValue);
+                                        }else{
+                                            if(brand!="Seleccionar"&&line!="Seleccionar"&&year!="Seleccionar"){
+                                                $("#averageValueAmount").html("No existe valor promedio para este vehículo.");
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        })
+                        .tooltip({
+                            classes: {
+                                "ui-tooltip": "ui-state-highlight"
+                            }
+                        });
+
+                this._on( this.input, {
+                    autocompleteselect: function( event, ui ) {
+                        ui.item.option.selected = true;
+                        this._trigger( "select", event, {
+                            item: ui.item.option
+                        });
+                    },
+
+                    autocompletechange: "_removeIfInvalid"
+                });
+            },
+
+            _createAutocompleteforBrand: function() {
+                var selected = this.element.children( ":selected" ),
+                        value = selected.val() ? selected.text() : "";
+
+                this.input = $( "<input>" )
+                        .appendTo( this.wrapper )
+                        .val( value )
+                        .attr( "title", "" )
+                        .addClass( "form-control custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+                        .attr("id",this.element.attr("id") + 2)
+                        .attr("name",this.element.attr("id") + 2)
+                        .autocomplete({
+                            delay: 100,
+                            minLength: 0,
+                            source: $.proxy( this, "_source" ),
+                            change: function( event, ui ,id) {
+                                var selectelement = $(this);
+                                selectelement.prop("disabled", true);
+                                $("#line").html("<option value=''>" + "&{'form.select.loading'}" + "</option>");
+
+                                var id = $(this).val();
+                                $.ajax({
+                                    type: 	"POST",
+                                    url: 	"@{ServiceVehicles.vehicleLinesForBrandString()}",
+                                    data:  	{brand: id},
+                                    success: function(response){
+                                        $("#line").html("<option value=''>" + "&{'form.select'}" + "</option>");
+                                        if(response.success){
+                                            var html = "";
+                                            $.each(response.lines, function(index, line){
+                                                html += "<option value='" + line.id + "'>" + line.name + "</option>";
+                                            });
+                                            $("#line").append(html);
+                                        }
+                                    },
+                                    error: function(){
+                                        $("#line").html("<option value=''>" + "&{'form.select.error'}" + "</option>");
+                                    },
+                                    complete: function(){
+                                        selectelement.prop("disabled", false);
+                                    }
+                                });
+                            }
+                        })
+                        .tooltip({
+                            classes: {
+                                "ui-tooltip": "ui-state-highlight"
+                            }
+                        });
+
+                this._on( this.input, {
+                    autocompleteselect: function( event, ui ) {
+                        ui.item.option.selected = true;
+                        this._trigger( "select", event, {
+                            item: ui.item.option
+                        });
+                    },
+
+                    autocompletechange: "_removeIfInvalid"
+                });
+            },
+
+            _createShowAllButton: function() {
+                var input = this.input,
+                        wasOpen = false;
+            },
+
+            _source: function( request, response ) {
+                var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                response( this.element.children( "option" ).map(function() {
+                    var text = $( this ).text();
+                    if ( this.value && ( !request.term || matcher.test(text) ) )
+                        return {
+                            label: text,
+                            value: text,
+                            option: this
+                        };
+                }) );
+            },
+
+            _removeIfInvalid: function( event, ui ) {
+
+                // Selected an item, nothing to do
+                if ( ui.item ) {
+                    return;
+                }
+
+                // Search for a match (case-insensitive)
+                var value = this.input.val(),
+                        valueLowerCase = value.toLowerCase(),
+                        valid = false;
+                this.element.children( "option" ).each(function() {
+                    if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+                        this.selected = valid = true;
+                        return false;
+                    }
+                });
+
+                // Found a match, nothing to do
+                if ( valid ) {
+                    return;
+                }
+
+                // Remove invalid value
+                this.input
+                        .val( "" )
+                        .attr( "title", "El dato " + value + " no se encuentra" )
+                        .tooltip( "open" );
+                this.element.val( "" );
+                this._delay(function() {
+                    this.input.tooltip( "close" ).attr( "title", "" );
+                }, 2500 );
+                this.input.autocomplete( "instance" ).term = "";
+            },
+
+            _destroy: function() {
+                this.wrapper.remove();
+                this.element.show();
+            }
+        });
+
+        $( "#brand_line" ).combobox();
+        $( "#line" ).combobox();
+
+
+    } );
+</script>
+
+
+#{/}

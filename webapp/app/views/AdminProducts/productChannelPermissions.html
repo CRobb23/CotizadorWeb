@@ -1,0 +1,94 @@
+#{extends 'admin.html' /}
+
+#{form @saveChannelPermissions(), class:"form-horizontal", method:"POST", onsubmit:"submit_query_form()"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'product.channelpermissions.title'} ${product?.name}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if product?.id}
+			<input type="hidden" name="productId" value="${product?.id}" />
+		#{/if}
+		
+		<div class="form-group">
+			<div class="col-sm-12">
+				<div class="row">
+					<div class="col-sm-6 text-center">
+						&{'product.channelpermissions.availablechannels'}
+						<div class="input-group text-left">
+							<select class="height200 form-control" id="available" multiple>
+				           		#{list items:channels, as:'channel'}
+				           			<option value="${channel.id}">${channel.name}</option>
+				           		#{/list}
+				        	</select>
+							<div class="input-group-btn">
+								<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button" value=" > "/>			
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 text-center">
+						&{'product.channelpermissions.assignedchannels'}
+						<div class="input-group text-left">
+							<div class="input-group-btn">
+								<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button" value=" < "/>
+							</div>
+							#{select 'channels[]', id:'assigned', multiple:'multiple', class:'form-control col-sm-6 height200'}
+						 		#{list items:assigned, as:'channel'}
+						 			<option value="${channel.id}">${channel.name}</option>
+						 		#{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>			
+			</div>
+		</div>
+	</div>
+	
+	<div class="well">
+		<div class="form-group">
+
+			<div class="col-sm-6 col-md-offset-3">
+				<input type="submit" class="btn btn-default btn-primary btn-block" value="&{'product.channelpermissions.savepermissions'}" />
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+<script type="text/javascript">
+	$(function (){
+	    $("#select_button").click(
+	    	function (){
+	    		$('#available option:selected').appendTo("#assigned");
+	    	}
+	    );
+	});
+	
+	$(function (){
+	    $("#delete_button").click(
+	    	function (){
+	    		$('#assigned option:selected').appendTo("#available");
+	    	}
+	    );
+	});
+	
+	function submit_query_form() {
+		obj = document.getElementById("assigned");
+		for(var i = 0; i < obj.options.length; i++){
+			obj.options[i].selected = true;
+		}
+	}
+</script>
+#{/}

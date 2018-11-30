@@ -1,0 +1,30 @@
+#{extends 'Mails/layout.html' /}
+<layout label="Text only">
+    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+        <tbody>
+        <tr>
+            <td class="w580" width="580">
+                <p align="left" class="article-title"><singleline label="Title">Estimado(a) ${incident.client?.getFullName()}:</singleline></p>
+                <div align="left" class="article-content">
+                    <multiline label="Description">
+                        <p>
+
+                           Por este medio puede revisar su póliza.
+                            #{if isWebPath == true}
+                                <a href="${link.raw()}">Aquí</a>
+                            #{/if}
+
+                        </p>
+                        <p>
+                            Atentamente
+                            <br>
+                            Cotizador Web El Roble
+                        </p>
+                    </multiline>
+                </div>
+            </td>
+        </tr>
+        <tr><td class="w580" width="580" height="10"></td></tr>
+        </tbody>
+    </table>
+</layout>

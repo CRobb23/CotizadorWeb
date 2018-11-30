@@ -1,0 +1,19 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'tasks.list.title'}</h1>
+		</span>
+	</div>
+	
+	<div class="panel panel-default">
+		<div class="panel-heading"><h4 class="panel-title">&{'tasks.list.complete.success'}</h4></div>
+		<div class="panel-body">
+				<div style="max-width:400px;margin:0 auto 10px;">
+					<a href="@{Incidents.incidentDetail(task?.incident?.id)}" class="btn btn-primary btn-block ">&{'tasks.list.complete.case'}</a>
+					<a href="@{UserTasks.newTask(task?.incident?.id)}" class="btn btn-primary btn-block ">&{'tasks.list.complete.newTask'}</a>
+					<a href="@{Incidents.attendIncident(task?.incident?.id)}" class="btn btn-primary btn-block ">&{'tasks.list.complete.attend'}</a>
+				</div>
+	  	</div>
+	</div>
+</div>

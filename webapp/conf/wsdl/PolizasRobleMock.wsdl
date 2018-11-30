@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions name="PolizasRoble" targetNamespace="CorpBI" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="CorpBI" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="CorpBI">
+      <xsd:element name="Solicitud">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="strXMLInput" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SolicitudResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="strXMLOutput" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="SolicitudRequest">
+    <wsdl:part element="tns:Solicitud" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="SolicitudResponse">
+    <wsdl:part element="tns:SolicitudResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="PolizasRoble">
+    <wsdl:operation name="Solicitud">
+      <wsdl:input message="tns:SolicitudRequest"/>
+      <wsdl:output message="tns:SolicitudResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PolizasRobleSOAP" type="tns:PolizasRoble">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="Solicitud">
+      <soap:operation soapAction="Solicitud_Poliza"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PolizasRoble">
+    <wsdl:port binding="tns:PolizasRobleSOAP" name="PolizasRobleSOAP">
+      <soap:address location="http://mobileteam.digitalgeko.com:8080/mockws/formularios"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

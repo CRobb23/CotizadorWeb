@@ -1,0 +1,146 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css'}">
+#{/}
+
+#{form @generateReportAppliedDiscounts(), class:"form-horizontal", method:"POST", role:"form"}	
+	
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'reports.appliedDisounts.title'}</h1>
+			</span>
+		</div>
+
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'channelId'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'reports.search.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: field.flash, class:'form-control'}
+						#{option}&{'form.all'}#{/option}
+						#{list items: channels, as: 'channel'}
+							#{option channel?.id}${channel?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		*{
+		#{field 'distributorId'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'reports.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				#{select field.name, id:field.id, value:field.flash, class:'form-control'}
+					#{option}&{'form.all'}#{/option}
+					#{list items: distributors, as: 'distributor'}
+						#{option distributor?.id}${distributor?.name}#{/option}
+					#{/list}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+			</div>
+		</div>
+		#{/}
+		}*
+		
+		#{field 'startDate'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'reports.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" value="${field.flash}" class="form-control" data-format="DD/MM/YYYY" id="startDatePicker"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'endDate'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'reports.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" value="${field.flash}" class="form-control" data-format="DD/MM/YYYY" id="endDatePicker"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'reports.appliedDiscounts.generate'}" />
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+<script type="text/javascript" src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}"></script>
+<script type="text/javascript" src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}"></script>
+
+<script type="text/javascript">
+
+	$(function () {
+		$('#startDatePicker').datetimepicker({
+		    locale: "es",
+		    format: "DD/MM/YYYY"
+		});
+		
+		$('#endDatePicker').datetimepicker({
+		    locale: "es",
+		    format: "DD/MM/YYYY"
+		});
+
+		$("#startDatePicker").on("dp.change",function (e) {
+		   $('#endDatePicker').data("DateTimePicker").minDate(e.date);
+		});
+
+		$("#endDatePicker").on("dp.change",function (e) {
+		    $('#startDatePicker').data("DateTimePicker").maxDate(e.date);
+		});
+	});
+
+	*{
+	$(function (){
+	    $("#channelId").change(function () {
+	    	var selectelement = $(this);
+	    	selectelement.prop('disabled', true);
+	    	$('#store_distributor').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+	    	var id = $(this).val();
+	    	$.ajax({
+				type : 'POST',
+				url : '@{ServiceChannels.distributorsForChannel()}', 
+				data :  {id:id}, 
+				success: function(response) {
+					$('#distributorId').html('<option value="">'+"&{'form.all'}"+'</option>');
+					if (response.success) {
+						var html = "";
+						$.each(response.distributors, function(index, distributor) {
+							html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+						});
+						$('#distributorId').append(html);
+					} 
+				},
+				error: function() {
+					$('#distributorId').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+				},
+				complete: function() {
+					selectelement.prop('disabled', false);
+				}
+			});
+	    });
+	});
+	}*
+</script>	            
+#{/}

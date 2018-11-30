@@ -1,0 +1,51 @@
+#{extends 'admin.html' /}
+<div class="well">
+	#{if linesProcessedCount!=null}
+	<div class="alert alert-success">${linesProcessedCount} lineas procesadas exitosamente.</div>
+	#{/if}
+
+	#{if !errorLines?.isEmpty()}
+	<table class="fixedLayout table table-striped table-bordered table-condensed" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr class="table-head">
+				<th class="first" style="width:10%">&{'vehicleLoJackList.table.fileLine'}</th>
+				<th>&{'vehicleLoJackList.table.error'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{list items:errorLines, as:'current'}
+				<tr class="${current_parity}">
+					<td class="first style2">${current?.fileLine}</td>
+					<td>${current?.error}</td>
+				</tr>
+			#{/list}
+		</tbody>
+	</table>
+	#{/if}
+
+	#{if valuesProcessedCount!=null}
+	<div class="alert alert-success">${valuesProcessedCount} valores procesados exitosamente.</div>
+	#{/if}
+
+	#{if errorVehicleValues?.size()>0}
+	<table class="fixedLayout table table-striped table-bordered table-condensed" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr class="table-head">
+				<th class="first" style="width:10%">&{'vehicleLoJackList.table.fileLine'}</th>
+				<th>&{'vehicleLoJackList.table.error'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{list items:errorVehicleLoJack, as:'current'}
+				<tr class="${current_parity}">
+					<td class="first style2">${current?.fileLine}</td>
+					<td>${current?.error}</td>
+				</tr>
+			#{/list}
+		</tbody>
+	</table>
+	#{/if}
+
+</div>

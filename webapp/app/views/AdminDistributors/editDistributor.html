@@ -1,0 +1,233 @@
+#{extends 'admin.html' /}
+
+
+
+#{form @saveDistributor(), class:"form-horizontal", method:"POST", onsubmit:"submit_query_form()", role:"form"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>${distributor?.id==null ? messages.get('createDistributor.title') : messages.get('editDistributor.title')}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if distributor?.id}
+			<input type="hidden" name="distributor.id" value="${distributor?.id}" />
+		#{/if}
+	
+		#{field 'distributor.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'distributor.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'distributor.channel'}
+		#{if controllers.Security.check('Administrador maestro')}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'distributor.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name+'.id', id:field.id, value: flash?.get(field.name+'.id')?:distributor?.channel?.id, class:'form-control'}
+						#{option}&{'form.none'}#{/option}
+						#{list items: channels, as: 'channel'}
+							#{option channel?.id}${channel?.name}#{/option}
+						#{/list}
+					#{/select}
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/if}
+		#{else}
+			<input type="hidden" name="${field.name}.id" value="${userChannel?.id}"/>
+		#{/else}
+		#{/}
+		
+		<div class="form-group">
+				<label class="col-sm-3 control-label">Administrators</label>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-6 text-center">
+							Administradores disponibles
+							<div class="input-group text-left">
+								<select class="height200 form-control" id="available" multiple>
+									#{list items:administrators, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+								</select>
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_bottom height200" id="select_button" value=" > "/>			
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 text-center">
+							Administradores seleccionados
+							<div class="input-group text-left">
+								<div class="input-group-btn">
+									<input type="button" class="btn btn-default btn_margin_top height200" id="delete_button" value=" < "/>
+								</div>
+								#{select 'distributor.administrators[].id', id:'assigned', multiple:'multiple', class:'form-control col-sm-6 height200'}
+									#{list items:assigned, as:'administrator'}
+										<option value="${administrator.id}">${administrator.getFullName()}</option>
+									#{/list}
+								#{/select}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+		#{field 'distributor.inspectionEmail'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'distributor.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		*{
+		#{field 'distributor.authorizedDiscount'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'distributor.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash?:field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		}*
+
+		#{field 'distributor.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'distributor.form.estado'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(distributor?.active)?1:0, class:'form-control'}
+				#{option 1}&{'distributor.table.state.active'}#{/option}
+				#{if distributor?.id != null}
+				#{option 0}&{'distributor.table.state.inactive'}#{/option}
+				#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+			</div>
+		</div>
+		#{/}
+
+
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${distributor?.id==null ? messages.get('distributor.form.create') : messages.get('distributor.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+#{/form}
+
+	#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function (){
+		    $("#distributor_channel").change(function () {
+		    	var selectelement = $(this);
+		    	$('#available').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+		    	$('#assigned').html('');
+		    	var id = $(this).val();
+		    	selectelement.prop('disabled', true);
+		    	$.ajax({
+					type : 'POST',
+					url : '@{ServiceChannels.administratorsForChannel()}', 
+					data :  {id:id}, 
+					success: function(response) {
+						$('#available').html('');
+						if (response.success) {
+							var html = "";
+							$.each(response.administrators, function(index, administrator) {
+								html+= '<option value="'+administrator.id+'">'+administrator.name+'('+administrator.email+')</option>';
+							});
+							$('#available').append(html);
+						} 
+					},
+					error: function() {
+						$('#available').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+					},
+					complete: function() {
+						selectelement.prop('disabled', false);
+					}
+				});
+		    });
+		});
+		
+		$(function (){
+			$("#channelId").change(function () {
+				var selectelement = $(this);
+				selectelement.prop('disabled', true);
+				$('#store_distributor').html('<option value="">'+"&{'form.select.loading'}"+'</option>');
+				var id = $(this).val();
+				$.ajax({
+					type : 'POST',
+					url : '@{ServiceChannels.distributorsForChannel()}', 
+					data :  {id:id}, 
+					success: function(response) {
+						$('#store_distributor').html('<option value="">'+"&{'form.none'}"+'</option>');
+						if (response.success) {
+							var html = "";
+							$.each(response.distributors, function(index, distributor) {
+								html+= '<option value="'+distributor.id+'">'+distributor.name+'</option>';
+							});
+							$('#store_distributor').append(html);
+						} 
+					},
+					error: function() {
+						$('#store_distributor').html('<option value="">'+"&{'form.select.error'}"+'</option>');
+					},
+					complete: function() {
+						selectelement.prop('disabled', false);
+					}
+				});
+			});
+		});
+		
+		$(function (){
+			$("#select_button").click(
+				function (){
+					$('#available option:selected').appendTo("#assigned");
+				}
+			);
+		});
+		
+		$(function (){
+			$("#delete_button").click(
+				function (){
+					$('#assigned option:selected').appendTo("#available");
+				}
+			);
+		});
+		
+		function submit_query_form() {
+			obj = document.getElementById("assigned");
+			for(var i = 0; i < obj.options.length; i++){
+				obj.options[i].selected = true;
+			}
+		}
+	</script>
+	#{/}

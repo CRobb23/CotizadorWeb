@@ -1,0 +1,66 @@
+#{extends 'admin.html' /}
+
+#{form @saveBrand(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>${brand==null ? messages.get('createBrand.title') : messages.get('editBrand.title')}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if brand}
+			<input type="hidden" name="brand.id" value="${brand?.id}" />
+		#{/if}
+	
+		#{field 'brand.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'brand.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+		#{field 'brand.transferCode'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'brand.form.'+field.name}</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                </div>
+            </div>
+		#{/}
+		
+		#{field 'brand.theftDeductible'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}"> &{'brand.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${brand==null ? messages.get('brand.form.create') : messages.get('brand.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	</div>
+#{/form}

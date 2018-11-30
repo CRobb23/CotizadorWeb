@@ -1,0 +1,251 @@
+#{extends 'admin.html' /}
+
+#{form @clientInformationNext(), id:"formClient", class:"form-horizontal", method:"POST", role:"form", enctype:"multipart/form-data"}
+	<div class="well fixed-sidebar-parent">
+		<div class="orange-title">
+			<span>
+				<h1>&{'quotation.client'} &{incident?.number != null ? ' / Caso No. ' + incident?.number : ''}</h1>
+				<ul class="steps hidden-xs pull-right">
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguro</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Simulación</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Seguimiento</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Caso</li>
+				</ul>
+			</span>
+		</div>
+	
+		#{if errors}
+		<div class="alert alert-danger">
+			&{'quotation.form.client.fielderrors'}
+		</div>	
+		#{/if}
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+
+		#{set 'moreScripts'}
+			<script type="text/javascript" src="@{'/public/javascripts/validations.js'}"></script>
+		#{/set}
+		
+		
+		<div class="row" style="min-height: 0px;">
+			<input type="hidden" name="iField" value="${iField}"/>
+			<div class="col-sm-12">
+				#{field 'client.isIndividual'}
+					<div class="form-group">
+						<div class="col-sm-12" style="text-align: center;">
+							<label class="radio-inline">
+								<input type="radio" value="true" name="${field.name}" id="clienteIndividual" class="typeClient" ${field.value ? 'checked' : ''} />
+								&{'quotation.form.client.individual'}
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="false" name="${field.name}" id="clienteJuridico" class="typeClient" ${!field.value ? 'checked' : ''} />
+								&{'quotation.form.client.juridico'}
+							</label>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 id="titleFieldsClient" class="fieldsClient" style="border-bottom: groove; text-align: center;">DATOS CLIENTE</h4>
+		<div class="row fieldsClient">
+			<div class="col-sm-6">
+				#{field 'client.firstName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.secondName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.firstSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.secondSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.marriedSurname'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.taxNumber'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" maxlength="10" class="form-control" validate="false"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.email'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 id="titleFieldsLegal" class="fieldsLegal" style="border-bottom: groove; text-align: center;">DATOS EMPRESA</h4>
+		<div class="row fieldsLegal">
+			<div class="col-sm-6">
+				#{field 'client.taxNumber'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" maxlength="10" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.email'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.companyName'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.societyType'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+						<div class="col-sm-8">
+							#{select 'client.societyType.id', class:'form-control', id:'society_type', value: client?.societyType?.id}
+								#{option}&{'form.select'}#{/option}
+								#{list items: societyTypes, as: 'societyType'}
+									#{option societyType?.id}${societyType?.name}#{/option}
+								#{/list}
+							#{/select}
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		
+		<h4 style="border-bottom: groove; text-align: center;">&{'quotation.form.client.phoneNumbers'}</h4>
+		<div class="row" style="min-height:auto">
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber1'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber2'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="8"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+		<div class="row" style="min-height:auto">
+			<div class="col-sm-6">
+				#{field 'client.phoneNumber3'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+		</div>
+
+		<div class="row" style="min-height:auto">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+            <div class="col-sm-3">
+                <input type="submit" class="btn btn-primary btn-block" value="&{'quotation.form.next'}" />
+            </div>
+		</div>
+        <h6 class="text-center">&{'quotation.form.client.phone.Authorization'}</h6>
+	</div>
+
+#{/form}
+
+#{set 'moreScripts'}
+	<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}" type="text/javascript"></script>
+	<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}" type="text/javascript"></script>
+	<script src="@{'/public/javascripts/jquery.validate.min.js'}" type="text/javascript"></script>
+	<script src="@{'/public/javascripts/quotation.js'}" type="text/javascript"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			let args =  {
+				urlGetGeographicAreaChildren: "@{GeographicArea.getGeographicAreaChildren()}",
+				formSelect:	"&{'form.select'}",
+				formSelectLoading: "&{'form.select.loading'}",
+				formSelectError: "&{'form.select.error'}",
+				phoneNumbersString: ""
+			}
+			init(args);
+		});
+	</script>	            
+#{/}
+
+

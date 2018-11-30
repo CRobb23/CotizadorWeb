@@ -1,0 +1,68 @@
+#{extends 'admin.html' /}
+
+#{form @saveChargeType(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'chargeType.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'chargeType.id'}
+		<input type="hidden" name="chargeTypeId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'chargeType.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'chargeType.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'chargeType.description'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'chargeType.form.description'}</label>
+			<div class="col-sm-6">
+				<textarea rows="3" cols="20" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"></textarea>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'chargeType.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'chargeType.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(chargeType?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'chargeTypesList.table.state.active'}#{/option}
+					#{if profession?.id != null}
+				    	#{option 0}&{'chargeTypesList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${chargeType?.id==null ? messages.get('chargeType.form.create') : messages.get('chargeType.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{chargeTypesList(null,true)}">&{'chargeType.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

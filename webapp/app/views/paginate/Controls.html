@@ -1,0 +1,53 @@
+%{
+int __firstPage = 1;
+int __currentPage = _items.pageNumber;
+int __pagesDisplayed = _items.pagesDisplayed;
+int __pagesBeforeMiddle = __pagesDisplayed / 2;
+int __maxPage = _items.pageCount;
+if (__currentPage > (__pagesDisplayed / 2)) {
+	__firstPage = __currentPage - __pagesBeforeMiddle;
+}
+int __lastPage = __currentPage + (__pagesDisplayed - __pagesBeforeMiddle - 1);
+if (__currentPage < (__pagesDisplayed - __pagesBeforeMiddle)) {
+	__lastPage = __pagesDisplayed;
+}
+if (__lastPage > __maxPage) {
+	__lastPage = __maxPage;
+}
+boolean __hasPrev = _items.hasPreviousPage;
+boolean __hasNext = _items.hasNextPage;
+String __firstURL = __hasPrev ? _items.getCallbackURL(1) : "#";
+String __prevURL = __hasPrev ? _items.getCallbackURL(__currentPage-1) : "#";
+String __nextURL = __hasNext ? _items.getCallbackURL(__currentPage+1) : "#";
+String __lastURL = __hasNext ? _items.getCallbackURL(__maxPage) : "#";
+}%
+
+<div class="hidden-xs pull-right">
+		<ul class="pagination">
+		#{if (_items.boundaryControlsEnabled)}	
+			<li class="${__currentPage == 1 ? 'disabled' : 'first'}"><a href="${__firstURL}">&{'play-paginate.first'}</a></li>
+		#{/if}
+		
+		<li class="${__hasPrev ? '' : 'disabled'}"><a href="${__prevURL}">&{'play-paginate.prev'}</a></li>
+			
+		#{list items: __firstPage .. __lastPage, as:'__idx'}
+			%{boolean __active = (__currentPage==__idx);}%
+			<li class="${__active ? 'active' : 'inactive'}"><a href="${_items.getCallbackURL(__idx)}">${__idx}</a></li>
+		#{/list}
+	
+		<li class="${__hasNext ? '' : 'disabled'}"><a href="${__nextURL}">&{'play-paginate.next'}</a></li>
+	
+		#{if (_items.boundaryControlsEnabled)}
+			<li class="${__currentPage == __maxPage ? 'disabled' : 'last'}"><a href="${__lastURL}">&{'play-paginate.last'}</a></li>
+		#{/if}
+	</ul>
+</div>
+<div class="clearfix"></div>
+
+<div class="visible-xs text-center">
+		<ul class="pagination">
+		<li class="${__hasPrev ? '' : 'disabled'} previous"><a href="${__prevURL}">&{'play-paginate.prev'}</a></li>
+		<li class="${__hasNext ? '' : 'disabled'} next"><a href="${__nextURL}">&{'play-paginate.next'}</a></li>
+	</ul>
+</div>
+	

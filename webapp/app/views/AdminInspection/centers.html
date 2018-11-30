@@ -1,0 +1,60 @@
+#{extends 'admin.html' /}
+
+#{form @saveCentersList(), class:"form-horizontal", method:"POST", enctype:"multipart/form-data"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'createCenters.title'}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if centersFile!=null}
+		<div class="form-group">
+	    	<label class="col-sm-3 control-label">&{'centers.form.storedFile'}</label>
+	    	<div class="col-sm-6">
+	      		<p class="form-control-static"><a href="@{viewFile(centersFile?.id)}" class="btn btn-block">${centersFile.fileName}</a></p>
+	    	</div>
+	  	</div>
+	  	#{/if}
+	
+		#{field 'file'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'centers.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="file" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" maxlength="75"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'centers.form.update'}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function() {
+			$("div.tip").tooltip();
+		});
+	</script>
+#{/}

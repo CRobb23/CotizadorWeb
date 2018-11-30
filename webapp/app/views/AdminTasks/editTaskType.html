@@ -1,0 +1,69 @@
+#{extends 'admin.html' /}
+#{form @saveTaskType(), class:"form-horizontal", method:"POST", role:"form"}		
+	<div class="well">
+		<div class="orange-title">
+			<span>
+				<h1>${type?.id==null ? messages.get('tasks.type.create.title') : messages.get('tasks.type.edit.title')}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+
+		#{if type?.id}
+			<input type="hidden" name="type.id" value="${type?.id}" />
+		#{/if}
+	
+		#{field 'type.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'tasks.type.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ?: field.value}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'type.description'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'tasks.type.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" maxlength="255" cols="1" class="form-control">${field.flash ?: field.value}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'type.active'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'tasks.type.form.'+field.name}</label>
+				<div class="col-sm-6">
+					#{select field.name, id:field.id, value: (field.flash)?field.flash:(field.value!=null)?((field.value)?1:0):1, class:'form-control'}
+						#{option 1}&{'form.active'}#{/option}
+						#{option 0}&{'form.inactive'}#{/option}
+					#{/select}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${type==null ? messages.get('tasks.type.form.create') : messages.get('tasks.type.form.edit')}" />
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-sm-offset-3 col-sm-6">
+				#{requiredleyend/}
+			</div>
+		</div>
+		
+	#{/form}
+</div>

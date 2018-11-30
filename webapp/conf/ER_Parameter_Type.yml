@@ -1,0 +1,23 @@
+ER_Parameter_Type(pt1):
+    code:           1
+    name:           Alfanumérico
+
+ER_Parameter_Type(pt2):
+    code:           2
+    name:           Numérico
+
+ER_Parameter_Type(pt3):
+    code:           3
+    name:           Fecha
+
+ER_Parameter_Type(pt4):
+    code:           4
+    name:           Opciones
+
+ER_Parameter_Type(pt5):
+    code:           5
+    name:           Booleano
+    
+ER_Parameter_Type(pt5):
+    code:           6
+    name:           Cuenta

@@ -1,0 +1,96 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+<div class="well">
+	<div class="orange-title">
+		<span>
+			<h1>&{'tasks.list.title'}</h1>
+		</span>
+	</div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	
+	#{if expiredTasks?.size()>0}
+	<div class="panel panel-default panel-transparent">
+		<div class="panel-heading"><h4 class="panel-title">&{'tasks.list.expired.title'}</h4></div>
+		<table class="table table-striped tablelist table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th>&{'tasks.list.table.type'}</th>
+					<th>&{'tasks.list.table.client'}</th>
+					<th>&{'tasks.list.table.note'}</th>
+					<th>&{'tasks.list.table.date'}</th>
+					<th colspan="2" class="text-center">&{'tasks.list.table.actions'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{list items:expiredTasks, as:'current'}
+					<tr class="${current_parity}">
+						<td data-title="&{'tasks.list.table.type'}">${current.type?.name}</td>
+						<td data-title="&{'tasks.list.table.client'}">${current.incident?.client?.getFullName()}</td>
+						<td data-title="&{'tasks.list.table.note'}">${current.description}</td>
+						<td style="color:red;" data-title="&{'tasks.list.table.date'}">${current.dueDate?.format('dd/MM/yyyy HH:mm')}</td>
+						<td data-title="&{'tasks.list.table.actions'}" class="text-center">
+							<a href="@{Incidents.incidentDetail(current.incident?.id)}" class="btn btn-xs">&{'tasks.list.table.incident'}</a>
+						</td>
+						<td class="text-center">
+							<a href="@{completeTask(current.id)}" class="btn btn-xs" onclick="return confirm('&{'tasks.list.table.complete.confirmation'}')">&{'tasks.list.table.complete'}</a>
+						</td>
+					</tr>
+				#{/list}
+			</tbody>
+		</table>
+	</div>
+	#{/if}
+	
+	#{if pendingTasks?.size()>0}
+	<div class="panel panel-default panel-transparent">
+		<div class="panel-heading"><h4 class="panel-title">&{'tasks.list.pending.title'}</h4></div>
+		<table class="table table-striped tablelist table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th>&{'tasks.list.table.type'}</th>
+					<th>&{'tasks.list.table.client'}</th>
+					<th>&{'tasks.list.table.note'}</th>
+					<th>&{'tasks.list.table.date'}</th>
+					<th colspan="2" class="text-center">&{'tasks.list.table.actions'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{list items:pendingTasks, as:'current'}
+					<tr class="${current_parity}">
+						<td data-title="&{'tasks.list.table.type'}">${current.type?.name}</td>
+						<td data-title="&{'tasks.list.table.client'}">${current.incident?.client?.getFullName()}</td>
+						<td data-title="&{'tasks.list.table.note'}">${current.description}</td>
+						<td data-title="&{'tasks.list.table.date'}">${current.dueDate?.format('dd/MM/yyyy HH:mm')}</td>
+						<td data-title="&{'tasks.list.table.actions'}" class="text-center">
+							<a href="@{Incidents.incidentDetail(current.incident?.id)}" class="btn btn-xs">&{'tasks.list.table.incident'}</a>
+						</td>
+						<td class="text-center">
+							<a href="@{completeTask(current.id)}" class="btn btn-xs" onclick="return confirm('&{'tasks.list.table.complete.confirmation'}')">&{'tasks.list.table.complete'}</a>
+						</td>
+					</tr>
+				#{/list}
+			</tbody>
+		</table>
+	</div>
+	#{/if}
+	
+	#{if (!pendingTasks || pendingTasks.size()==0) && (!expiredTasks || expiredTasks.size()==0) }
+		&{'tasks.list.empty'}
+	#{/if}
+	
+</div>

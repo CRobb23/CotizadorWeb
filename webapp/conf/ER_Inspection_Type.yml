@@ -1,0 +1,14 @@
+ER_Inspection_Type(insT1):
+    code:               1
+    name:               Domicilio
+    typeOrder:          1
+
+ER_Inspection_Type(insT2):
+    code:               2
+    name:               Centro autorizado
+    typeOrder:          2
+
+ER_Inspection_Type(insT3):
+    code:               3
+    name:               Inspección propia
+    typeOrder:          3

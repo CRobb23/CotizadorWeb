@@ -1,0 +1,59 @@
+#{extends 'admin.html' /}
+
+#{form @saveRate(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'rate.form.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		#{field 'rate.id'}
+		<input type="hidden" name="rateId" value="${field.value}"/>
+		#{/}
+	
+		#{field 'rate.name'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'profession.form.name'}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		#{field 'rate.active'}
+		<div class="form-group ${field.error?'has-error':''}">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'rate.form.active'}</label>
+			<div class="col-sm-6">
+
+				#{select field.name, id:field.id, value:flash.get(field.name)?:(rate?.active)      ?1:0, class:'form-control'}
+					#{option 1}&{'rateList.table.state.active'}#{/option}
+					#{if rate?.id != null}
+				    	#{option 0}&{'rateList.table.state.inactive'}#{/option}
+					#{/if}
+				#{/select}
+				#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+
+
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${rate?.id==null ? messages.get('rate.form.create') : messages.get('rate.form.edit')}" />
+			</div>
+			<div class="col-sm-offset-3 col-sm-6">
+				<a class="btn btn-primary btn-block" href="@{ratesList(null,true)}">&{'rate.form.cancel'}</a>
+			</div>
+		</div>
+	</div>
+#{/form}

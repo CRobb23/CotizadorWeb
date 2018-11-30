@@ -1,0 +1,58 @@
+#{extends 'admin.html' /}
+<div class="well">
+	<div class="orange-title"><span>
+		<h1>&{'vehicleValuesList.title'} ${line?.brand?.name} ${line?.name}</h1>
+	</span></div>
+	#{if flash.error}
+		<div class="alert alert-danger">
+			${flash.error}
+		</div>
+	#{/if}
+	#{if flash.success}
+		<div class="alert alert-success">
+			${flash.success}
+		</div>
+	#{/if}
+	<div style="text-align:right; margin-bottom:10pt">
+		<a href="@{editVehicleValue(null, line?.id)}" class="btn btn-default">&{'vehicleValuesList.newVehicle'}</a>
+	</div>
+
+	<div class="table-responsive">
+	<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+		<thead>
+			<tr class="table-head">
+				#{if line==null}
+				<th>&{'vehicleValuesList.table.brand'}</th>
+				<th>&{'vehicleValuesList.table.line'}</th>
+				#{/if}
+				<th>&{'vehicleValuesList.table.year'}</th>
+				<th>&{'vehicleValuesList.table.value'}</th>
+				<th class="last textC" style="width:50px;">&{'vehicleValuesList.table.edit'}</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			#{paginate.list items:vehicleValues, as:'current'}
+				<tr class="${current_parity}">
+					#{if line==null}
+					<td>${current?.line?.brand?.name}</td>
+					<td>${current?.line?.name}</td>
+					#{/if}
+					<td>${current?.year?.year}</td>
+					<td>${current?.value?.decimalFormat()}</td>
+					<td class="lasticon textC">
+						<a href="@{editVehicleValue(current?.id, line?.id)}" class="btn btn-xs">&{'vehicleValuesList.table.edit'}</a>
+					</td>
+				</tr>
+			#{/paginate.list}
+		</tbody>
+	</table>
+	</div>
+
+	#{if vehicleValues?.getPageCount() > 1}
+		#{paginate.controls items:vehicleValues /}
+		<div class="visible-xs text-center">
+			#{paginate.summary items:vehicleValues /}
+		</div>
+	#{/if}
+</div>

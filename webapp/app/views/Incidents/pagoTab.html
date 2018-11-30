@@ -1,0 +1,124 @@
+			<h4 style="border-bottom: groove; text-align: center;"></h4>
+		<div class="row">
+			#{if controllers.Security.check('Administrador maestro')}
+				<div class="col-sm-6">
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="emissionZone">#{required/} &{'quotation.form.incident.emissionZone'}</label>
+						<div class="col-sm-8">
+							#{select 'emissionZone', class:'form-control', id:'emissionZone', value: incident?.emissionZone}
+                                #{list items: zoneList, as: 'zoneItem'}
+                                    #{option zoneItem?.transferCode}${zoneItem?.name}#{/option}
+                                #{/list}
+							#{/select}
+						</div>
+					</div>
+				</div>
+			#{/if}
+			<div class="col-sm-6">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="chargeType">#{required/} &{'quotation.form.payment.chargeType'}</label>
+					<div class="col-sm-8">
+						#{select 'payment.chargeType.id', class:'form-control', id:'chargeType', value: payment?.chargeType?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: chargeTypes, as: 'chargeTypeItem'}
+								#{option chargeTypeItem?.id}${chargeTypeItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 bank fields">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="bankAccountType">#{required/} &{'quotation.form.payment.bankAccountType'}</label>
+					<div class="col-sm-8">
+						#{select 'payment.bankAccountType.id', class:'form-control', id:'bankAccountType', value: payment?.bankAccountType?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: bankAccountTypes, as: 'bankAccountTypeItem'}
+								#{option bankAccountTypeItem?.id}${bankAccountTypeItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 bank fields">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="bank">#{required/} &{'quotation.form.payment.bank'}</label>
+					<div class="col-sm-8">
+						#{select 'payment.bank.id', class:'form-control', id:'bank', value: payment?.bank?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: banks, as: 'banksItem'}
+								#{option banksItem?.id}${banksItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 creditCard fields">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="cardType">#{required/} &{'quotation.form.payment.cardType'}</label>
+					<div class="col-sm-8">
+						#{select 'payment.cardType.id', class:'form-control', id:'cardType', value: payment?.cardType?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: cardTypes, as: 'cardTypeItem'}
+								#{option cardTypeItem?.id}${cardTypeItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 creditCard fields">
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="cardClass">#{required/} &{'quotation.form.payment.cardClass'}</label>
+					<div class="col-sm-8">
+						#{select 'payment.cardClass.id', class:'form-control', id:'cardClass', value: payment?.cardClass?.id}
+							#{option}&{'form.select'}#{/option}
+							#{list items: cardClassz, as: 'cardClassItem'}
+								#{option cardClassItem?.id}${cardClassItem?.name}#{/option}
+							#{/list}
+						#{/select}
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6 field fields">
+				#{field 'payment.numberAccountCard'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}  <h6>&{'quotation.form.client.messageDPI'}</h6></label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control creditCardClass"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6 fields" style="display:none;">
+				#{field 'payment.codeAccountCard'}
+					<div class="form-group" style="display:none;">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+			<div class="col-sm-6 creditCard fields">
+				#{field 'payment.expirationDate'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+						<div class="col-sm-8">
+							<input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" maxlength="10" class="form-control datePicker"/>
+						</div>
+					</div>
+				#{/}
+			</div>
+        </div>
+                <div class="col-sm-12" id="chkAgree">
+				#{field 'payment.isAgree'}
+                    <div class="form-group">
+                        <label class="col-sm-10 control-label" for="${field.id}">Autorizo a Seguros El Roble debitar de la cuenta y/o tarjeta de crédito que especifico en esta solicitud, la cantidad necesaria para cubrir el pago de las primas de Seguro de Automóvil que he contratado.</label>
+                        <div class="col-sm-2">
+                            <div class="checkbox">
+                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+                            </div>
+                        </div>
+                    </div>
+				#{/}
+                </div>

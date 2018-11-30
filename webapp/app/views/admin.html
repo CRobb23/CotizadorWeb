@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>El Roble</title>		
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="format-detection" content="telephone=no">
+
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/bootstrap3/css/bootstrap.min.css'}" />
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}">
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/theme.css'}">
+	<link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}" />
+
+	#{get 'moreStyles' /}
+
+	<script src="@{'/public/javascripts/respond.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+	<script src="@{'/public/javascripts/jquery-1.10.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+	<script src="@{'/public/bootstrap3/js/bootstrap.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+
+    <script type="text/javascript">
+        function isTouchDevice() {
+           return !!('ontouchstart' in window);
+        }
+    </script>
+
+	#{get 'moreScripts' /}
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-7">
+				<a href="@{Application.index()}" class="pt-20 logo-img"><img src="@{'/public/images/ElRoble.png'}" alt="el roble"/></a>
+			</div>
+			<div class="mt-20 col-sm-5 my-acount-box">		
+				<div class="well">
+					<div class="ribbon-container"><h1 class="ribbon-title-small">Mi cuenta</h1></div>
+					<strong>Bienvenido</strong>
+					<div class="clear"></div>
+					<a href="@{AdminProfile.profile()}" class="btn btn-sm">
+						${connectedUser}
+					</a>
+					<a href="@{Secure.logout()}" class="btn btn-sm pull-right">&{'menu.profile.signout'}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<h1 class="menuTitle">
+			Menu
+		</h1>
+		<div class="navbar navbar-default" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+  			<div class="navbar-header navbar-default">
+  				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav_bar_collapse">
+  					<span class="sr-only">Toggle navigation</span>
+  					<span class="icon-bar"></span>
+  					<span class="icon-bar"></span>
+  					<span class="icon-bar"></span>
+			   	</button>
+			</div>
+			
+			<div class="collapse navbar-collapse" id="nav_bar_collapse">
+				<ul class="nav navbar-nav">
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Usuario de cabina')}
+						<li class="${(request.controller == 'UserGuards') ? 'current_page_item_selected active' : 'current_page_item'}">
+							<a href="@{UserGuards.guardsList()}">&{'menu.guards.title'}</a>
+						</li>
+					#{/if}
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor') || controllers.Security.check('Usuario Final')}
+						<li class="${(request.controller == 'UserCases') ? 'current_page_item_selected active' : 'current_page_item'}">
+							<a href="@{UserCases.clientInformation()}">&{'menu.cases.newquotation'}</a>
+						</li>
+					#{/if}
+					#{/if}
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor') || controllers.Security.check('Usuario Final')}
+						<li class="${(request.controller == 'Incidents') ? 'current_page_item_selected active' : 'current_page_item'}">
+							<a href="@{Incidents.incidentsList()}">&{'menu.cases.incidents'}</a>
+						</li>
+					#{/if}
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if !controllers.Security.check('admin@elroble.com') && (controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor'))}
+					<li class="${(request.controller == 'IncidentForms') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a href="@{IncidentForms.incidentsList()}">&{'menu.forms.title'}</a>
+					</li>
+					#{/if}
+					#{/if}
+
+					#{if controllers.Security.check('admin@elroble.com')}
+					<li class="dropdown ${(request.controller == 'AdminForms' || request.controller == 'AdminParameters') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.forms.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{IncidentForms.incidentsList()}">&{'menu.forms.title'}</a></li>
+							<li><a href="@{AdminParameters.parameters()}">&{'menu.forms.parameters'}</a></li>
+							<li><a href="@{AdminForms.forms()}">&{'menu.forms.forms'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+
+					#{if controllers.Security.check('Administrador maestro')}
+					<li class="dropdown ${(request.controller == 'AdminCoverages' || request.controller == 'AdminProducts') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.products.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminProducts.productsList(null,true)}">&{'menu.products.products'}</a></li>
+							<li><a href="@{AdminCoverages.coveragesList()}">&{'menu.products.coverages'}</a></li>
+							<li><a href="@{AdminProducts.newProductFromExcel()}">Crear Producto desde Excel</a></li>
+						</ul>
+					</li>
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal')}
+					<li class="dropdown ${(request.controller == 'AdminChannels' || request.controller == 'AdminDistributors' || request.controller == 'AdminStores') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.channels.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							#{if controllers.Security.check('Administrador maestro')}
+							<li><a href="@{AdminChannels.channelsList()}">&{'menu.channels.channels'}</a></li>
+							#{/if}
+							#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial')}
+							<li><a href="@{AdminDistributors.distributorsList()}">&{'menu.channels.distributors'}</a></li>
+							#{/if}
+							#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal')}
+							<li><a href="@{AdminStores.storesList()}">&{'menu.channels.stores'}</a></li>
+							#{/if}
+						</ul>
+					</li>
+					#{/if}
+					#{/if}
+					#{if controllers.Security.check('Administrador maestro')}
+					<li class="dropdown ${request.controller == 'AdminVehicles' ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.vehicles.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminVehicles.vehicleBrands()}">&{'menu.vehicles.brands'}</a></li>
+							<li><a href="@{AdminVehicles.vehicleLines()}">&{'menu.vehicles.lines'}</a></li>
+							*{<li><a href="@{AdminVehicles.vehicleValues()}">&{'menu.vehicles.values'}</a></li>}*
+							<li><a href="@{AdminVehicles.vehicleValuesMassiveUpdate()}">&{'menu.vehicles.valuesmassiveupdate'}</a></li>
+                            <li><a href="@{AdminVehicles.vehicleLoJackMassiveUpdate()}">&{'menu.vehicles.lojack.valuesmassiveupdate'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+					
+					#{if controllers.Security.check('Administrador maestro')}
+					<li class="dropdown ${(request.controller == 'AdminCases' || request.controller == 'AdminActivities' || request.controller == 'AdminIncidents'
+					|| request.controller == 'AdminTasks' || request.controller == 'AdminInspection') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.tasks.title'}<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminTasks.taskTypesList()}">&{'menu.tasks.activity_types'}</a></li>
+							<li><a href="@{AdminCases.noSaleReasonsList()}">&{'menu.cases.nosalereasons'}</a></li>
+							<li><a href="@{AdminInspection.centers()}">&{'menu.inspection.inspectioncenters'}</a></li>
+							<li><a href="@{AdminInspections.inspectionsList()}">&{'menu.inspection.inspectionsList'}</a></li>
+							<li><a href="@{AdminReminders.remindersList()}">&{'menu.task.guards'}</a></li>
+                           <!-- <li><a href="@{AdminIncidents.pendingIncidents()}">&{'menu.task.pendingIncidents'}</a></li> -->
+                            <li><a href="@{AdminMEssages.list()}">&{'menu.task.adminMessages'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor')}
+					<li class="${(request.controller == 'UserTasks') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a href="@{UserTasks.tasksList()}">&{'menu.tasks.title'}</a>
+					</li>
+					#{/if}
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Administrador maestro') ||
+					controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor')}
+					<li class="dropdown ${(request.controller == 'AdminReports') ? 'current_page_item_selected active' : 'current_page_item'}">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.reports.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminReports.reportAppliedDiscounts()}">&{'menu.reports.appliedDiscounts'}</a></li>
+							#{if controllers.Security.checkIsQA()}
+                            <li><a href="@{AdminReports.reportClosedSalesWithQA()}">&{'menu.reports.closedSales.QA'}</a></li>
+							#{/if}
+							<li><a href="@{AdminReports.reportClosedSales()}">&{'menu.reports.closedSales'}</a></li>
+							<li><a href="@{AdminReports.reportQuotations()}">&{'menu.reports.quotations'}</a></li>
+							#{if  controllers.Security.check('Gerente de canal') || controllers.Security.check('Administrador maestro')}
+							<li><a href="@{AdminReports.reportQuotationsUser()}">&{'menu.reports.quotationsUser'}</a></li>
+							#{/if}
+							<li><a href="@{AdminReports.reportQuotationsException()}">&{'menu.reports.quotationsException'}</a></li>
+
+							#{if controllers.Security.check('Gerente de canal') || controllers.Security.check('Administrador maestro')}
+							<li><a href="@{AdminReports.users()}">Usuarios</a></li>
+							#{/if}
+							#{if controllers.Security.check('Administrador maestro')}
+							<li><a href="@{AdminReports.productView()}">Productos</a></li>
+							#{/if}
+						</ul>
+					</li>
+					#{/if}
+					#{/if}
+
+					#{if controllers.Security.checkAccess()}
+					#{if controllers.Security.check('Administrador maestro') ||
+					controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal')}
+					<li class="${request.controller == 'AdminUsers' ? 'current_page_item_selected active' : ''}">
+						<a href="@{AdminUsers.usersList(null, null, null, null, true)}">&{'menu.users.title'}</a>
+					</li>
+					#{/if}
+					#{/if}
+					#{if controllers.Security.check('Administrador maestro')}
+					<li class="${request.controller == 'AdminConfiguration' ? 'current_page_item_selected active' : ''}">
+						<a href="@{AdminConfiguration.index()}">&{'menu.configuration.title'}</a>
+					</li>
+					#{/if}
+					#{if controllers.Security.check('Administrador maestro') }
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.catalogs.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminProfessions.professionsList}">&{'menu.catalogs.professions'}</a></li>
+							<li><a href="@{AdminZones.zonesList}">&{'menu.catalogs.zones'}</a></li>
+							<li><a href="@{AdminProductTypes.productTypesList}">&{'menu.catalogs.productTypes'}</a></li>
+							<li><a href="@{AdminRates.ratesList}">&{'menu.catalogs.rates'}</a></li>
+							<li><a href="@{AdminNationalities.nationalitiesList}">&{'menu.catalogs.nationalities'}</a></li>
+							<li><a href="@{AdminLicenseTypes.licenseTypesList}">&{'menu.catalogs.licenseTypes'}</a></li>
+							<li><a href="@{AdminReminderTypes.reminderTypesList}">&{'menu.catalogs.reminderTypes'}</a></li>
+							<li><a href="@{AdminSocietyTypes.societyTypesList}">&{'menu.catalogs.societyTypes'}</a></li>
+							<li><a href="@{AdminCoverageCodes.coverageCodesList}">&{'menu.catalogs.coverageCodes'}</a></li>
+							<li><a href="@{AdminSex.sexList}">&{'menu.catalogs.sexTypes'}</a></li>
+							<li><a href="@{AdminCivilStatuses.civilStatusesList}">&{'menu.catalogs.civilStatuses'}</a></li>
+							<li><a href="@{AdminEconomicActivities.economicActivitiesList}">&{'menu.catalogs.economicActivitiesTypes'}</a></li>
+							<li><a href="@{AdminSocietyTypes.societyTypesList}">&{'menu.catalogs.societyTypes'}</a></li>
+							<li><a href="@{AdminProductionTypes.productionTypesList}">&{'menu.catalogs.productionTypes'}</a></li>
+							<li><a href="@{AdminWorkFlowMovementTypes.workFlowMovementTypesList}">&{'menu.catalogs.workFlowMovementTypes'}</a></li>
+							<li><a href="@{AdminDocumentTypes.documentTypesList}">&{'menu.catalogs.documentTypes'}</a></li>
+							<li><a href="@{AdminGeographicAreas.geographicAreasList}">&{'menu.catalogs.geographicAreas'}</a></li>
+                            <li><a href="@{AdminBeneficiaries.beneficiariesList()}">&{'menu.catalogs.beneficiaries'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+					#{if controllers.Security.check('Administrador maestro') }
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.payment_catalogs.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminChargeTypes.chargeTypesList}">&{'menu.catalogs.chargeTypes'}</a></li>
+							<li><a href="@{AdminPaymentTypes.paymentTypesList}">&{'menu.catalogs.paymentTypes'}</a></li>
+							<li><a href="@{AdminBankAccountTypes.bankAccountTypesList}">&{'menu.catalogs.bankAccountTypes'}</a></li>
+							<li><a href="@{AdminCardTypes.cardTypesList}">&{'menu.catalogs.cardTypes'}</a></li>
+							<li><a href="@{AdminAccountLines.accountLinesList}">&{'menu.catalogs.accountLines'}</a></li>
+							<li><a href="@{AdminAgentCodes.agentCodesList}">&{'menu.catalogs.agentCodes'}</a></li>
+							<li><a href="@{AdminPortfolioTypes.portfolioTypesList}">&{'menu.catalogs.portfolioTypes'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+					#{if controllers.Security.check('Administrador maestro') }
+					<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">&{'menu.vehicle_catalogs.title'}<b class="caret"></b> </a>
+						<ul class="dropdown-menu">
+							<li><a href="@{AdminYears.yearsList}">&{'menu.catalogs.years'}</a></li>
+							<li><a href="@{AdminUninsurables.uninsurablesList}">&{'menu.catalogs.uninsurables'}</a></li>
+							<li><a href="@{AdminDeductibles.deductiblesList}">&{'menu.catalogs.deductibles'}</a></li>
+							<li><a href="@{AdminAverageValues.averageValuesList}">&{'menu.catalogs.averageValues'}</a></li>
+							<li><a href="@{AdminPlateTypes.plateTypesList}">&{'menu.catalogs.plateTypes'}</a></li>
+							<li><a href="@{AdminVehiclePromotionTypes.vehiclePromotionTypesList}">&{'menu.catalogs.vehiclePromotionTypes'}</a></li>
+							<li><a href="@{AdminVehicleTypes.vehicleTypesList}">&{'menu.catalogs.vehicleTypes'}</a></li>
+							<li><a href="@{AdminRates.ratesList}">&{'menu.catalogs.rates'}</a></li>
+						</ul>
+					</li>
+					#{/if}
+				</ul>
+			</div>
+		</div>
+		#{doLayout /}
+	</div>
+
+</body>
+</html>

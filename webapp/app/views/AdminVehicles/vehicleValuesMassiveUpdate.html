@@ -1,0 +1,56 @@
+#{extends 'admin.html' /}
+
+<form action="@{uploadValues()}" method="POST" class="form-horizontal" enctype="multipart/form-data" role="form">
+	<div class="well">
+		<div class="orange-title"><span>
+			<h1>&{'vehicleValuesMassiveUpdate.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+
+		<div class="form-group">
+	    	<label class="col-sm-4 control-label">&{'vehicleValue.form.template'}</label>
+	    	<div class="col-sm-6">
+	      		<p class="form-control-static"><a href="@{'/public/templates/PlantillaValores.xls'}" class="btn btn-block">&{'vehicleValue.form.downloadTemplate'}</a></p>
+	    	</div>
+	  	</div>
+		
+		<div class="form-group">
+	    	<label class="col-sm-4 control-label">Listado Marcas/Lineas</label>
+	    	<div class="col-sm-6">
+	      		<p class="form-control-static"><a href="@{downloadBrands()}" class="btn btn-block">Descargar Listado Marcas/Lineas</a></p>
+	    	</div>
+	  	</div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label">Listado Valores Marcas/Lineas</label>
+            <div class="col-sm-6">
+                <p class="form-control-static"><a href="@{downloadValues()}" class="btn btn-block">Descargar Listado Valores Marcas/Lineas</a></p>
+            </div>
+        </div>
+
+    #{field 'valuesFile'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-4 control-label" for="${field.id}">&{'vehicleValue.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="file" name="${field.name}" id="${field.id}" class="form-control" />
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-4 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="&{'vehicleValue.form.upload'}" />
+			</div>
+		</div>
+	</div>
+</form>

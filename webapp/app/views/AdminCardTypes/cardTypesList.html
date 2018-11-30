@@ -1,0 +1,85 @@
+#{extends 'admin.html' /}
+
+#{form @searchCardTypes(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="well">	
+		<div class="orange-title"><span>
+		<h1>&{'cardTypesList.title'}</h1>
+		</span></div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{field 'cardType'}
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="${field.id}">&{'cardTypesList.search.form.'+field.name}</label>
+			<div class="col-sm-6">
+				<input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+			</div>
+		</div>
+		#{/}
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block " name="search" value=" &{'cardTypesList.search.form.search'} " />		
+				<input type="submit" class="btn btn-default btn-block" name="all" value=" &{'cardTypesList.search.form.all'} " />
+			</div>
+		</div>
+	</div>
+#{/form}
+<div class="well">
+	<div class="overflow">
+
+		<div style="float:right; padding-left: 5px; text-align:right; margin-bottom:10pt">
+			<a href="@{editCardType()}" class="btn btn-default">&{'cardTypesList.new'}</a>
+		</div>
+		
+		<div style="float:right; text-align:right; margin-bottom:10pt">
+			<a href="@{newCardTypeFromExcel()}" class="btn btn-default">&{'cardTypesList.newExcel'}</a>
+		</div>
+
+		<div class="table-responsive">
+		<table class="table table-striped table-bordered" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr class="table-head">
+					<th class="first">&{'cardTypesList.table.name'}</th>
+					<th>&{'cardTypesList.table.active'}</th>
+					<th class="last textC" style="width:50px;">&{'cardTypesList.table.edit'}</th>
+					<th class="last textC" style="width:50px;">&{'cardTypesList.table.delete'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:cardTypes , as:'current'}
+					<tr class="${current_parity}">
+						<td class="first style2">${current?.name}</td>
+						<td>
+							${current?.active.yesno('Activo', 'Inactivo') }
+						</td>
+						<td class="lasticon textC">
+							<a href="@{editCardType(current?.id)}"  class="btn btn-xs">&{'cardTypesList.table.edit'}</a>
+						</td>
+						<td class="lasticon textC">
+							<a href="@{deleteCardType(current?.id)}"  class="btn btn-xs">&{'cardTypesList.table.delete'}</a>
+						</td>
+
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+		</div>
+		
+		#{if cardTypes?.getPageCount() > 1}
+			#{paginate.controls items:cardTypes /}
+			<div class="visible-xs text-center">
+				#{paginate.summary items:cardTypes /}
+			</div>
+		#{/if}
+	</div>
+</div>

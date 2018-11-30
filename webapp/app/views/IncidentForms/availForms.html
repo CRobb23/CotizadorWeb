@@ -1,0 +1,45 @@
+#{extends 'admin.html' /}
+
+#{set 'moreStyles'}
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/responsive-table.css'}" />
+#{/}
+
+#{form @printIncidentForm(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>&{'form.printForm.title'}</h1>
+			</span>
+		</div>
+	
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+		
+		<table class="table table-striped table-bordered tablelist table-hover">
+			<thead>
+				<tr class="table-head">
+					<th style="width:100%;">&{'formsList.table.form'}</th>
+					<th colspan="2" style="text-align:center;">&{'formsList.table.actions'}</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				#{paginate.list items:availForms, as:'current'}
+					<tr class="${current_parity}">
+						<td data-title="&{'formsList.table.form'}">${current?.name}</td>
+						<!-- Boton llenado de formularios //// --- td data-title="&{'formsList.table.actions'}"><a href="@{editIncidentParameters(incidentId, current?.id)}" class="btn btn-xs">&{'formsList.table.fill'}</a></td-->
+						<td data-title=""><a href="@{printIncidentForm(incidentId, current?.id)}" class="btn btn-xs">&{'formsList.table.print'}</a></td>
+					</tr>
+				#{/paginate.list}
+			</tbody>
+		</table>
+	</div>
+#{/form}

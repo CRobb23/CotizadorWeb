@@ -1,0 +1,454 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                       Application.index
+
+# AdminCases
+GET 	/nosalereasons							AdminCases.noSaleReasonsList
+GET 	/nosalereasons/edit/{id}				AdminCases.editNoSaleReason
+GET 	/nosalereasons/new						AdminCases.editNoSaleReason
+POST	/nosalereasons/save						AdminCases.saveNoSaleReason
+
+# AdminChannels
+GET		/channels								AdminChannels.channelsList
+GET		/channels/edit/{id}						AdminChannels.editChannel
+GET		/channels/new							AdminChannels.editChannel
+POST	/channels/save							AdminChannels.saveChannel
+POST	/channels/search						AdminChannels.searchChannels
+
+# AdminConfiguration
+GET		/configuration							AdminConfiguration.index
+POST	/configuration/save						AdminConfiguration.saveConfiguration
+
+# AdminCoverages
+GET		/coverages								AdminCoverages.coveragesList
+GET		/coverages/edit/{id}					AdminCoverages.editCoverage
+GET		/coverages/new							AdminCoverages.editCoverage
+POST	/coverages/save							AdminCoverages.saveCoverage
+
+# AdminDistributors
+GET		/distributors							AdminDistributors.distributorsList
+GET		/distributors/edit/{id}					AdminDistributors.editDistributor
+GET		/distributors/new						AdminDistributors.editDistributor
+POST	/distributors/save						AdminDistributors.saveDistributor
+*   	/distributors/search					AdminDistributors.searchDistributors
+
+# AdminPasswordReset
+GET		/resetpassword							AdminPasswordReset.resetPassword
+POST	/resetpassword/send						AdminPasswordReset.sendPassword
+
+# AdminProducts
+GET		/products								AdminProducts.productsList
+GET		/products/edit/{id}						AdminProducts.editProduct
+GET		/products/new							AdminProducts.editProduct
+GET 	/products/new-excel						AdminProducts.newProducFromExcel
+POST	/products/save							AdminProducts.saveProduct
+GET		/products/{id}/deductibles				AdminProducts.productDeductibles
+POST	/products/deductibles/save				AdminProducts.saveDeductibles
+GET		/products/{id}/parameters				AdminProducts.productAdditionalParameters
+POST	/products/parameters/save				AdminProducts.saveAdditionalParameters
+GET		/products/{id}/channels					AdminProducts.productChannelPermissions
+POST	/products/channels/save  				AdminProducts.saveChannelPermissions
+GET		/products/{id}/distributors				AdminProducts.productDistributorPermissions
+POST	/products/distributors/save				AdminProducts.saveDistributorPermissions
+
+# AdminProfile
+GET 	/profile								AdminProfile.profile
+POST	/profile/password/save					AdminProfile.savePassword
+POST	/profile/profile/save					UserProfile.saveProfile
+
+# AdminReports
+GET		/reports/discounts						AdminReports.reportAppliedDiscounts
+POST	/reports/discounts/generate				AdminReports.generateReportAppliedDiscounts
+GET 	/reports/users							AdminReports.users
+*   	/reports/products						AdminReports.products
+*		/reports/quotations						AdminReports.reportQuotations
+*		/reports/quotationsUser					AdminReports.reportQuotationsUser
+
+# AdminStores
+GET		/stores									AdminStores.storesList
+*   	/stores/search							AdminStores.searchStores
+GET		/stores/edit/{id}						AdminStores.editStore
+GET		/stores/new								AdminStores.editStore
+POST	/stores/save							AdminStores.saveStore
+GET		/stores/delete/{id}						AdminStores.deleteStore
+# AdminUsers
+GET		/users									AdminUsers.usersList
+*		/users/search							AdminUsers.search
+GET		/users/edit/{userId}					AdminUsers.editUser
+GET		/users/new								AdminUsers.editUser
+POST	/users/save								AdminUsers.saveUser
+
+# AdminVehicles
+GET		/brands									AdminVehicles.vehicleBrands
+*   	/brands/search							AdminVehicles.searchBrands
+GET		/brands/edit/{id}						AdminVehicles.editVehicleBrand
+GET		/brands/new								AdminVehicles.editVehicleBrand
+POST	/brands/save							AdminVehicles.saveBrand
+GET 	/brands/new-excel						AdminVehicles.newVehiculeBrandFromExcel
+
+GET		/lines									AdminVehicles.vehicleLines
+*   	/lines/search							AdminVehicles.searchLines
+GET		/lines/edit/{id}						AdminVehicles.editVehicleLine
+GET		/lines/new								AdminVehicles.editVehicleLine
+POST	/lines/save								AdminVehicles.saveLine
+GET 	/lines/new-excel						AdminVehicles.newVehiculeLineFromExcel
+
+GET		/values									AdminVehicles.vehicleValues
+POST	/values/search							AdminVehicles.searchvehicleValues
+GET		/values/edit/{id}						AdminVehicles.editVehicleValue
+GET		/values/new								AdminVehicles.editVehicleValue
+POST	/values/save							AdminVehicles.saveVehicleValue
+
+GET		/values/batch							AdminVehicles.vehicleValuesMassiveUpdate
+POST	/values/batch/process					AdminVehicles.uploadValues
+GET 	/values/batch/downloadValues			AdminVehicles.downloadValues
+
+# Incidents
+GET		/incidents								Incidents.incidentsList
+POST	/incidents/search						Incidents.searchIncidents
+GET		/incidents/detail/{id}					Incidents.incidentDetail
+GET		/incidents/quotations/detail/{id}		Incidents.incidentQuotationDetail
+GET		/incidents/quotations/discount/{id}		Incidents.incidentQuotationDiscount
+GET		/incidents/quotations/resend/{id}		Incidents.resendQuotation
+POST	/incidents/quotations/discount/save		Incidents.saveQuotationDiscount
+POST 	/incident/getClientsById				Incidents.getClientsById
+POST 	/incident/getPersonDetails				Incidents.getPersonDetails
+
+# Services
+POST	/services/channelAdmins					ServiceChannels.administratorsForChannel
+POST	/services/channelDistributors			ServiceChannels.distributorsForChannel
+POST	/services/distributorUsers				ServiceChannels.administratorsAndSellersForDistributor
+POST	/services/coverages						ServiceCoverages.getCoverages
+POST	/services/coveragesfields				ServiceCoverages.getCoveragesFields
+POST	/services/vehicleLines					ServiceVehicles.vehicleLinesForBrand
+POST	/services/lineValues					ServiceVehicles.vehicleValuesForLine
+POST	/services/productParameters				ServiceVehicles.parametersForProduct
+
+# Quotation process
+GET		/incident/client						UserCases.clientInformation
+POST	/incident/client/next					UserCases.clientInformationNext
+POST	/incident/vehicle/next					UserCases.vehicleInformationNext
+POST	/incident/insurance/next				UserCases.insuranceInformationNext
+POST	/incident/simulation/next				UserCases.simulationNext
+POST	/incident/save							UserCases.saveAndSend
+POST    /incident/savePublic                    UserCases.saveAndSendPublic
+GET		/incident/success						UserCases.successful
+POST 	/incident/getByInfo						UserCases.getByInfo
+
+# Forms
+GET		/forms									AdminForms.forms
+POST	/forms/search							AdminForms.searchForms
+GET		/forms/edit/{id}						AdminForms.editForm
+GET		/forms/new								AdminForms.editForm
+POST	/forms/save								AdminForms.saveForm
+GET		/forms/availForms/{incidentId}			AdminForms.showAvailForms
+POST	/forms/printIncidentForm				AdminForms.printIncidentForm
+
+# Parameters
+GET		/parameters								AdminParameters.parameters
+POST	/parameters/search						AdminParameters.searchParameters
+GET		/parameters/edit/{id}					AdminParameters.editParameter
+GET		/parameters/new							AdminParameters.editParameter
+POST	/parameters/save						AdminParameters.saveParameter
+
+# IncidentParameters
+GET		/incident/editIncidentParameters/{incidentId} 	AdminParameters.editIncidentParameters
+POST	/incident/saveIncidentParameters				AdminParameters.saveIncidentParameters
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Import Secure routes
+GET		/login									Secure.login
+POST   	/login          						Secure.authenticate
+GET		/logout        		 					Secure.logout
+
+# Professions
+GET		/professions							AdminProfessions.professionsList
+*   	/professions/search						AdminProfessions.searchProfessions
+GET		/professions/edit/{id}					AdminProfessions.editProfession
+GET		/professions/new						AdminProfessions.editProfession
+POST	/professions/save						AdminProfessions.saveProfession
+GET		/professions/new-excel					AdminProfessions.newProfessionFromExcel
+
+# Zones
+GET		/zones								AdminZones.zonesList
+*   	/zones/search						AdminZones.searchZones
+GET		/zones/edit/{id}					AdminZones.editZone
+GET		/zones/new							AdminZones.editZone
+POST	/zones/save							AdminZones.saveZone
+GET		/zones/new-excel					AdminZones.newZoneFromExcel
+
+# ProductTypes
+GET		/products/types						AdminProductTypes.productTypesList
+*   	/products/types/search				AdminProductTypes.searchProductTypes
+GET		/products/types/edit/{id}			AdminProductTypes.editProductType
+GET		/products/types/new					AdminProductTypes.editProductType
+POST	/products/types/save				AdminProductTypes.saveProductType
+GET		/products/types/new-excel			AdminProductTypes.newProductTypeFromExcel
+
+# Rates
+GET		/rates							AdminRates.ratesList
+*   	/rates/search					AdminRates.searchRates
+GET		/rates/edit/{id}				AdminRates.editRates
+GET		/rates/new						AdminRates.editRates
+POST	/rates/save						AdminRates.saveRates
+GET		/rates/new-excel				AdminRates.newRateFromExcel
+
+# Years
+GET		/years							AdminYears.yearsList
+*   	/years/search					AdminYears.searchYears
+GET		/years/edit/{id}				AdminYears.editYears
+GET		/years/new						AdminYears.editYears
+POST	/years/save						AdminYears.saveYears
+GET		/years/new-excel				AdminYears.newYearFromExcel
+
+# Uninsurables
+GET		/uninsurables						AdminUninsurables.uninsurablesList
+*   	/uninsurables/search				AdminUninsurables.searchUninsurables
+GET		/uninsurables/edit/{id}				AdminUninsurables.editUninsurable
+GET		/uninsurables/new					AdminUninsurables.editUninsurable
+POST	/uninsurables/save					AdminUninsurables.saveUninsurable
+GET		/uninsurables/new-excel				AdminUninsurables.newYearFromExcel
+
+# Deductibles
+GET		/deductibles						AdminDeductibles.deductiblesList
+*   	/deductibles/search					AdminDeductibles.searchDeductibles
+GET		/deductibles/edit/{id}				AdminDeductibles.editDeductible
+GET		/deductibles/new					AdminDeductibles.editDeductible
+POST	/deductibles/save					AdminDeductibles.saveDeductible
+GET		/deductibles/new-excel				AdminDeductibles.newDeductibleFromExcel
+
+# AverageValues
+GET		/average-values							AdminAverageValues.averageValuesList
+*   	/average-values/search					AdminAverageValues.searchAverageValues
+GET		/average-values/edit/{id}				AdminAverageValues.editAverageValue
+GET		/average-values/new						AdminAverageValues.editAverageValue
+POST	/average-values/save					AdminAverageValues.saveAverageValue
+GET		/average-values/new-excel				AdminAverageValues.newAverageValueFromExcel
+
+# VehicleTypes
+GET		/vehicle-types						AdminVehicleTypes.vehicleTypesList
+*   	/vehicles/types/search				AdminVehicleTypes.searchVehicleTypes
+GET		/vehicles/types/edit/{id}			AdminVehicleTypes.editVehicleType
+GET		/vehicles/types/new					AdminVehicleTypes.editVehicleType
+POST	/vehicles/types/save				AdminVehicleTypes.saveVehicleType
+GET		/vehicles/types/new-excel			AdminVehicleTypes.newVehicleTypeFromExcel
+
+# Reminders
+GET		/reminders							AdminReminders.remindersList
+*   	/reminders/search					AdminReminders.searchReminders
+GET		/reminders/edit/{id}				AdminReminders.editReminder
+GET		/reminders/new						AdminReminders.editReminder
+POST	/reminders/save						AdminReminders.saveReminder
+*		/reminders/send						AdminReminders.sendExcelGuards
+
+# Inspection
+GET		/inspections							AdminInspections.inspectionsList
+*   	/inspections/search						AdminInspections.searchInspections
+GET		/inspections/edit/{id}					AdminInspections.editInspection
+GET		/inspections/new						AdminInspections.editInspection
+POST	/inspections/save						AdminInspections.saveInspection
+
+# Pending Inspections Incident
+GET		/pendingIncidents						AdminIncidents.pendingIncidents
+*   	/pendingIncidents/search				AdminIncidents.searchIncidents
+
+# Nationalities
+GET		/nationalities								AdminNationalities.nationalitiesList
+*   	/nationalities/search						AdminNationalities.searchNationalities
+GET		/nationalities/edit/{id}					AdminNationalities.editNationality
+GET		/nationalities/new							AdminNationalities.editNationality
+POST	/nationalities/save							AdminNationalities.saveNationality
+GET		/nationalities/new-excel					AdminNationalities.newNationalityFromExcel
+
+# Sex
+GET		/sex									AdminSex.sexList
+*   	/sex/search								AdminSex.searchSex
+GET		/sex/edit/{id}							AdminSex.editSex
+GET		/sex/new								AdminSex.editSex
+POST	/sex/save								AdminSex.saveSex
+GET		/sex/new-excel							AdminSex.newSexFromExcel
+
+
+# Civil Statuses
+GET		/civilStatuses								AdminCivilStatuses.civilStatusesList
+*   	/civilStatuses/search						AdminCivilStatuses.searchCivilStatuses
+GET		/civilStatuses/edit/{id}					AdminCivilStatuses.editCivilStatus
+GET		/civilStatuses/new							AdminCivilStatuses.editCivilStatus
+POST	/civilStatuses/save							AdminCivilStatuses.saveCivilStatus
+GET		/civilStatuses/new-excel					AdminCivilStatuses.newCivilStatusFromExcel
+
+# Economic Activities
+GET		/economicActivities								AdminEconomicActivities.economicActivitiesList
+*   	/economicActivities/search						AdminEconomicActivities.searchEconomicActivities
+GET		/economicActivities/edit/{id}					AdminEconomicActivities.editEconomicActivities
+GET		/economicActivities/new							AdminEconomicActivities.editEconomicActivities
+POST	/economicActivities/save							AdminEconomicActivities.saveEconomicActivities
+GET		/economicActivities/new-excel					AdminEconomicActivities.newEconomicActivitiesFromExcel
+
+# Production Types
+GET		/productionTypes								AdminProductionTypes.productionTypesList
+*   	/productionTypes/search						AdminProductionTypes.searchProductionTypes
+GET		/productionTypes/edit/{id}					AdminProductionTypes.editProductionType
+GET		/productionTypes/new							AdminProductionTypes.editProductionType
+POST	/productionTypes/save							AdminProductionTypes.saveProductionType
+GET		/productionTypes/new-excel					AdminProductionTypes.newProductionTypeFromExcel
+
+# Portfolio Types
+GET		/portfolioTypes								AdminPortfolioTypes.portfolioTypesList
+*   	/portfolioTypes/search						AdminPortfolioTypes.searchPortfolioTypes
+GET		/portfolioTypes/edit/{id}					AdminPortfolioTypes.editPortfolioType
+GET		/portfolioTypes/new							AdminPortfolioTypes.editPortfolioType
+POST	/portfolioTypes/save							AdminPortfolioTypes.savePortfolioType
+GET		/portfolioTypes/new-excel					AdminPortfolioTypes.newPortfolioTypeFromExcel
+
+# AccountLine Types
+GET		/accountLines								AdminAccountLines.accountLinesList
+*   	/accountLines/search						AdminAccountLines.searchAccountLines
+GET		/accountLines/edit/{id}					AdminAccountLines.editAccountLine
+GET		/accountLines/new							AdminAccountLines.editAccountLine
+POST	/accountLines/save							AdminAccountLines.saveAccountLine
+GET		/accountLines/new-excel					AdminAccountLines.newAccountLineFromExcel
+
+# Agent Codes
+GET		/agentCodes								AdminAgentCodes.agentCodesList
+*   	/agentCodes/search						AdminAgentCodes.searchAgentCodes
+GET		/agentCodes/edit/{id}					AdminAgentCodes.editAgentCode
+GET		/agentCodes/new							AdminAgentCodes.editAgentCode
+POST	/agentCodes/save							AdminAgentCodes.saveAgentCode
+GET		/agentCodes/new-excel					AdminAgentCodes.newAgentCodeFromExcel
+
+# Document Types
+GET		/documentTypes								AdminDocumentTypes.documentTypesList
+*   	/documentTypes/search						AdminDocumentTypes.searchDocumentTypes
+GET		/documentTypes/edit/{id}					AdminDocumentTypes.editDocumentType
+GET		/documentTypes/new							AdminDocumentTypes.editDocumentType
+POST	/documentTypes/save							AdminDocumentTypes.saveDocumentType
+GET		/documentTypes/new-excel					AdminDocumentTypes.newDocumentTypeFromExcel
+
+# WorkFlow Movement Types
+GET		/workFlowMovementTypes								AdminWorkFlowMovementTypes.workFlowMovementTypesList
+*   	/workFlowMovementTypes/search						AdminWorkFlowMovementTypes.searchWorkFlowMovementTypes
+GET		/workFlowMovementTypes/edit/{id}					AdminWorkFlowMovementTypes.editWorkFlowMovementType
+GET		/workFlowMovementTypes/new							AdminWorkFlowMovementTypes.editWorkFlowMovementType
+POST	/workFlowMovementTypes/save							AdminWorkFlowMovementTypes.saveWorkFlowMovementType
+GET		/workFlowMovementTypes/new-excel					AdminWorkFlowMovementTypes.newWorkFlowMovementTypeFromExcel
+
+# Coverage Codes
+GET		/coverageCodes								AdminCoverageCodes.coverageCodesList
+*   	/coverageCodes/search						AdminCoverageCodes.searchCoverageCodes
+GET		/coverageCodes/edit/{id}					AdminCoverageCodes.editCoverageCode
+GET		/coverageCodes/new							AdminCoverageCodes.editCoverageCode
+POST	/coverageCodes/save							AdminCoverageCodes.saveCoverageCode
+GET		/coverageCodes/new-excel					AdminCoverageCodes.newCoverageCodeFromExcel
+
+# Card Types
+GET		/cardTypes								AdminCardTypes.cardTypesList
+*   	/cardTypes/search						AdminCardTypes.searchCardTypes
+GET		/cardTypes/edit/{id}					AdminCardTypes.editCardType
+GET		/cardTypes/new							AdminCardTypes.editCardType
+POST	/cardTypes/save							AdminCardTypes.saveCardType
+GET		/cardTypes/new-excel					AdminCardTypes.newCardTypeFromExcel
+
+# LicenseTypes
+GET		/licenseTypes								AdminLicenseTypes.licenseTypesList
+*   	/licenseTypes/search						AdminLicenseTypes.searchLicenseTypes
+GET		/licenseTypes/edit/{id}					AdminLicenseTypes.editLicenceType
+GET		/licenseTypes/new							AdminLicenseTypes.editLicenceType
+POST	/licenseTypes/save							AdminLicenseTypes.saveLicenceType
+GET		/licenseTypes/new-excel					AdminLicenseTypes.newLicenceTypeFromExcel
+
+# ReminderTypes
+GET		/reminderTypes								AdminReminderTypes.reminderTypesList
+*   	/reminderTypes/search						AdminReminderTypes.searchReminderTypes
+GET		/reminderTypes/edit/{id}					AdminReminderTypes.editLicenceType
+GET		/reminderTypes/new							AdminReminderTypes.editLicenceType
+POST	/reminderTypes/save							AdminReminderTypes.saveLicenceType
+GET		/reminderTypes/new-excel					AdminReminderTypes.newLicenceTypeFromExcel
+
+# PlateTypes
+GET		/plateTypes								AdminPlateTypes.plateTypesList
+*   	/plateTypes/search						AdminPlateTypes.searchPlateTypes
+GET		/plateTypes/edit/{id}					AdminPlateTypes.editPlateType
+GET		/plateTypes/new							AdminPlateTypes.editPlateType
+POST	/plateTypes/save							AdminPlateTypes.savePlateType
+GET		/plateTypes/new-excel					AdminPlateTypes.newPlateTypeFromExcel
+
+# SocietyTypes
+GET		/societyTypes								AdminSocietyTypes.societyTypesList
+*   	/societyTypes/search						AdminSocietyTypes.searchSocietyTypes
+GET		/societyTypes/edit/{id}					AdminSocietyTypes.editSocietyType
+GET		/societyTypes/new							AdminSocietyTypes.editSocietyType
+POST	/societyTypes/save							AdminSocietyTypes.saveSocietyType
+GET		/societyTypes/new-excel					AdminSocietyTypes.newSocietyType
+
+# BankAccountTypes
+GET		/bankAccountTypes								AdminBankAccountTypes.bankAccountTypesList
+*   	/bankAccountTypes/search						AdminBankAccountTypes.searchBankAccountTypes
+GET		/bankAccountTypes/edit/{id}					AdminBankAccountTypes.editBankAccountType
+GET		/bankAccountTypes/new							AdminBankAccountTypes.editBankAccountType
+POST	/bankAccountTypes/save							AdminBankAccountTypes.saveBankAccountType
+GET		/bankAccountTypes/new-excel					AdminBankAccountTypes.newBankAccountType
+
+# VehiclePromotionTypes
+GET		/vehiclePromotionTypes								AdminVehiclePromotionTypes.vehiclePromotionTypesList
+*   	/vehiclePromotionTypes/search						AdminVehiclePromotionTypes.searchVehiclePromotionTypes
+GET		/vehiclePromotionTypes/edit/{id}					AdminVehiclePromotionTypes.editVehiclePromotionType
+GET		/vehiclePromotionTypes/new							AdminVehiclePromotionTypes.editVehiclePromotionType
+POST	/vehiclePromotionTypes/save							AdminVehiclePromotionTypes.saveVehiclePromotionType
+GET		/vehiclePromotionTypes/new-excel					AdminVehiclePromotionTypes.newVehiclePromotionType
+
+# Charge Types
+GET		/chargeTypes								AdminChargeTypes.chargeTypesList
+*   	/chargeTypes/search						AdminChargeTypes.searchChargeTypes
+GET		/chargeTypes/edit/{id}					AdminChargeTypes.editChargeType
+GET		/chargeTypes/new							AdminChargeTypes.editChargeType
+POST	/chargeTypes/save							AdminChargeTypes.saveChargeType
+GET		/chargeTypes/new-excel					AdminChargeTypes.newChargeTypeFromExcel
+
+# Payment Types
+GET		/paymentTypes								AdminPaymentTypes.paymentTypesList
+*   	/paymentTypes/search						AdminPaymentTypes.searchPaymentTypes
+GET		/paymentTypes/edit/{id}					AdminPaymentTypes.editPaymentType
+GET		/paymentTypes/new							AdminPaymentTypes.editPaymentType
+POST	/paymentTypes/save							AdminPaymentTypes.savePaymentType
+GET		/paymentTypes/new-excel					AdminPaymentTypes.newPaymentTypeFromExcel
+
+# Geographic Areas
+GET		/geographicAreas								AdminGeographicAreas.geographicAreasList
+*   	/geographicAreas/search						AdminGeographicAreas.searchGeographicAreas
+GET		/geographicAreas/edit/{id}					AdminGeographicAreas.editGeographicArea
+GET		/geographicAreas/new							AdminGeographicAreas.editGeographicArea
+POST	/geographicAreas/save							AdminGeographicAreas.saveGeographicArea
+GET		/geographicAreas/new-excel					AdminGeographicAreas.newGeographicAreaFromExcel
+
+# Beneficiaries
+GET		/beneficiaries								AdminBeneficiaries.beneficiariesList
+*   	/beneficiaries/search						AdminBeneficiaries.searchBeneficiaries
+GET		/beneficiaries/edit/{id}					AdminBeneficiaries.editBeneficiaries
+GET		/beneficiaries/new							AdminBeneficiaries.editBeneficiaries
+POST	/beneficiaries/save							AdminBeneficiaries.saveBeneficiaries
+GET		/beneficiaries/new-excel					AdminBeneficiaries.newBeneficiariesFromExcel
+
+# AdminTasks
+GET		/tasks										AdminTasks.taskTypesList
+*   	/tasks/search						AdminTasks.searchTaskTypes
+GET		/tasks/edit/{id}					AdminTasks.editTaskType
+GET		/tasks/new							AdminTasks.editTaskType
+POST	/tasks/save							AdminTasks.saveTaskType
+
+# User Tasks
+*       /usertasks/complete                 UserTasks.completeTask
+*       /usertasks/list                     UserTasks.tasksList
+*       /usertasks/new                      UserTasks.newTask
+*       /usertasks/create                   UserTasks.createTask
+
+# Catch all
+ *       /{controller}/{action}                  {controller}.{action}

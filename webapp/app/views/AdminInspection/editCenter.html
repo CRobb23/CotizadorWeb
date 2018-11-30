@@ -1,0 +1,80 @@
+#{extends 'admin.html' /}
+
+#{form @saveCenter(), class:"form-horizontal", method:"POST"}
+	<div class="well">	
+		<div class="orange-title">
+			<span>
+				<h1>${center==null ? messages.get('createCenter.title') : messages.get('editCenter.title')}</h1>
+			</span>
+		</div>
+		#{if flash.error}
+			<div class="alert alert-danger">
+				${flash.error}
+			</div>
+		#{/if}
+		#{if flash.success}
+			<div class="alert alert-success">
+				${flash.success}
+			</div>
+		#{/if}
+	
+		#{if center?.id}
+			<input type="hidden" name="center.id" value="${center?.id}" />
+		#{/if}
+	
+		#{field 'center.name'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'center.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" maxlength="75"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'center.address'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'center.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" maxlength="250" cols="1" class="form-control">${field.flash ? field.flash : field.value}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		#{field 'center.schedule'}
+			<div class="form-group ${field.error?'has-error':''}">
+				<label class="col-sm-3 control-label" for="${field.id}">&{'coverage.form.'+field.name}</label>
+				<div class="col-sm-6">
+					<textarea name="${field.name}" id="${field.id}" maxlength="250" cols="1" class="form-control">${field.flash ? field.flash : field.value}</textarea>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+				</div>
+			</div>
+		#{/}
+		
+		<div class="form-group">
+			<label class="col-sm-3 control-label" for="active">&{'coverage.form.form.state'}</label>
+			<div class="col-sm-6">
+				#{select 'center.active', value: flash.active?:center?.active, class:'form-control', id:'active'}
+					#{option true}&{'centersList.table.state.active'}#{/option}
+					#{option false}&{'centersList.table.state.inactive'}#{/option}
+				#{/select}
+				#{if errors.forKey("active")}<span class="help-block">#{error 'active' /}</span>#{/if}
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<div class="col-sm-offset-3 col-sm-6">
+				<input type="submit" class="btn btn-primary btn-block" value="${center==null ? messages.get('center.form.create') : messages.get('center.form.edit')}" />
+			</div>
+		</div>
+	</div>
+#{/form}
+
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		$(function() {
+			$("div.tip").tooltip();
+		});
+	</script>
+#{/}
