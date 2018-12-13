@@ -2,17 +2,8 @@ package models.ws.rest;
 
 public class InspectionAutoFinishRequest {
 
-	private String message;
 	private String inspectionNumber;
-	private String status;
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
-	}
+	private Integer status;
 
 	public String getInspectionNumber() {
 		return inspectionNumber;
@@ -21,11 +12,11 @@ public class InspectionAutoFinishRequest {
 		this.inspectionNumber = inspectionNumber;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 }

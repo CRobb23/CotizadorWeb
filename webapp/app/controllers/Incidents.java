@@ -12,7 +12,6 @@ import java.util.*;
 
 import javax.inject.Inject;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import models.*;
 import models.dto.BusinessDetailDTO;
 import models.dto.PersonDetailDTO;
@@ -793,36 +792,42 @@ public class Incidents extends AdminBaseController {
 							requestAuto.setMarriedSurname(incident.client.marriedSurname);
 							requestAuto.setIdentificationDocument(incident.client.identificationDocument);
 							requestAuto.setTaxNumber(incident.client.taxNumber);
-							requestAuto.setClientEmail(incident.client.email);
-							requestAuto.setBrokerEmail(connectedUser().email);
 							requestAuto.setLicenseNumber(incident.client.licenseNumber);
 							requestAuto.setLicenseType(incident.client.licenseType.transferCode);
-							List<String> phones = new ArrayList<>();
-							phones.add(incident.client.phoneNumber1);
-							phones.add(incident.client.phoneNumber2);
-							phones.add(incident.client.phoneNumber3);
+							// Add PhoneData
+							List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
+							InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
+							phoneData.setPhone(incident.client.phoneNumber1);
+							phones.add(phoneData);
 							requestAuto.setPhones(phones);
-							List<InspectionAutoRequest.Address> addresses = new ArrayList<>();
-							InspectionAutoRequest.Address address = new InspectionAutoRequest.Address();
-							address.setAddress(incident.client.address);
-							address.setCountry(incident.client.country.transferCode);
-							address.setDepartment(incident.client.department.transferCode);
-							address.setMunicipality(incident.client.municipality.transferCode);
-							address.setZone(incident.client.zone.transferCode);
-							addresses.add(address);
-							requestAuto.setAddresses(addresses);
-
+							// Add Email Data
+							List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
+							InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
+							emailData.setEmail(incident.client.email);
+							emails.add(emailData);
+							requestAuto.setEmails(emails);
+							// Add Email Broker Data
+							List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
+							InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
+							emailBrokerData.setEmail(connectedUser().email);
+							emailsBroker.add(emailBrokerData);
+							requestAuto.setEmailsBroker(emailsBroker);
+							//
+							requestAuto.setAddress(incident.client.address);
 							requestAuto.setVehicleOwner(incident.vehicle.owner);
-							requestAuto.setBrand(incident.vehicle.line.brand.transferCode);
-							requestAuto.setLine(incident.vehicle.line.transferCode);
+							requestAuto.setBrand(incident.vehicle.line.transferCode);
 							requestAuto.setYear(incident.vehicle.erYear.year);
 							requestAuto.setPlate(incident.vehicle.plate);
 							requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
 							requestAuto.setColor(incident.vehicle.color);
 							requestAuto.setEngine(incident.vehicle.engine);
-							requestAuto.setChasis(incident.vehicle.chassis);
+							requestAuto.setVin(incident.vehicle.chassis);
 							requestAuto.setMileage(incident.vehicle.mileage);
-							requestAuto.setTypeMileage(incident.vehicle.typeMileage);
+							// Other Data
+							requestAuto.setLicenseYears(" ");
+							requestAuto.setUse(" ");
+							requestAuto.setOrigin(" ");
+							requestAuto.setCoin("Q");
 
 							InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
 							if(!inspectionResponse.getSuccess()){

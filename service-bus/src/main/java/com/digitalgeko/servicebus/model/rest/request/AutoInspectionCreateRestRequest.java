@@ -15,25 +15,28 @@ public class AutoInspectionCreateRestRequest {
     private String marriedSurname;
     private String identificationDocument;
     private String taxNumber;
-    private List<Address> addresses;
-    private List<String> phones;
-    private String clientEmail;
-    private String brokerEmail;
     private String licenseType;
     private String licenseNumber;
+    private String licenseYears;
 
     // VEHICLE
     private String vehicleOwner;
+    private String address;
     private String brand;
-    private String line;
     private String year;
     private String plate;
-    private String typeVehicle;
-    private String color;
+    private String vin;
     private String engine;
-    private String chasis;
+    private String color;
     private String mileage;
-    private String typeMileage;
+    private String typeVehicle;
+    private String origin;
+    private String use;
+    private String coin;
+
+    private List<PhoneData> phones;
+    private List<EmailData> emails;
+    private List<EmailBrokerData> emailsBroker;
 
     public String getFirstName() {
         return firstName;
@@ -91,38 +94,6 @@ public class AutoInspectionCreateRestRequest {
         this.taxNumber = taxNumber;
     }
 
-    public List<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<Address> addresses) {
-        this.addresses = addresses;
-    }
-
-    public List<String> getPhones() {
-        return phones;
-    }
-
-    public void setPhones(List<String> phones) {
-        this.phones = phones;
-    }
-
-    public String getClientEmail() {
-        return clientEmail;
-    }
-
-    public void setClientEmail(String clientEmail) {
-        this.clientEmail = clientEmail;
-    }
-
-    public String getBrokerEmail() {
-        return brokerEmail;
-    }
-
-    public void setBrokerEmail(String brokerEmail) {
-        this.brokerEmail = brokerEmail;
-    }
-
     public String getLicenseType() {
         return licenseType;
     }
@@ -139,6 +110,14 @@ public class AutoInspectionCreateRestRequest {
         this.licenseNumber = licenseNumber;
     }
 
+    public String getLicenseYears() {
+        return licenseYears;
+    }
+
+    public void setLicenseYears(String licenseYears) {
+        this.licenseYears = licenseYears;
+    }
+
     public String getVehicleOwner() {
         return vehicleOwner;
     }
@@ -147,20 +126,20 @@ public class AutoInspectionCreateRestRequest {
         this.vehicleOwner = vehicleOwner;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getBrand() {
         return brand;
     }
 
     public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
     }
 
     public String getYear() {
@@ -179,20 +158,12 @@ public class AutoInspectionCreateRestRequest {
         this.plate = plate;
     }
 
-    public String getTypeVehicle() {
-        return typeVehicle;
+    public String getVin() {
+        return vin;
     }
 
-    public void setTypeVehicle(String typeVehicle) {
-        this.typeVehicle = typeVehicle;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
+    public void setVin(String vin) {
+        this.vin = vin;
     }
 
     public String getEngine() {
@@ -203,12 +174,12 @@ public class AutoInspectionCreateRestRequest {
         this.engine = engine;
     }
 
-    public String getChasis() {
-        return chasis;
+    public String getColor() {
+        return color;
     }
 
-    public void setChasis(String chasis) {
-        this.chasis = chasis;
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getMileage() {
@@ -219,59 +190,95 @@ public class AutoInspectionCreateRestRequest {
         this.mileage = mileage;
     }
 
-    public String getTypeMileage() {
-        return typeMileage;
+    public String getTypeVehicle() {
+        return typeVehicle;
     }
 
-    public void setTypeMileage(String typeMileage) {
-        this.typeMileage = typeMileage;
+    public void setTypeVehicle(String typeVehicle) {
+        this.typeVehicle = typeVehicle;
     }
 
-    public static class Address {
-        private String address;
-        private String country;
-        private String department;
-        private String municipality;
-        private String zone;
+    public String getOrigin() {
+        return origin;
+    }
 
-        public String getAddress() {
-            return address;
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public String getUse() {
+        return use;
+    }
+
+    public void setUse(String use) {
+        this.use = use;
+    }
+
+    public String getCoin() {
+        return coin;
+    }
+
+    public void setCoin(String coin) {
+        this.coin = coin;
+    }
+
+    public List<PhoneData> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<PhoneData> phones) {
+        this.phones = phones;
+    }
+
+    public List<EmailData> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<EmailData> emails) {
+        this.emails = emails;
+    }
+
+    public List<EmailBrokerData> getEmailsBroker() {
+        return emailsBroker;
+    }
+
+    public void setEmailsBroker(List<EmailBrokerData> emailsBroker) {
+        this.emailsBroker = emailsBroker;
+    }
+
+    public static class PhoneData {
+        private String phone;
+
+        public String getPhone() {
+            return phone;
         }
 
-        public void setAddress(String address) {
-            this.address = address;
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+    }
+
+    public static class EmailData {
+        private String email;
+
+        public String getEmail() {
+            return email;
         }
 
-        public String getCountry() {
-            return country;
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
+
+    public static class EmailBrokerData {
+        private String email;
+
+        public String getEmail() {
+            return email;
         }
 
-        public void setCountry(String country) {
-            this.country = country;
-        }
-
-        public String getDepartment() {
-            return department;
-        }
-
-        public void setDepartment(String department) {
-            this.department = department;
-        }
-
-        public String getMunicipality() {
-            return municipality;
-        }
-
-        public void setMunicipality(String municipality) {
-            this.municipality = municipality;
-        }
-
-        public String getZone() {
-            return zone;
-        }
-
-        public void setZone(String zone) {
-            this.zone = zone;
+        public void setEmail(String email) {
+            this.email = email;
         }
     }
 }

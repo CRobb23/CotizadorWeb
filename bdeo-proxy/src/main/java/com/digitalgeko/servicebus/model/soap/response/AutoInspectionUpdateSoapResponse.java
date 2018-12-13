@@ -5,14 +5,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="datosAutoInspeccion")
+@XmlRootElement(name="actualizaautoinspeccionBDEO")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AutoInspectionCreateSoapResponse {
+public class AutoInspectionUpdateSoapResponse {
 
     @XmlElement(name="msgRespuesta")
     private String message;
-    @XmlElement(name="codigoAutoInspeccion")
-    private String inspectionNumber;
+
+    public AutoInspectionUpdateSoapResponse(String message) {
+        this.message = message;
+    }
 
     public String getMessage() {
         return message;
@@ -22,11 +24,4 @@ public class AutoInspectionCreateSoapResponse {
         this.message = message;
     }
 
-    public String getInspectionNumber() {
-        return inspectionNumber;
-    }
-
-    public void setInspectionNumber(String inspectionNumber) {
-        this.inspectionNumber = inspectionNumber;
-    }
 }

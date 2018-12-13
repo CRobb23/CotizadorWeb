@@ -273,19 +273,17 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
                 inspection.inspectionDate = new Date();
                 incident.inspection = inspection.save();
 
-                String inspectionStatus = inspectionFinishRequest.getStatus();
-                if (!StringUtil.isNullOrBlank(inspectionStatus)) {
-                    inspection.insurable = inspectionStatus;
-                    if ("REVISADO".equals(inspectionStatus)) {
-                        incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
-                    } else if ("CANCELADO".equals(inspectionStatus)) {
-                        incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
-                    }
-                    incident.save();
-                    Mails.finishInspection(incident);
-                    inspectionResponse.setSuccess(true);
-                    inspectionResponse.setMessage("Satisfactorio");
+                Integer inspectionStatus = inspectionFinishRequest.getStatus();
+                inspection.insurable = "ASEGURABLE";
+                if (inspectionStatus == 2 || inspectionStatus == 4 || inspectionStatus == 5) {
+                    incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
+                } else if (inspectionStatus == 3) {
+                    incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
                 }
+                incident.save();
+                Mails.finishInspection(incident);
+                inspectionResponse.setSuccess(true);
+                inspectionResponse.setMessage("SATISFACTORIO");
             } else {
                 inspectionResponse.setSuccess(false);
                 inspectionResponse.setMessage("La cotización no tiene una inspección asociada.");

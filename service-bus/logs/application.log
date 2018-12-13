@@ -1,0 +1,18 @@
+2018-12-12 16:08:36 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Starting ServiceBusApplication on WKCOLOCARHOST with PID 21700 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:08:36 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - No active profile set, falling back to default profiles: default
+2018-12-12 16:08:39 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Started ServiceBusApplication in 3.634 seconds (JVM running for 4.407)
+2018-12-12 16:11:58 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Starting ServiceBusApplication on WKCOLOCARHOST with PID 15428 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:11:58 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - No active profile set, falling back to default profiles: default
+2018-12-12 16:12:00 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Started ServiceBusApplication in 2.289 seconds (JVM running for 2.76)
+2018-12-12 16:13:01 [main] INFO  c.d.s.GekoservicebusApplicationTests - Starting GekoservicebusApplicationTests on WKCOLOCARHOST with PID 6688 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:13:01 [main] INFO  c.d.s.GekoservicebusApplicationTests - No active profile set, falling back to default profiles: default
+2018-12-12 16:13:03 [main] INFO  c.d.s.GekoservicebusApplicationTests - Started GekoservicebusApplicationTests in 2.616 seconds (JVM running for 3.503)
+2018-12-12 16:13:13 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Starting ServiceBusApplication on WKCOLOCARHOST with PID 25160 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:13:13 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - No active profile set, falling back to default profiles: default
+2018-12-12 16:13:16 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Started ServiceBusApplication in 2.443 seconds (JVM running for 2.982)
+2018-12-12 16:17:37 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Starting ServiceBusApplication on WKCOLOCARHOST with PID 19988 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:17:37 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - No active profile set, falling back to default profiles: default
+2018-12-12 16:17:39 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Started ServiceBusApplication in 2.492 seconds (JVM running for 3.091)
+2018-12-12 16:18:16 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Starting ServiceBusApplication on WKCOLOCARHOST with PID 17316 (started by GEKO in C:\Users\GEKO\Documents\Division Autos\Roble-Autos-Cotizador\service-bus)
+2018-12-12 16:18:16 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - No active profile set, falling back to default profiles: default
+2018-12-12 16:18:18 [restartedMain] INFO  c.d.servicebus.ServiceBusApplication - Started ServiceBusApplication in 2.509 seconds (JVM running for 3.035)

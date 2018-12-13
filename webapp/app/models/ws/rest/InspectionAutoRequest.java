@@ -1,305 +1,284 @@
 package models.ws.rest;
 
-import com.google.gson.annotations.Expose;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InspectionAutoRequest {
 
-	// PERSON
-	@Expose
-	private String firstName;
-	@Expose
-	private String secondName;
-	@Expose
-	private String firstSurname;
-	@Expose
-	private String secondSurname;
-	@Expose
-	private String marriedSurname;
-	@Expose
-	private String identificationDocument;
-	@Expose
-	private String taxNumber;
-	@Expose
-	private List<Address> addresses;
-	@Expose
-	private List<String> phones;
-	@Expose
-	private String clientEmail;
-	@Expose
-	private String brokerEmail;
-	@Expose
-	private String licenseType;
-	@Expose
-	private String licenseNumber;
+    // PERSON
+    private String firstName;
+    private String secondName;
+    private String firstSurname;
+    private String secondSurname;
+    private String marriedSurname;
+    private String identificationDocument;
+    private String taxNumber;
+    private String licenseType;
+    private String licenseNumber;
+    private String licenseYears;
 
-	// VEHICLE
-	@Expose
-	private String vehicleOwner;
-	@Expose
-	private String brand;
-	@Expose
-	private String line;
-	@Expose
-	private String year;
-	@Expose
-	private String plate;
-	@Expose
-	private String typeVehicle;
-	@Expose
-	private String color;
-	@Expose
-	private String engine;
-	@Expose
-	private String chasis;
-	@Expose
-	private String mileage;
-	@Expose
-	private String typeMileage;
+    // VEHICLE
+    private String vehicleOwner;
+    private String address;
+    private String brand;
+    private String year;
+    private String plate;
+    private String vin;
+    private String engine;
+    private String color;
+    private String mileage;
+    private String typeVehicle;
+    private String origin;
+    private String use;
+    private String coin;
 
-	public String getFirstName() {
-		return firstName;
-	}
+    private List<PhoneData> phones;
+    private List<EmailData> emails;
+    private List<EmailBrokerData> emailsBroker;
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public String getSecondName() {
-		return secondName;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public void setSecondName(String secondName) {
-		this.secondName = secondName;
-	}
+    public String getSecondName() {
+        return secondName;
+    }
 
-	public String getFirstSurname() {
-		return firstSurname;
-	}
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
 
-	public void setFirstSurname(String firstSurname) {
-		this.firstSurname = firstSurname;
-	}
+    public String getFirstSurname() {
+        return firstSurname;
+    }
 
-	public String getSecondSurname() {
-		return secondSurname;
-	}
+    public void setFirstSurname(String firstSurname) {
+        this.firstSurname = firstSurname;
+    }
 
-	public void setSecondSurname(String secondSurname) {
-		this.secondSurname = secondSurname;
-	}
+    public String getSecondSurname() {
+        return secondSurname;
+    }
 
-	public String getMarriedSurname() {
-		return marriedSurname;
-	}
+    public void setSecondSurname(String secondSurname) {
+        this.secondSurname = secondSurname;
+    }
 
-	public void setMarriedSurname(String marriedSurname) {
-		this.marriedSurname = marriedSurname;
-	}
+    public String getMarriedSurname() {
+        return marriedSurname;
+    }
 
-	public String getIdentificationDocument() {
-		return identificationDocument;
-	}
+    public void setMarriedSurname(String marriedSurname) {
+        this.marriedSurname = marriedSurname;
+    }
 
-	public void setIdentificationDocument(String identificationDocument) {
-		this.identificationDocument = identificationDocument;
-	}
+    public String getIdentificationDocument() {
+        return identificationDocument;
+    }
 
-	public String getTaxNumber() {
-		return taxNumber;
-	}
+    public void setIdentificationDocument(String identificationDocument) {
+        this.identificationDocument = identificationDocument;
+    }
 
-	public void setTaxNumber(String taxNumber) {
-		this.taxNumber = taxNumber;
-	}
+    public String getTaxNumber() {
+        return taxNumber;
+    }
 
-	public List<Address> getAddresses() {
-		return addresses;
-	}
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
 
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
-	}
+    public String getLicenseType() {
+        return licenseType;
+    }
 
-	public List<String> getPhones() {
-		return phones;
-	}
+    public void setLicenseType(String licenseType) {
+        this.licenseType = licenseType;
+    }
 
-	public void setPhones(List<String> phones) {
-		this.phones = phones;
-	}
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
 
-	public String getClientEmail() {
-		return clientEmail;
-	}
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
 
-	public void setClientEmail(String clientEmail) {
-		this.clientEmail = clientEmail;
-	}
+    public String getLicenseYears() {
+        return licenseYears;
+    }
 
-	public String getBrokerEmail() {
-		return brokerEmail;
-	}
+    public void setLicenseYears(String licenseYears) {
+        this.licenseYears = licenseYears;
+    }
 
-	public void setBrokerEmail(String brokerEmail) {
-		this.brokerEmail = brokerEmail;
-	}
+    public String getVehicleOwner() {
+        return vehicleOwner;
+    }
 
-	public String getLicenseType() {
-		return licenseType;
-	}
+    public void setVehicleOwner(String vehicleOwner) {
+        this.vehicleOwner = vehicleOwner;
+    }
 
-	public void setLicenseType(String licenseType) {
-		this.licenseType = licenseType;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getLicenseNumber() {
-		return licenseNumber;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setLicenseNumber(String licenseNumber) {
-		this.licenseNumber = licenseNumber;
-	}
+    public String getBrand() {
+        return brand;
+    }
 
-	public String getVehicleOwner() {
-		return vehicleOwner;
-	}
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
-	public void setVehicleOwner(String vehicleOwner) {
-		this.vehicleOwner = vehicleOwner;
-	}
+    public String getYear() {
+        return year;
+    }
 
-	public String getBrand() {
-		return brand;
-	}
+    public void setYear(String year) {
+        this.year = year;
+    }
 
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
+    public String getPlate() {
+        return plate;
+    }
 
-	public String getLine() {
-		return line;
-	}
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
 
-	public void setLine(String line) {
-		this.line = line;
-	}
+    public String getVin() {
+        return vin;
+    }
 
-	public String getYear() {
-		return year;
-	}
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
 
-	public void setYear(String year) {
-		this.year = year;
-	}
+    public String getEngine() {
+        return engine;
+    }
 
-	public String getPlate() {
-		return plate;
-	}
+    public void setEngine(String engine) {
+        this.engine = engine;
+    }
 
-	public void setPlate(String plate) {
-		this.plate = plate;
-	}
+    public String getColor() {
+        return color;
+    }
 
-	public String getTypeVehicle() {
-		return typeVehicle;
-	}
+    public void setColor(String color) {
+        this.color = color;
+    }
 
-	public void setTypeVehicle(String typeVehicle) {
-		this.typeVehicle = typeVehicle;
-	}
+    public String getMileage() {
+        return mileage;
+    }
 
-	public String getColor() {
-		return color;
-	}
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
+    }
 
-	public void setColor(String color) {
-		this.color = color;
-	}
+    public String getTypeVehicle() {
+        return typeVehicle;
+    }
 
-	public String getEngine() {
-		return engine;
-	}
+    public void setTypeVehicle(String typeVehicle) {
+        this.typeVehicle = typeVehicle;
+    }
 
-	public void setEngine(String engine) {
-		this.engine = engine;
-	}
+    public String getOrigin() {
+        return origin;
+    }
 
-	public String getChasis() {
-		return chasis;
-	}
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
-	public void setChasis(String chasis) {
-		this.chasis = chasis;
-	}
+    public String getUse() {
+        return use;
+    }
 
-	public String getMileage() {
-		return mileage;
-	}
+    public void setUse(String use) {
+        this.use = use;
+    }
 
-	public void setMileage(String mileage) {
-		this.mileage = mileage;
-	}
+    public String getCoin() {
+        return coin;
+    }
 
-	public String getTypeMileage() {
-		return typeMileage;
-	}
+    public void setCoin(String coin) {
+        this.coin = coin;
+    }
 
-	public void setTypeMileage(String typeMileage) {
-		this.typeMileage = typeMileage;
-	}
+    public List<PhoneData> getPhones() {
+        return phones;
+    }
 
-	public static class Address{
-		@Expose
-		private String address;
-		@Expose
-		private String country;
-		@Expose
-		private String department;
-		@Expose
-		private String municipality;
-		@Expose
-		private String zone;
+    public void setPhones(List<PhoneData> phones) {
+        this.phones = phones;
+    }
 
-		public String getAddress() {
-			return address;
-		}
+    public List<EmailData> getEmails() {
+        return emails;
+    }
 
-		public void setAddress(String address) {
-			this.address = address;
-		}
+    public void setEmails(List<EmailData> emails) {
+        this.emails = emails;
+    }
 
-		public String getCountry() {
-			return country;
-		}
+    public List<EmailBrokerData> getEmailsBroker() {
+        return emailsBroker;
+    }
 
-		public void setCountry(String country) {
-			this.country = country;
-		}
+    public void setEmailsBroker(List<EmailBrokerData> emailsBroker) {
+        this.emailsBroker = emailsBroker;
+    }
 
-		public String getDepartment() {
-			return department;
-		}
+    public static class PhoneData {
+        private String phone;
 
-		public void setDepartment(String department) {
-			this.department = department;
-		}
+        public String getPhone() {
+            return phone;
+        }
 
-		public String getMunicipality() {
-			return municipality;
-		}
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+    }
 
-		public void setMunicipality(String municipality) {
-			this.municipality = municipality;
-		}
+    public static class EmailData {
+        private String email;
 
-		public String getZone() {
-			return zone;
-		}
+        public String getEmail() {
+            return email;
+        }
 
-		public void setZone(String zone) {
-			this.zone = zone;
-		}
-	}
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
+
+    public static class EmailBrokerData {
+        private String email;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+    }
 }

@@ -1,25 +1,7 @@
 package models;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import controllers.Incidents;
 import ext.GsonExclusionStrategy;
 import helpers.ERConstants;
@@ -27,6 +9,10 @@ import helpers.GeneralMethods;
 import play.Logger;
 import play.db.jpa.Model;
 import play.libs.Crypto;
+
+import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity
 public class ER_Incident extends Model {
