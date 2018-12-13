@@ -12,11 +12,12 @@ import java.util.*;
 
 import javax.inject.Inject;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import models.*;
 import models.dto.BusinessDetailDTO;
 import models.dto.PersonDetailDTO;
 import models.ws.*;
+import models.ws.rest.InspectionAutoRequest;
+import models.ws.rest.InspectionAutoResponse;
 import objects.LoJackOptions;
 import org.allcolor.yahp.converter.IHtmlToPdfTransformer;
 import org.apache.commons.beanutils.BeanUtils;
@@ -47,9 +48,7 @@ import play.modules.paginate.ValuePaginator;
 import play.modules.pdf.PDF;
 import play.modules.pdf.PDF.Options;
 import play.mvc.With;
-import service.CreateRequestService;
-import service.InspectionService;
-import service.PolicyService;
+import service.*;
 import utils.StringUtil;
 
 @With(Secure.class)
@@ -61,7 +60,17 @@ public class Incidents extends AdminBaseController {
 	static CreateRequestService createRequestService;
 	@Inject
 	static InspectionService inspectionService;
-	
+	@Inject
+	static ClientsQueryWebService clientQueryServiceBus;
+	@Inject
+	static AverageValueQueryWebService averageValueServiceBus;
+	@Inject
+	static PersonQueryWebService personServiceBus;
+	@Inject
+	static BusinessQueryWebService businessServiceBus;
+	@Inject
+	static PolicyInputWebService policyServiceBus;
+
 	public static Long dailyCorrelativeNumber;
 	public static Map<String,String> searchFields;
 	/*
@@ -567,16 +576,14 @@ public class Incidents extends AdminBaseController {
     	}
     
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor"})
-    public static void saveIncidentState(@Required Long id, 
-    									 @Required Integer state, 
-    									 Long noSaleReason, 
-    									 Long selectedQuotation, 
-    									 Long selectedPaymentForm, 
-    									 Boolean inspection, 
-    									 Integer inspectionType, 
-    									 String inspectionAddress, 
+    public static void saveIncidentState(@Required Long id, @Required Integer state, Long noSaleReason,
+    									 Long selectedQuotation, Long selectedPaymentForm, Boolean inspection,
+    									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
-    									 String inspectionNumber,Date inspectionDate) {
+    									 String inspectionNumber,Date inspectionDate,
+										 Boolean inspectionAutoQ1, Boolean inspectionAutoQ2, Boolean inspectionAutoQ3,
+										 Boolean inspectionAutoQ4, Boolean inspectionAutoQ5, Boolean inspectionAutoQ6,
+										 Boolean inspectionAutoQ7) {
     	flash.clear();
     	flash.discard();
     	
@@ -607,6 +614,10 @@ public class Incidents extends AdminBaseController {
                         }
 	        		}
         		}
+
+				// check for auto inspection
+
+
 				incident.policyValidity = policyValidity;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
@@ -637,8 +648,16 @@ public class Incidents extends AdminBaseController {
 									currentInspection.inspectionDate = inspectionDate;
 									currentInspection.save();
 									incident.save();
-                                }
-            				}else{
+								}
+							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
+								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
+								if (!Boolean.TRUE.equals(inspectionAutoQ1) || !Boolean.TRUE.equals(inspectionAutoQ2) || !Boolean.TRUE.equals(inspectionAutoQ3)
+										|| !Boolean.TRUE.equals(inspectionAutoQ4) || !Boolean.TRUE.equals(inspectionAutoQ5)
+										|| !Boolean.TRUE.equals(inspectionAutoQ6) || !Boolean.TRUE.equals(inspectionAutoQ7)) {
+									flash.error("No es posible acceder a Auto Inspección. Favor de seleccionar otro tipo de inspección.");
+									attendIncident(id);
+								}
+            				} else {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
 
             				}
@@ -729,6 +748,7 @@ public class Incidents extends AdminBaseController {
 	    				inspectionR.setContactEmail(incident.client.email);
 	    				inspectionR.setContactPhone(incident.client.phoneNumber1);
 	    				inspectionInfo.type = ER_Inspection_Type.find("code = ?", inspectionType).first();
+
 	    				if(inspectionType == ERConstants.INSPECTION_TYPE_ADDRESS){
 	    					inspectionInfo.address = inspectionAddress;
 	    					inspectionInfo.appointmentDate = appointmentDate;
@@ -791,7 +811,68 @@ public class Incidents extends AdminBaseController {
 	    					inspectionInfo.inspectionNumber = inspectionNumber;
 	    				//	inspectionInfo.inspectionDate = new Date();
 	    					inspectionInfo.inspected = true;
-	    				}
+	    				} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
+							InspectionAutoRequest requestAuto = new InspectionAutoRequest();
+							requestAuto.setFirstName(incident.client.firstName);
+							requestAuto.setSecondName(incident.client.secondName);
+							requestAuto.setFirstSurname(incident.client.firstSurname);
+							requestAuto.setSecondSurname(incident.client.secondSurname);
+							requestAuto.setMarriedSurname(incident.client.marriedSurname);
+							requestAuto.setIdentificationDocument(incident.client.identificationDocument);
+							requestAuto.setTaxNumber(incident.client.taxNumber);
+							requestAuto.setLicenseNumber(incident.client.licenseNumber);
+							requestAuto.setLicenseType(incident.client.licenseType.transferCode);
+							// Add PhoneData
+							List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
+							InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
+							phoneData.setPhone(incident.client.phoneNumber1);
+							phones.add(phoneData);
+							requestAuto.setPhones(phones);
+							// Add Email Data
+							List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
+							InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
+							emailData.setEmail(incident.client.email);
+							emails.add(emailData);
+							requestAuto.setEmails(emails);
+							// Add Email Broker Data
+							List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
+							InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
+							emailBrokerData.setEmail(connectedUser().email);
+							emailsBroker.add(emailBrokerData);
+							requestAuto.setEmailsBroker(emailsBroker);
+							//
+							requestAuto.setAddress(incident.client.address);
+							requestAuto.setVehicleOwner(incident.vehicle.owner);
+							requestAuto.setBrand(incident.vehicle.line.transferCode);
+							requestAuto.setYear(incident.vehicle.erYear.year);
+							requestAuto.setPlate(incident.vehicle.plate);
+							requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
+							requestAuto.setColor(incident.vehicle.color);
+							requestAuto.setEngine(incident.vehicle.engine);
+							requestAuto.setVin(incident.vehicle.chassis);
+							requestAuto.setMileage(incident.vehicle.mileage);
+							// Other Data
+							requestAuto.setLicenseYears(" ");
+							requestAuto.setUse(" ");
+							requestAuto.setOrigin(" ");
+							requestAuto.setCoin("Q");
+
+							InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
+							if(!inspectionResponse.getSuccess()){
+								flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
+								ER_Exceptions exceptions = new ER_Exceptions();
+								exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
+								exceptions.exceptionDate = new Date();
+								exceptions.quotation = quotation;
+								exceptions.active = 1;
+								exceptions.save();
+								incident.status = incidentStatusIncomplete;
+								incident.save();
+								attendIncident(id);
+							} else {
+								inspectionInfo.inspectionNumber = inspectionResponse.getNumber();
+							}
+						}
 	    				inspectionInfo.incident = incident;
 	    				inspectionInfo = inspectionInfo.save();
 	    			}
@@ -1021,7 +1102,7 @@ public class Incidents extends AdminBaseController {
         		request.setLine(incident.vehicle.line.name);
         		request.setYear(incident.vehicle.erYear.year);
         		request.setCurrency("Q");
-        		QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+        		QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
         		if(queryAverage != null && queryAverage.getAverageValue() != null){
         			renderArgs.put("value", new ER_Average_Value(queryAverage.getAverageValue()));
         		}else{
@@ -1231,8 +1312,7 @@ public class Incidents extends AdminBaseController {
 					}
 				}
 			} catch (Exception e) {
-				Logger.error("error: " + e.getMessage());
-				e.printStackTrace();
+				Logger.error(e, e.getMessage());
 			}
 
 			String jsonField = quotation.toJsonString(true);
@@ -1307,6 +1387,7 @@ public class Incidents extends AdminBaseController {
 
 			quotation.product = ER_Product.findById(quotation.product.id);
 			quotation.incident = incident;
+
 			quotation.creationDate = new Date();
 			QueryAverageValueVehicleRequest request = new QueryAverageValueVehicleRequest();
 			request.setBrand(incident.vehicle.line.brand.name);
@@ -2088,7 +2169,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-        			transaction.updateFromResponse(policyService.sendBusinessClient(businessClientRequest));
+        			transaction.updateFromResponse(policyServiceBus.sendBusinessClient(businessClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
@@ -2107,7 +2188,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-        			transaction.updateFromResponse(policyService.sendPersonClient(personClientRequest));
+        			transaction.updateFromResponse(policyServiceBus.sendPersonClient(personClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
@@ -2128,7 +2209,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayer != null && sendPayer){
     		ER_Transaction_Status transaction = incident.getTransaction(PayerRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataPayer(createRequestService.createPayerRequest(incident)));
+				transaction.updateFromResponse(policyServiceBus.sendDataPayer(createRequestService.createPayerRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
@@ -2148,7 +2229,7 @@ public class Incidents extends AdminBaseController {
     	if(sendVehicle != null && sendVehicle){
     		ER_Transaction_Status transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
+				transaction.updateFromResponse(policyServiceBus.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
@@ -2169,7 +2250,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPolicy != null && sendPolicy){
     		ER_Transaction_Status transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
 			if(!transaction.complete){
-				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
+				policyResponse = policyServiceBus.sendDataPolicy(createRequestService.createPolicyRequest(incident));
 				transaction.updateFromResponse(policyResponse);
 				if(!transaction.complete){
 					incident.merge();
@@ -2195,7 +2276,7 @@ public class Incidents extends AdminBaseController {
     	if(sendCoverages != null && sendCoverages){
     		ER_Transaction_Status transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
+				transaction.updateFromResponse(policyServiceBus.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
@@ -2215,7 +2296,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPrimes != null && sendPrimes){
     		ER_Transaction_Status transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
+				transaction.updateFromResponse(policyServiceBus.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PRIMA -> AS400: " + transaction.message);
@@ -2235,7 +2316,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayment != null && sendPayment){
     		ER_Transaction_Status transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
+				transaction.updateFromResponse(policyServiceBus.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
@@ -2255,7 +2336,7 @@ public class Incidents extends AdminBaseController {
     	if(sendWorkFlow != null && sendWorkFlow){
     		ER_Transaction_Status transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
+				transaction.updateFromResponse(policyServiceBus.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
@@ -2603,7 +2684,7 @@ public class Incidents extends AdminBaseController {
 		if (data.length > 1 && !StringUtil.isNullOrBlank(data[1])) {
 			request.setIdentificationDocument(data[1].replace(" ", ""));
 		}
-		QueryClientResponse queryClients = policyService.queryClient(request);
+		QueryClientResponse queryClients = clientQueryServiceBus.clientQuery(request);
 		if(queryClients != null){
 			if (!queryClients.getMessage().contains("no existe")) {
 				response.put("success", true);
@@ -2629,7 +2710,7 @@ public class Incidents extends AdminBaseController {
 		if (data.length > 1 && !StringUtil.isNullOrBlank(data[1])) {
 			request.setIdentificationDocument(data[1].replace(" ", ""));
 		}
-		QueryClientResponse queryClients = policyService.queryClient(request);
+		QueryClientResponse queryClients = clientQueryServiceBus.clientQuery(request);
 		if(queryClients != null){
 			if (!queryClients.getMessage().contains("no existe")) {
 				if (queryClients.getClients() != null && queryClients.getClients().size() > 1) {
@@ -2656,7 +2737,7 @@ public class Incidents extends AdminBaseController {
                 	request.setClientCode(data[1].replace(" ", ""));
                 if (data.length > 2)
                 	request.setClientCif(data[2]);
-                QueryPersonDetailResponse personDetail = policyService.queryPersonDetail(request);
+                QueryPersonDetailResponse personDetail = personServiceBus.queryPersonDetail(request);
                 if (personDetail != null) {
                     PersonDetailDTO personDetailDTO = PersonDetailDTO.loadData(personDetail);
                     response.put("success", true);
@@ -2668,7 +2749,7 @@ public class Incidents extends AdminBaseController {
                 	request.setClientCode(data[1].replace(" ", ""));
                 if (data.length > 2)
                 	request.setClientCif(data[2]);
-                QueryBusinessDetailResponse businessDetail = policyService.queryBusinessDetail(request);
+                QueryBusinessDetailResponse businessDetail = businessServiceBus.queryBusinessDetail(request);
                 if (businessDetail != null) {
                     BusinessDetailDTO businessDetailDTO = BusinessDetailDTO.loadData(businessDetail);
                     response.put("success", true);

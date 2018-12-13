@@ -1,30 +1,16 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="listaCoberturas")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class CoveragesResponse extends BaseResponse {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 741;
-	
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
-	@XmlElement(name="ramo")
+	@Expose
 	private String branch;
-	@XmlElement(name="poliza")
+	@Expose
 	private String policy;
-	
-	public CoveragesResponse() {}
-	public CoveragesResponse(String message) {
-		this.message = message;
-	}
-	
+
 	public String getMessage() {
 		return message;
 	}
@@ -43,7 +29,5 @@ public class CoveragesResponse extends BaseResponse {
 	public void setPolicy(String policy) {
 		this.policy = policy;
 	}
-	public Integer getTransaction() {
-		return TRANSACTION;
-	}
+
 }

@@ -1,23 +1,20 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="datosPagador")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PayerResponse extends BaseResponse {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 726;
 
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
-	@XmlElement(name="cifCliente")
+	@Expose
 	private String cifClient;
-	@XmlElement(name="codigoCliente")
+	@Expose
 	private String codeClient;
 	
 	public PayerResponse() {}
@@ -42,8 +39,5 @@ public class PayerResponse extends BaseResponse {
 	}
 	public void setCodeClient(String codeClient) {
 		this.codeClient = codeClient;
-	}
-	public Integer getTransaction() {
-		return TRANSACTION;
 	}
 }

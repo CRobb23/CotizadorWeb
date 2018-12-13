@@ -6,7 +6,6 @@ import helpers.Filter;
 import helpers.GeneralMethods;
 import jxl.Sheet;
 import jxl.Workbook;
-import models.ER_Bank;
 import models.ER_Bank_Account_Type;
 import models.ER_Bank_Account_Type;
 import models.ER_Profession;
@@ -59,7 +58,8 @@ public class AdminBankAccountTypes extends AdminBaseController {
 		bankAccountTypes.setPageNumber(page);
 		bankAccountTypes.setPageSize(10);
 		renderArgs.put("bankAccountTypes", bankAccountTypes);
-		}
+
+	}
 	
 	/*
 	 * ************************************************************************************************************************

@@ -1,21 +1,10 @@
 package models.ws;
 
-import java.util.Date;
+import com.google.gson.annotations.Expose;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlRootElement(name="listaPrima")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PrimeResponse extends BaseResponse {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 746;
-	
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
 	
 	public PrimeResponse() {}
@@ -28,8 +17,5 @@ public class PrimeResponse extends BaseResponse {
 	}
 	public void setMessage(String message) {
 		this.message = message;
-	}
-	public Integer getTransaction() {
-		return TRANSACTION;
 	}
 }

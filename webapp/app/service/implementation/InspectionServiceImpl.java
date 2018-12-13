@@ -5,42 +5,51 @@ import java.util.Date;
 
 import models.*;
 import models.ws.rest.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
 import helpers.ERConstants;
 import notifiers.Mails;
+import play.Logger;
 import play.Play;
 import play.libs.WS;
 import play.libs.WS.WSRequest;
 import play.modules.guice.InjectSupport;
 import service.InspectionService;
+import service.JsonService;
 import utils.StringUtil;
 
+import javax.inject.Inject;
+
 @InjectSupport
-public class InspectionServiceImpl implements InspectionService{
+public class InspectionServiceImpl extends ExternalJsonAbstractService implements InspectionService{
 	
-	private final Logger LOG = LoggerFactory.getLogger(InspectionService.class);
 	private final String WS_INSPECTION = Play.configuration.getProperty("inspection.app");
 	private final String WS_INSPECTION_BROKERS = Play.configuration.getProperty("inspection.brokers.app");
 	private final String CONNECTION_ERROR = "Ha ocurrido un error en la conexión.";
 
-	public InspectionResponse createInspection(Inspection request){
+    private InspectionAutoRequest autoRequest;
+    private InspectionAutoResponse autoResponse;
+
+    @Inject
+    public InspectionServiceImpl(JsonService jsonService) {
+        super(jsonService);
+    }
+
+    public InspectionResponse createInspection(Inspection request){
 		InspectionResponse inspectionResponse = new InspectionResponse();
         try{
         	InspectionRequest inspectionRequest = new InspectionRequest();
         	inspectionRequest.setData(request);
         	
-        	LOG.info("createInspection REST REQUEST:\n\n" + new Gson().toJson(inspectionRequest) + "\n");
+        	Logger.info("createInspection REST REQUEST:\n\n" + new Gson().toJson(inspectionRequest) + "\n");
         	
         	WSRequest wsRequest = WS.url(WS_INSPECTION + "/createQuoteInspection");
         	wsRequest.setHeader("Content-Type", "application/json");
         	wsRequest.body(new Gson().toJson(inspectionRequest));
         	inspectionResponse = new Gson().fromJson(wsRequest.post().getString(), InspectionResponse.class);
-        	
-        	LOG.info("createInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+
+            Logger.info("createInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
         	
         	return inspectionResponse;
         }catch(Exception e){
@@ -54,8 +63,8 @@ public class InspectionServiceImpl implements InspectionService{
     }
 	
 	public InspectionResponse 	finishInspection(String body){
-		 
-		 LOG.info("finishInspection REST REQUEST:\n\n" + body + "\n");
+
+        Logger.info("finishInspection REST REQUEST:\n\n" + body + "\n");
 		 
 		 InspectionResponse inspectionResponse = new InspectionResponse();
 		 try{
@@ -112,8 +121,8 @@ public class InspectionServiceImpl implements InspectionService{
                                 bolCorrect = false;
 							}
 
-                            LOG.info("Datos Comunes desde app" + CommonData);
-                            LOG.info("Datos Comunes de cotizador" + incident.vehicle.getFullPlate() + ";" + incident.vehicle.engine + ";" + incident.vehicle.chassis + ";" + incident.vehicle.line.name + ";" + incident.vehicle.line.brand.name);
+                            Logger.info("Datos Comunes desde app" + CommonData);
+                            Logger.info("Datos Comunes de cotizador" + incident.vehicle.getFullPlate() + ";" + incident.vehicle.engine + ";" + incident.vehicle.chassis + ";" + incident.vehicle.line.name + ";" + incident.vehicle.line.brand.name);
                             if(bolCorrect) {
                                 incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
                             }
@@ -169,8 +178,8 @@ public class InspectionServiceImpl implements InspectionService{
                                 incident.status = incidentStatusIncomplete;
                                 bolCorrect = false;
                             }
-                            LOG.info("Datos Comunes desde app" + CommonData);
-                            LOG.info("Datos Comunes de cotizador" + incident.vehicle.getFullPlate() + ";" + incident.vehicle.engine + ";" + incident.vehicle.chassis);
+                            Logger.info("Datos Comunes desde app" + CommonData);
+                            Logger.info("Datos Comunes de cotizador" + incident.vehicle.getFullPlate() + ";" + incident.vehicle.engine + ";" + incident.vehicle.chassis);
                             if(bolCorrect) {
                                 incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
                             }
@@ -191,8 +200,8 @@ public class InspectionServiceImpl implements InspectionService{
 					 inspectionResponse.setSuccess(false);
 					 inspectionResponse.setMessage("La cotización no tiene una inspección asociada.");
 				 }
-				 
-				 LOG.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+
+                 Logger.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
 				 
 				 return inspectionResponse;
 			 }
@@ -202,8 +211,8 @@ public class InspectionServiceImpl implements InspectionService{
 		
 		 inspectionResponse.setSuccess(false);
 		 inspectionResponse.setMessage("Ha ocurrido un error al actualizar la inspección.");
-		 
-		 LOG.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+
+        Logger.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
 		 
 		 return inspectionResponse;
 	 }
@@ -214,12 +223,12 @@ public class InspectionServiceImpl implements InspectionService{
 			InspectionRequest inspectionRequest = new InspectionRequest();
 			inspectionRequest.setData(request);
 
-			LOG.info("createInspection Brokers REST REQUEST:\n\n" + new Gson().toJson(inspectionRequest) + "\n");
+            Logger.info("createInspection Brokers REST REQUEST:\n\n" + new Gson().toJson(inspectionRequest) + "\n");
 			WSRequest wsRequest = WS.url(WS_INSPECTION_BROKERS + "/createQuoteInspection");
 			wsRequest.setHeader("Content-Type", "application/json");
 			wsRequest.body(new Gson().toJson(inspectionRequest));
 			inspectionResponse = new Gson().fromJson(wsRequest.post().getString(), InspectionResponse.class);
-			LOG.info("createInspection  Brokers REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+            Logger.info("createInspection  Brokers REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
 			return inspectionResponse;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -234,11 +243,11 @@ public class InspectionServiceImpl implements InspectionService{
 	public InspectionBrokerResponse listExternalBrokers(){
 		InspectionBrokerResponse inspectionResponse = new InspectionBrokerResponse();
 		try{
-			LOG.info("list external Brokers REST REQUEST:");
+            Logger.info("list external Brokers REST REQUEST:");
 			WSRequest wsRequest = WS.url(WS_INSPECTION_BROKERS + "/listAllBrokers");
 			wsRequest.setHeader("Content-Type", "application/json");
 			inspectionResponse = new Gson().fromJson(wsRequest.post().getString(), InspectionBrokerResponse.class);
-			LOG.info("createInspection  Brokers REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+            Logger.info("createInspection  Brokers REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
 			return inspectionResponse;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -249,5 +258,74 @@ public class InspectionServiceImpl implements InspectionService{
 		inspectionResponse.setMessage(CONNECTION_ERROR);
 		return inspectionResponse;
 	}
-	
+
+    @Override
+    public InspectionAutoResponse finishAutoInspection(String body) {
+        Logger.info("finishInspection REST REQUEST:\n\n" + body + "\n");
+
+        InspectionAutoResponse inspectionResponse = new InspectionAutoResponse();
+        try{
+            InspectionAutoFinishRequest inspectionFinishRequest = new Gson().fromJson(body, InspectionAutoFinishRequest.class);
+            ER_Incident incident = ER_Incident.find("inspection.inspectionNumber = ?", inspectionFinishRequest.getInspectionNumber()).first();
+            if(incident != null ) {
+                ER_Inspection inspection = incident.inspection;
+                inspection.inspected = true;
+                inspection.inspectionDate = new Date();
+                incident.inspection = inspection.save();
+
+                Integer inspectionStatus = inspectionFinishRequest.getStatus();
+                inspection.insurable = "ASEGURABLE";
+                if (inspectionStatus == 2 || inspectionStatus == 4 || inspectionStatus == 5) {
+                    incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
+                } else if (inspectionStatus == 3) {
+                    incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
+                }
+                incident.save();
+                Mails.finishInspection(incident);
+                inspectionResponse.setSuccess(true);
+                inspectionResponse.setMessage("SATISFACTORIO");
+            } else {
+                inspectionResponse.setSuccess(false);
+                inspectionResponse.setMessage("La cotización no tiene una inspección asociada.");
+            }
+
+            Logger.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+
+            return inspectionResponse;
+        } catch(Exception e) {
+            Logger.error(e, e.getMessage());
+        }
+        inspectionResponse.setSuccess(false);
+        inspectionResponse.setMessage("Ha ocurrido un error al actualizar la inspección.");
+        Logger.info("finishInspection REST RESPONSE:\n\n" + new Gson().toJson(inspectionResponse) + "\n");
+        return inspectionResponse;
+    }
+
+    @Override
+    public InspectionAutoResponse createAutoInspection(InspectionAutoRequest request) {
+        this.autoRequest = request;
+        callServiceBus();
+        return autoResponse;
+    }
+
+    @Override
+    protected String getEndpoint() {
+        return "/inspection/auto";
+    }
+
+    @Override
+    protected Object getReqObject() {
+        return autoRequest;
+    }
+
+    @Override
+    protected void setResObject(Object object) {
+        this.autoResponse = (InspectionAutoResponse) object;
+    }
+
+    @Override
+    protected Class getResClass() {
+        return InspectionAutoResponse.class;
+    }
+
 }

@@ -1,5 +1,7 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,95 +12,89 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="datosdeVehiculo")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class VehicleRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 735;
-	
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 735;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="chasis")
+	@Expose
 	private String chasis;
-	@XmlElement(name="motor")
+	@Expose
 	private String engine;
-	@XmlElement(name="placa")
+	@Expose
 	private String plate;
-	@XmlElement(name="marca")
+	@Expose
 	private String brand;
-	@XmlElement(name="marcaLinea")
+	@Expose
 	private String line;
-	@XmlElement(name="tipoVehiculo")
+	@Expose
 	private String typeVehicle;
-	@XmlElement(name="tipoTarifa")
+	@Expose
 	private String rateType;
-	@XmlElement(name="blindaje")
+	@Expose
 	private String armor;
-	@XmlElement(name="valorBlindaje")
+	@Expose
 	private String armorValue;
-	@XmlElement(name="codigoAlarma")
+	@Expose
 	private String reminderCode;
-	@XmlElement(name="modeloVehiculo")
+	@Expose
 	private String year;
-	@XmlElement(name="numeroPasajeros")
+	@Expose
 	private Integer numberOfPassengers;
-	@XmlElement(name="color")
+	@Expose
 	private String color;
-	@XmlElement(name="centimetrosCubicos")
+	@Expose
 	private Integer cubicCentimeter;
-	@XmlElement(name="numeroCilindros")
+	@Expose
 	private Integer numberCylinders;
-	@XmlElement(name="numeroEjes")
+	@Expose
 	private Integer numberAxes;
-	@XmlElement(name="numeroPuertas")
+	@Expose
 	private String numberDoor;
-	@XmlElement(name="claseCasco")
+	@Expose
 	private Long helmetClass;
-	@XmlElement(name="valorVehiculo")
+	@Expose
 	private BigDecimal vehicleValue;
-	@XmlElement(name="kilometraje")
+	@Expose
 	private String mileage;
-	@XmlElement(name="tipoKilometraje")
+	@Expose
 	private String typeMileage;
-	@XmlElement(name="tipoCombustible")
+	@Expose
 	private String fuelType;
-	@XmlElement(name="tonelaje")
+	@Expose
 	private Integer tonnage;
-	@XmlElement(name="numeroPrestamo")
+	@Expose
 	private String loanNumber;
-	@XmlElement(name="garantia")
+	@Expose
 	private String warranty;
-	@XmlElement(name="codigoBeneficiarioGarantia")
+	@Expose
 	private String beneficiaryCodeWarranty;
-	@XmlElement(name="seleccion")
+	@Expose
 	private String selection;
-	@XmlElement(name="numeroInspeccion")
+	@Expose
 	private String inspectionNumber;
-	@XmlElement(name="danosPreexistentes")
+	@Expose
 	private String preExistingDamage;
-	@XmlElement(name="codigoPromocion")
+	@Expose
 	private String promotionCode;
-	@XmlElement(name="equipoEspecial")
+	@Expose
 	private String specialTeam;
-    @XmlElement(name="terceros")
-    private String onlyThird;
-	@XmlElement(name="propietario")
+	@Expose
+	private String onlyThird;
+	@Expose
 	private String vehicleOwner;
-    @XmlElementWrapper(name="listaDanos")
-    @XmlElement(name="lista")
+	@Expose
 	private List<Damage> damageList;
-    @XmlElementWrapper(name="listaEquipoEspecial")
-    @XmlElement(name="listaEquipo")
+	@Expose
 	private List<SpecialTeam> specialTeamList;
 	
-	@XmlAccessorType(XmlAccessType.FIELD)
-    public static class Damage{
-		@XmlElement(name="numeroLinea")
+	public static class Damage{
+		@Expose
 		private Integer numberLine;
-		@XmlElement(name="descripcionLinea")
+		@Expose
 		private String descriptionLine;
 		
 		public Integer getNumberLine() {
@@ -115,11 +111,10 @@ public class VehicleRequest {
 		}
 	}
 	
-	@XmlAccessorType(XmlAccessType.FIELD)
-    public static class SpecialTeam{
-		@XmlElement(name="numeroLineaEE")
+	public static class SpecialTeam{
+		@Expose
 		private Integer numberLine;
-		@XmlElement(name="descripcion")
+		@Expose
 		private String descriptionLine;
 
         public Integer getNumberLine() {

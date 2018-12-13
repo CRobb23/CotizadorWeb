@@ -1,39 +1,32 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlRootElement(name="menoresEdadConCoberturas")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class YoungerRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 750;
-	
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 750;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="codigoCobertura")
+	@Expose
 	private String codeCoverage;
-	@XmlElement(name="nombreMenor")
+	@Expose
 	private String name;
-	@XmlElement(name="direccionMenor")
+	@Expose
 	private String address;
-	@XmlElement(name="fechaNacimientoMenor")
+	@Expose
 	private Date birthdate;
-	@XmlElement(name="edadMenor")
+	@Expose
 	private String age;
-	@XmlElement(name="tipoLicenciaMenor")
+	@Expose
 	private String typeLicense;
-	@XmlElement(name="numeroLicenciaMenor")
+	@Expose
 	private String licenseNumber;
-	@XmlElement(name="fechaVencimientoDesde")
+	@Expose
 	private Date expirationDateFrom;
-	@XmlElement(name="fechaVencimientoHasta")
+	@Expose
 	private Date expirationDate;
 	
 	public String getQuoteNumber() {

@@ -1,101 +1,84 @@
 package models.ws;
 
-import javax.xml.bind.annotation.*;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaDatosClientePersonal")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryPersonDetailResponse extends BaseResponse {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 776;
 
-    @XmlElement(name="msgRespuesta")
+	@Expose
     private String message;
 
-    public QueryPersonDetailResponse() {}
-    public QueryPersonDetailResponse(String message) {
-        this.message = message;
-    }
-
-    @XmlElement(name="nit")
-    private String taxNumber;
-    @XmlElement(name="primerNombre")
-    private String firstName;
-    @XmlElement(name="segundoNombre")
-    private String secondName;
-    @XmlElement(name="primerApellido")
-    private String firstSurname;
-    @XmlElement(name="segundoApellido")
-    private String secondSurname;
-    @XmlElement(name="apellidoCasada")
-    private String marriedSurname;
-    @XmlElement(name="fechaNacimiento")
-    private String birthdate;
-    @XmlElement(name="sexo")
-    private String sex;
-    @XmlElement(name="edad")
-    private Integer age;
-    @XmlElement(name="profesion")
-    private String profession;
-    @XmlElement(name="dpi")
-    private String identificationDocument;
-    @XmlElement(name="codigoCliente")
-    private String codeClient;
-    @XmlElement(name="codigoCifBanco")
-    private String codeCifBank;
-    @XmlElement(name="pasaporte")
-    private String passport;
-    @XmlElement(name="estadoCivil")
-    private String civilStatus;
-    @XmlElement(name="nacionalidad")
-    private String nationality;
-    @XmlElement(name="tipoLicencia")
-    private String licenseType;
-    @XmlElement(name="numeroLicencia")
-    private String licenseNumber;
-    @XmlElement(name="email")
-    private String email;
-    @XmlElement(name="direcciones")
-    private Address address;
-
-    @Override
-    public Integer getTransaction() {
-        return TRANSACTION;
-    }
+	@Expose
+	private String taxNumber;
+	@Expose
+	private String firstName;
+	@Expose
+	private String secondName;
+	@Expose
+	private String firstSurname;
+	@Expose
+	private String secondSurname;
+	@Expose
+	private String marriedSurname;
+	@Expose
+	private String birthdate;
+	@Expose
+	private String sex;
+	@Expose
+	private Integer age;
+	@Expose
+	private String profession;
+	@Expose
+	private String identificationDocument;
+	@Expose
+	private String codeClient;
+	@Expose
+	private String codeCifBank;
+	@Expose
+	private String passport;
+	@Expose
+	private String civilStatus;
+	@Expose
+	private String nationality;
+	@Expose
+	private String licenseType;
+	@Expose
+	private String licenseNumber;
+	@Expose
+	private String email;
+	@Expose
+	private Address address;
 
     @Override
     public String getMessage() {
         return message;
     }
 
-    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Address{
-        @XmlElement(name="direccionCasa")
-        private HomeAddress homeAddress;
+		@Expose
+		private HomeAddress homeAddress;
+
+		@Expose
+		private WorkAddress workAddress;
     	
-        @XmlElement(name="direccionTrabajo")
-        private WorkAddress workAddress;
-    	
-    	@XmlAccessorType(XmlAccessType.FIELD)
-        public static class HomeAddress{
-    		@XmlElement(name="direccionC")
-    		private String address;
-    		@XmlElement(name="paisC")
-    		private String country;
-    		@XmlElement(name="departamentoC")
-    		private String department;
-    		@XmlElement(name="municipioC")
-    		private String municipality;
-    		@XmlElement(name="zonaC")
-    		private String zone;
-    		@XmlElement(name="telefono1")
-    		private String phone1;
-    		@XmlElement(name="telefono2")
-    		private String phone2;
-    		@XmlElement(name="telefono3")
-    		private String phone3;
-    		@XmlElement(name="colonia")
-    		private String colony;
+    	public static class HomeAddress{
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
+			@Expose
+			private String colony;
     		
 			public String getAddress() {
 				return address;
@@ -153,24 +136,23 @@ public class QueryPersonDetailResponse extends BaseResponse {
 			}
     	}
     	
-    	@XmlAccessorType(XmlAccessType.FIELD)
         public static class WorkAddress{
-    		@XmlElement(name="direccionT")
-    		private String address;
-    		@XmlElement(name="paisT")
-    		private String country;
-    		@XmlElement(name="departamentoT")
-    		private String department;
-    		@XmlElement(name="municipioT")
-    		private String municipality;
-    		@XmlElement(name="zonaT")
-    		private String zone;
-    		@XmlElement(name="telefonoT1")
-    		private String phone1;
-    		@XmlElement(name="telefonoT2")
-    		private String phone2;
-    		@XmlElement(name="telefonoT3")
-    		private String phone3;
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
     		
 			public String getAddress() {
 				return address;

@@ -1,96 +1,93 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="datosClientePersonal")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PersonClientRequest {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 715;
 
-	@XmlElement(name="fechaCotizacion")
+	public static final int TRANSACTION = 715;
+
+	@Expose
 	private String quotationDate;
-	@XmlElement(name="codigoCliente")
+	@Expose
 	private String codeClient;
-	@XmlElement(name="numeroCotizacion")
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="nit")
+	@Expose
 	private String taxNumber;
-	@XmlElement(name="titulo")
+	@Expose
 	private String codeTitle;
-	@XmlElement(name="primerNombre")
+	@Expose
 	private String firstName;
-	@XmlElement(name="segundoNombre")
+	@Expose
 	private String secondName;
-	@XmlElement(name="primerApellido")
+	@Expose
 	private String firstSurname;
-	@XmlElement(name="segundoApellido")
+	@Expose
 	private String secondSurname;
-	@XmlElement(name="apellidoCasada")
+	@Expose
 	private String marriedSurname;
-	@XmlElement(name="fechaNacimiento")
+	@Expose
 	private String birthdate;
-	@XmlElement(name="sexo")
+	@Expose
 	private String sex;
-	@XmlElement(name="edad")
+	@Expose
 	private Integer age;
-	@XmlElement(name="profesion")
+	@Expose
 	private String profession;
-	@XmlElement(name="dpi")
+	@Expose
 	private String identificationDocument;
-	@XmlElement(name="codigoCifBanco")
+	@Expose
 	private String codeCifBank;
-	@XmlElement(name="pasaporte")
+	@Expose
 	private String passport;
-	@XmlElement(name="estadoCivil")
+	@Expose
 	private String civilStatus;
-	@XmlElement(name="nacionalidad")
+	@Expose
 	private String nationality;
-	@XmlElement(name="tipoLicencia")
+	@Expose
 	private String licenseType;
-	@XmlElement(name="numeroLicencia")
+	@Expose
 	private String licenseNumber;
-	@XmlElement(name="email")
+	@Expose
 	private String email;
-	@XmlElement(name="vip")
+	@Expose
 	private String vip;
-    
-    @XmlElement(name="direcciones")
-    private Address address;
+
+	@Expose
+	private Address address;
 	
-    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Address{
-        @XmlElement(name="direccionCasa")
-        private HomeAddress homeAddress;
+		@Expose
+		private HomeAddress homeAddress;
+
+		@Expose
+		private WorkAddress workAddress;
     	
-        @XmlElement(name="direccionTrabajo")
-        private WorkAddress workAddress;
-    	
-    	@XmlAccessorType(XmlAccessType.FIELD)
-        public static class HomeAddress{
-    		@XmlElement(name="direccionC")
-    		private String address;
-    		@XmlElement(name="paisC")
-    		private String country;
-    		@XmlElement(name="departamentoC")
-    		private String department;
-    		@XmlElement(name="municipioC")
-    		private String municipality;
-    		@XmlElement(name="zonaC")
-    		private String zone;
-    		@XmlElement(name="telefono1")
-    		private String phone1;
-    		@XmlElement(name="telefono2")
-    		private String phone2;
-    		@XmlElement(name="telefono3")
-    		private String phone3;
-    		@XmlElement(name="colonia")
-    		private String colony;
+    	public static class HomeAddress{
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
+			@Expose
+			private String colony;
     		
 			public String getAddress() {
 				return address;
@@ -148,24 +145,23 @@ public class PersonClientRequest {
 			}
     	}
     	
-    	@XmlAccessorType(XmlAccessType.FIELD)
-        public static class WorkAddress{
-    		@XmlElement(name="direccionT")
-    		private String address;
-    		@XmlElement(name="paisT")
-    		private String country;
-    		@XmlElement(name="departamentoT")
-    		private String department;
-    		@XmlElement(name="municipioT")
-    		private String municipality;
-    		@XmlElement(name="zonaT")
-    		private String zone;
-    		@XmlElement(name="telefonoT1")
-    		private String phone1;
-    		@XmlElement(name="telefonoT2")
-    		private String phone2;
-    		@XmlElement(name="telefonoT3")
-    		private String phone3;
+    	public static class WorkAddress{
+			@Expose
+			private String address;
+			@Expose
+			private String country;
+			@Expose
+			private String department;
+			@Expose
+			private String municipality;
+			@Expose
+			private String zone;
+			@Expose
+			private String phone1;
+			@Expose
+			private String phone2;
+			@Expose
+			private String phone3;
     		
 			public String getAddress() {
 				return address;

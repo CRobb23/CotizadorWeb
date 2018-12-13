@@ -1,5 +1,7 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,20 +10,15 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="datosdePoliza")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PolicyResponse extends BaseResponse {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 731;
 
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
-	@XmlElement(name="ramo")
+	@Expose
 	private String branch;
-	@XmlElement(name="poliza")
+	@Expose
 	private String policy;
-	@XmlElement(name="anexo")
+	@Expose
 	private String filename;
 
 	public PolicyResponse() {}
@@ -56,7 +53,4 @@ public class PolicyResponse extends BaseResponse {
 		this.filename = filename;
 	}
 
-	public Integer getTransaction() {
-		return TRANSACTION;
-	}
 }

@@ -1,5 +1,7 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,18 +10,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-@XmlRootElement(name="consultaValorPromedioVehiculo")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryAverageValueVehicleResponse extends BaseResponse {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 706;
-	
-	@XmlElement(name="msgRespuesta")
+	@Expose
 	private String message;
-	@XmlElement(name="valorPromedio")
+	@Expose
 	private BigDecimal averageValue;
-	@XmlElement(name="cantidadVehiculos")
+	@Expose
 	private Integer vehicleQuantity;
 	
 	public QueryAverageValueVehicleResponse() {}
@@ -44,8 +41,5 @@ public class QueryAverageValueVehicleResponse extends BaseResponse {
 	}
 	public void setVehicleQuantity(Integer vehicleQuantity) {
 		this.vehicleQuantity = vehicleQuantity;
-	}
-	public Integer getTransaction() {
-		return TRANSACTION;
 	}
 }

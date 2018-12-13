@@ -1,47 +1,40 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="datosWorkFlow")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class WorkFlowRequest {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 760;
 
-	@XmlElement(name="tipoMovimiento")
+	public static final int TRANSACTION = 760;
+
+	@Expose
 	private String movementType;
-	@XmlElement(name="subTipoMovimiento")
+	@Expose
 	private String subMovementType;
-	@XmlElement(name="tipoDocumento")
+	@Expose
 	private String documentType;
-	@XmlElement(name="numeroCotizacion")
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="fechaDocumento")
+	@Expose
 	private String documentDate;
-	@XmlElement(name="fechaRecepcion")
+	@Expose
 	private String receptionDate;
-	@XmlElement(name="nombreAsegurado")
+	@Expose
 	private String insuredName;
-	@XmlElement(name="observaciones")
+	@Expose
 	private String observations;
-	@XmlElement(name="urgente")
+	@Expose
 	private String urgent;
-	@XmlElement(name="linea")
+	@Expose
 	private String line;
-	@XmlElement(name="fechaRevision")
+	@Expose
 	private String reviewDate;
-	@XmlElement(name="fechaAsignacion")
+	@Expose
 	private String dateAssignment;
-	@XmlElement(name="fechaEmision")
+	@Expose
 	private String emissionDate;
-	@XmlElement(name="codigoBarras")
+	@Expose
 	private String barcode;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
 	
 	public String getMovementType() {

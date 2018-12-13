@@ -64,7 +64,8 @@ public final class ERConstants {
 	public static final int INSPECTION_TYPE_ADDRESS = 1;
 	public static final int INSPECTION_TYPE_CENTER = 2;
 	public static final int INSPECTION_TYPE_SELLER = 3;
-	
+	public static final int INSPECTION_TYPE_AUTO = 4;
+
 	public static final int FILE_CENTERS_LIST = 1;
 	public static final int CHANNEL_PUBLIC = 3;
 
