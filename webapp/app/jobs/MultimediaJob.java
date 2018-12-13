@@ -36,109 +36,115 @@ public class MultimediaJob extends Job {
 	}
 	
 	public void doJob(){
-		//if(multimediaList == null){
-
-			multimediaList = ER_Multimedia.find("byUploadedFilesGD", false).fetch();
+	    try {
+            multimediaList = ER_Multimedia.find("byUploadedFilesGD", false).fetch();
             Logger.info("Inicia multimedia Job, lista de multimedia a subir: " + multimediaList.size());
-		//}
-        //for (int i=0; i<40; i++){
-		for(ER_Multimedia multimedia: multimediaList){
-			uploadMultimediaFiles(multimedia);
-		}
+            for (int i = 0; i < 30; i++) {
+                if (multimediaList.size() > i)
+                    uploadMultimediaFiles(multimediaList.get(i));
+                else
+                    break;
+            }
+        }
+        catch (Exception e){
+	        Logger.error(e.getMessage());
+        }
     }
 	
 	private void uploadMultimediaFiles(ER_Multimedia multimedia){
-	    multimedia = ER_Multimedia.findById(multimedia.id);
-		ER_Client client = ER_Client.find("multimedia.id = ?", multimedia.id).first();
-		if (client != null) {
-            ER_Incident incident = ER_Incident.find("client.id = ?", client.id).first();
-            if (incident != null) {
-                Logger.info("Sube multimedia de caso: " + incident.number);
-                Boolean uploadedFilesGD = true;
+	    try {
+            multimedia = ER_Multimedia.findById(multimedia.id);
+            ER_Client client = ER_Client.find("multimedia.id = ?", multimedia.id).first();
+            if (client != null) {
+                ER_Incident incident = ER_Incident.find("client.id = ?", client.id).first();
+                if (incident != null) {
+                    Logger.info("Sube multimedia de caso: " + incident.number);
+                    Boolean uploadedFilesGD = true;
 
-                WSRequest requestDirectory = WS.url(WS_GDRIVE + "/findFolderByName");
-                requestDirectory.setParameter("folderName", incident.number);
-                requestDirectory.setParameter("parentFolderId", null);
-                Map<String, Object> responseDirectory = new Gson().fromJson(requestDirectory.post().getString(), Map.class);
-                if((Boolean) responseDirectory.get("success")){
-                    Logger.info("Crea directorio en drive ");
-                    for(Field field: multimedia.getClass().getDeclaredFields()){
-                        if(field.getName().contains("url")){
-                            try{
-                                Object value = field.get(multimedia);
-                                if(value != null && !"".equals(value.toString().trim()) && !value.toString().contains("http") && !value.toString().contains("https")){
-                                    //Check if file exist
-                                    File fileMultimedia = new File (value.toString());
-                                    Logger.info("Intenta subir el archivo: " + value.toString());
-                                   if (fileMultimedia.exists())
-                                   {
-                                        String urlFile = uploadFile(responseDirectory,fileMultimedia);
-                                        if(urlFile != null){
-                                            field.set(multimedia, urlFile);
-                                        }
-                                   }
-                                   else
-                                        System.out.println("El archivo " + value.toString()  + "  no existe.");
-                                }
-                            }catch(Exception e){
-                                e.printStackTrace();
-                                uploadedFilesGD = false;
-                            }
-                        }
-                    }
-                    for(Field field: multimedia.getClass().getDeclaredFields()){
-                        if(field.getName().contains("url")){
-                            try{
-                                Object value = field.get(multimedia);
-                                if(value != null && !"".equals(value.toString().trim()) && !value.toString().contains("http") && !value.toString().contains("https")){
+                    WSRequest requestDirectory = WS.url(WS_GDRIVE + "/findFolderByName");
+                    requestDirectory.setParameter("folderName", incident.number);
+                    requestDirectory.setParameter("parentFolderId", null);
+                    Map<String, Object> responseDirectory = new Gson().fromJson(requestDirectory.post().getString(), Map.class);
+                    if ((Boolean) responseDirectory.get("success")) {
+                        Logger.info("Crea directorio en drive ");
+                        for (Field field : multimedia.getClass().getDeclaredFields()) {
+                            if (field.getName().contains("url")) {
+                                try {
+                                    Object value = field.get(multimedia);
+                                    if (value != null && !"".equals(value.toString().trim()) && !value.toString().contains("http") && !value.toString().contains("https")) {
+                                        //Check if file exist
+                                        File fileMultimedia = new File(value.toString());
+                                        Logger.info("Intenta subir el archivo: " + value.toString());
+                                        if (fileMultimedia.exists()) {
+                                            String urlFile = uploadFile(responseDirectory, fileMultimedia);
+                                            if (urlFile != null) {
+                                                field.set(multimedia, urlFile);
+                                            }
+                                        } else
+                                            System.out.println("El archivo " + value.toString() + "  no existe.");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                     uploadedFilesGD = false;
                                 }
-                            }catch(Exception e){
-                                e.printStackTrace();
                             }
                         }
-                    }
-                //Checks if has aditional multimedia
-                    if(multimedia!= null && multimedia.hasAditionalFilesGD != null && multimedia.hasAditionalFilesGD){
-                        Logger.info("Intenta subir multimedia adicional");
-
-                        List <ER_Aditional_Multimedia> aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?",multimedia.id).fetch();
-                        for(ER_Aditional_Multimedia currentAditional: aditional_multimedia){
-                            try{
-                                if(currentAditional.urlFile != null && !"".equals(currentAditional.urlFile.trim()) && !currentAditional.urlFile.contains("http") && !currentAditional.urlFile .contains("https")){
-                                    //Check if file exist
-                                    File fileMultimedia = new File (currentAditional.urlFile);
-                                    Logger.info("Intenta subir el archivo adicional: " + currentAditional.urlFile);
-                                    if (fileMultimedia.exists())
-                                    {
-                                        String urlFile = uploadFile(responseDirectory,fileMultimedia);
-                                        if(urlFile != null){
-                                            currentAditional.urlFile = urlFile;
-                                            currentAditional.uploaded = true;
-                                        }
+                        for (Field field : multimedia.getClass().getDeclaredFields()) {
+                            if (field.getName().contains("url")) {
+                                try {
+                                    Object value = field.get(multimedia);
+                                    if (value != null && !"".equals(value.toString().trim()) && !value.toString().contains("http") && !value.toString().contains("https")) {
+                                        uploadedFilesGD = false;
                                     }
-                                    else
-                                        System.out.println("El archivo adicional" + currentAditional.urlFile  + "  no existe.");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            }catch(Exception e){
-                                e.printStackTrace();
-                                uploadedFilesGD = false;
-                                Logger.info("ERROR EN adicional: " + e.getMessage());
                             }
-                            currentAditional.save();
                         }
+                        //Checks if has aditional multimedia
+                        if (multimedia != null && multimedia.hasAditionalFilesGD != null && multimedia.hasAditionalFilesGD) {
+                            Logger.info("Intenta subir multimedia adicional");
+
+                            List<ER_Aditional_Multimedia> aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", multimedia.id).fetch();
+                            for (ER_Aditional_Multimedia currentAditional : aditional_multimedia) {
+                                try {
+                                    if (currentAditional.urlFile != null && !"".equals(currentAditional.urlFile.trim()) && !currentAditional.urlFile.contains("http") && !currentAditional.urlFile.contains("https")) {
+                                        //Check if file exist
+                                        File fileMultimedia = new File(currentAditional.urlFile);
+                                        Logger.info("Intenta subir el archivo adicional: " + currentAditional.urlFile);
+                                        if (fileMultimedia.exists()) {
+                                            String urlFile = uploadFile(responseDirectory, fileMultimedia);
+                                            if (urlFile != null) {
+                                                currentAditional.urlFile = urlFile;
+                                                currentAditional.uploaded = true;
+                                            }
+                                        } else
+                                            System.out.println("El archivo adicional" + currentAditional.urlFile + "  no existe.");
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    uploadedFilesGD = false;
+                                    Logger.info("ERROR EN adicional: " + e.getMessage());
+                                }
+                                currentAditional.save();
+                            }
+                        }
+                    } else {
+                        uploadedFilesGD = false;
                     }
-                }else{
-                    uploadedFilesGD = false;
+                    Logger.info("Logro subir la multimedia del caso: " + incident.number + " exitoso: " + uploadedFilesGD);
+                    multimedia.uploadedFilesGD = uploadedFilesGD;
+                    multimedia.save();
                 }
-                Logger.info("Logro subir la multimedia del caso: " + incident.number + " exitoso: " + uploadedFilesGD);
-                multimedia.uploadedFilesGD = uploadedFilesGD;
-                multimedia.save();
             }
+        }
+        catch(Exception e){
+	        Logger.error(e.getMessage());
         }
 	}
 	
 	private String uploadFile(Map<String, Object> responseDirectory, File file){
+	    try{
     	if((Boolean) responseDirectory.get("success") && file != null){
     		WSRequest request = WS.url(WS_GDRIVE + "/sendPublicFile");
     		request.setHeader("Content-Type", "multipart/form-data");
@@ -152,5 +158,10 @@ public class MultimediaJob extends Job {
     	}
     	
     	return null;
+        }
+        catch(Exception e){
+            Logger.error(e.getMessage());
+            return null;
+        }
     }
 }

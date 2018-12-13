@@ -40,9 +40,9 @@ public class StringUtil {
         str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
         str = str.replaceAll("Á","+01").replaceAll("á","+02").replaceAll("É","+03").replaceAll("é","+04").replaceAll("Í","+05");
         str = str.replaceAll("í","+06").replaceAll("Ó","+07").replaceAll("ó","+08").replaceAll("Ú","+09").replaceAll("ú","+10");
-        str = str.replaceAll("Ñ","+11").replaceAll("ñ","+12");
+        str = str.replaceAll("Ñ","+11").replaceAll("ñ","+12").replaceAll("—","-").replaceAll("\\p{Pd}","–");
         // Remove special characters
-        // str = StringUtils.stripAccents(str);
+        // str = StringUtils.stripAccents(str);–––––––––––
         return str;
     }
     public static String escapeXmlResponse(String str) {
@@ -52,7 +52,7 @@ public class StringUtil {
         str = str.replace("+06","í").replace("+07","Ó").replace("+08","ó").replace("+09","Ú").replace("+10","ú");
         str = str.replace("+11","Ñ").replace("+12","ñ");
         // Remove special characters
-        // str = StringUtils.stripAccents(str);
+        // str = StringUtils.stripAccents(str);\\p{Pd}
         return str;
     }
 
