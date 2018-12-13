@@ -71,7 +71,7 @@ public class Incidents extends AdminBaseController {
 	 */
 	
 	private static void filterIncidents(String searchField,String multipleSearch,Map<String,String> searchFields) {
-		
+		try{
 		//Validate the parameters
 		boolean valid = GeneralMethods.validateParameter(searchField);
 		valid = valid | GeneralMethods.validateParameter(multipleSearch);
@@ -239,12 +239,18 @@ public class Incidents extends AdminBaseController {
 			incidents.setPageSize(10);
 			renderArgs.put("incidents", incidents);
 		}
+		}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+	}
+
+
 	}
 	
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-	@Access
     public static void incidentsList(String searchField, Boolean search) {
-
+		try{
     	if(search==null||search==false){
     		params.flash();
     		searchFields = new HashMap<String,String>();
@@ -273,33 +279,42 @@ public class Incidents extends AdminBaseController {
     		flash.error(Messages.get("incidents.list.noentries"));
     	}
     	
-        render();
+        render();}
+		catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
     }
 
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void searchIncidents(String searchField,String multipleSearch) {
-    	flash.clear();
-    	if (!GeneralMethods.validateParameter(searchField)&&!GeneralMethods.validateParameter(multipleSearch)) {
-                flash.error(Messages.get("incidents.list.searcherror"));
+		try{
+			flash.clear();
+			if (!GeneralMethods.validateParameter(searchField)&&!GeneralMethods.validateParameter(multipleSearch)) {
+					flash.error(Messages.get("incidents.list.searcherror"));
 
-    		incidentsList(null, false);
-    	} else {
-    		
-    		searchFields = new HashMap<String,String>();
-    		searchFields.put("number_case", params.get("number_case"));
-    		searchFields.put("number_policy", params.get("number_policy"));
-    		searchFields.put("client_name", params.get("client_name"));
-    		searchFields.put("vehicle_plate", params.get("vehicle_plate"));
-    		searchFields.put("vehicle_brand", params.get("vehicle_brand"));
-    		searchFields.put("vehicle_line", params.get("vehicle_line"));
-    		searchFields.put("vehicle_year", params.get("vehicle_year"));
-    		searchFields.put("case_status", params.get("case_status"));
-    		searchFields.put("incident_date", params.get("incident_date"));
-    		searchFields.put("multiple", String.valueOf(GeneralMethods.validateParameter(multipleSearch)));
-    		
-    		incidentsList(searchField, true);
-    	}
-    	
+				incidentsList(null, false);
+			} else {
+
+				searchFields = new HashMap<String,String>();
+				searchFields.put("number_case", params.get("number_case"));
+				searchFields.put("number_policy", params.get("number_policy"));
+				searchFields.put("client_name", params.get("client_name"));
+				searchFields.put("vehicle_plate", params.get("vehicle_plate"));
+				searchFields.put("vehicle_brand", params.get("vehicle_brand"));
+				searchFields.put("vehicle_line", params.get("vehicle_line"));
+				searchFields.put("vehicle_year", params.get("vehicle_year"));
+				searchFields.put("case_status", params.get("case_status"));
+				searchFields.put("incident_date", params.get("incident_date"));
+				searchFields.put("multiple", String.valueOf(GeneralMethods.validateParameter(multipleSearch)));
+
+				incidentsList(searchField, true);
+			}
+		}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+		}
     }
     
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor"})
@@ -316,7 +331,7 @@ public class Incidents extends AdminBaseController {
     
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void incidentDetail(Long id) {
-    	
+    	try{
     	if (id!=null) {
 	    	ER_Incident incident = ER_Incident.findById(id);
 	    	
@@ -361,6 +376,11 @@ public class Incidents extends AdminBaseController {
     	}
     	
     	incidentsList(null, null);
+		}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+	}
     	
     }
 
@@ -417,6 +437,7 @@ public class Incidents extends AdminBaseController {
 	 */
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void attendIncident(Long id) {
+		try{
     	if(id != null){
     		ER_Incident incident = ER_Incident.findById(id);
     		if((incident != null && canViewIncident(incident)) || incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER) {
@@ -483,7 +504,12 @@ public class Incidents extends AdminBaseController {
 	    			}
     			}
     		}
-    	}
+    		}
+		}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+	}
     }
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
 	public static void attendInspection(Long incidentId,int isApproved) {
@@ -586,6 +612,7 @@ public class Incidents extends AdminBaseController {
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_INDICTED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_INSPECTION) ||
+                    incident.status.code.equals(ERConstants.INCIDENT_STATUS_COMPLETED) ||
                     (incident.status.code.equals(ERConstants.INCIDENT_STATUS_INCOMPLETE) && StringUtil.isNullOrBlank(inspectionNumber)))
 					{
         			validation.required("inspection", inspection);
@@ -668,6 +695,7 @@ public class Incidents extends AdminBaseController {
             		incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
             		incident.status.code.equals(ERConstants.INCIDENT_STATUS_INDICTED) ||
             		incident.status.code.equals(ERConstants.INCIDENT_STATUS_INSPECTION) ||
+                    incident.status.code.equals(ERConstants.INCIDENT_STATUS_COMPLETED ) ||
 					(incident.status.code.equals(ERConstants.INCIDENT_STATUS_INCOMPLETE) && StringUtil.isNullOrBlank(inspectionNumber))){
     				
 	    			String[] livianos = new String[]{"01", "03", "05", "08", "09", "13", "16", "17"};
@@ -984,7 +1012,7 @@ public class Incidents extends AdminBaseController {
 	 */
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void newQuotation(Long incidentId) {
-    	
+    	try{
     	if (incidentId!=null) {
     		ER_Incident incident = ER_Incident.findById(incidentId);
     		if(incident!=null && canViewIncident(incident) && incident.canModifyQuotations()){
@@ -1058,76 +1086,82 @@ public class Incidents extends AdminBaseController {
     	}
     	
     	incidentDetail(incidentId);
+		}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+	}
+
     }
     
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void simulateQuotation(@Valid ER_Quotation quotation, @Required Long[] paymentFrecuencies, Long loJackId) {
-
-        if (quotation.incident==null || quotation.incident.id == null) {
-            incidentsList(null, false);
-        }
+	try {
+		if (quotation.incident == null || quotation.incident.id == null) {
+			incidentsList(null, false);
+		}
 		quotation.setValuesOfQuotation(quotation);
-    	
-    	ER_General_Configuration configuration = ER_General_Configuration.find("").first();
-    	BigDecimal hundred = new BigDecimal(100);
-    	ER_Coverage theftCoverage = (configuration!=null)?configuration.theftCoverage:null;
-    	BigDecimal partialTheftPercentage = (configuration!=null)?configuration.partialTheftPercentage.divide(hundred):BigDecimal.ZERO;
-    	
-    	if (quotation.product==null || quotation.product.id==null) {
+
+		ER_General_Configuration configuration = ER_General_Configuration.find("").first();
+		BigDecimal hundred = new BigDecimal(100);
+		ER_Coverage theftCoverage = (configuration != null) ? configuration.theftCoverage : null;
+		BigDecimal partialTheftPercentage = (configuration != null) ? configuration.partialTheftPercentage.divide(hundred) : BigDecimal.ZERO;
+
+		if (quotation.product == null || quotation.product.id == null) {
 			validation.addError("quotation.product", Messages.get("quotation.form.quotation.required"));
 		}
-		
+
 		List<ER_Quotation_Parameter> parameters = quotation.parameters;
-		if (parameters!=null && !parameters.isEmpty()) {
-        	BigDecimal theftValue = BigDecimal.ZERO;
-			
-        	int theftIndex = 0;
-    		for (int j=0; j<parameters.size();j++) {
-    			ER_Quotation_Parameter parameter = parameters.get(j);
-    			if (!parameter.validateValue()) {
-    				String key = "quotation.parameters["+j+"].value";
-    				if (!validation.hasError(key)) {
-    					validation.addError(key, Messages.get("quotation.form.quotation.required"));
-    				}
-    			}
-    			
-    			if (parameter.productCoverage!=null && parameter.productCoverage.coverage.equals(theftCoverage)) {
-    				theftValue = (parameter.value!=null)?parameter.value:BigDecimal.ZERO;
-    				theftIndex = j;
-    			}
-    		}
-    		
-    		if (quotation.carValue!=null) {
-	    		if (!(quotation.carValue.multiply(partialTheftPercentage).compareTo(theftValue)>=0)) {
-	    			validation.addError("quotation.parameters["+theftIndex+"].value", Messages.get("quotation.form.quotation.theftcoverageerror",configuration.partialTheftPercentage, "%%"));
-	    		}
-    		}
+		if (parameters != null && !parameters.isEmpty()) {
+			BigDecimal theftValue = BigDecimal.ZERO;
+
+			int theftIndex = 0;
+			for (int j = 0; j < parameters.size(); j++) {
+				ER_Quotation_Parameter parameter = parameters.get(j);
+				if (!parameter.validateValue()) {
+					String key = "quotation.parameters[" + j + "].value";
+					if (!validation.hasError(key)) {
+						validation.addError(key, Messages.get("quotation.form.quotation.required"));
+					}
+				}
+
+				if (parameter.productCoverage != null && parameter.productCoverage.coverage.equals(theftCoverage)) {
+					theftValue = (parameter.value != null) ? parameter.value : BigDecimal.ZERO;
+					theftIndex = j;
+				}
+			}
+
+			if (quotation.carValue != null) {
+				if (!(quotation.carValue.multiply(partialTheftPercentage).compareTo(theftValue) >= 0)) {
+					validation.addError("quotation.parameters[" + theftIndex + "].value", Messages.get("quotation.form.quotation.theftcoverageerror", configuration.partialTheftPercentage, "%%"));
+				}
+			}
 		}
-		
+
 		if (quotation.hasCarValue()) {
 			validation.required("quotation.carValue", quotation.carValue);
 		}
 
-        // Validate if has average value and car value is within parameters
-        if (quotation.incident.vehicle.averageValue != null && quotation.carValue != null ) {
-            BigDecimal averageValueParam = new BigDecimal(0.25);
-            ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
-            if (currentConfiguration.averageValueConfig != null) {
-                averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
-            }
-            BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
-            BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
-            // Find lower and upper parameter
-            BigDecimal lowerValue = quotation.incident.vehicle.averageValue.multiply(min);
-            BigDecimal upperValue = quotation.incident.vehicle.averageValue.multiply(max);
-            // car value within
-            if (quotation.carValue.compareTo(lowerValue) < 0  || quotation.carValue.compareTo(upperValue) > 0) {
-                validation.addError("quotation.carValue", Messages.get("quotation.form.quotation.carvaluerange"));
-            }
-        }
+		// Validate if has average value and car value is within parameters
+		if (quotation.incident.vehicle.averageValue != null && quotation.carValue != null) {
+			BigDecimal averageValueParam = new BigDecimal(0.25);
+			ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
+			if (currentConfiguration.averageValueConfig != null) {
+				averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
+			}
+			BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
+			BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
+			// Find lower and upper parameter
+			BigDecimal lowerValue = quotation.incident.vehicle.averageValue.multiply(min);
+			BigDecimal upperValue = quotation.incident.vehicle.averageValue.multiply(max);
+			// car value within
+			if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
+				validation.addError("quotation.carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+			}
+		}
 
-        List<LoJackOptions> loJackOptions = GeneralMethods.getAvailableLoJacks(loJackId);
-        if (quotation.loJack != null) {
+		List<LoJackOptions> loJackOptions = GeneralMethods.getAvailableLoJacks(loJackId);
+		if (quotation.loJack != null) {
 			for (LoJackOptions loJackOption : loJackOptions) {
 				if (loJackOption.number == quotation.loJack) {
 					quotation.selectedLoJack = loJackOption;
@@ -1141,168 +1175,179 @@ public class Incidents extends AdminBaseController {
 			params.flash();
 			validation.keep();
 			newQuotation(quotation.incident.id);
-			
+
 		} else {
-			
+
 			QuotationHelper.calculateTotalPrime(quotation, quotation.incident.vehicle, paymentFrecuencies);
-			
-			if (quotation.discount!=null) {
-				
+
+			if (quotation.discount != null) {
+
 				BigDecimal primeDiscount = BigDecimal.ZERO;
-				if (quotation.product.hasFacultative !=null && quotation.product.hasFacultative && quotation.facultative!=null) {
+				if (quotation.product.hasFacultative != null && quotation.product.hasFacultative && quotation.facultative != null) {
 					ER_Facultative_Deductible facultative = ER_Facultative_Deductible.findById(quotation.facultative);
-					if (facultative!=null) {
+					if (facultative != null) {
 						primeDiscount = facultative.primeDiscount;
 					}
 				}
-				
-	    		BigDecimal authorizedDiscount = Incidents.getAuthorizedDiscount(quotation.product, quotation.carValue, primeDiscount);
-	    		validation.max("quotation.discount", quotation.discount, authorizedDiscount.doubleValue());
-	    		validation.min("quotation.discount", quotation.discount, 0.0);
-	    		
-    			quotation.applyDiscount(quotation.discount);
+
+				BigDecimal authorizedDiscount = Incidents.getAuthorizedDiscount(quotation.product, quotation.carValue, primeDiscount);
+				validation.max("quotation.discount", quotation.discount, authorizedDiscount.doubleValue());
+				validation.min("quotation.discount", quotation.discount, 0.0);
+
+				quotation.applyDiscount(quotation.discount);
 			}
-			
+
 			validation.min("quotation.totalPrime", quotation.totalPrime, 0.01);
 			if (validation.hasErrors()) {
 				params.flash();
 				validation.keep();
 				newQuotation(quotation.incident.id);
-    		}
+			}
 
-            try{
-                ER_Vehicle_Line line = ER_Vehicle_Line.findById(quotation.incident.vehicle.line.id);
-                ER_Year erYear = ER_Year.findById(quotation.incident.vehicle.erYear.id);
-                QueryAverageValueVehicleRequest request = new QueryAverageValueVehicleRequest();
-                request.setBrand(line.brand.name);
-                request.setLine(line.name);
-                request.setYear(erYear.year);
-                request.setCurrency("Q");
-                QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
-                if(!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue")  && quotation.carValue != null){
-                    // Garanteed value check
-                    BigDecimal garanteedValueParam = new BigDecimal(0.15);
-                    ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
-                    if (currentConfiguration.garanteedValueConfig != null) {
-                        garanteedValueParam = currentConfiguration.garanteedValueConfig.divide(BigDecimal.valueOf(100));
-                    }
-                    BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
-                    BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-                    BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+			try {
+				ER_Vehicle_Line line = ER_Vehicle_Line.findById(quotation.incident.vehicle.line.id);
+				ER_Year erYear = ER_Year.findById(quotation.incident.vehicle.erYear.id);
+				QueryAverageValueVehicleRequest request = new QueryAverageValueVehicleRequest();
+				request.setBrand(line.brand.name);
+				request.setLine(line.name);
+				request.setYear(erYear.year);
+				request.setCurrency("Q");
+				QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+				if (!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.carValue != null) {
+					// Garanteed value check
+					BigDecimal garanteedValueParam = new BigDecimal(0.15);
+					ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
+					if (currentConfiguration.garanteedValueConfig != null) {
+						garanteedValueParam = currentConfiguration.garanteedValueConfig.divide(BigDecimal.valueOf(100));
+					}
+					BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
+					BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+					BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
-                    if(quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0){
-                        quotation.setGaranteedValue(Boolean.TRUE);
-                    }else if(quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0){
-                        quotation.setGaranteedValue(Boolean.TRUE);
-                    }
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+					if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
+						quotation.setGaranteedValue(Boolean.TRUE);
+					} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+						quotation.setGaranteedValue(Boolean.TRUE);
+					}
+				}
+			} catch (Exception e) {
+				Logger.error("error: " + e.getMessage());
+				e.printStackTrace();
+			}
 
-	    	String jsonField = quotation.toJsonString(true);
-	    	renderArgs.put("selectedFrecuencies", paymentFrecuencies);
-	    	render(quotation, jsonField, configuration, loJackId);
+			String jsonField = quotation.toJsonString(true);
+			renderArgs.put("selectedFrecuencies", paymentFrecuencies);
+			render(quotation, jsonField, configuration, loJackId);
+			}
+		}
+		catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
 		}
     }
     
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void saveQuotation(String iField, Long incidentId, String back, Long[] paymentFrecuencies) {
-    	
-    	if (back!=null) {
-    		ER_Quotation quotation = ER_Quotation.quotationFromJson(iField, true);
-    		if (quotation.product!=null) {
-    			flash.put("quotation.product.id", quotation.product.id);
-    			flash.put("quotation.carValue", quotation.carValue);
-    			flash.put("quotation.facultative", quotation.facultative);
-    			flash.put("quotation.discount", quotation.discount);
-    			int i = 0;
-    			
-    			if (quotation.parameters!=null) {
-    				for (ER_Quotation_Parameter parameter : quotation.parameters) {
-        				
-        				if (parameter.validateValue()) {
-        					if (parameter.coverageValue!=null) {
-            					flash.put("quotation.parameters["+i+"].coverageValue.id", parameter.coverageValue.id);
-            				}
-        					if (parameter.value!=null) {
-            					flash.put("quotation.parameters["+i+"].value", StringFormatExtensions.decimalFormat(parameter.value.doubleValue()));
-            				}
-        					
-        					if (parameter.applyInsurance!=null) {
-        						flash.put("quotation.parameters["+i+"].applyInsurance", (parameter.applyInsurance)?"on":"");
-        					}
-        					i++;
-        				}
-        			}
-    			}
-    		}
-    		
-    		String frecuencies = "";
-    		if (paymentFrecuencies!=null) {
-    			for (int i=0; i<paymentFrecuencies.length; i++) {
-    				frecuencies += paymentFrecuencies[i];
-    				if (i!=paymentFrecuencies.length-1) {
-    					frecuencies+=",";
-    				}
-    				
-    			}
-    			if (!frecuencies.isEmpty()) {
-    				flash.put("paymentFrecuencies", frecuencies);
-    			}
-    		}
-    		
-    		newQuotation(incidentId);
-    	}
-    	
-    	ER_Incident incident = ER_Incident.findById(incidentId);
-    	if (canViewIncident(incident) && incident.canModifyQuotations()) {
-    		ER_Quotation quotation = ER_Quotation.quotationFromJson(iField, true);
-    		
-    		boolean hasDiscount = quotation.discount!=null && quotation.discount.compareTo(BigDecimal.ZERO)>0;
-    		if (hasDiscount) {
-    			quotation.discountDate = new Date();
-    			quotation.discountAuthorizedUser = connectedUser();
-    		}
+ 	try{
+		if (back != null) {
+			ER_Quotation quotation = ER_Quotation.quotationFromJson(iField, true);
+			if (quotation.product != null) {
+				flash.put("quotation.product.id", quotation.product.id);
+				flash.put("quotation.carValue", quotation.carValue);
+				flash.put("quotation.facultative", quotation.facultative);
+				flash.put("quotation.discount", quotation.discount);
+				int i = 0;
+
+				if (quotation.parameters != null) {
+					for (ER_Quotation_Parameter parameter : quotation.parameters) {
+
+						if (parameter.validateValue()) {
+							if (parameter.coverageValue != null) {
+								flash.put("quotation.parameters[" + i + "].coverageValue.id", parameter.coverageValue.id);
+							}
+							if (parameter.value != null) {
+								flash.put("quotation.parameters[" + i + "].value", StringFormatExtensions.decimalFormat(parameter.value.doubleValue()));
+							}
+
+							if (parameter.applyInsurance != null) {
+								flash.put("quotation.parameters[" + i + "].applyInsurance", (parameter.applyInsurance) ? "on" : "");
+							}
+							i++;
+						}
+					}
+				}
+			}
+
+			String frecuencies = "";
+			if (paymentFrecuencies != null) {
+				for (int i = 0; i < paymentFrecuencies.length; i++) {
+					frecuencies += paymentFrecuencies[i];
+					if (i != paymentFrecuencies.length - 1) {
+						frecuencies += ",";
+					}
+
+				}
+				if (!frecuencies.isEmpty()) {
+					flash.put("paymentFrecuencies", frecuencies);
+				}
+			}
+
+			newQuotation(incidentId);
+		}
+
+		ER_Incident incident = ER_Incident.findById(incidentId);
+		if (canViewIncident(incident) && incident.canModifyQuotations()) {
+			ER_Quotation quotation = ER_Quotation.quotationFromJson(iField, true);
+
+			boolean hasDiscount = quotation.discount != null && quotation.discount.compareTo(BigDecimal.ZERO) > 0;
+			if (hasDiscount) {
+				quotation.discountDate = new Date();
+				quotation.discountAuthorizedUser = connectedUser();
+			}
 
 			quotation.product = ER_Product.findById(quotation.product.id);
 			quotation.incident = incident;
-        	quotation.creationDate = new Date();
-        	QueryAverageValueVehicleRequest request = new QueryAverageValueVehicleRequest();
-        	request.setBrand(incident.vehicle.line.brand.name);
-    		request.setLine(incident.vehicle.line.name);
-    		request.setYear(incident.vehicle.erYear.year);
-    		request.setCurrency("Q");
-    		quotation.loadDetailJSON();
-    		QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
-    		if(!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.quotationDetail != null && quotation.carValue != null){
-    			BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
-    			BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-    			BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
-    			
-    			if(quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0){
-    				quotation.quotationDetail.setVehicleValue(queryAverage.getAverageValue());
-    			}else if(quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0){
-    				quotation.quotationDetail.setVehicleValue(quotation.carValue);
-    			}
-    		}
-        	quotation.save();
-        	
+			quotation.creationDate = new Date();
+			QueryAverageValueVehicleRequest request = new QueryAverageValueVehicleRequest();
+			request.setBrand(incident.vehicle.line.brand.name);
+			request.setLine(incident.vehicle.line.name);
+			request.setYear(incident.vehicle.erYear.year);
+			request.setCurrency("Q");
+			quotation.loadDetailJSON();
+			QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+			if (!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.quotationDetail != null && quotation.carValue != null) {
+				BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
+				BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+				BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+
+				if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
+					quotation.quotationDetail.setVehicleValue(queryAverage.getAverageValue());
+				} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+					quotation.quotationDetail.setVehicleValue(quotation.carValue);
+				}
+			}
+			quotation.save();
+
 			List<ByteArrayOutputStream> streamArray = new ArrayList<ByteArrayOutputStream>();
 			streamArray.add(quotationPDFData(quotation));
-    	
+
 			boolean result = Mails.quotations(incident, streamArray, true);
 			Mails.incidentDetail(incident);
-			if(!result){
+			if (!result) {
 				flash.put("incident.quotation.send.warning", Messages.get("incident.quotation.send.warning"));
 				incidentDetail(incident.id);
 			}
-			
+
 			flash.success(Messages.get("incident.quotation.send.success"));
 			incidentDetail(incident.id);
-    	}
-    	
-    	newQuotation(incidentId);
+		}
+
+		newQuotation(incidentId);
+		}
+    catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+		}
     }
     
     /*
@@ -1312,105 +1357,118 @@ public class Incidents extends AdminBaseController {
 	 */
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void editClient(Long clientId, Long incidentId, Integer activeTab) {
-    	if(clientId != null){
-    		ER_Incident incident = ER_Incident.findById(incidentId);
-    		ER_Client client = incident.client;
-    		ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
-    		ER_Legal_Representative legalRepresentative = client.legalRepresentative;
-            ER_Legal_Representative legalRepresentativePayer = client.payer != null ? client.payer.legalRepresentativePayer : null;
-            ER_Vehicle vehicle = incident.vehicle;
-    		ER_Payment payment = incident.payment;
-    		ER_Client_PEP clientPEP = client.clientPEP;
+		try {
+		if (clientId != null) {
+			ER_Incident incident = ER_Incident.findById(incidentId);
+			ER_Client client = incident.client;
+			ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
+			ER_Legal_Representative legalRepresentative = client.legalRepresentative;
+			ER_Legal_Representative legalRepresentativePayer = client.payer != null ? client.payer.legalRepresentativePayer : null;
+			ER_Vehicle vehicle = incident.vehicle;
+			ER_Payment payment = incident.payment;
+			ER_Client_PEP clientPEP = client.clientPEP;
 			ER_Client_PayerPEP clientPayerPEP = client.payer != null ? client.payer.clientPayerPEP : null;
-            client.ConvertUpper();
-    		if(canViewClient(client)){
-    			renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
-    	    	renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
-    	    	renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
+			client.ConvertUpper();
+			if (canViewClient(client)) {
+				renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
+				renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
+				renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
 //    	    	renderArgs.put("phoneNumbersString", client.phoneNumbers != null ? client.phoneNumbers : "");
 
 				loadAddressCatalogs(client, payer);
 
-    	    	if(vehicle != null){
-	        		if(vehicle.line != null && vehicle.line.brand != null){
-	        			//List<ER_Vehicle_Value> values = ER_Vehicle_Value.find("year != null and line.insurable = 1 and line.id = ? order by year asc", vehicle.line.id).fetch();
-	        			//renderArgs.put("values", values);
-	        			
-	        			//List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v.line from ER_Vehicle_Value v where v.year != null and v.line.insurable = 1 and v.line.vehicleClass IS NOT NULL and v.line.brand.id = ? order by v.line.name", vehicle.line.brand.id).fetch();
-    	    			//renderArgs.put("lines", lines);
-    	    			
-    	    			List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
-    	    			renderArgs.put("lines", lines);
-	        		}
-    	        	List <ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
-    	        	renderArgs.put("brands", brands);
-    	        	renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
-    	    		renderArgs.put("vehicleRates", ER_Rate.findAll());
-    	    		renderArgs.put("vehicleERYears", ER_Year.findAll());
-    	    		renderArgs.put("vehicleReminderTypes", ER_Reminder_Type.find("order by name asc").fetch());
-    	    		renderArgs.put("vehiclePlateTypes", ER_Plate_Type.findAll());
-    	    		renderArgs.put("chargeTypes", ER_Charge_Type.find("order by name asc").fetch());
-    	    		renderArgs.put("bankAccountTypes", ER_Bank_Account_Type.find("order by name asc").fetch());
-    	    		renderArgs.put("banks", ER_Bank.find("select distinct b from ER_Bank as b where b.active = ?", true).fetch());
-    	    		renderArgs.put("cardTypes", ER_Card_Type.find("order by name asc").fetch());
-    	    		renderArgs.put("cardClassz", ER_Card_Class.find("order by name asc").fetch());
-    	    		
-    	    		if(vehicle.armor == null){
-    	    			vehicle.armor = "N";
-    	    		}
-    	    		if(vehicle.isNew == null){
-    	    			vehicle.isNew = true;
-    	    		}
-    	    	}
-    	    	if (payer == null) {
-    	    	    payer = new ER_Client_Payer();
-                    payer.isIndividual = true;
-                }
-    	    	loadCatalogsClient();
+				if (vehicle != null) {
+					if (vehicle.line != null && vehicle.line.brand != null) {
+						//List<ER_Vehicle_Value> values = ER_Vehicle_Value.find("year != null and line.insurable = 1 and line.id = ? order by year asc", vehicle.line.id).fetch();
+						//renderArgs.put("values", values);
 
-				List <ER_Aditional_Multimedia> aditional_multimedia = null;
+						//List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v.line from ER_Vehicle_Value v where v.year != null and v.line.insurable = 1 and v.line.vehicleClass IS NOT NULL and v.line.brand.id = ? order by v.line.name", vehicle.line.brand.id).fetch();
+						//renderArgs.put("lines", lines);
+
+						List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
+						renderArgs.put("lines", lines);
+					}
+					List<ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
+					renderArgs.put("brands", brands);
+					renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
+					renderArgs.put("vehicleRates", ER_Rate.findAll());
+					renderArgs.put("vehicleERYears", ER_Year.findAll());
+					renderArgs.put("vehicleReminderTypes", ER_Reminder_Type.find("order by name asc").fetch());
+					renderArgs.put("vehiclePlateTypes", ER_Plate_Type.findAll());
+					renderArgs.put("chargeTypes", ER_Charge_Type.find("order by name asc").fetch());
+					renderArgs.put("bankAccountTypes", ER_Bank_Account_Type.find("order by name asc").fetch());
+					renderArgs.put("banks", ER_Bank.find("select distinct b from ER_Bank as b where b.active = ?", true).fetch());
+					renderArgs.put("cardTypes", ER_Card_Type.find("order by name asc").fetch());
+					renderArgs.put("cardClassz", ER_Card_Class.find("order by name asc").fetch());
+
+					if (vehicle.armor == null) {
+						vehicle.armor = "N";
+					}
+					if (vehicle.isNew == null) {
+						vehicle.isNew = true;
+					}
+				}
+				if (payer == null) {
+					payer = new ER_Client_Payer();
+					payer.isIndividual = true;
+				}
+				loadCatalogsClient();
+
+				List<ER_Aditional_Multimedia> aditional_multimedia = null;
 				if (client.multimedia != null)
-					aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?",client.multimedia.id).fetch();
+					aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
 
 
-    			render(incident, client, vehicle, payment, payer, legalRepresentative, legalRepresentativePayer, incidentId, activeTab,clientPEP,clientPayerPEP,aditional_multimedia);
-    		}
-    	}
-    	incidentsList(null, null);
+				render(incident, client, vehicle, payment, payer, legalRepresentative, legalRepresentativePayer, incidentId, activeTab, clientPEP, clientPayerPEP, aditional_multimedia);
+			}
+		}
+		incidentsList(null, null);
+		}
+    	catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
     }
 
     /**
      * Load all the catalogs to the client form
      */
     private static void loadCatalogsClient() {
-    	List<ER_Civil_Status> statuses  = ER_Civil_Status.find("active = ? order by name",Boolean.TRUE).fetch();
-    	renderArgs.put("statuses",statuses);
+    	try {
+			List<ER_Civil_Status> statuses = ER_Civil_Status.find("active = ? order by name", Boolean.TRUE).fetch();
+			renderArgs.put("statuses", statuses);
 
-		//-------Obtener la lista de nacionalidades ordenados por nombre, mostrando GUATEMALA como primer elemento.--------//
-    	List<ER_Nationality> nationalities = ER_Nationality.find("active = ? order by name", Boolean.TRUE).fetch();
-		renderArgs.put("nationalities", nationalities);
-    	
-    	List<ER_License_Type> licenseTypes = ER_License_Type.find("active = ? order by name", Boolean.TRUE).fetch();
-    	renderArgs.put("licenseTypes", licenseTypes);
-    	
-    	List<ER_Sex> sexList = ER_Sex.find("active = ?", Boolean.TRUE).fetch();
-    	renderArgs.put("sex", sexList);
-    	
-    	List<ER_Society_Type> societyTypes = ER_Society_Type.find("active = ? order by name", Boolean.TRUE).fetch();
-    	renderArgs.put("societyTypes", societyTypes);
+			//-------Obtener la lista de nacionalidades ordenados por nombre, mostrando GUATEMALA como primer elemento.--------//
+			List<ER_Nationality> nationalities = ER_Nationality.find("active = ? order by name", Boolean.TRUE).fetch();
+			renderArgs.put("nationalities", nationalities);
 
-    	List<ER_Economic_Activity> economicActivities = ER_Economic_Activity.find("active = ? order by name", Boolean.TRUE).fetch();
-    	renderArgs.put("economicActivities", economicActivities);
+			List<ER_License_Type> licenseTypes = ER_License_Type.find("active = ? order by name", Boolean.TRUE).fetch();
+			renderArgs.put("licenseTypes", licenseTypes);
 
-        List<ER_Channel> zoneList = ER_Channel.find("isPublic = ? OR isPublic IS NULL", Boolean.FALSE).fetch();
-        renderArgs.put("zoneList", zoneList);
+			List<ER_Sex> sexList = ER_Sex.find("active = ?", Boolean.TRUE).fetch();
+			renderArgs.put("sex", sexList);
+
+			List<ER_Society_Type> societyTypes = ER_Society_Type.find("active = ? order by name", Boolean.TRUE).fetch();
+			renderArgs.put("societyTypes", societyTypes);
+
+			List<ER_Economic_Activity> economicActivities = ER_Economic_Activity.find("active = ? order by name", Boolean.TRUE).fetch();
+			renderArgs.put("economicActivities", economicActivities);
+
+			List<ER_Channel> zoneList = ER_Channel.find("isPublic = ? OR isPublic IS NULL", Boolean.FALSE).fetch();
+			renderArgs.put("zoneList", zoneList);
+		}
+        catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
 
     }
 
     //* -------- Function to load address lists boxes for individual and legal client, payer forms.-----------------------------------------------
 	// --------- by default country = GUATEMALA and load DEPARTMENTS for father country. if payer is null or empty, set client parameters.--------
-    private static void loadAddressCatalogs(ER_Client client, ER_Client_Payer payer){
-		if(client != null) {
+    private static void loadAddressCatalogs(ER_Client client, ER_Client_Payer payer) {
+    	try{
+		if (client != null) {
 			//----------------------------------------------------CLIENT MAIL ADDRESS LISTS---------------------------------------------------------------------
 			if (client.country != null && client.country.id != null) {
 				renderArgs.put("departments", ER_Geographic_Area.find("id_father = ? order by name asc", client.country.id).fetch());
@@ -1451,38 +1509,44 @@ public class Incidents extends AdminBaseController {
 				renderArgs.put("legalZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", client.legalRepresentative.municipality.id).fetch());
 			}
 		}
-		if(payer != null){
+		if (payer != null) {
 			//-----------------------------------------------------------------------PAYER ADDRESS MAIL LISTS --------------------------------------------------------
-			if(payer.country != null && payer.country.id != null){
+			if (payer.country != null && payer.country.id != null) {
 				renderArgs.put("payerDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.country.id).fetch());
 			}
-			if(payer.department != null && payer.department.id != null){
+			if (payer.department != null && payer.department.id != null) {
 				renderArgs.put("payerMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.department.id).fetch());
 			}
-			if(payer.municipality != null && payer.municipality.id != null){
+			if (payer.municipality != null && payer.municipality.id != null) {
 				renderArgs.put("payerZones", ER_Geographic_Area.find("id_father = ? order by name asc", payer.municipality.id).fetch());
 			}
 			//----------------------------------------------------PAYER PAYMENT ADDRESS LISTS---------------------------------------------------------------------
-			if(payer.countryWork != null && payer.countryWork.id != null){
+			if (payer.countryWork != null && payer.countryWork.id != null) {
 				renderArgs.put("payerWorkDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.countryWork.id).fetch());
 			}
-			if(payer.workDepartment != null && payer.workDepartment.id != null){
+			if (payer.workDepartment != null && payer.workDepartment.id != null) {
 				renderArgs.put("payerWorkMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.workDepartment.id).fetch());
 			}
-			if(payer.workMunicipality != null && payer.workMunicipality.id != null) {
+			if (payer.workMunicipality != null && payer.workMunicipality.id != null) {
 				renderArgs.put("payerWorkZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.workMunicipality.id).fetch());
 			}
 			//----------------------------------------------------PAYER LEGAL REPRESENTATIVE ADDRESS BUSINESS LIST-----------------------------------------------
-			if(payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.country != null && payer.legalRepresentativePayer.country.id != null){
+			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.country != null && payer.legalRepresentativePayer.country.id != null) {
 				renderArgs.put("payerLegalDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.country.id).fetch());
 			}
-			if(payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.department != null && payer.legalRepresentativePayer.department.id != null){
+			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.department != null && payer.legalRepresentativePayer.department.id != null) {
 				renderArgs.put("payerLegalMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.department.id).fetch());
 			}
-			if(payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.municipality != null && payer.legalRepresentativePayer.municipality.id != null){
+			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.municipality != null && payer.legalRepresentativePayer.municipality.id != null) {
 				renderArgs.put("payerLegalZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.legalRepresentativePayer.municipality.id).fetch());
 			}
 			//----------------------------------------------------------------------------------------------------------------
+		}
+
+		}
+		catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
     
@@ -1602,6 +1666,7 @@ public class Incidents extends AdminBaseController {
                         }
                     }
                 }catch(Exception e){
+                	Logger.error("error: " + e.getMessage());
                     e.printStackTrace();
                 }
 	    		flash.success(Messages.get("client.edit.success"));
@@ -1626,6 +1691,7 @@ public class Incidents extends AdminBaseController {
 				return fileName;
 			}
 		}catch(Exception e){
+			Logger.error("error: " + e.getMessage());
 			e.printStackTrace();
 		}
 		return null;
@@ -1875,9 +1941,10 @@ public class Incidents extends AdminBaseController {
     									Boolean sendPayment,
     									Boolean sendWorkFlow,
     									Boolean sendQueryVehicle){
-    	
+    	try{
     	ER_Incident incident = ER_Incident.findById(incidentId);
-        ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+			Logger.info("Ingresa a generar poliza del caso: " + incident.number);
+			ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
     	if(incident.status.code == ERConstants.INCIDENT_STATUS_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_APPROVED_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_INCOMPLETE){
     		flash.error("Error: La inspección no se ha completado.");
             ER_Exceptions exceptions = new ER_Exceptions();
@@ -1916,6 +1983,18 @@ public class Incidents extends AdminBaseController {
 		ER_Quotation quotation = ER_Quotation.findById(incident.selectedQuotation.id);
     	if(quotation.carValue != null && quotation.carValue.compareTo(BigDecimal.ZERO)>0){
 			if(incident.vehicle.isNew == null || (incident.vehicle.isNew != null && !incident.vehicle.isNew)) {
+				if(incident.inspection == null || incident.inspection.inspectionDate == null){
+					flash.error("Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.");
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.";
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
 				int days = differenceBetweenDates(incident.inspection.inspectionDate,incident.policyValidity);
 				if (days>15 || days<0) {
 					flash.error("Error: La vigencia de póliza no se encuentra dentro de los 15 días posteriores a inspección.");
@@ -2284,6 +2363,11 @@ public class Incidents extends AdminBaseController {
 		Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
     	flash.put("GeneratePolicySuccess",policyResponse.getPolicy());
     	incidentDetail(incident.id);
+	}
+		catch(Exception e){
+		Logger.error("error: " + e.getMessage());
+		e.printStackTrace();
+	}
     }
     
     private static boolean isValidateFields(ER_Incident incident){

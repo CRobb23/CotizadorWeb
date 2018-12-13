@@ -72,19 +72,18 @@
 					#{/if}
 					#{/if}
 
-					#{if controllers.Security.checkAccess()}
+					*{#{if controllers.Security.checkAccess()}}*
 					#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor') || controllers.Security.check('Usuario Final')}
 						<li class="${(request.controller == 'UserCases') ? 'current_page_item_selected active' : 'current_page_item'}">
 							<a href="@{UserCases.clientInformation()}">&{'menu.cases.newquotation'}</a>
 						</li>
+					*{#{/if}}*
 					#{/if}
-					#{/if}
-					#{if controllers.Security.checkAccess()}
+
 					#{if controllers.Security.check('Administrador maestro') || controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal') || controllers.Security.check('Vendedor') || controllers.Security.check('Supervisor') || controllers.Security.check('Usuario Final')}
 						<li class="${(request.controller == 'Incidents') ? 'current_page_item_selected active' : 'current_page_item'}">
 							<a href="@{Incidents.incidentsList()}">&{'menu.cases.incidents'}</a>
 						</li>
-					#{/if}
 					#{/if}
 
 					#{if controllers.Security.checkAccess()}
