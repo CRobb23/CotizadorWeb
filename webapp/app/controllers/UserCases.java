@@ -55,8 +55,7 @@ public class UserCases extends AdminBaseController {
 	 * ************************************************************************************************************************
 	 */
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-	@Access
-    public static void clientInformation() {
+	public static void clientInformation() {
     	flash.clear();
         renderClientInformation(null);
     }
