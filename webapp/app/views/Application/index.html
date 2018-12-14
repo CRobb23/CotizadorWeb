@@ -2,6 +2,6 @@
 
 #{if !controllers.Security.checkAccess()}
 <div class="alert alert-danger">
-    <p>Emisión en línea detenida  por cierre mensual.</p>
+    <p>${mensajeFueraDeLinea.raw()}</p>
 </div>
 #{/if}

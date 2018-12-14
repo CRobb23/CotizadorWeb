@@ -1,5 +1,6 @@
 package controllers;
 
+import static helpers.ERConstants.OUT_OF_LINE_MESSAGE;
 import static play.modules.pdf.PDF.renderPDF;
 
 import helpers.ERConstants;
@@ -23,7 +24,10 @@ public class Application extends AdminBaseController {
     	if (checkRole(ERConstants.USER_ROLE_SALES_MAN)) {
     		UserCases.clientInformation();
     	}
-    	
+		//Message for system out of line.
+		ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
+		String body = mail.body;
+		renderArgs.put("mensajeFueraDeLinea",body);
     	render();
     }
 }
