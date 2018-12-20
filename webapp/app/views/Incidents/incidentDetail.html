@@ -190,13 +190,20 @@
 			#{/if}
 			#{if incident?.status?.code == 6 || incident?.status?.code == 7}
                 <a href="@{IncidentForms.showAvailForms(incident?.id)}" class="btn btn-block btn-large">&{'incident.attend.forms'}</a>
-				#{if !controllers.Security.check('Usuario Final') && incident?.status?.code == 6}
-					<a href="@{generatePolicy(incident?.id, true, true, true, true, true, true, true, true)}" class="btn btn-block btn-large">&{'incident.attend.policy'}</a>
+				#{if controllers.Security.checkAccess()}
+					#{if !controllers.Security.check('Usuario Final') && incident?.status?.code == 6}
+						<a href="@{generatePolicy(incident?.id, true, true, true, true, true, true, true, true)}" class="btn btn-block btn-large">&{'incident.attend.policy'}</a>
+					#{/if}
+					#{if controllers.Security.check('Usuario Final') && incident?.status?.code == 6}
+						<a href="@{generatePolicy(incident?.id, true, true, true, true, true, true, true, true)}" class="btn btn-block btn-large">&{'incident.attend.confirm'}</a>
+					#{/if}
+
 				#{/if}
-				#{if controllers.Security.check('Usuario Final') && incident?.status?.code == 6}
-					<a href="@{generatePolicy(incident?.id, true, true, true, true, true, true, true, true)}" class="btn btn-block btn-large">&{'incident.attend.confirm'}</a>
-				#{/if}
-				
+				#{else}
+					#{if incident?.status?.code == 6}
+					<h4 style="color: red;">${mensajeFueraDeLinea.raw()}</h4>
+					#{/if}
+				#{/else}
 			#{/if}
 			#{if incident?.status?.code == 7}
 				#{if incident?.policyFileDownload == true && (incident?.policyWebPath == '' || incident?.policyWebPath == null || incident?.policyFileUpload == false || incident?.policyFileUpload == null)}
@@ -208,6 +215,9 @@
 				#{elseif  incident?.policyFileUpload == true && incident?.policyFileDownload == true}
                     <a href="${incident?.policyWebPath}" class="btn btn-block btn-large" target="_blank">&{"incident.attend.downloadpolicy"}</a>
 				#{/elseif}
+				#{else}
+                    <h4>Póliza aún no disponible para descargar</h4>
+				#{/else}
 			#{/if}
 			#{if incident?.status?.code == 7}
 				#{if  incident?.policyFileUpload == true}

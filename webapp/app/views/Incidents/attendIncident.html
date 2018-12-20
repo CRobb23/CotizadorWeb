@@ -190,11 +190,9 @@
 				<a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs">&{'client.edit.cancel'}</a>
 			</div>
 			#{if incident?.policy == null || incident?.policy.trim() == ''}
-				#{if incident?.status?.code == 2 || incident?.status?.code == 3 || incident?.status?.code == 4 || incident?.status?.code == 9}
 					<div class="col-sm-2">
 						<input type="submit" class="btn btn-primary btn-block" value="&{'incident.attend.save'}" />
 					</div>
-				#{/if}
 			#{/if}
 		</div>
 		
