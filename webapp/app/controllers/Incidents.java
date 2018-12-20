@@ -1,5 +1,6 @@
 package controllers;
 
+import static helpers.ERConstants.OUT_OF_LINE_MESSAGE;
 import static play.modules.pdf.PDF.renderPDF;
 import static play.modules.pdf.PDF.writePDF;
 
@@ -380,6 +381,10 @@ public class Incidents extends AdminBaseController {
 	    		}
 	    		ER_Admin_Messages messages = ER_Admin_Messages.findById(1L);
 				String body = messages.body;
+
+				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
+				String outOfLineMessage = mail.body;
+				renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
 	    		render(incident, tasks, isOwner,body,isQAUser);
 	    	} 
     	}
@@ -2374,6 +2379,7 @@ public class Incidents extends AdminBaseController {
         //Constantes de formularios
 		//1=IVE, 2=Solicitud Auto, 7=IVE JURIDICO, 8= PEP 9 = pagador PEP
 		for(ER_Form form: availForms) {
+			Logger.info("Inicia a generar formularios del caso: " + incident.number);
 			  if(form.id == 1 || form.id == 2 ||  form.id == 7 ||  form.id == 8 ||  form.id == 9)
 			  {
 				if  ((form.id == 9 ||  form.id == 8) && incident.client.expose == false){
@@ -2405,7 +2411,7 @@ public class Incidents extends AdminBaseController {
 				  //Render the PDF
 
 				  String files = Play.applicationPath.getAbsolutePath() + "/tmpFiles/";
-				  Logger.info("ruta a guardar files de forms: " +files);
+				  Logger.info("ruta a guardar files de forms: " +files + " del caso: " + incident.number);
 				  File directory = new File(files);
 				  if(!directory.exists()){
 					  directory.mkdirs();
