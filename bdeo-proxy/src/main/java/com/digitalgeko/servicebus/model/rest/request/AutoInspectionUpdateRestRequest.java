@@ -1,22 +1,17 @@
 package com.digitalgeko.servicebus.model.rest.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AutoInspectionUpdateRestRequest {
 
-    private String id;
+    @JsonProperty("status")
     private Integer status;
+    @JsonProperty("over_excess")
     private Integer overExcess;
+    @JsonProperty("comments")
     private String comments;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Integer getStatus() {
         return status;

@@ -11,9 +11,12 @@ public class AutoInspectionDeleteSoapResponse {
 
     @XmlElement(name="msgRespuesta")
     private String message;
+    @XmlElement(name = "id")
+    private String id;
 
-    public AutoInspectionDeleteSoapResponse(String message) {
+    public AutoInspectionDeleteSoapResponse(String message, String id) {
         this.message = message;
+        this.id = id;
     }
 
     public String getMessage() {
@@ -24,4 +27,11 @@ public class AutoInspectionDeleteSoapResponse {
         this.message = message;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

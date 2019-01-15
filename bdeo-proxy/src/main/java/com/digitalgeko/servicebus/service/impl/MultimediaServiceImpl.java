@@ -30,8 +30,6 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class MultimediaServiceImpl extends AbstractBusServiceImpl {
 
-    protected static final Logger log = LoggerFactory.getLogger(BdeoInspectionsBusServiceImpl.class);
-
     private String BASE_URL;
     private RestTemplate restTemplate;
 
@@ -51,6 +49,7 @@ public class MultimediaServiceImpl extends AbstractBusServiceImpl {
             readableByteChannel = Channels.newChannel(url.openStream());
             fileChannel = new FileOutputStream(filename).getChannel();
             fileChannel.transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+            log.info("DESCARGA COMPLETA");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -59,33 +58,33 @@ public class MultimediaServiceImpl extends AbstractBusServiceImpl {
             IOUtils.closeQuietly(readableByteChannel);
             IOUtils.closeQuietly(fileChannel);
         }
-        log.info("DESCARGA COMPLETA");
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            MultiValueMap<String, String> simpleMap= new LinkedMultiValueMap();
-            simpleMap.add("folderName", folderName);
-            HttpEntity<MultiValueMap<String, String>> simpleRequest = new HttpEntity(simpleMap, headers);
-            String response = restTemplate.postForObject(BASE_URL + "/findFolderByName", simpleRequest, String.class);
-            MultimediaDriveResponse driveResponse = (MultimediaDriveResponse) fromJSON(response, MultimediaDriveResponse.class);
-            log.info("FOLDER LISTO " + driveResponse.getData());
-            headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            MultiValueMap<String, Object> complexMap = new LinkedMultiValueMap();
-            complexMap.add("upload", new File(filename));
-            complexMap.add("folderId", driveResponse.getData());
-            HttpEntity<MultiValueMap<String, Object>> complexRequest = new HttpEntity(simpleMap, headers);
-            response = restTemplate.postForObject(BASE_URL + "/sendPrivateFile", complexRequest, String.class);
-            log.info("ARCHIVO EN DRIVE");
-        } catch (ConvertException e) {
+            File file = new File(filename);
+            if (file.isFile()) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                MultiValueMap<String, String> simpleMap= new LinkedMultiValueMap();
+                simpleMap.add("folderName", folderName);
+                HttpEntity<MultiValueMap<String, String>> simpleRequest = new HttpEntity(simpleMap, headers);
+                String response = restTemplate.postForObject(BASE_URL + "/findFolderByName", simpleRequest, String.class);
+                MultimediaDriveResponse driveResponse = (MultimediaDriveResponse) fromJSON(response, MultimediaDriveResponse.class);
+                log.info("FOLDER LISTO " + driveResponse.getData());
+                headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                MultiValueMap<String, Object> complexMap = new LinkedMultiValueMap();
+                complexMap.add("upload", file);
+                complexMap.add("folderId", driveResponse.getData());
+                HttpEntity<MultiValueMap<String, Object>> complexRequest = new HttpEntity(simpleMap, headers);
+                response = restTemplate.postForObject(BASE_URL + "/sendPrivateFile", complexRequest, String.class);
+                log.info("ARCHIVO EN DRIVE");
+            } else {
+                log.info("ARCHIVO NO EXISTE");
+            }
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
         log.info("FIN DE PROCESO");
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

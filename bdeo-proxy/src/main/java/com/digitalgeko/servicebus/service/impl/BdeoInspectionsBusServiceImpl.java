@@ -16,10 +16,14 @@ import com.digitalgeko.servicebus.model.soap.response.AutoInspectionQuerySoapRes
 import com.digitalgeko.servicebus.model.soap.response.AutoInspectionUpdateSoapResponse;
 import com.digitalgeko.servicebus.outgoing.rest.BdeoInspectionServiceRestOutbound;
 import com.digitalgeko.servicebus.service.BdeoInspectionsBus;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -42,6 +46,7 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
     @Override
     public String parseBdeoMessage(String soapMessage) {
         String response = "";
+        soapMessage = unescapeMessage(soapMessage);
         String requestCode = getSoapRequestCode(soapMessage);
         String message = getSoapMessage(soapMessage);
         switch (requestCode) {
@@ -70,9 +75,16 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             // Convert SOAP to JSON, call BDEO, return message
             String restMessage = fromSOAPtoJSON(soapMessage, AutoInspectionCreateSoapRequest.class, AutoInspectionCreateRestRequest.class);
             String restResponse = bdeoServiceRestOutbound.createAutoInspection(login(), restMessage);
+            // Set CaseNumber form SOAP
+            //Parse SOAP Obj
+            AutoInspectionCreateSoapRequest soapObj = (AutoInspectionCreateSoapRequest) fromSOAP(soapMessage, AutoInspectionCreateSoapRequest.class);
+            AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
+            restObj.setCaseNumber(soapObj.getCaseNumber());
+            restResponse = toJSON(restObj);
+            // Convert and Response to SOAP
             String soapResponse = fromJSONtoSOAP(restResponse, AutoInspectionRestResponse.class, AutoInspectionCreateSoapResponse.class);
             return soapResponse;
-        } catch (ConvertException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
             return e.getMessage();
         }
@@ -83,7 +95,7 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             // Convert SOAP to JSON, call BDEO, return message
             AutoInspectionDeleteSoapRequest soapRequest = (AutoInspectionDeleteSoapRequest) fromSOAP(soapMessage, AutoInspectionDeleteSoapRequest.class);
             bdeoServiceRestOutbound.deleteAutoInspection(login(), soapRequest.getId());
-            String soapResponse = toSOAP(new AutoInspectionDeleteSoapResponse("SATISFACTORIO"));
+            String soapResponse = toSOAP(new AutoInspectionDeleteSoapResponse("SATISFACTORIO", soapRequest.getId()));
             return soapResponse;
         } catch (ConvertException e) {
             log.error(e.getMessage(), e);
@@ -99,28 +111,17 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             // Check for Status REVISADO, Sent Multimedia to Drive
             AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
             if (restObj.getStatus() == 2 || restObj.getStatus() == 4 || restObj.getStatus() == 5) {
-                for (AutoInspectionRestResponse.InspectionImage image : restObj.getImages()) {
-                    CompletableFuture<Boolean> front = multimediaService.processImage(restObj.getCaseId(), "frontImage.jpg", image.getFront());
-                    CompletableFuture<Boolean> rear = multimediaService.processImage(restObj.getCaseId(), "rearImage.jpg", image.getRear());
-                    CompletableFuture<Boolean> frontRight = multimediaService.processImage(restObj.getCaseId(), "frontRightImage.jpg", image.getFrontRight());
-                    CompletableFuture<Boolean> rearRight = multimediaService.processImage(restObj.getCaseId(), "rearRightImage.jpg", image.getRearRight());
-                    CompletableFuture<Boolean> right = multimediaService.processImage(restObj.getCaseId(), "rightImage.jpg", image.getRight());
-                    CompletableFuture<Boolean> board = multimediaService.processImage(restObj.getCaseId(), "boardImage.jpg", image.getBoard());
-                    CompletableFuture<Boolean> interiorBoard = multimediaService.processImage(restObj.getCaseId(), "interiorBoardImage.jpg", image.getInteriorBoard());
-                    CompletableFuture<Boolean> trunk = multimediaService.processImage(restObj.getCaseId(), "trunkImage.jpg", image.getTrunk());
-                    CompletableFuture<Boolean> tyre = multimediaService.processImage(restObj.getCaseId(), "tyreImage.jpg", image.getTyre());
-                    CompletableFuture<Boolean> trunkTyre = multimediaService.processImage(restObj.getCaseId(), "trunkTyreImage.jpg", image.getTrunkTyre());
-                    CompletableFuture<Boolean> hood = multimediaService.processImage(restObj.getCaseId(), "hoodImage.jpg", image.getHood());
-                    CompletableFuture<Boolean> radioAir = multimediaService.processImage(restObj.getCaseId(), "radioImage.jpg", image.getRadioAir());
-                    CompletableFuture<Boolean> windowSwitch = multimediaService.processImage(restObj.getCaseId(), "windowSwitchImage.jpg", image.getWindowSwitch());
-                    CompletableFuture<Boolean> registration = multimediaService.processImage(restObj.getCaseId(), "registrarionImage.jpg", image.getRegistration());
-                    CompletableFuture<Boolean> license = multimediaService.processImage(restObj.getCaseId(), "licenseImage.jpg", image.getLicense());
-                    CompletableFuture<Boolean> dpi = multimediaService.processImage(restObj.getCaseId(), "dpiImage.jpg", image.getDpi());
-                    CompletableFuture<Boolean> car = multimediaService.processImage(restObj.getCaseId(), "catImage.jpg", image.getCar());
-                    CompletableFuture<Boolean> signature = multimediaService.processImage(restObj.getCaseId(), "signatureImage.jpg", image.getSignature());
-
-                    CompletableFuture.allOf(front,rear,frontRight,rearRight,right,board,interiorBoard,trunk,
-                            tyre,trunkTyre,hood,radioAir,windowSwitch,registration,license,dpi,car,signature).join();
+                int counter = 1;
+                List<CompletableFuture> tasks = new ArrayList<>();
+                for (String image : restObj.getImages()) {
+                    String fileName = "BDEO_IMAGE_" + counter + ".JPG";
+                    CompletableFuture<Boolean> task = multimediaService.processImage(restObj.getCaseNumber(), fileName, image);
+                    tasks.add(task);
+                }
+                try {
+                    CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).join();
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
                 }
             }
             // Return message
@@ -138,7 +139,7 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             AutoInspectionUpdateSoapRequest soapRequest = (AutoInspectionUpdateSoapRequest) fromSOAP(soapMessage, AutoInspectionUpdateSoapRequest.class);
             String restMessage = fromSOAPtoJSON(soapMessage, AutoInspectionUpdateSoapRequest.class, AutoInspectionUpdateRestRequest.class);
             bdeoServiceRestOutbound.updateAutoInspection(login(), soapRequest.getId(), restMessage);
-            String soapResponse = toSOAP(new AutoInspectionUpdateSoapResponse("SATISFACTORIO"));
+            String soapResponse = toSOAP(new AutoInspectionUpdateSoapResponse("SATISFACTORIO", soapRequest.getId()));
             return soapResponse;
         } catch (ConvertException e) {
             log.error(e.getMessage(), e);
@@ -155,17 +156,23 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
     }
 
     private String getSoapRequestCode(String soapMessage) {
-        if (soapMessage != null && soapMessage.length() > 3) {
-            return soapMessage.substring(0, 3);
-        }
-        return "";
+        int pos = getSoapMessageInit(soapMessage);
+        return soapMessage.substring(pos-3, pos);
     }
 
     private String getSoapMessage(String soapMessage) {
+        return soapMessage.substring(getSoapMessageInit(soapMessage));
+    }
+
+    private int getSoapMessageInit(String soapMessage) {
         if (soapMessage != null && soapMessage.length() > 3) {
-            return soapMessage.substring(3);
+            return soapMessage.indexOf("<");
         }
-        return "";
+        return 0;
+    }
+
+    private String unescapeMessage(String soapMessage) {
+        return StringEscapeUtils.unescapeXml(soapMessage);
     }
 
 }

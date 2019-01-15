@@ -1,41 +1,68 @@
 package models.ws.rest;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class InspectionAutoRequest {
 
     // PERSON
+    @Expose
     private String firstName;
+    @Expose
     private String secondName;
+    @Expose
     private String firstSurname;
+    @Expose
     private String secondSurname;
+    @Expose
     private String marriedSurname;
+    @Expose
     private String identificationDocument;
+    @Expose
     private String taxNumber;
+    @Expose
     private String licenseType;
+    @Expose
     private String licenseNumber;
+    @Expose
     private String licenseYears;
 
     // VEHICLE
+    @Expose
     private String vehicleOwner;
+    @Expose
     private String address;
+    @Expose
     private String brand;
+    @Expose
+    private String line;
+    @Expose
     private String year;
+    @Expose
     private String plate;
+    @Expose
     private String vin;
+    @Expose
     private String engine;
+    @Expose
     private String color;
+    @Expose
     private String mileage;
+    @Expose
     private String typeVehicle;
+    @Expose
     private String origin;
+    @Expose
     private String use;
+    @Expose
     private String coin;
 
+    @Expose
     private List<PhoneData> phones;
+    @Expose
     private List<EmailData> emails;
+    @Expose
     private List<EmailBrokerData> emailsBroker;
 
     public String getFirstName() {
@@ -246,7 +273,16 @@ public class InspectionAutoRequest {
         this.emailsBroker = emailsBroker;
     }
 
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
     public static class PhoneData {
+        @Expose
         private String phone;
 
         public String getPhone() {
@@ -259,6 +295,7 @@ public class InspectionAutoRequest {
     }
 
     public static class EmailData {
+        @Expose
         private String email;
 
         public String getEmail() {
@@ -271,6 +308,7 @@ public class InspectionAutoRequest {
     }
 
     public static class EmailBrokerData {
+        @Expose
         private String email;
 
         public String getEmail() {

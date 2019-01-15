@@ -10,7 +10,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint
-public class BdeoInspectionServiceSoapInbound {
+public class  BdeoInspectionServiceSoapInbound {
 
     private static final String NAMESPACE_URI = "CorpBI";
 

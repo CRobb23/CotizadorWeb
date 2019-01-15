@@ -12,16 +12,24 @@ public class AutoInspectionCreateSoapRequest {
 
     @XmlElement(name="caso")
     private String caseNumber;
-    @XmlElement(name="telefono")
-    private String phone;
     @XmlElement(name="nombreAsegurado")
     private String insuredName;
     @XmlElement(name="apellidoAsegurado")
     private String insuredSurname;
-    @XmlElement(name="dpi")
-    private String identificationDocument;
+    @XmlElement(name="licencia")
+    private String licenseNumber;
+    @XmlElement(name ="email")
+    private String email;
+    @XmlElement(name="marca")
+    private String brand;
+    @XmlElement(name="linea")
+    private String line;
+    @XmlElement(name="modelo")
+    private String model;
     @XmlElement(name="placa")
     private String plate;
+    @XmlElement(name="telefono")
+    private String phone;
 
     public String getCaseNumber() {
         return caseNumber;
@@ -29,14 +37,6 @@ public class AutoInspectionCreateSoapRequest {
 
     public void setCaseNumber(String caseNumber) {
         this.caseNumber = caseNumber;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getInsuredName() {
@@ -55,12 +55,44 @@ public class AutoInspectionCreateSoapRequest {
         this.insuredSurname = insuredSurname;
     }
 
-    public String getIdentificationDocument() {
-        return identificationDocument;
+    public String getLicenseNumber() {
+        return licenseNumber;
     }
 
-    public void setIdentificationDocument(String identificationDocument) {
-        this.identificationDocument = identificationDocument;
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getPlate() {
@@ -69,5 +101,13 @@ public class AutoInspectionCreateSoapRequest {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

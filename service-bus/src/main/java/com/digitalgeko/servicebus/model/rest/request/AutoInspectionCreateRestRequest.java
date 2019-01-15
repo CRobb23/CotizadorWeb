@@ -23,6 +23,7 @@ public class AutoInspectionCreateRestRequest {
     private String vehicleOwner;
     private String address;
     private String brand;
+    private String line;
     private String year;
     private String plate;
     private String vin;
@@ -244,6 +245,14 @@ public class AutoInspectionCreateRestRequest {
 
     public void setEmailsBroker(List<EmailBrokerData> emailsBroker) {
         this.emailsBroker = emailsBroker;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
     }
 
     public static class PhoneData {

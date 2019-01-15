@@ -19,7 +19,7 @@ public abstract class AbstractBusServiceImpl {
     @Autowired
     protected Mapper mapper;
 
-    protected static final Logger log = LoggerFactory.getLogger(BdeoInspectionsBusServiceImpl.class);
+    protected static final Logger log = LoggerFactory.getLogger(AbstractBusServiceImpl.class);
 
     protected String fromSOAPtoJSON(String soapMessage, Class soapClass, Class restClass) throws ConvertException {
         try {

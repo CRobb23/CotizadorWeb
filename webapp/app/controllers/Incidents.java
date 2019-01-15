@@ -580,10 +580,7 @@ public class Incidents extends AdminBaseController {
     									 Long selectedQuotation, Long selectedPaymentForm, Boolean inspection,
     									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
-    									 String inspectionNumber,Date inspectionDate,
-										 Boolean inspectionAutoQ1, Boolean inspectionAutoQ2, Boolean inspectionAutoQ3,
-										 Boolean inspectionAutoQ4, Boolean inspectionAutoQ5, Boolean inspectionAutoQ6,
-										 Boolean inspectionAutoQ7) {
+    									 String inspectionNumber,Date inspectionDate) {
     	flash.clear();
     	flash.discard();
     	
@@ -651,12 +648,6 @@ public class Incidents extends AdminBaseController {
 								}
 							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
 								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
-								if (!Boolean.TRUE.equals(inspectionAutoQ1) || !Boolean.TRUE.equals(inspectionAutoQ2) || !Boolean.TRUE.equals(inspectionAutoQ3)
-										|| !Boolean.TRUE.equals(inspectionAutoQ4) || !Boolean.TRUE.equals(inspectionAutoQ5)
-										|| !Boolean.TRUE.equals(inspectionAutoQ6) || !Boolean.TRUE.equals(inspectionAutoQ7)) {
-									flash.error("No es posible acceder a Auto Inspección. Favor de seleccionar otro tipo de inspección.");
-									attendIncident(id);
-								}
             				} else {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
 
@@ -821,7 +812,7 @@ public class Incidents extends AdminBaseController {
 							requestAuto.setIdentificationDocument(incident.client.identificationDocument);
 							requestAuto.setTaxNumber(incident.client.taxNumber);
 							requestAuto.setLicenseNumber(incident.client.licenseNumber);
-							requestAuto.setLicenseType(incident.client.licenseType.transferCode);
+							requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
 							// Add PhoneData
 							List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
 							InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
@@ -843,8 +834,9 @@ public class Incidents extends AdminBaseController {
 							//
 							requestAuto.setAddress(incident.client.address);
 							requestAuto.setVehicleOwner(incident.vehicle.owner);
-							requestAuto.setBrand(incident.vehicle.line.transferCode);
-							requestAuto.setYear(incident.vehicle.erYear.year);
+							requestAuto.setBrand(incident.vehicle.line.name);
+                            requestAuto.setLine(incident.vehicle.line.brand.name);
+                            requestAuto.setYear(incident.vehicle.erYear.year);
 							requestAuto.setPlate(incident.vehicle.plate);
 							requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
 							requestAuto.setColor(incident.vehicle.color);
@@ -858,7 +850,7 @@ public class Incidents extends AdminBaseController {
 							requestAuto.setCoin("Q");
 
 							InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
-							if(!inspectionResponse.getSuccess()){
+							if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
 								flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
 								ER_Exceptions exceptions = new ER_Exceptions();
 								exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
@@ -870,7 +862,7 @@ public class Incidents extends AdminBaseController {
 								incident.save();
 								attendIncident(id);
 							} else {
-								inspectionInfo.inspectionNumber = inspectionResponse.getNumber();
+								inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
 							}
 						}
 	    				inspectionInfo.incident = incident;

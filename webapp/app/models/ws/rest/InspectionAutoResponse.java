@@ -4,7 +4,7 @@ public class InspectionAutoResponse {
 	
 	private Boolean success;
 	private String message;
-	private String number;
+	private Integer inspectionNumber;
 	
 	public Boolean getSuccess() {
 		return success;
@@ -18,10 +18,12 @@ public class InspectionAutoResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	public String getNumber() {
-		return number;
+
+	public Integer getInspectionNumber() {
+		return inspectionNumber;
 	}
-	public void setNumber(String number) {
-		this.number = number;
+
+	public void setInspectionNumber(Integer inspectionNumber) {
+		this.inspectionNumber = inspectionNumber;
 	}
 }

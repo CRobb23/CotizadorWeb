@@ -12,32 +12,9 @@ public class AutoInspectionCreateSoapResponse {
     @XmlElement(name="id")
     private String id;
     @XmlElement(name="caso")
-    private String caseId;
-    @XmlElement(name="casoRef")
-    private String caseRef;
-    @XmlElement(name="direccion")
-    private String address;
-    @XmlElement(name="empresaId")
-    private String masterCompanyId;
-    @XmlElement(name="empresa")
-    private String companyName;
-    @XmlElement(name="abrioEnlace")
-    private Boolean isOpen;
-    @XmlElement(name="estado")
-    private Integer status;
-    @XmlElement(name="comentarios")
-    private String comments;
-    @XmlElement(name="creadoId")
-    private String createdById;
-    @XmlElement(name="creadoNombre")
-    private String createdByName;
-    @XmlElement(name="actualizadoId")
-    private String updatedById;
-    @XmlElement(name="creadoFecha")
-    private Long createdDate;
-    @XmlElement(name="actualizadoFecha")
-    private Long updatedDate;
-
+    private String caseNumber;
+    @XmlElement(name="url")
+    private String url;
 
     public String getId() {
         return id;
@@ -47,108 +24,19 @@ public class AutoInspectionCreateSoapResponse {
         this.id = id;
     }
 
-    public String getCaseId() {
-        return caseId;
+    public String getCaseNumber() {
+        return caseNumber;
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
+    public void setCaseNumber(String caseNumber) {
+        this.caseNumber = caseNumber;
     }
 
-    public String getCaseRef() {
-        return caseRef;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCaseRef(String caseRef) {
-        this.caseRef = caseRef;
+    public void setUrl(String url) {
+        this.url = url;
     }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMasterCompanyId() {
-        return masterCompanyId;
-    }
-
-    public void setMasterCompanyId(String masterCompanyId) {
-        this.masterCompanyId = masterCompanyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Boolean getOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(Boolean open) {
-        isOpen = open;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(String createdById) {
-        this.createdById = createdById;
-    }
-
-    public String getCreatedByName() {
-        return createdByName;
-    }
-
-    public void setCreatedByName(String createdByName) {
-        this.createdByName = createdByName;
-    }
-
-    public String getUpdatedById() {
-        return updatedById;
-    }
-
-    public void setUpdatedById(String updatedById) {
-        this.updatedById = updatedById;
-    }
-
-    public Long getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Long createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Long getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Long updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
 }

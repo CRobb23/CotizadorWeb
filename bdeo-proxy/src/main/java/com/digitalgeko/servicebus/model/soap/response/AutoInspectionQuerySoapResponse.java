@@ -11,91 +11,77 @@ public class AutoInspectionQuerySoapResponse {
 
     @XmlElement(name="id")
     private String id;
+    @XmlElement(name = "url")
+    private String url;
     @XmlElement(name="caso")
-    private String caseId;
-    @XmlElement(name="casoRef")
-    private String caseRef;
-    @XmlElement(name="direccion")
-    private String address;
-    @XmlElement(name="empresaId")
-    private String masterCompanyId;
-    @XmlElement(name="empresa")
-    private String companyName;
-    @XmlElement(name="abrioEnlace")
-    private Boolean isOpen;
-    @XmlElement(name="estado")
-    private Integer status;
-    @XmlElement(name="comentarios")
-    private String comments;
-    @XmlElement(name="creadoId")
-    private String createdById;
+    private String caseNumber;
+    @XmlElement(name = "placa")
+    private String plate;
     @XmlElement(name="creadoNombre")
     private String createdByName;
+    @XmlElement(name="estado")
+    private Integer status;
     @XmlElement(name="actualizadoId")
     private String updatedById;
+    @XmlElement(name="creadoId")
+    private String createdById;
+
+    @XmlElement(name="buenasCondiciones")
+    private String goodConditions;
+    @XmlElement(name="antiguedad")
+    private String carYears;
+    @XmlElement(name = "articulo908")
+    private String article908;
+
+    @XmlElement(name = "numeroRef")
+    private String numRef;
+    @XmlElement(name="casoRef")
+    private String caseRef;
+    @XmlElement(name="nombreAsegurado")
+    private String insuredName;
+    @XmlElement(name="abrioEnlace")
+    private String isOpen;
+    @XmlElement(name="telefono")
+    private String phone;
+    @XmlElement(name="modelo")
+    private String model;
+    @XmlElement(name="puntuacion")
+    private String grade;
+    @XmlElement(name="empresaId")
+    private String masterCompanyId;
+    @XmlElement(name="licencia")
+    private String licenseNumber;
+    @XmlElement(name = "marca")
+    private String brand;
     @XmlElement(name="creadoFecha")
     private Long createdDate;
-    @XmlElement(name="actualizadoFecha")
-    private Long updatedDate;
-
-    @XmlElement(name="chasis")
-    private String vin;
+    @XmlElement(name="prefijo")
+    private String prefixInput;
+    @XmlElement(name="empresa")
+    private String companyName;
+    @XmlElement(name="linea")
+    private String line;
+    @XmlElement(name="apellidoAsegurado")
+    private String insuredSurname;
+    @XmlElement(name="email")
+    private String email;
     @XmlElement(name="nombrePropietario")
     private String owner;
     @XmlElement(name="color")
     private String color;
-    @XmlElement(name="dpi")
-    private String dpi;
-    @XmlElement(name="licencia")
-    private String licenseNumber;
-    @XmlElement(name="tipoLicencia")
-    private String licenseType;
-    @XmlElement(name="email")
-    private String email;
-    @XmlElement(name="motor")
-    private String engine;
-    @XmlElement(name="buenasCondiciones")
-    private Boolean goodConditions;
-    @XmlElement(name="documentos")
-    private Boolean haveDocs;
-    @XmlElement(name="tieneTelefono")
-    private Boolean havePhone;
-    @XmlElement(name="puntuacion")
-    private Integer grade;
-    @XmlElement(name="antiguedad")
-    private Boolean carYears;
-    @XmlElement(name="nombreAsegurado")
-    private String insuredName;
-    @XmlElement(name="apellidoAsegurado")
-    private String insuredSurname;
-    @XmlElement(name="direccionAsegurado")
-    private String insuredStreet;
-    @XmlElement(name="prefijo")
-    private String prefixInput;
-    @XmlElement(name="esPropietario")
-    private String isOwner;
-    @XmlElement(name="kilometraje")
-    private String milage;
-    @XmlElement(name="tenenciaLicencia")
-    private Integer licenseYears;
-    @XmlElement(name="linea")
-    private String line;
-    @XmlElement(name="modelo")
-    private String model;
     @XmlElement(name="tipo")
     private String carType;
-    @XmlElement(name="origen")
-    private String origin;
-    @XmlElement(name="superaDeducible")
-    private Integer overExcess;
-    @XmlElement(name="telefono")
-    private String phone;
-    @XmlElement(name="poliza")
-    private String policy;
-    @XmlElement(name="lugarApropiado")
-    private Boolean goodPlace;
     @XmlElement(name="uso")
     private String carUse;
+    @XmlElement(name="chasis")
+    private String vin;
+    @XmlElement(name="motor")
+    private String engine;
+    @XmlElement(name="kilometraje")
+    private String mileage;
+    @XmlElement(name="actualizadoFecha")
+    private Long updatedDate;
+
 
     public String getId() {
         return id;
@@ -105,76 +91,28 @@ public class AutoInspectionQuerySoapResponse {
         this.id = id;
     }
 
-    public String getCaseId() {
-        return caseId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getCaseRef() {
-        return caseRef;
+    public String getCaseNumber() {
+        return caseNumber;
     }
 
-    public void setCaseRef(String caseRef) {
-        this.caseRef = caseRef;
+    public void setCaseNumber(String caseNumber) {
+        this.caseNumber = caseNumber;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPlate() {
+        return plate;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMasterCompanyId() {
-        return masterCompanyId;
-    }
-
-    public void setMasterCompanyId(String masterCompanyId) {
-        this.masterCompanyId = masterCompanyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Boolean getOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(Boolean open) {
-        isOpen = open;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(String createdById) {
-        this.createdById = createdById;
+    public void setPlate(String plate) {
+        this.plate = plate;
     }
 
     public String getCreatedByName() {
@@ -185,12 +123,132 @@ public class AutoInspectionQuerySoapResponse {
         this.createdByName = createdByName;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public String getUpdatedById() {
         return updatedById;
     }
 
     public void setUpdatedById(String updatedById) {
         this.updatedById = updatedById;
+    }
+
+    public String getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(String createdById) {
+        this.createdById = createdById;
+    }
+
+    public String getGoodConditions() {
+        return goodConditions;
+    }
+
+    public void setGoodConditions(String goodConditions) {
+        this.goodConditions = goodConditions;
+    }
+
+    public String getCarYears() {
+        return carYears;
+    }
+
+    public void setCarYears(String carYears) {
+        this.carYears = carYears;
+    }
+
+    public String getArticle908() {
+        return article908;
+    }
+
+    public void setArticle908(String article908) {
+        this.article908 = article908;
+    }
+
+    public String getNumRef() {
+        return numRef;
+    }
+
+    public void setNumRef(String numRef) {
+        this.numRef = numRef;
+    }
+
+    public String getCaseRef() {
+        return caseRef;
+    }
+
+    public void setCaseRef(String caseRef) {
+        this.caseRef = caseRef;
+    }
+
+    public String getInsuredName() {
+        return insuredName;
+    }
+
+    public void setInsuredName(String insuredName) {
+        this.insuredName = insuredName;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getMasterCompanyId() {
+        return masterCompanyId;
+    }
+
+    public void setMasterCompanyId(String masterCompanyId) {
+        this.masterCompanyId = masterCompanyId;
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public Long getCreatedDate() {
@@ -201,6 +259,38 @@ public class AutoInspectionQuerySoapResponse {
         this.createdDate = createdDate;
     }
 
+    public String getPrefixInput() {
+        return prefixInput;
+    }
+
+    public void setPrefixInput(String prefixInput) {
+        this.prefixInput = prefixInput;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getInsuredSurname() {
+        return insuredSurname;
+    }
+
+    public void setInsuredSurname(String insuredSurname) {
+        this.insuredSurname = insuredSurname;
+    }
+
     public Long getUpdatedDate() {
         return updatedDate;
     }
@@ -209,12 +299,12 @@ public class AutoInspectionQuerySoapResponse {
         this.updatedDate = updatedDate;
     }
 
-    public String getVin() {
-        return vin;
+    public String getEmail() {
+        return email;
     }
 
-    public void setVin(String vin) {
-        this.vin = vin;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getOwner() {
@@ -233,36 +323,28 @@ public class AutoInspectionQuerySoapResponse {
         this.color = color;
     }
 
-    public String getDpi() {
-        return dpi;
+    public String getCarType() {
+        return carType;
     }
 
-    public void setDpi(String dpi) {
-        this.dpi = dpi;
+    public void setCarType(String carType) {
+        this.carType = carType;
     }
 
-    public String getLicenseNumber() {
-        return licenseNumber;
+    public String getCarUse() {
+        return carUse;
     }
 
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
+    public void setCarUse(String carUse) {
+        this.carUse = carUse;
     }
 
-    public String getLicenseType() {
-        return licenseType;
+    public String getVin() {
+        return vin;
     }
 
-    public void setLicenseType(String licenseType) {
-        this.licenseType = licenseType;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setVin(String vin) {
+        this.vin = vin;
     }
 
     public String getEngine() {
@@ -273,171 +355,11 @@ public class AutoInspectionQuerySoapResponse {
         this.engine = engine;
     }
 
-    public Boolean getGoodConditions() {
-        return goodConditions;
+    public String getMileage() {
+        return mileage;
     }
 
-    public void setGoodConditions(Boolean goodConditions) {
-        this.goodConditions = goodConditions;
-    }
-
-    public Boolean getHaveDocs() {
-        return haveDocs;
-    }
-
-    public void setHaveDocs(Boolean haveDocs) {
-        this.haveDocs = haveDocs;
-    }
-
-    public Boolean getHavePhone() {
-        return havePhone;
-    }
-
-    public void setHavePhone(Boolean havePhone) {
-        this.havePhone = havePhone;
-    }
-
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
-    public Boolean getCarYears() {
-        return carYears;
-    }
-
-    public void setCarYears(Boolean carYears) {
-        this.carYears = carYears;
-    }
-
-    public String getInsuredName() {
-        return insuredName;
-    }
-
-    public void setInsuredName(String insuredName) {
-        this.insuredName = insuredName;
-    }
-
-    public String getInsuredSurname() {
-        return insuredSurname;
-    }
-
-    public void setInsuredSurname(String insuredSurname) {
-        this.insuredSurname = insuredSurname;
-    }
-
-    public String getInsuredStreet() {
-        return insuredStreet;
-    }
-
-    public void setInsuredStreet(String insuredStreet) {
-        this.insuredStreet = insuredStreet;
-    }
-
-    public String getPrefixInput() {
-        return prefixInput;
-    }
-
-    public void setPrefixInput(String prefixInput) {
-        this.prefixInput = prefixInput;
-    }
-
-    public String getIsOwner() {
-        return isOwner;
-    }
-
-    public void setIsOwner(String isOwner) {
-        this.isOwner = isOwner;
-    }
-
-    public String getMilage() {
-        return milage;
-    }
-
-    public void setMilage(String milage) {
-        this.milage = milage;
-    }
-
-    public Integer getLicenseYears() {
-        return licenseYears;
-    }
-
-    public void setLicenseYears(Integer licenseYears) {
-        this.licenseYears = licenseYears;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getCarType() {
-        return carType;
-    }
-
-    public void setCarType(String carType) {
-        this.carType = carType;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
-    public Integer getOverExcess() {
-        return overExcess;
-    }
-
-    public void setOverExcess(Integer overExcess) {
-        this.overExcess = overExcess;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPolicy() {
-        return policy;
-    }
-
-    public void setPolicy(String policy) {
-        this.policy = policy;
-    }
-
-    public Boolean getGoodPlace() {
-        return goodPlace;
-    }
-
-    public void setGoodPlace(Boolean goodPlace) {
-        this.goodPlace = goodPlace;
-    }
-
-    public String getCarUse() {
-        return carUse;
-    }
-
-    public void setCarUse(String carUse) {
-        this.carUse = carUse;
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
     }
 }

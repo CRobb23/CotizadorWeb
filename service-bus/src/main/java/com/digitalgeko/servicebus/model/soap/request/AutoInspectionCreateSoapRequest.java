@@ -37,8 +37,10 @@ public class AutoInspectionCreateSoapRequest {
     private String vehicleOwner;
     @XmlElement(name="domicilio")
     private String address;
-    @XmlElement(name="marcaLinea")
+    @XmlElement(name="marca")
     private String brand;
+    @XmlElement(name="linea")
+    private String line;
     @XmlElement(name="modelo")
     private String year;
     @XmlElement(name="placa")
@@ -276,6 +278,14 @@ public class AutoInspectionCreateSoapRequest {
 
     public void setEmailsBroker(List<EmailBrokerData> emailsBroker) {
         this.emailsBroker = emailsBroker;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
     }
 
     @XmlAccessorType(XmlAccessType.FIELD)

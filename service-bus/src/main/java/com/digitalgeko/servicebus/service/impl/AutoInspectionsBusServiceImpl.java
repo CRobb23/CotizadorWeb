@@ -43,8 +43,10 @@ public class AutoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
     public String createAutoInspection(String restMessage) {
         try {
             String soapMessage = fromJSONtoSOAP(restMessage, AutoInspectionCreateRestRequest.class, AutoInspectionCreateSoapRequest.class);
+            soapMessage = AutoInspectionCreateSoapRequest.RQ_CODE + soapMessage;
             String soapResponse = brokerSoapOutbound.sendBrokerMessage(soapMessage);
-            String restResponse = fromJSONtoSOAP(soapResponse, AutoInspectionCreateSoapResponse.class, AutoInspectionCreateRestResponse.class);
+            soapResponse = soapResponse.replace(AutoInspectionCreateSoapRequest.RS_CODE, "");
+            String restResponse = fromSOAPtoJSON(soapResponse, AutoInspectionCreateSoapResponse.class, AutoInspectionCreateRestResponse.class);
             return restResponse;
         } catch (ConvertException | ConnectionException e) {
             log.error(e.getMessage(), e);
