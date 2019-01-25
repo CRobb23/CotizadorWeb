@@ -40,7 +40,7 @@ public class StringUtil {
         str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
         str = str.replaceAll("Á","+01").replaceAll("á","+02").replaceAll("É","+03").replaceAll("é","+04").replaceAll("Í","+05");
         str = str.replaceAll("í","+06").replaceAll("Ó","+07").replaceAll("ó","+08").replaceAll("Ú","+09").replaceAll("ú","+10");
-        str = str.replaceAll("Ñ","+11").replaceAll("ñ","+12").replaceAll("—","-").replaceAll("\\p{Pd}","–");
+        str = str.replaceAll("Ñ","+11").replaceAll("ñ","+12").replaceAll("\\p{Pd}","+13");
         // Remove special characters
         // str = StringUtils.stripAccents(str);–––––––––––
         return str;

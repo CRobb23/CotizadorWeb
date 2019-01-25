@@ -81,6 +81,8 @@ public final class ERConstants {
 	public static final int SUPPORT_MAIL = 10;
 	public static final int POLICY_GENERATED_MAIL = 11;
 	public static final int OUT_OF_LINE_MESSAGE = 12;
+	public static final int ACCESS_TO_CLIENT_DATA = 13;
+
 
 
 
