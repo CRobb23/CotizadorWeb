@@ -1,11 +1,49 @@
-			<h4 style="border-bottom: groove; text-align: center;"></h4>
+#{extends 'admin.html' /}
+
+#{form @saveClientPayment(), id:"formPayment", class:"form-horizontal", method:"POST"}
+<div class="container">
+<div class="well fixed-sidebar-parent">
+
+    <div class="orange-title">
+			<span>
+				<h1>&{'payment.edit.title'}</h1>
+				<ul class="steps hidden-xs pull-right">
+					#{if incident?.policy == null || incident?.policy.trim() == ''}
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Pagador</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Documentos</li>
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Pago</li>
+				#{/if}
+				#{else}
+                    <li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{clienteTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Cliente</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{pagadorTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Pagador</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{vehiculoTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Vehículo</li>
+					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{documentoTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Documentos</li>
+					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet" ><br />Pago</li>
+				#{/else}
+				</ul>
+			</span>
+    </div>
+
+    #{if errors}
+        <div class="alert alert-danger">
+        &{'client.edit.fielderrors'}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+<h4 style="border-bottom: groove; text-align: center;"></h4>
 		<div class="row">
 			#{if controllers.Security.check('Administrador maestro')}
 				<div class="col-sm-6">
 					<div class="form-group">
 						<label class="col-sm-4 control-label" for="emissionZone">#{required/} &{'quotation.form.incident.emissionZone'}</label>
 						<div class="col-sm-8">
-							#{select 'emissionZone', class:'form-control', id:'emissionZone', value: incident?.emissionZone}
+							#{select 'emissionZone', class:'form-control', id:'emissionZone',name:'emissionZone', value: incident?.emissionZone}
                                 #{list items: zoneList, as: 'zoneItem'}
                                     #{option zoneItem?.transferCode}${zoneItem?.name}#{/option}
                                 #{/list}
@@ -122,3 +160,49 @@
                     </div>
 				#{/}
                 </div>
+                <input type="hidden" name="clientId" value="${client?.id}"/>
+                <input type="hidden" name="incidentId" value="${incident?.id}"/>
+
+                <div class="row">
+                    <div class="col-sm-offset-4 col-sm-2">
+                        <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs" >&{'client.edit.cancel'}</a>
+                    </div>
+                    <div class="col-sm-2">
+                        <a class="btn btn-primary btn-block" href="@{documentoTab(client.id,incident.id)}" class="btn btn-xs" >&{'client.edit.previous'}</a>
+                    </div>
+                    #{if incident?.policy == null || incident?.policy.trim() == ''}
+                        #{if incident?.status?.code == 0 || incident?.status?.code == 1 }
+                            <div class="col-sm-2">
+                                <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.final.save'}"/>
+                            </div>
+                        #{/if}
+                        #{else}
+                            <div class="col-sm-2">
+                                <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.update'}"/>
+                            </div>
+                        #{/else}
+                    #{/if}
+                </div>
+             </div>
+        </div>
+			#{/form}
+
+#{set 'moreScripts'}
+<script src="@{'/public/javascripts/clientPayment.js'}" type="text/javascript"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.10.4.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/javascripts/validations.js'}" type="text/javascript"></script>
+<script src="@{'/public/javascripts/jquery.validate.min.js'}" type="text/javascript"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}" type="text/javascript"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}" type="text/javascript"></script>
+<script src="@{'/public/javascripts/jquery.mask.js'}" type="text/javascript"></script>
+#{/}
+<script type="text/javascript">
+    $(document).ready(function() {
+        let args =  {
+            formSelect:	"&{'form.select'}",
+            formSelectLoading: "&{'form.select.loading'}",
+            formSelectError: "&{'form.select.error'}",
+        }
+        init(args);
+    });
+</script>

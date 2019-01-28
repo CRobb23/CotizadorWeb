@@ -1,5 +1,7 @@
 package controllers;
 
+import static helpers.ERConstants.ACCESS_TO_CLIENT_DATA;
+import static helpers.ERConstants.MESSAGE_AFTER_POLICY_CREATED;
 import static helpers.ERConstants.OUT_OF_LINE_MESSAGE;
 import static play.modules.pdf.PDF.renderPDF;
 import static play.modules.pdf.PDF.writePDF;
@@ -291,7 +293,7 @@ public class Incidents extends AdminBaseController {
     	
         render();}
 		catch(Exception e){
-			Logger.error("error: " + e.getMessage());
+			Logger.error(e, e.getMessage());
 			e.printStackTrace();
 		}
     }
@@ -379,7 +381,7 @@ public class Incidents extends AdminBaseController {
 				if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
 	    			isOwner = true;
 	    		}
-	    		ER_Admin_Messages messages = ER_Admin_Messages.findById(1L);
+	    		ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(MESSAGE_AFTER_POLICY_CREATED));
 				String body = messages.body;
 
 				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
@@ -1435,7 +1437,153 @@ public class Incidents extends AdminBaseController {
 		e.printStackTrace();
 		}
     }
-    
+
+    /*
+    * Client Tab
+    *
+    * */
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void clienteTab(Long clientId, Long incidentId) {
+		try {
+			if (clientId != null) {
+				ER_Incident incident = ER_Incident.findById(incidentId);
+				ER_Client client = incident.client;
+				ER_Client_PEP clientPEP = client.clientPEP;
+				ER_Legal_Representative legalRepresentative = client.legalRepresentative;
+				//Temp
+				ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
+				if (canViewClient(client)) {
+					renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
+					renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
+					renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
+					loadAddressCatalogs(client, payer);
+					loadCatalogsClient();
+					ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(ACCESS_TO_CLIENT_DATA));
+					String mensajeAlerta = messages.body;
+					render(incident, client,clientPEP,legalRepresentative,mensajeAlerta);
+				}
+			}
+		}
+		catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void documentoTab(Long clientId, Long incidentId,String isOldClient,String isOldCar) {
+		try {
+			if (clientId != null) {
+				ER_Incident incident = ER_Incident.findById(incidentId);
+				ER_Client client = ER_Client.findById(clientId);
+				//Temp
+				if (canViewClient(client)) {
+					List<ER_Aditional_Multimedia> aditional_multimedia = null;
+					if (client.multimedia != null)
+						aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
+					render(incident, client,aditional_multimedia,isOldClient,isOldCar);
+				}
+			}
+		}
+		catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void pagadorTab(Long clientId, Long incidentId,String isOldClient) {
+		try {
+			if (clientId != null) {
+				ER_Incident incident = ER_Incident.findById(incidentId);
+				ER_Client client = ER_Client.findById(clientId);
+				//Temp
+				ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
+				ER_Legal_Representative legalRepresentativePayer = client.payer != null ? client.payer.legalRepresentativePayer  : null;
+				ER_Client_PayerPEP clientPayerPEP = client.payer != null ? client.payer.clientPayerPEP : null;
+				if (canViewClient(client)) {
+					renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
+					renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
+					renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
+					loadAddressCatalogs(client, payer);
+					loadCatalogsClient();
+					if (payer == null) {
+						payer = new ER_Client_Payer();
+						payer.isIndividual = true;
+					}
+					render(incident, client,payer,clientPayerPEP,legalRepresentativePayer,isOldClient);
+				}
+			}
+		}
+		catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void vehiculoTab(Long clientId, Long incidentId,String isOldClient) {
+		try {
+			if (clientId != null) {
+				ER_Incident incident = ER_Incident.findById(incidentId);
+				ER_Client client = incident.client;
+				ER_Vehicle vehicle = incident.vehicle;
+				if (canViewClient(client)) {
+					if (vehicle != null) {
+						if (vehicle.line != null && vehicle.line.brand != null) {
+							List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
+							renderArgs.put("lines", lines);
+						}
+						List<ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
+						renderArgs.put("brands", brands);
+						renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
+						renderArgs.put("vehicleRates", ER_Rate.findAll());
+						renderArgs.put("vehicleERYears", ER_Year.findAll());
+						renderArgs.put("vehicleReminderTypes", ER_Reminder_Type.find("order by name asc").fetch());
+						renderArgs.put("vehiclePlateTypes", ER_Plate_Type.findAll());
+						renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
+
+						if (vehicle.armor == null) {
+							vehicle.armor = "N";
+						}
+						if (vehicle.isNew == null) {
+							vehicle.isNew = true;
+						}
+						render(incident, client, vehicle,isOldClient);
+					}
+				}
+				incidentsList(null, null);
+			}
+		}
+		catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void pagoTab(Long clientId, Long incidentId) {
+		try {
+			if (clientId != null) {
+				ER_Incident incident = ER_Incident.findById(incidentId);
+				ER_Payment payment = incident.payment;
+				ER_Client client = incident.client;
+				if (canViewClient(client)) {
+					renderArgs.put("chargeTypes", ER_Charge_Type.find("order by name asc").fetch());
+					renderArgs.put("bankAccountTypes", ER_Bank_Account_Type.find("order by name asc").fetch());
+					renderArgs.put("banks", ER_Bank.find("select distinct b from ER_Bank as b where b.active = ?", true).fetch());
+					renderArgs.put("cardTypes", ER_Card_Type.find("order by name asc").fetch());
+					renderArgs.put("cardClassz", ER_Card_Class.find("order by name asc").fetch());
+					List<ER_Channel> zoneList = ER_Channel.find("isPublic = ? OR isPublic IS NULL", Boolean.FALSE).fetch();
+					renderArgs.put("zoneList", zoneList);
+					render(incident, client,payment);
+				}
+			}
+		}
+		catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
     /*
 	 * ************************************************************************************************************************
 	 * Client editing
@@ -1454,7 +1602,6 @@ public class Incidents extends AdminBaseController {
 			ER_Payment payment = incident.payment;
 			ER_Client_PEP clientPEP = client.clientPEP;
 			ER_Client_PayerPEP clientPayerPEP = client.payer != null ? client.payer.clientPayerPEP : null;
-			client.ConvertUpper();
 			if (canViewClient(client)) {
 				renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
 				renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
@@ -1503,8 +1650,6 @@ public class Incidents extends AdminBaseController {
 				List<ER_Aditional_Multimedia> aditional_multimedia = null;
 				if (client.multimedia != null)
 					aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
-
-
 				render(incident, client, vehicle, payment, payer, legalRepresentative, legalRepresentativePayer, incidentId, activeTab, clientPEP, clientPayerPEP, aditional_multimedia);
 			}
 		}
@@ -1635,15 +1780,666 @@ public class Incidents extends AdminBaseController {
 			e.printStackTrace();
 		}
 	}
-    
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientPayer(ER_Client_Payer payer,ER_Legal_Representative legalRepresentativePayer,ER_Client_PayerPEP clientPayerPEP,
+									Long clientId, Long incidentId,String accion,ER_Client client,String isOldClient){
+        flash.discard();
+        try {
+            if(validation.hasErrors()){
+                params.flash();
+                validation.keep();
+                pagadorTab(clientId, incidentId,isOldClient);
+            }else{
+				ER_Client currentClient  = ER_Client.findById(clientId);
+				ER_Client_Payer currentPayer;
+
+				currentClient.useDataClientPayer = client.useDataClientPayer;
+				if((payer.taxNumber != null && !payer.taxNumber.isEmpty())){
+					currentClient.useDataClientPayer = false;
+				}
+
+				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
+					payer.legalRepresentativePayer = legalRepresentativePayer;
+				}
+
+				if(payer.expose != null && payer.expose) {
+					if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
+						clientPayerPEP.relationshipIsPep = true;
+						if (!clientPayerPEP.relationship.equals("Otro"))
+							clientPayerPEP.specificRelationship = null;
+					}
+					else
+						clientPayerPEP.relationshipIsPep = false;
+					clientPayerPEP.save();
+
+					payer.clientPayerPEP = clientPayerPEP;
+				}
+				if (payer!= null && payer.id != null) {
+					currentPayer = ER_Client_Payer.findById(payer.id);
+					payer.ConvertUpper();
+					legalRepresentativePayer.ConvertUpper();
+					clientPayerPEP.ConvertUpper();
+					BeanUtils.copyProperties(currentPayer, payer);
+					currentPayer.save();
+					currentClient.payer = currentPayer;
+				}
+				else{
+					currentPayer = new ER_Client_Payer();
+					payer.ConvertUpper();
+					legalRepresentativePayer.ConvertUpper();
+					clientPayerPEP.ConvertUpper();
+					BeanUtils.copyProperties(currentPayer, payer);
+					currentPayer.save();
+					currentClient.payer = currentPayer;
+				}
+				String completeAction = Messages.get("client.edit.next") != null ? Messages.get("client.edit.next") : "Siguiente";
+				String partialAction = Messages.get("client.edit.partial") != null ? Messages.get("client.edit.partial") : "Guardar Parcial";
+				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
+				if (completeAction.equals(accion)) {
+					currentClient.save();
+					vehiculoTab(clientId, incidentId,isOldClient);
+				}
+				if (partialAction.equals(accion)) {
+					currentClient.save();
+					flash.success(Messages.get("client.edit.success"));
+					pagadorTab(clientId, incidentId,isOldClient);
+				}
+				if (updateAction.equals(accion)) {
+					currentClient.save();
+					flash.success(Messages.get("client.edit.success"));
+					pagadorTab(clientId, incidentId,isOldClient);
+				}
+
+            }
+        }catch(Exception e){
+            Logger.error(e, e.getMessage());
+            e.printStackTrace();
+        }
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientVehicle(ER_Vehicle vehicle, Long clientId, Long incidentId,String accion,String isOldClient){
+		flash.discard();
+		try {
+		if(validation.hasErrors()){
+			params.flash();
+			validation.keep();
+			vehiculoTab(clientId, incidentId,isOldClient);
+		}else{
+			if(vehicle != null && vehicle.id != null){
+				String completeAction = Messages.get("client.edit.next") != null ? Messages.get("client.edit.next") : "Siguiente";
+				String partialAction = Messages.get("client.edit.partial") != null ? Messages.get("client.edit.partial") : "Guardar Parcial";
+				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
+
+				ER_Vehicle currentVehicle = ER_Vehicle.findById(vehicle.id);
+				vehicle.ConvertUpper();
+				BeanUtils.copyProperties(currentVehicle, vehicle);
+				vehicle.save();
+				String isOldCar;
+				if(vehicle.isNew){
+					isOldCar = "false";
+				}
+				else
+					isOldCar = "true";
+				if (completeAction.equals(accion)) {
+					documentoTab(clientId,incidentId,isOldClient,isOldCar);
+				}
+				if (partialAction.equals(accion)) {
+					flash.success(Messages.get("client.edit.success"));
+					vehiculoTab(clientId, incidentId,isOldClient);
+				}
+				if (updateAction.equals(accion)) {
+					flash.success(Messages.get("client.edit.success"));
+					vehiculoTab(clientId, incidentId,isOldClient);
+				}
+			}
+		}
+		}catch(Exception e){
+		Logger.error(e, e.getMessage());
+		e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientPayment(ER_Payment payment, Long clientId, Long incidentId, String emissionZone){
+		flash.discard();
+		try{
+		if(validation.hasErrors()){
+			params.flash();
+			validation.keep();
+			pagoTab(clientId, incidentId);
+		}else{
+			ER_Incident incident = ER_Incident.findById(incidentId);
+			incident.emissionZone = emissionZone;
+			if(incident.payment != null){
+				BeanUtils.copyProperties(incident.payment, payment);
+
+			}else{
+				ER_Payment currentPayment= new ER_Payment();
+				BeanUtils.copyProperties(currentPayment, payment);
+				currentPayment.save();
+				incident.payment = currentPayment;
+			}
+			if(incident.status.id == ERConstants.INCIDENT_STATUS_IN_PROGRESS)
+			incident.status = ER_Incident_Status.find("byCode", ERConstants.INCIDENT_STATUS_INDICTED).first();
+
+			incident.save();
+			flash.success(Messages.get("client.edit.success"));
+			incidentDetail(incidentId);
+		}
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientDocuments(Long clientId, Long incidentId,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+		if(validation.hasErrors()){
+			params.flash();
+			validation.keep();
+			documentoTab(clientId, incidentId,isOldClient,isOldCar);
+		}else{
+			ER_Client currentClient  = ER_Client.findById(clientId);
+			ER_Incident incident = ER_Incident.findById(incidentId);
+			ER_Vehicle vehicle = incident.vehicle;
+			if(currentClient!=null){
+				if(currentClient.isIndividual){
+					//validates all the required multimedia
+					if(currentClient.multimedia ==null ){
+						flash.error("Por favor suba la multimedia que es obligatoria");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					if(currentClient.multimedia.urlDPI == null || currentClient.multimedia.urlDPI.equals("")){
+						flash.error("Por favor suba el DPI ya que es obligatorio");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && (currentClient.multimedia.urlReceiptServices == null || currentClient.multimedia.urlReceiptServices.equals(""))){
+						flash.error("Por favor suba el recibo de servicios ya que es obligatorio");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+
+					else if(currentClient.multimedia.urlDriverLicence == null || currentClient.multimedia.urlDriverLicence.equals("")){
+						flash.error("Por favor suba licencia ya que es obligatoria");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if(vehicle.isNew){
+						if (currentClient.multimedia.urlCarInvoiceNew == null || currentClient.multimedia.urlCarInvoiceNew.equals("")){
+							flash.error("Por favor suba factura de vehiculo ya que esta marcado como vehiculo nuevo");
+							documentoTab(clientId,incidentId,isOldClient,isOldCar);
+						}
+						else
+							pagoTab(clientId,incidentId);
+					}
+					else if(!vehicle.isNew && (currentClient.multimedia.urlCirculationCard == null || currentClient.multimedia.urlCirculationCard.equals(""))){
+						flash.error("Por favor suba tarjeta de circulación ya que es obligatoria");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+
+					else{
+						pagoTab(clientId,incidentId);
+					}
+				}
+				else{
+					if(currentClient.multimedia ==null){
+						flash.error("Por favor suba la multimedia que es obligatoria");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && ( currentClient.multimedia.urlScanPatents == null || currentClient.multimedia.urlScanPatents.equals(""))){
+						flash.error("Por favor suba las patentes escaneadas");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && (currentClient.multimedia.urlScanLegalRepresentativeAppointment== null || currentClient.multimedia.urlScanLegalRepresentativeAppointment.equals(""))){
+						flash.error("Por favor suba nombramiento de representante legal");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && ( currentClient.multimedia.urlDPILegalRepresentative== null || currentClient.multimedia.urlDPILegalRepresentative.equals(""))){
+						flash.error("Por favor suba DPI de representante legal");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && ( currentClient.multimedia.urlRTU== null || currentClient.multimedia.urlRTU.equals(""))){
+						flash.error("Por favor suba RTU");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if((isOldClient.equals("false") || isOldClient.equals("")) && (currentClient.multimedia.urlReceiptServicesLegal== null || currentClient.multimedia.urlReceiptServicesLegal.equals(""))){
+						flash.error("Por favor suba recibo de servicios");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else if(vehicle!= null && vehicle.isNew) {
+						if (currentClient.multimedia.urlCarInvoiceNew == null || currentClient.multimedia.urlCarInvoiceNew.equals("")) {
+							flash.error("Por favor suba factura de vehiculo ya que esta marcado como vehiculo nuevo");
+							documentoTab(clientId, incidentId,isOldClient,isOldCar);
+						} else
+							pagoTab(clientId, incidentId);
+					}
+					else if(!vehicle.isNew && (currentClient.multimedia.urlCirculationCard == null || currentClient.multimedia.urlCirculationCard.equals(""))){
+						flash.error("Por favor suba tarjeta de circulación ya que es obligatoria");
+						documentoTab(clientId,incidentId,isOldClient,isOldCar);
+					}
+					else
+						pagoTab(clientId,incidentId);
+				}
+			}
+		}
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientDpi(Long clientId,Long incidentId,File dpi,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+		if(validation.hasErrors()){
+			params.flash();
+			validation.keep();
+		}else{
+			ER_Client currentClient = ER_Client.findById(clientId);
+			if(currentClient.multimedia == null) {
+				ER_Multimedia multimedia = new ER_Multimedia();
+				multimedia.save();
+				currentClient.multimedia = multimedia;
+			}
+			currentClient.multimedia.uploadedFilesGD = false;
+			currentClient.multimedia.urlDPI = dpi != null ? saveFile(dpi) : currentClient.multimedia.urlDPI;
+			currentClient.save();
+		}
+		flash.success(Messages.get("client.edit.success"));
+		documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientReceiptServices(Long clientId,Long incidentId,File receiptServices,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.uploadedFilesGD = false;
+				currentClient.multimedia.urlReceiptServices = receiptServices != null ? saveFile(receiptServices) : currentClient.multimedia.urlReceiptServices;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-    public static void saveClient(ER_Client client, ER_Client_Payer payer, ER_Legal_Representative legalRepresentative,
-                                    ER_Legal_Representative legalRepresentativePayer, ER_Vehicle vehicle, ER_Payment payment,
+    public static void saveClientCirculationCard(Long clientId,Long incidentId,File circulationCard,String isOldClient, String isOldCar){
+        flash.discard();
+        try{
+            if(validation.hasErrors()){
+                params.flash();
+                validation.keep();
+            }else{
+                ER_Client currentClient = ER_Client.findById(clientId);
+                if(currentClient.multimedia == null) {
+                    ER_Multimedia multimedia = new ER_Multimedia();
+                    multimedia.save();
+                    currentClient.multimedia = multimedia;
+                }
+                currentClient.multimedia.urlCirculationCard = circulationCard != null ? saveFile(circulationCard) : currentClient.multimedia.urlCirculationCard;
+                currentClient.save();
+            }
+            flash.success(Messages.get("client.edit.success"));
+            documentoTab(clientId,incidentId,isOldClient,isOldCar);
+        }catch(Exception e){
+            Logger.error(e, e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientDriverLicence(Long clientId,Long incidentId,File driverLicence,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlDriverLicence = driverLicence != null ? saveFile(driverLicence) : currentClient.multimedia.urlDriverLicence;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientCarInvoiceNew(Long clientId,Long incidentId,File carInvoiceNew,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlCarInvoiceNew = carInvoiceNew != null ? saveFile(carInvoiceNew) : currentClient.multimedia.urlCarInvoiceNew;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientAnotherCompanyPolicy(Long clientId,Long incidentId,File anotherCompanyPolicy,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlAnotherCompanyPolicy = anotherCompanyPolicy != null ? saveFile(anotherCompanyPolicy) : currentClient.multimedia.urlAnotherCompanyPolicy;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientAuthorizationForm(Long clientId,Long incidentId,File authorizationForm,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlAuthorizationForm = authorizationForm != null ? saveFile(authorizationForm) : currentClient.multimedia.urlAuthorizationForm;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientDepositReceipt(Long clientId,Long incidentId,File [] depositReceipt,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				if(depositReceipt != null)
+				{
+					currentClient.multimedia.hasAditionalFilesGD = true;
+				}
+				for(File currentFile: depositReceipt){
+					ER_Aditional_Multimedia aditional_multimedia = new ER_Aditional_Multimedia();
+					aditional_multimedia.multimedia = currentClient.multimedia;
+					aditional_multimedia.uploaded= false;
+					aditional_multimedia.urlFile = saveFile(currentFile);
+					aditional_multimedia.save();
+				}
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientScanPatents(Long clientId,Long incidentId,File scanPatents,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlScanPatents = scanPatents != null ? saveFile(scanPatents) : currentClient.multimedia.urlScanPatents;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientScanLegalRepresentativeAppointment(Long clientId,Long incidentId,File scanLegalRepresentativeAppointment,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlScanLegalRepresentativeAppointment = scanLegalRepresentativeAppointment != null ? saveFile(scanLegalRepresentativeAppointment) : currentClient.multimedia.urlScanLegalRepresentativeAppointment;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientDpiLegalRepresentative(Long clientId,Long incidentId,File dpiLegalRepresentative,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlDPILegalRepresentative = dpiLegalRepresentative != null ? saveFile(dpiLegalRepresentative) : currentClient.multimedia.urlDPILegalRepresentative;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientRTU(Long clientId,Long incidentId,File rtu,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlRTU = rtu != null ? saveFile(rtu) : currentClient.multimedia.urlRTU;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClientReceiptServicesLegal(Long clientId,Long incidentId,File receiptServicesLegal,String isOldClient,String isOldCar){
+		flash.discard();
+		try{
+			if(validation.hasErrors()){
+				params.flash();
+				validation.keep();
+			}else{
+				ER_Client currentClient = ER_Client.findById(clientId);
+				if(currentClient.multimedia == null) {
+					ER_Multimedia multimedia = new ER_Multimedia();
+					multimedia.save();
+					currentClient.multimedia = multimedia;
+				}
+				currentClient.multimedia.urlReceiptServicesLegal= receiptServicesLegal != null ? saveFile(receiptServicesLegal) : currentClient.multimedia.urlReceiptServicesLegal;
+				currentClient.save();
+			}
+			flash.success(Messages.get("client.edit.success"));
+			documentoTab(clientId,incidentId,isOldClient,isOldCar);
+		}catch(Exception e){
+			Logger.error(e, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+	public static void saveClient(ER_Client client,  ER_Legal_Representative legalRepresentative,
+								  Long clientId, Long incidentId, String accion,ER_Client_PEP clientPEP,String isOldClient){
+		flash.discard();
+		try {
+		if(validation.hasErrors()){
+			params.flash();
+			validation.keep();
+			clienteTab(clientId, incidentId);
+		}else{
+					ER_Client currentClient = ER_Client.findById(clientId);
+					ER_Incident incident = ER_Incident.findById(incidentId);
+					legalRepresentative.ConvertUpper();
+					clientPEP.ConvertUpper();
+					client.ConvertUpper();
+					if ((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) | (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
+						client.legalRepresentative = legalRepresentative;
+					}
+					if (client.expose != null && client.expose) {
+						if (clientPEP.typeOfrelationship.equals("Parentesco") || clientPEP.typeOfrelationship.equals("Asociado")) {
+							clientPEP.relationshipIsPep = true;
+							if (!clientPEP.relationship.equals("Otro"))
+								clientPEP.specificRelationship = null;
+						} else
+							clientPEP.relationshipIsPep = false;
+						client.clientPEP = clientPEP;
+					}
+					Date defaultValue = null;
+					DateConverter converter = new DateConverter(defaultValue);
+					ConvertUtils.register(converter, Date.class);
+					client.useDataClientPayer = currentClient.useDataClientPayer;
+					client.multimedia = currentClient.multimedia;
+					client.legalRepresentative = currentClient.legalRepresentative;
+					client.payer = currentClient.payer;
+					BeanUtils.copyProperties(currentClient, client);
+					currentClient.save();
+					incident.client= currentClient;
+					String completeAction = Messages.get("client.edit.next") != null ? Messages.get("client.edit.next") : "Siguiente";
+					String partialAction = Messages.get("client.edit.partial") != null ? Messages.get("client.edit.partial") : "Guardar Parcial";
+					String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
+
+						if (incident.status.code == ERConstants.INCIDENT_STATUS_CREATED) {
+							incident.status = ER_Incident_Status.find("byCode", ERConstants.INCIDENT_STATUS_IN_PROGRESS).first();
+						}
+						if (completeAction.equals(accion)) {
+							incident.save();
+							pagadorTab(clientId, incidentId,isOldClient);
+						}
+						if (partialAction.equals(accion)) {
+							incident.save();
+							flash.success(Messages.get("client.edit.success"));
+							clienteTab(clientId, incidentId);
+						}
+						if (updateAction.equals(accion)) {
+							incident.save();
+							flash.success(Messages.get("client.edit.success"));
+							clienteTab(clientId, incidentId);
+						}
+			}
+			}catch(Exception e){
+				Logger.error(e, e.getMessage());
+				e.printStackTrace();
+			}
+	}
+	/*
+    @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+    public static void saveClient(ER_Client client,  ER_Legal_Representative legalRepresentative,
                                     Long clientId, Long incidentId, String accion, String emissionZone, File dpi,
                                     File receiptServices, File circulationCard, File driverLicence, File carInvoiceNew,
                                     File anotherCompanyPolicy, File[] depositReceipt, File authorizationForm,
                                     File scanPatents, File scanLegalRepresentativeAppointment, File dpiLegalRepresentative,
-                                    File rtu, File receiptServicesLegal, Integer activeTab,ER_Client_PEP clientPEP,ER_Client_PayerPEP clientPayerPEP) {
+                                    File rtu, File receiptServicesLegal, Integer activeTab,ER_Client_PEP clientPEP) {
     	flash.discard();
     	if(validation.hasErrors()){
     		params.flash();
@@ -1655,41 +2451,8 @@ public class Incidents extends AdminBaseController {
                 ER_Incident incident = ER_Incident.findById(incidentId);
                 try{
                 	//-------------------Only save data if exist -------------------------------------------------------------------------------------------------------------
-                    payer.ConvertUpper();
-                    legalRepresentative.ConvertUpper();
-                    legalRepresentativePayer.ConvertUpper();
-					clientPEP.ConvertUpper();
-					clientPayerPEP.ConvertUpper();
-                    if((payer.taxNumber != null && !payer.taxNumber.isEmpty())){
-						client.useDataClientPayer = false;
-						client.payer = payer;
-					}
-					if((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) | (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
-						client.legalRepresentative = legalRepresentative;
-					}
-					if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
-						client.payer.legalRepresentativePayer = legalRepresentativePayer;
-                    }
-                    if(client.expose != null && client.expose) {
-                    	if (clientPEP.typeOfrelationship.equals("Parentesco") || clientPEP.typeOfrelationship.equals("Asociado")) {
-							clientPEP.relationshipIsPep = true;
-						    if (!clientPEP.relationship.equals("Otro"))
-						    	clientPEP.specificRelationship = null;
-                    	}
-                    	else
-							clientPEP.relationshipIsPep = false;
-                        client.clientPEP = clientPEP;
-                    }
-					if(payer.expose != null && payer.expose) {
-						if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
-							clientPayerPEP.relationshipIsPep = true;
-							if (!clientPayerPEP.relationship.equals("Otro"))
-								clientPayerPEP.specificRelationship = null;
-						}
-						else
-							clientPayerPEP.relationshipIsPep = false;
-						payer.clientPayerPEP = clientPayerPEP;
-					}
+
+
 					//--------------------------------------------------------------------------------------------------------------------------------
                     Date defaultValue = null;
     				DateConverter converter = new DateConverter(defaultValue);
@@ -1715,7 +2478,7 @@ public class Incidents extends AdminBaseController {
 					{
 						currentClient.multimedia.hasAditionalFilesGD = true;
 					}
-                    currentClient.save();
+
 					for(File currentFile: depositReceipt){
 						ER_Aditional_Multimedia aditional_multimedia = new ER_Aditional_Multimedia();
 						aditional_multimedia.multimedia = currentClient.multimedia;
@@ -1723,34 +2486,15 @@ public class Incidents extends AdminBaseController {
 						aditional_multimedia.urlFile = saveFile(currentFile);
 						aditional_multimedia.save();
 					}
-					if(vehicle != null && vehicle.id != null){
-						ER_Vehicle currentVehicle = ER_Vehicle.findById(vehicle.id);
-						vehicle.ConvertUpper();
-						BeanUtils.copyProperties(currentVehicle, vehicle);
-						vehicle.save();
-					}
+
 		    		if(incident.payment != null){
 		    			BeanUtils.copyProperties(incident.payment, payment);
 		    		}else{
 		    			incident.payment = payment;
 		    		}
-		    		incident.emissionZone = emissionZone;
-		    		incident.save();
 
-                    String completeAction = Messages.get("client.edit.complete") != null ? Messages.get("client.edit.complete") : "Guardar y Salir";
-                    String partialAction = Messages.get("client.edit.partial") != null ? Messages.get("client.edit.partial") : "Guardar Parcial";
-                    if(completeAction.equals(accion)){
-                        incident.status = ER_Incident_Status.find("byCode", ERConstants.INCIDENT_STATUS_INDICTED).first();
-                        incident.save();
-                    }else {
-                        if(incident.status.code == ERConstants.INCIDENT_STATUS_CREATED){
-                            incident.status = ER_Incident_Status.find("byCode", ERConstants.INCIDENT_STATUS_IN_PROGRESS).first();
-                            incident.save();
-                        }
-                        if(partialAction.equals(accion)) {
-                            editClient(clientId, incidentId, activeTab);
-                        }
-                    }
+
+
                 }catch(Exception e){
                 	Logger.error("error: " + e.getMessage());
                     e.printStackTrace();
@@ -1760,7 +2504,7 @@ public class Incidents extends AdminBaseController {
     		}
     	}
     }
-
+*/
 	private static String saveFile(File file){
 		try{
 			if(file != null){
@@ -2425,22 +3169,29 @@ public class Incidents extends AdminBaseController {
 				  //Formulario IVE individual
 				  if (form.id == 1 && incident.client.isIndividual == true){
 					  currentClient.multimedia.urlFormIVE = generatedFileName;
+					  currentClient.multimedia.uploadedFilesGD = false;
+
 				  }
 				  //Formulario solicitud Auto
 				  else if (form.id == 2){
 					  currentClient.multimedia.urlformRequestAuto = generatedFileName;
+					  currentClient.multimedia.uploadedFilesGD = false;
+					  Logger.info("Guarda formulario solicitud auto ");
 				  }
 				  //Formulario PEP
 				  else if(form.id == 8){
 					  currentClient.multimedia.urlFormPEP= generatedFileName;
+					  currentClient.multimedia.uploadedFilesGD = false;
 				  }
                   //Formulario IVE JURIDICO
                   else if(form.id == 7){
                       currentClient.multimedia.urlFormIVE = generatedFileName;
+					  currentClient.multimedia.uploadedFilesGD = false;
                   }
 				  //Formulario Pagador PEP
 				  else if(form.id == 9){
 					  currentClient.multimedia.urlFormPayerPEP = generatedFileName;
+					  currentClient.multimedia.uploadedFilesGD = false;
 				  }
 				  currentClient.save();
 			  }
