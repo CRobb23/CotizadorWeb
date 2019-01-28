@@ -342,87 +342,92 @@ public class UserCases extends AdminBaseController {
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void insuranceInformationNext(@Valid List<ER_Quotation> quotations, @Required Long[] paymentFrecuencies, String iField, String back, Long loJackId) {
     	flash.clear();
-    	
-    	ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
-        List<LoJackOptions> loJackOptions = GeneralMethods.getAvailableLoJacks(loJackId);
-    	if(quotations != null){
-	    	for(int i=0; i< quotations.size(); i++){
-	    		ER_Quotation quotation = quotations.get(i);
-	    		quotation.setValuesOfQuotation(quotation);
-	    		if(quotation.hasCarValue()){
-	    			validation.required("quotations["+i+"].carValue", quotation.carValue);
-	    		}
-	    		if(quotation.discount != null && quotation.product != null){
-	    			BigDecimal primeDiscount = BigDecimal.ZERO;
-	    			if(quotation.product.hasFacultative != null && quotation.product.hasFacultative && quotation.facultative != null){
-	    				ER_Facultative_Deductible facultative = ER_Facultative_Deductible.findById(quotation.facultative);
-	    				if(facultative != null){
-	    					primeDiscount = facultative.primeDiscount;
-	    				}
-	    			}
-		    		BigDecimal authorizedDiscount = Incidents.getAuthorizedDiscount(quotation.product, quotation.carValue, primeDiscount);
-		    		validation.max("quotations["+i+"].discount", quotation.discount, authorizedDiscount.doubleValue());
-		    		validation.min("quotations["+i+"].discount", quotation.discount, 0.0);
-	    		}
-	    		// Validate if has average value and car value is within parameters
-                if (incident.vehicle.averageValue != null && quotation.carValue != null ) {
-                    BigDecimal averageValueParam = new BigDecimal(0.25);
-                    ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
-                    if (currentConfiguration.averageValueConfig != null) {
-                        averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
-                    }
-                    BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
-                    BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
-                    // Find lower and upper parameter
-                    BigDecimal lowerValue = incident.vehicle.averageValue.multiply(min);
-                    BigDecimal upperValue = incident.vehicle.averageValue.multiply(max);
-                    // car value within
-                    if (quotation.carValue.compareTo(lowerValue) < 0  || quotation.carValue.compareTo(upperValue) > 0) {
-                        validation.addError("quotations["+i+"].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
-                    }
-                    //Checks lower and higher range
-					boolean valueCorrect;
-					for(ER_Product_Coverage coverage : quotation.product.coverages){
-						valueCorrect = false;
-						for(int j = 0; j<coverage.values.size(); j++){
-							if (coverage.values.get(j).highRange ==null) {
-								valueCorrect = true;
-								break;
-							}
-							else if (coverage.values.get(j).highRange !=null && quotation.carValue.compareTo(coverage.values.get(j).highRange)<=0){
-								valueCorrect =true;
-								break;
+    	try {
+			ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
+			List<LoJackOptions> loJackOptions = GeneralMethods.getAvailableLoJacks(loJackId);
+			if (quotations != null) {
+				for (int i = 0; i < quotations.size(); i++) {
+					ER_Quotation quotation = quotations.get(i);
+					quotation.setValuesOfQuotation(quotation);
+					if (quotation.hasCarValue()) {
+						validation.required("quotations[" + i + "].carValue", quotation.carValue);
+					}
+					if (quotation.discount != null && quotation.product != null) {
+						BigDecimal primeDiscount = BigDecimal.ZERO;
+						if (quotation.product.hasFacultative != null && quotation.product.hasFacultative && quotation.facultative != null) {
+							ER_Facultative_Deductible facultative = ER_Facultative_Deductible.findById(quotation.facultative);
+							if (facultative != null) {
+								primeDiscount = facultative.primeDiscount;
 							}
 						}
-						if(!valueCorrect) {
-							validation.addError("quotations["+i+"].carValue", Messages.get("quotation.form.quotation.carvaluerangecoverage"));
-							break;
+						BigDecimal authorizedDiscount = Incidents.getAuthorizedDiscount(quotation.product, quotation.carValue, primeDiscount);
+						validation.max("quotations[" + i + "].discount", quotation.discount, authorizedDiscount.doubleValue());
+						validation.min("quotations[" + i + "].discount", quotation.discount, 0.0);
+					}
+					// Validate if has average value and car value is within parameters
+					if (incident.vehicle.averageValue != null && quotation.carValue != null) {
+						BigDecimal averageValueParam = new BigDecimal(0.25);
+						ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
+						if (currentConfiguration.averageValueConfig != null) {
+							averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
+						}
+						BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
+						BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
+						// Find lower and upper parameter
+						BigDecimal lowerValue = incident.vehicle.averageValue.multiply(min);
+						BigDecimal upperValue = incident.vehicle.averageValue.multiply(max);
+						// car value within
+						if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
+							validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
 						}
 					}
-                }
-	    		if (quotation.loJack != null) {
-                    for (LoJackOptions loJackOption : loJackOptions) {
-                        if (loJackOption.number == quotation.loJack) {
-                            quotation.selectedLoJack = loJackOption;
-                            quotation.loJackRecharge = loJackOption.recharge;
-                            break;
-                        }
-                    }
-                }
-	    	}
-    	}
-    	
-		incident.quotations = quotations;
-    	
-    	if(back != null){ 
-    		validation.clear();
-    		renderArgs.put("vehicle", incident.vehicle);
-    		renderVehicleForm(incident.vehicle, incident.toJsonString(true), incident.vehicle.line.id, null);
-    	}
-    	
-    	renderArgs.put("incident", incident);
-    	
-    	insuranceSimulation(quotations, paymentFrecuencies, incident.toJsonString(true), loJackId);
+					if ( quotation.carValue != null) {
+						//Checks lower and higher range
+						boolean valueCorrect;
+						for (ER_Product_Coverage coverage : quotation.product.coverages) {
+							valueCorrect = false;
+							for (int j = 0; j < coverage.values.size(); j++) {
+								if (coverage.values.get(j).highRange == null) {
+									valueCorrect = true;
+									break;
+								} else if (coverage.values.get(j).highRange != null && quotation.carValue.compareTo(coverage.values.get(j).highRange) <= 0) {
+									valueCorrect = true;
+									break;
+								}
+							}
+							if (!valueCorrect) {
+								validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerangecoverage"));
+								break;
+							}
+						}
+					}
+					if (quotation.loJack != null) {
+						for (LoJackOptions loJackOption : loJackOptions) {
+							if (loJackOption.number == quotation.loJack) {
+								quotation.selectedLoJack = loJackOption;
+								quotation.loJackRecharge = loJackOption.recharge;
+								break;
+							}
+						}
+					}
+				}
+			}
+
+			incident.quotations = quotations;
+
+			if (back != null) {
+				validation.clear();
+				renderArgs.put("vehicle", incident.vehicle);
+				renderVehicleForm(incident.vehicle, incident.toJsonString(true), incident.vehicle.line.id, null);
+			}
+
+			renderArgs.put("incident", incident);
+
+			insuranceSimulation(quotations, paymentFrecuencies, incident.toJsonString(true), loJackId);
+		}
+		catch(Exception e){
+			Logger.error(e,e.getMessage());
+    }
     }
     
     /*
