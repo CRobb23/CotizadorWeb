@@ -82,6 +82,8 @@ public class AutoInspectionRestResponse {
     private Long updatedDate;
     @JsonProperty("images")
     private List<String> images;
+    @JsonProperty("report")
+    private String report;
 
     public String getId() {
         return id;
@@ -369,5 +371,13 @@ public class AutoInspectionRestResponse {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
     }
 }

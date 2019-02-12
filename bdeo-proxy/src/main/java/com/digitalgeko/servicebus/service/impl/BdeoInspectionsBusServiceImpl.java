@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -111,18 +110,12 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             // Check for Status REVISADO, Sent Multimedia to Drive
             AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
             if (restObj.getStatus() == 2 || restObj.getStatus() == 4 || restObj.getStatus() == 5) {
-                int counter = 1;
-                List<CompletableFuture> tasks = new ArrayList<>();
-                for (String image : restObj.getImages()) {
-                    String fileName = "BDEO_IMAGE_" + counter + ".JPG";
-                    CompletableFuture<Boolean> task = multimediaService.processImage(restObj.getCaseNumber(), fileName, image);
-                    tasks.add(task);
-                }
-                try {
-                    CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0])).join();
-                } catch (Exception e) {
-                    log.error(e.getMessage(), e);
-                }
+                // Find Drive Folder
+                String folderId = multimediaService.findFolder(restObj.getCaseRef());
+                List<String> multimediaList = new ArrayList<>();
+                multimediaList.addAll(restObj.getImages());
+                multimediaList.add(restObj.getReport());
+                multimediaService.processMultimedia(restObj.getCaseRef(), folderId, multimediaList);
             }
             // Return message
             String soapResponse = fromJSONtoSOAP(restResponse, AutoInspectionRestResponse.class, AutoInspectionQuerySoapResponse.class);
