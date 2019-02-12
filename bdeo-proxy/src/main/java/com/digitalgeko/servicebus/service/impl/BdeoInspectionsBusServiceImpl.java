@@ -111,7 +111,8 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
             if (restObj.getStatus() == 2 || restObj.getStatus() == 4 || restObj.getStatus() == 5) {
                 // Find Drive Folder
-                String folderId = multimediaService.findFolder(restObj.getCaseRef());
+                String driveFolderName = "DA-" + restObj.getCaseRef();
+                String folderId = multimediaService.findFolder(driveFolderName);
                 List<String> multimediaList = new ArrayList<>();
                 multimediaList.addAll(restObj.getImages());
                 multimediaList.add(restObj.getReport());
