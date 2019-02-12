@@ -700,7 +700,7 @@ quotation.form.quotation.carValue = SUMA ASEGURADA DAÑOS PROPIOS
 quotation.form.quotation.theftcoverageerror = El monto es mayor al %.2f%s de la suma asegurada
 quotation.form.quotation.theftcoveragleyend = La suma asegurada de la cobertura de robo parcial debe ser menor o igual al %.2f%s de la suma asegurada
 quotation.form.quotation.armoredGlassesLimit = Hasta un límite máximo de Q.40, 000.00
-quotation.form.quotation.carvaluerange = El valor del vehiculo se excede de los parametros establecidos.
+quotation.form.quotation.carvaluerange = El valor del vehiculo se excede de los parametros establecidos, por favor comuniquese con su ejecutivo de negocios.
 quotation.form.quotation.carvaluerangecoverage = El valor del vehiculo se excede de los parametros establecidos en la cobertura.
 
 quotation.simulation.quotation = Cotización
@@ -996,6 +996,10 @@ incident.quotation.discount.no_authorized_discount = No posee un descuento autor
 #######################################################################
 
 client.edit.title = Editar cliente
+payer.edit.title = Editar pagador
+vehicle.edit.title = Editar vehiculo
+payment.edit.title = Editar metodo pago
+document.edit.title = Editar documentos
 client.edit.form.client.firstName = Nombre
 client.edit.form.client.lastName = Apellido
 client.edit.form.client.phoneNumber = Teléfono
@@ -1006,7 +1010,9 @@ client.edit.fielderrors = Existen errores en el formulario, por favor revisar
 client.edit.save = Modificar cliente
 client.edit.update = Actualizar
 client.edit.cancel = Salir
-client.edit.complete = Guardar y Salir
+client.edit.next = Siguiente
+client.edit.final.save = Guardar y Salir
+client.edit.previous = Anterior
 client.edit.partial = Guardar Parcial
 
 client.edit.success = El cliente fue modificado exitosamente
