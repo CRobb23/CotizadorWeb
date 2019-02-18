@@ -85,6 +85,9 @@
 						#{elseif incident?.inspection?.type?.code == helpers.ERConstants.INSPECTION_TYPE_CENTER}
 							<td>${incident?.inspection?.type?.name}</td>
 						#{/elseif}
+						#{elseif incident?.inspection?.type?.code == helpers.ERConstants.INSPECTION_TYPE_AUTO}
+                            <td>${incident?.inspection?.type?.name}</td>
+						#{/elseif}
 					</tr>
 					#{/if}
 					<tr>

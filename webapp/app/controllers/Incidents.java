@@ -810,66 +810,73 @@ public class Incidents extends AdminBaseController {
 	    				//	inspectionInfo.inspectionDate = new Date();
 	    					inspectionInfo.inspected = true;
 	    				} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
-							InspectionAutoRequest requestAuto = new InspectionAutoRequest();
-							requestAuto.setFirstName(incident.client.firstName);
-							requestAuto.setSecondName(incident.client.secondName);
-							requestAuto.setFirstSurname(incident.client.firstSurname);
-							requestAuto.setSecondSurname(incident.client.secondSurname);
-							requestAuto.setMarriedSurname(incident.client.marriedSurname);
-							requestAuto.setIdentificationDocument(incident.client.identificationDocument);
-							requestAuto.setTaxNumber(incident.client.taxNumber);
-							requestAuto.setLicenseNumber(incident.client.licenseNumber);
-							requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
-							// Add PhoneData
-							List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
-							InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
-							phoneData.setPhone(incident.client.phoneNumber1);
-							phones.add(phoneData);
-							requestAuto.setPhones(phones);
-							// Add Email Data
-							List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
-							InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
-							emailData.setEmail(incident.client.email);
-							emails.add(emailData);
-							requestAuto.setEmails(emails);
-							// Add Email Broker Data
-							List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
-							InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
-							emailBrokerData.setEmail(connectedUser().email);
-							emailsBroker.add(emailBrokerData);
-							requestAuto.setEmailsBroker(emailsBroker);
-							//
-							requestAuto.setAddress(incident.client.address);
-							requestAuto.setVehicleOwner(incident.vehicle.owner);
-							requestAuto.setBrand(incident.vehicle.line.name);
-                            requestAuto.setLine(incident.vehicle.line.brand.name);
-                            requestAuto.setYear(incident.vehicle.erYear.year);
-							requestAuto.setPlate(incident.vehicle.plate);
-							requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
-							requestAuto.setColor(incident.vehicle.color);
-							requestAuto.setEngine(incident.vehicle.engine);
-							requestAuto.setVin(incident.vehicle.chassis);
-							requestAuto.setMileage(incident.vehicle.mileage);
-							// Other Data
-							requestAuto.setLicenseYears(" ");
-							requestAuto.setUse(" ");
-							requestAuto.setOrigin(" ");
-							requestAuto.setCoin("Q");
+	    					// Validate All info
+							String validStr = validAutoInspectionFields(incident);
+							if ("OK".equals(validStr)) {
+								InspectionAutoRequest requestAuto = new InspectionAutoRequest();
+								requestAuto.setFirstName(incident.client.firstName);
+								requestAuto.setSecondName(incident.client.secondName);
+								requestAuto.setFirstSurname(incident.client.firstSurname);
+								requestAuto.setSecondSurname(incident.client.secondSurname);
+								requestAuto.setMarriedSurname(incident.client.marriedSurname);
+								requestAuto.setIdentificationDocument(incident.client.identificationDocument);
+								requestAuto.setTaxNumber(incident.client.taxNumber);
+								requestAuto.setLicenseNumber(incident.client.licenseNumber);
+								requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
+								// Add PhoneData
+								List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
+								InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
+								phoneData.setPhone(incident.client.phoneNumber2);
+								phones.add(phoneData);
+								requestAuto.setPhones(phones);
+								// Add Email Data
+								List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
+								InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
+								emailData.setEmail(incident.client.email);
+								emails.add(emailData);
+								requestAuto.setEmails(emails);
+								// Add Email Broker Data
+								List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
+								InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
+								emailBrokerData.setEmail(connectedUser().email);
+								emailsBroker.add(emailBrokerData);
+								requestAuto.setEmailsBroker(emailsBroker);
+								//
+								requestAuto.setAddress(incident.client.address);
+								requestAuto.setVehicleOwner(incident.vehicle.owner);
+								requestAuto.setBrand(incident.vehicle.line.name);
+								requestAuto.setLine(incident.vehicle.line.brand.name);
+								requestAuto.setYear(incident.vehicle.erYear.year);
+								requestAuto.setPlate(incident.vehicle.plate);
+								requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
+								requestAuto.setColor(incident.vehicle.color);
+								requestAuto.setEngine(incident.vehicle.engine);
+								requestAuto.setVin(incident.vehicle.chassis);
+								requestAuto.setMileage(incident.vehicle.mileage);
+								// Other Data
+								requestAuto.setLicenseYears(" ");
+								requestAuto.setUse(" ");
+								requestAuto.setOrigin(" ");
+								requestAuto.setCoin("Q");
 
-							InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
-							if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
-								flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
-								ER_Exceptions exceptions = new ER_Exceptions();
-								exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
-								exceptions.exceptionDate = new Date();
-								exceptions.quotation = quotation;
-								exceptions.active = 1;
-								exceptions.save();
-								incident.status = incidentStatusIncomplete;
-								incident.save();
-								attendIncident(id);
+								InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
+								if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
+									flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
+									ER_Exceptions exceptions = new ER_Exceptions();
+									exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
+									exceptions.exceptionDate = new Date();
+									exceptions.quotation = quotation;
+									exceptions.active = 1;
+									exceptions.save();
+									incident.status = incidentStatusIncomplete;
+									incident.save();
+									attendIncident(id);
+								} else {
+									inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
+								}
 							} else {
-								inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
+								flash.error("No es posible generar una AutoInspeccion. " + validStr);
+								attendIncident(id);
 							}
 						}
 	    				inspectionInfo.incident = incident;
@@ -905,6 +912,28 @@ public class Incidents extends AdminBaseController {
     		finalized(incident.id, success);
     	}
     }
+
+    private static String validAutoInspectionFields(final ER_Incident incident) {
+		String validStr = "OK";
+		if (StringUtil.isNullOrBlank(incident.client.firstName) && StringUtil.isNullOrBlank(incident.client.secondName)) {
+			validStr = "Nombres cliente incompleto.";
+		} else if (StringUtil.isNullOrBlank(incident.client.firstSurname) && StringUtil.isNullOrBlank(incident.client.secondSurname)) {
+			validStr = "Apellidos cliente incompleto.";
+		} else if (StringUtil.isNullOrBlank(incident.client.phoneNumber2)) {
+			validStr = "Numero teléfono incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.client.email)) {
+			validStr = "Correo electrónico incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.line.name)) {
+			validStr = "Linea de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.line.brand.name)) {
+			validStr = "Marca de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.erYear.year)) {
+			validStr = "Modelo de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.plate)) {
+			validStr = "Placa de vehículo incompleto";
+		}
+		return validStr;
+	}
 	
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void saveIncidentStatePublic(@Required Long id, 

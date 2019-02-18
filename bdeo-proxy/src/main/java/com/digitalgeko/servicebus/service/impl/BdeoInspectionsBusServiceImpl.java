@@ -71,14 +71,17 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
 
     public String createAutoInspection(String soapMessage) {
         try {
+            //Parse SOAP Obj
+            AutoInspectionCreateSoapRequest soapObj = (AutoInspectionCreateSoapRequest) fromSOAP(soapMessage, AutoInspectionCreateSoapRequest.class);
+            String caseNum = soapObj.getCaseNumber();
+            soapObj.setCaseNumber("DA-"+caseNum);
+            soapMessage = toSOAP(soapObj);
             // Convert SOAP to JSON, call BDEO, return message
             String restMessage = fromSOAPtoJSON(soapMessage, AutoInspectionCreateSoapRequest.class, AutoInspectionCreateRestRequest.class);
             String restResponse = bdeoServiceRestOutbound.createAutoInspection(login(), restMessage);
             // Set CaseNumber form SOAP
-            //Parse SOAP Obj
-            AutoInspectionCreateSoapRequest soapObj = (AutoInspectionCreateSoapRequest) fromSOAP(soapMessage, AutoInspectionCreateSoapRequest.class);
             AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
-            restObj.setCaseNumber(soapObj.getCaseNumber());
+            restObj.setCaseNumber(caseNum);
             restResponse = toJSON(restObj);
             // Convert and Response to SOAP
             String soapResponse = fromJSONtoSOAP(restResponse, AutoInspectionRestResponse.class, AutoInspectionCreateSoapResponse.class);
@@ -111,13 +114,15 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             AutoInspectionRestResponse restObj = (AutoInspectionRestResponse) fromJSON(restResponse, AutoInspectionRestResponse.class);
             if (restObj.getStatus() == 2 || restObj.getStatus() == 4 || restObj.getStatus() == 5) {
                 // Find Drive Folder
-                String driveFolderName = "DA-" + restObj.getCaseRef();
+                String driveFolderName = restObj.getCaseRef();
                 String folderId = multimediaService.findFolder(driveFolderName);
                 List<String> multimediaList = new ArrayList<>();
                 multimediaList.addAll(restObj.getImages());
                 multimediaList.add(restObj.getReport());
                 multimediaService.processMultimedia(restObj.getCaseRef(), folderId, multimediaList);
             }
+            restObj.setCaseRef(restObj.getCaseRef().replaceAll("DA-", ""));
+            restResponse = toJSON(restObj);
             // Return message
             String soapResponse = fromJSONtoSOAP(restResponse, AutoInspectionRestResponse.class, AutoInspectionQuerySoapResponse.class);
             return soapResponse;
