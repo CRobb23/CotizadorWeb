@@ -111,7 +111,7 @@ public class Incidents extends AdminBaseController {
 					String name = ("%" + searchFields.get("client_name") + "%").toLowerCase();
 					filter.addGroupStart(Operator.AND);
 					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
+					filter.addQuery("lower(concat|(client.firstName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
 					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
 					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
 					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
@@ -861,7 +861,7 @@ public class Incidents extends AdminBaseController {
 
 								InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
 								if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
-									flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
+									flash.error("Ha ocurrido un error en la conexión con AutoInspecciones - " + inspectionResponse.getMessage());
 									ER_Exceptions exceptions = new ER_Exceptions();
 									exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
 									exceptions.exceptionDate = new Date();
@@ -3035,8 +3035,8 @@ public class Incidents extends AdminBaseController {
                     incident.save();
     				incidentDetail(incident.id);
 				}
-			}else{
-				policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+			//}else{
+			//	policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
 			}
     	}
 

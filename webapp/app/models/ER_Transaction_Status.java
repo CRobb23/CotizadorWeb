@@ -47,8 +47,8 @@ public class ER_Transaction_Status extends Model {
 	}
 
 	public void updateFromResponse(Object response){
-		xml =  getXMLFromObject(response);
 		BaseResponse baseResponse = (BaseResponse) response;
+		xml = "";
 		message = baseResponse.getMessage();
 		complete = baseResponse.isSuccessful();
 	}

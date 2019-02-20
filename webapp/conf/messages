@@ -1014,6 +1014,7 @@ client.edit.next = Siguiente
 client.edit.final.save = Guardar y Salir
 client.edit.previous = Anterior
 client.edit.partial = Guardar Parcial
+client.edit.complete = Guardar y Salir
 
 client.edit.success = El cliente fue modificado exitosamente
 
