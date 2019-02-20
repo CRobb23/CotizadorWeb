@@ -21,7 +21,7 @@ import play.libs.WS;
 import play.libs.WS.FileParam;
 import play.libs.WS.WSRequest;
 
-@Every("15mn")
+@Every("1mn")
 public class MultimediaJob extends Job {
 
 	private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
@@ -38,9 +38,8 @@ public class MultimediaJob extends Job {
 	
 	public void doJob(){
 	    try {
-            multimediaList = ER_Multimedia.find("byUploadedFilesGD", false).fetch();
+            multimediaList = ER_Multimedia.find("uploaded_files_gd = false and can_upload_files = true").fetch(50);
             Logger.info("Inicia multimedia Job, lista de multimedia a subir: " + multimediaList.size());
-
 
             for (ER_Multimedia multimedia:multimediaList) {
                     uploadMultimediaFiles(multimedia);

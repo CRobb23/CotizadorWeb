@@ -24,6 +24,10 @@ import controllers.Incidents;
 import ext.GsonExclusionStrategy;
 import helpers.ERConstants;
 import helpers.GeneralMethods;
+import objects.CoverageCost;
+import objects.CoverageCostCategory;
+import objects.PaymentOption;
+import objects.QuotationDetail;
 import play.Logger;
 import play.db.jpa.Model;
 import play.libs.Crypto;
@@ -32,8 +36,6 @@ import play.libs.Crypto;
 public class ER_Incident extends Model {
 	
 	public Long number;
-
-
 
 	@OneToMany(mappedBy="incident", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	public List<ER_Incident_Parameter> parameters;
@@ -56,7 +58,9 @@ public class ER_Incident extends Model {
 	@ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
 	@JoinColumn(name="status_id", nullable=true)
 	public ER_Incident_Status status;
-	
+
+	@Column(precision=19, scale=2)
+	public BigDecimal selectedTotalPrime;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	public ER_Declined_Sell_Reason declinedReason;
@@ -64,7 +68,7 @@ public class ER_Incident extends Model {
 	@ManyToOne(fetch=FetchType.LAZY)
 	public ER_Quotation selectedQuotation;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	public ER_Payment_Frecuency selectedPaymentFrecuency;
 	
 	@OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
@@ -122,6 +126,36 @@ public class ER_Incident extends Model {
 	
 	@Column(name="emission_zone", nullable=true)
 	public String emissionZone;
+
+	public PaymentOption getSelectedPaymentOption() {
+		List<PaymentOption> paymentOptions = selectedQuotation.quotationDetail.getPaymentOptions();
+		ER_Payment_Frecuency currentFrecuency = selectedPaymentFrecuency;
+		QuotationDetail currentQuotationDetail = selectedQuotation.quotationDetail;
+		for(PaymentOption currentPayment: paymentOptions){
+			if(currentPayment.frecuencyId == currentFrecuency.id) {
+
+				currentPayment.netPrime = currentQuotationDetail.getVirginInternalPrime();
+				if (currentPayment.netPrime.compareTo(currentQuotationDetail.getTotalMinimumPrime()) < 0) {
+					currentPayment.netPrime = currentQuotationDetail.getTotalMinimumPrime();
+				}
+				return currentPayment;
+			}
+		}
+		return null;
+	}
+
+	public BigDecimal getSelectedCoverage(String strCoverage) {
+		List<CoverageCostCategory> categories = selectedQuotation.quotationDetail.getCategories();
+		for(CoverageCostCategory currentCategory:categories ) {
+			List<CoverageCost> costCategory = currentCategory.getCosts();
+				for(CoverageCost currentCostCategory : costCategory){
+					if(currentCostCategory.external && currentCostCategory.coverageName.toLowerCase().equals(strCoverage.toLowerCase())){
+						return currentCostCategory.originalCost;
+					}
+				}
+		}
+		return null;
+	}
 
     public static ER_Incident incidentFromJson(String json, boolean encrypted) {
 		try{

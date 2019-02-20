@@ -191,6 +191,7 @@
 							#{if controllers.Security.check('Gerente de canal') || controllers.Security.check('Administrador maestro')}
 							<li><a href="@{AdminReports.users()}">Usuarios</a></li>
 							#{/if}
+
 							#{if controllers.Security.check('Administrador maestro')}
 							<li><a href="@{AdminReports.productView()}">Productos</a></li>
 							#{/if}
@@ -199,13 +200,12 @@
 					#{/if}
 					#{/if}
 
-					#{if controllers.Security.checkAccess()}
+
 					#{if controllers.Security.check('Administrador maestro') ||
 					controllers.Security.check('Gerente comercial') || controllers.Security.check('Gerente de canal')}
 					<li class="${request.controller == 'AdminUsers' ? 'current_page_item_selected active' : ''}">
 						<a href="@{AdminUsers.usersList(null, null, null, null, true)}">&{'menu.users.title'}</a>
 					</li>
-					#{/if}
 					#{/if}
 					#{if controllers.Security.check('Administrador maestro')}
 					<li class="${request.controller == 'AdminConfiguration' ? 'current_page_item_selected active' : ''}">

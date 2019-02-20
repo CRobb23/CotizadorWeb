@@ -386,12 +386,25 @@ public class UserCases extends AdminBaseController {
 						boolean valueCorrect;
 						for (ER_Product_Coverage coverage : quotation.product.coverages) {
 							valueCorrect = false;
+							if(coverage.coverage.category.id != 1){ //Solo debe validar seccion 1 de coberturas
+								break;
+							}
 							for (int j = 0; j < coverage.values.size(); j++) {
-								if (coverage.values.get(j).highRange == null) {
+
+								if (coverage.values.get(j).lowRange == null && coverage.values.get(j).highRange == null) {
 									valueCorrect = true;
 									break;
-								} else if (coverage.values.get(j).highRange != null && quotation.carValue.compareTo(coverage.values.get(j).highRange) <= 0) {
+								}
+								else if ((coverage.values.get(j).lowRange != null && coverage.values.get(j).highRange == null && quotation.carValue.compareTo(coverage.values.get(j).lowRange) >= 0)){
 									valueCorrect = true;
+									break;
+								}
+								else if ((coverage.values.get(j).highRange != null && coverage.values.get(j).lowRange == null && quotation.carValue.compareTo(coverage.values.get(j).lowRange) <= 0)){
+									valueCorrect = true;
+									break;
+								}
+									else if ((coverage.values.get(j).lowRange != null && coverage.values.get(j).highRange != null) && (quotation.carValue.compareTo(coverage.values.get(j).highRange) <= 0 && quotation.carValue.compareTo(coverage.values.get(j).lowRange) >= 0)) {
+										valueCorrect = true;
 									break;
 								}
 							}
@@ -534,7 +547,7 @@ public class UserCases extends AdminBaseController {
     				quotation.applyDiscount(quotation.discount);
     			}
 
-    			validation.min("quotations["+i+"].totalPrime", quotation.totalPrime, 0.01); 
+    			validation.min("quotations["+i+"].totalPrime", quotation.totalPrime, 0.01);
 
     		}
     		
