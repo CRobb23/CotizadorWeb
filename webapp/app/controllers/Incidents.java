@@ -22,6 +22,7 @@ import models.ws.*;
 import models.ws.rest.InspectionAutoRequest;
 import models.ws.rest.InspectionAutoResponse;
 import objects.LoJackOptions;
+import objects.PaymentOption;
 import org.allcolor.yahp.converter.IHtmlToPdfTransformer;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -71,8 +72,6 @@ public class Incidents extends AdminBaseController {
 	static PersonQueryWebService personServiceBus;
 	@Inject
 	static BusinessQueryWebService businessServiceBus;
-	@Inject
-	static PolicyInputWebService policyServiceBus;
 
 	public static Long dailyCorrelativeNumber;
 	public static Map<String,String> searchFields;
@@ -898,6 +897,10 @@ public class Incidents extends AdminBaseController {
     			incident.declinedReason = reason;
     			incident.selectedQuotation = quotation;
     			incident.selectedPaymentFrecuency = frecuency;
+
+				incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
+
+
     			incident.save();
     			
     			//Generar resguardo
@@ -1627,18 +1630,11 @@ public class Incidents extends AdminBaseController {
 				renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
 				renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
 				renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
-//    	    	renderArgs.put("phoneNumbersString", client.phoneNumbers != null ? client.phoneNumbers : "");
 
 				loadAddressCatalogs(client, payer);
 
 				if (vehicle != null) {
 					if (vehicle.line != null && vehicle.line.brand != null) {
-						//List<ER_Vehicle_Value> values = ER_Vehicle_Value.find("year != null and line.insurable = 1 and line.id = ? order by year asc", vehicle.line.id).fetch();
-						//renderArgs.put("values", values);
-
-						//List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v.line from ER_Vehicle_Value v where v.year != null and v.line.insurable = 1 and v.line.vehicleClass IS NOT NULL and v.line.brand.id = ? order by v.line.name", vehicle.line.brand.id).fetch();
-						//renderArgs.put("lines", lines);
-
 						List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
 						renderArgs.put("lines", lines);
 					}
@@ -1992,8 +1988,11 @@ public class Incidents extends AdminBaseController {
 							flash.error("Por favor suba factura de vehiculo ya que esta marcado como vehiculo nuevo");
 							documentoTab(clientId,incidentId,isOldClient,isOldCar);
 						}
-						else
-							pagoTab(clientId,incidentId);
+						else {
+							currentClient.multimedia.canUploadFiles = false;
+							currentClient.save();
+							pagoTab(clientId, incidentId);
+						}
 					}
 					else if(!vehicle.isNew && (currentClient.multimedia.urlCirculationCard == null || currentClient.multimedia.urlCirculationCard.equals(""))){
 						flash.error("Por favor suba tarjeta de circulación ya que es obligatoria");
@@ -2001,6 +2000,8 @@ public class Incidents extends AdminBaseController {
 					}
 
 					else{
+						currentClient.multimedia.canUploadFiles = false;
+						currentClient.save();
 						pagoTab(clientId,incidentId);
 					}
 				}
@@ -2033,15 +2034,21 @@ public class Incidents extends AdminBaseController {
 						if (currentClient.multimedia.urlCarInvoiceNew == null || currentClient.multimedia.urlCarInvoiceNew.equals("")) {
 							flash.error("Por favor suba factura de vehiculo ya que esta marcado como vehiculo nuevo");
 							documentoTab(clientId, incidentId,isOldClient,isOldCar);
-						} else
+						} else {
+							currentClient.multimedia.canUploadFiles = false;
+							currentClient.save();
 							pagoTab(clientId, incidentId);
+						}
 					}
 					else if(!vehicle.isNew && (currentClient.multimedia.urlCirculationCard == null || currentClient.multimedia.urlCirculationCard.equals(""))){
 						flash.error("Por favor suba tarjeta de circulación ya que es obligatoria");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
-					else
-						pagoTab(clientId,incidentId);
+					else {
+						currentClient.multimedia.canUploadFiles = false;
+						currentClient.save();
+						pagoTab(clientId, incidentId);
+					}
 				}
 			}
 		}
@@ -2453,79 +2460,6 @@ public class Incidents extends AdminBaseController {
 				e.printStackTrace();
 			}
 	}
-	/*
-    @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-    public static void saveClient(ER_Client client,  ER_Legal_Representative legalRepresentative,
-                                    Long clientId, Long incidentId, String accion, String emissionZone, File dpi,
-                                    File receiptServices, File circulationCard, File driverLicence, File carInvoiceNew,
-                                    File anotherCompanyPolicy, File[] depositReceipt, File authorizationForm,
-                                    File scanPatents, File scanLegalRepresentativeAppointment, File dpiLegalRepresentative,
-                                    File rtu, File receiptServicesLegal, Integer activeTab,ER_Client_PEP clientPEP) {
-    	flash.discard();
-    	if(validation.hasErrors()){
-    		params.flash();
-    		validation.keep();
-    		editClient(clientId, incidentId, activeTab);
-    	}else{
-    		ER_Client currentClient  = ER_Client.findById(clientId);
-    		if(canViewClient(client)){
-                ER_Incident incident = ER_Incident.findById(incidentId);
-                try{
-                	//-------------------Only save data if exist -------------------------------------------------------------------------------------------------------------
-
-
-					//--------------------------------------------------------------------------------------------------------------------------------
-                    Date defaultValue = null;
-    				DateConverter converter = new DateConverter(defaultValue);
-    				ConvertUtils.register(converter, Date.class);
-					BeanUtils.copyProperties(currentClient, client);
-					
-					currentClient.multimedia.uploadedFilesGD = false;
-		        	currentClient.multimedia.urlDPI = dpi != null ? saveFile(dpi) : currentClient.multimedia.urlDPI;
-		        	currentClient.multimedia.urlReceiptServices = receiptServices != null ? saveFile(receiptServices) : currentClient.multimedia.urlReceiptServices;
-		        	currentClient.multimedia.urlCirculationCard = circulationCard != null ? saveFile(circulationCard) : currentClient.multimedia.urlCirculationCard;
-		        	currentClient.multimedia.urlDriverLicence = driverLicence != null ? saveFile(driverLicence) : currentClient.multimedia.urlDriverLicence;
-		        	currentClient.multimedia.urlCarInvoiceNew = carInvoiceNew != null ? saveFile(carInvoiceNew) : currentClient.multimedia.urlCarInvoiceNew;
-		        	currentClient.multimedia.urlAnotherCompanyPolicy = anotherCompanyPolicy != null ? saveFile(anotherCompanyPolicy) : currentClient.multimedia.urlAnotherCompanyPolicy;
-		        //	currentClient.multimedia.urlDepositReceipt = depositReceipt != null ? saveFile(depositReceipt) : currentClient.multimedia.urlDepositReceipt;
-		        	currentClient.multimedia.urlAuthorizationForm = authorizationForm != null ? saveFile(authorizationForm) : currentClient.multimedia.urlDepositReceipt;
-		        	currentClient.multimedia.urlScanPatents = scanPatents != null ? saveFile(scanPatents) : currentClient.multimedia.urlScanPatents;
-		        	currentClient.multimedia.urlScanLegalRepresentativeAppointment = scanLegalRepresentativeAppointment != null ? saveFile(scanLegalRepresentativeAppointment) : currentClient.multimedia.urlScanLegalRepresentativeAppointment;
-		        	currentClient.multimedia.urlDPILegalRepresentative = dpiLegalRepresentative != null ? saveFile(dpiLegalRepresentative) : currentClient.multimedia.urlDPILegalRepresentative;
-		        	currentClient.multimedia.urlRTU = rtu != null ? saveFile(rtu) : currentClient.multimedia.urlRTU;
-                    currentClient.multimedia.urlReceiptServicesLegal = receiptServicesLegal != null ? saveFile(receiptServicesLegal) : currentClient.multimedia.urlReceiptServicesLegal;
-					//Saves Extra files
-					if(depositReceipt != null)
-					{
-						currentClient.multimedia.hasAditionalFilesGD = true;
-					}
-
-					for(File currentFile: depositReceipt){
-						ER_Aditional_Multimedia aditional_multimedia = new ER_Aditional_Multimedia();
-						aditional_multimedia.multimedia = currentClient.multimedia;
-						aditional_multimedia.uploaded= false;
-						aditional_multimedia.urlFile = saveFile(currentFile);
-						aditional_multimedia.save();
-					}
-
-		    		if(incident.payment != null){
-		    			BeanUtils.copyProperties(incident.payment, payment);
-		    		}else{
-		    			incident.payment = payment;
-		    		}
-
-
-
-                }catch(Exception e){
-                	Logger.error("error: " + e.getMessage());
-                    e.printStackTrace();
-                }
-	    		flash.success(Messages.get("client.edit.success"));
-	    		incidentDetail(incidentId);
-    		}
-    	}
-    }
-*/
 	private static String saveFile(File file){
 		try{
 			if(file != null){
@@ -2670,7 +2604,7 @@ public class Incidents extends AdminBaseController {
         	options.filename = "COTIZACION_" + index.toString() + "_CASO_" + quotation.incident.number;
         	
         	String additionalBenefits = "";
-        	
+        	Logger.info(quotation.quotationDetail.getVirginInternalPrime().toString());
         	if (quotation.product.additionalBenefits != null && !"".equals(quotation.product.additionalBenefits)) {
         		additionalBenefits = quotation.product.additionalBenefits;
         	} else {
@@ -2939,7 +2873,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-        			transaction.updateFromResponse(policyServiceBus.sendBusinessClient(businessClientRequest));
+        			transaction.updateFromResponse(policyService.sendBusinessClient(businessClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
@@ -2958,7 +2892,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-        			transaction.updateFromResponse(policyServiceBus.sendPersonClient(personClientRequest));
+        			transaction.updateFromResponse(policyService.sendPersonClient(personClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
@@ -2979,7 +2913,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayer != null && sendPayer){
     		ER_Transaction_Status transaction = incident.getTransaction(PayerRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataPayer(createRequestService.createPayerRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataPayer(createRequestService.createPayerRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
@@ -2999,7 +2933,7 @@ public class Incidents extends AdminBaseController {
     	if(sendVehicle != null && sendVehicle){
     		ER_Transaction_Status transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
@@ -3020,7 +2954,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPolicy != null && sendPolicy){
     		ER_Transaction_Status transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
 			if(!transaction.complete){
-				policyResponse = policyServiceBus.sendDataPolicy(createRequestService.createPolicyRequest(incident));
+				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
 				transaction.updateFromResponse(policyResponse);
 				if(!transaction.complete){
 					incident.merge();
@@ -3046,7 +2980,7 @@ public class Incidents extends AdminBaseController {
     	if(sendCoverages != null && sendCoverages){
     		ER_Transaction_Status transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
+				transaction.updateFromResponse(policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
@@ -3066,7 +3000,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPrimes != null && sendPrimes){
     		ER_Transaction_Status transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
+				transaction.updateFromResponse(policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PRIMA -> AS400: " + transaction.message);
@@ -3086,7 +3020,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayment != null && sendPayment){
     		ER_Transaction_Status transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
+				transaction.updateFromResponse(policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
@@ -3106,7 +3040,7 @@ public class Incidents extends AdminBaseController {
     	if(sendWorkFlow != null && sendWorkFlow){
     		ER_Transaction_Status transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
@@ -3214,9 +3148,13 @@ public class Incidents extends AdminBaseController {
 					  currentClient.multimedia.urlFormPayerPEP = generatedFileName;
 					  currentClient.multimedia.uploadedFilesGD = false;
 				  }
+
 				  currentClient.save();
 			  }
 		}
+            ER_Client currentClient = incident.client;
+            currentClient.multimedia.canUploadFiles = true;
+            currentClient.save();
 
         //Send success message to client
 		Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
