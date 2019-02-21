@@ -113,6 +113,9 @@ public class QuotationDetail {
 	public BigDecimal getPrimeDiscount() {
 		return primeDiscount;
 	}
+
+
+
 	public void setPrimeDiscount(BigDecimal primeDiscount) {
 		this.primeDiscount = primeDiscount;
 	}
@@ -293,6 +296,10 @@ public class QuotationDetail {
 		}
 	}
 
+	public BigDecimal getInternalPrimeWithNoDescounts() {
+		return this.internalPrime;
+	}
+
 	public BigDecimal getInternalPrime() {
 		
 		if (this.internalPrime!=null && this.internalPrime.compareTo(BigDecimal.ZERO) == 0) {
@@ -382,7 +389,7 @@ public class QuotationDetail {
 	
 	public BigDecimal getTotalEmissionFee() {
 		if(emissionFee != null && internalPrime != null) {
-		    return emissionFee.multiply(getInternalPrime());
+		    return emissionFee.multiply(getInternalPrime()).setScale(2, RoundingMode.HALF_UP);
 		}
 		
 		return BigDecimal.ZERO;
@@ -409,7 +416,7 @@ public class QuotationDetail {
 	public List<PaymentOption> getPaymentOptions() {
 		return paymentOptions;
 	}
-	
+
 	private BigDecimal optionAmount(BigDecimal base) {
 		BigDecimal totalPayment = this.getTotalVat(BigDecimal.ZERO).add(base); 
 		return totalPayment;

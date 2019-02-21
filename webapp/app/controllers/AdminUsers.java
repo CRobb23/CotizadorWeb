@@ -119,7 +119,7 @@ public class AdminUsers extends AdminBaseController {
 	 * Users lists
 	 * ************************************************************************************************************************
 	 */
-	@Access
+
     public static void usersList(String email, String firstName, String lastName, Long role, Boolean active, boolean intern) {
     	
     	if (!intern) {

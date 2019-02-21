@@ -40,6 +40,9 @@ public class ER_Multimedia extends Model{
 	@Column(name="uploaded_files_gd")
 	public Boolean uploadedFilesGD;
 
+	@Column(name="can_upload_files")
+	public Boolean canUploadFiles;
+
 	@Column(name="has_more_files")
 	public Boolean hasAditionalFilesGD;
 
