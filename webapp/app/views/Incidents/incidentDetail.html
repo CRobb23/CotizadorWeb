@@ -80,7 +80,7 @@
 							<td>${incident?.inspection?.type?.name} - ${incident?.inspection?.address}</td>
 							</tr>
 							<th>&{'incident.field.date'}</th>
-							<td>${incident?.inspection?.appointmentDinate?.format('dd/MM/yyyy HH:mm')}</td>
+							<td>${incident?.inspection?.appointmentDate?.format('dd/MM/yyyy HH:mm')}</td>
 						#{/if}
 						#{elseif incident?.inspection?.type?.code == helpers.ERConstants.INSPECTION_TYPE_CENTER}
 							<td>${incident?.inspection?.type?.name}</td>
