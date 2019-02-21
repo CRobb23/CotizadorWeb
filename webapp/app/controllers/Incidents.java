@@ -72,8 +72,6 @@ public class Incidents extends AdminBaseController {
 	static PersonQueryWebService personServiceBus;
 	@Inject
 	static BusinessQueryWebService businessServiceBus;
-	@Inject
-	static PolicyInputWebService policyServiceBus;
 
 	public static Long dailyCorrelativeNumber;
 	public static Map<String,String> searchFields;
@@ -2854,7 +2852,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-        			transaction.updateFromResponse(policyServiceBus.sendBusinessClient(businessClientRequest));
+        			transaction.updateFromResponse(policyService.sendBusinessClient(businessClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
@@ -2873,7 +2871,7 @@ public class Incidents extends AdminBaseController {
     			ER_Transaction_Status transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
     			if(!transaction.complete){
     				PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-        			transaction.updateFromResponse(policyServiceBus.sendPersonClient(personClientRequest));
+        			transaction.updateFromResponse(policyService.sendPersonClient(personClientRequest));
         			if(!transaction.complete){
         				incident.merge();
         				flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
@@ -2894,7 +2892,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayer != null && sendPayer){
     		ER_Transaction_Status transaction = incident.getTransaction(PayerRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataPayer(createRequestService.createPayerRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataPayer(createRequestService.createPayerRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
@@ -2914,7 +2912,7 @@ public class Incidents extends AdminBaseController {
     	if(sendVehicle != null && sendVehicle){
     		ER_Transaction_Status transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
@@ -2935,7 +2933,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPolicy != null && sendPolicy){
     		ER_Transaction_Status transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
 			if(!transaction.complete){
-				policyResponse = policyServiceBus.sendDataPolicy(createRequestService.createPolicyRequest(incident));
+				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
 				transaction.updateFromResponse(policyResponse);
 				if(!transaction.complete){
 					incident.merge();
@@ -2961,7 +2959,7 @@ public class Incidents extends AdminBaseController {
     	if(sendCoverages != null && sendCoverages){
     		ER_Transaction_Status transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
+				transaction.updateFromResponse(policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
@@ -2981,7 +2979,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPrimes != null && sendPrimes){
     		ER_Transaction_Status transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
+				transaction.updateFromResponse(policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS PRIMA -> AS400: " + transaction.message);
@@ -3001,7 +2999,7 @@ public class Incidents extends AdminBaseController {
     	if(sendPayment != null && sendPayment){
     		ER_Transaction_Status transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
+				transaction.updateFromResponse(policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
@@ -3021,7 +3019,7 @@ public class Incidents extends AdminBaseController {
     	if(sendWorkFlow != null && sendWorkFlow){
     		ER_Transaction_Status transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyServiceBus.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
+				transaction.updateFromResponse(policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
 				if(!transaction.complete){
 					incident.merge();
     				flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
