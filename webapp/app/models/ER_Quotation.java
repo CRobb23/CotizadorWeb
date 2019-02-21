@@ -44,6 +44,7 @@ public class ER_Quotation extends Model {
 	@Required
 	@ManyToOne(optional=false)
 	public ER_Product product;
+
 	@Column(precision=19, scale=2)
 	public BigDecimal totalPrime;
 	@Column(precision=19, scale=2)
