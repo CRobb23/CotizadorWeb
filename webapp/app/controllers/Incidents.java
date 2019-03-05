@@ -1737,6 +1737,7 @@ public class Incidents extends AdminBaseController {
 					payer.ConvertUpper();
 					legalRepresentativePayer.ConvertUpper();
 					clientPayerPEP.ConvertUpper();
+                    currentPayer.legalRepresentativePayer = legalRepresentativePayer;
 					BeanUtils.copyProperties(currentPayer, payer);
 					currentPayer.save();
 					currentClient.payer = currentPayer;
@@ -1746,6 +1747,7 @@ public class Incidents extends AdminBaseController {
 					payer.ConvertUpper();
 					legalRepresentativePayer.ConvertUpper();
 					clientPayerPEP.ConvertUpper();
+                    currentPayer.legalRepresentativePayer = legalRepresentativePayer;
 					BeanUtils.copyProperties(currentPayer, payer);
 					currentPayer.save();
 					currentClient.payer = currentPayer;
@@ -2328,7 +2330,7 @@ public class Incidents extends AdminBaseController {
 					ConvertUtils.register(converter, Date.class);
 					client.useDataClientPayer = currentClient.useDataClientPayer;
 					client.multimedia = currentClient.multimedia;
-					client.legalRepresentative = currentClient.legalRepresentative;
+					//client.legalRepresentative = currentClient.legalRepresentative;
 					client.payer = currentClient.payer;
 					BeanUtils.copyProperties(currentClient, client);
 					currentClient.save();

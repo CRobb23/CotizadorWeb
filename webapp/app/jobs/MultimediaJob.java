@@ -17,11 +17,14 @@ import play.Logger;
 import play.Play;
 import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.On;
 import play.libs.WS;
 import play.libs.WS.FileParam;
 import play.libs.WS.WSRequest;
+import java.time.Duration;
 
-@Every("1mn")
+
+@On(" 0 0/10  0,1,2,3,4,21,22,23 * * ? *")
 public class MultimediaJob extends Job {
 
 	private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
@@ -38,7 +41,7 @@ public class MultimediaJob extends Job {
 	
 	public void doJob(){
 	    try {
-            multimediaList = ER_Multimedia.find("uploaded_files_gd = false and can_upload_files = true").fetch(50);
+            multimediaList = ER_Multimedia.find("uploaded_files_gd = false and can_upload_files = true").fetch(10);
             Logger.info("Inicia multimedia Job, lista de multimedia a subir: " + multimediaList.size());
 
             for (ER_Multimedia multimedia:multimediaList) {
@@ -76,10 +79,25 @@ public class MultimediaJob extends Job {
                                             File fileMultimedia = new File(value.toString());
                                             Logger.info("Intenta subir el archivo: " + value.toString());
                                             if (fileMultimedia.exists()) {
-                                                String urlFile = uploadFile(responseDirectory, fileMultimedia);
+                                                String[] urlResponse = uploadFile(responseDirectory, fileMultimedia).split("##");
+                                                String urlFile = urlResponse[0];
+                                                if (urlFile==null || "104".equals(urlFile)){
+                                                    continue;
+                                                }
+
+
                                                 if (urlFile != null) {
                                                     field.set(multimedia, urlFile);
                                                 }
+
+                                                String fileId = urlResponse[1];
+                                                String transfer=transferOwner(fileId);
+                                                if("105".equals(transfer)){
+                                                    break;
+                                                }
+
+
+
                                             } else
                                                 System.out.println("El archivo " + value.toString() + "  no existe.");
                                         }
@@ -150,12 +168,15 @@ public class MultimediaJob extends Job {
     		WSRequest request = WS.url(WS_GDRIVE + "/sendPublicFile");
     		request.setHeader("Content-Type", "multipart/form-data");
         	request.setParameter("folderId", responseDirectory.get("data"));
+            request.timeout("6min");
         	request.files(new FileParam(file, "upload"));
         	Map<String, Object> response = new Gson().fromJson(request.post().getString(), Map.class);
         	System.out.println(response);
         	if((Boolean) response.get("success")){
         		return response.get("data").toString();
-        	}
+        	}else if ("104".equals(response.get("code"))){
+        	    return  response.get("code").toString();
+            }
     	}
     	
     	return null;
@@ -164,5 +185,18 @@ public class MultimediaJob extends Job {
             Logger.error(e.getMessage());
             return null;
         }
+    }
+
+    private String transferOwner(String fileId){
+	    try{
+            WSRequest request = WS.url(WS_GDRIVE + "/transferOwner");
+            request.setParameter("fileId", fileId);
+            Map<String, Object> response = new Gson().fromJson(request.post().getString(), Map.class);
+            return  response.get("code").toString();
+        }catch (Exception e){
+	        Logger.error(e.getMessage());
+        }
+
+        return null;
     }
 }
