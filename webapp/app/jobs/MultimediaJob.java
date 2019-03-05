@@ -17,13 +17,14 @@ import play.Logger;
 import play.Play;
 import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.On;
 import play.libs.WS;
 import play.libs.WS.FileParam;
 import play.libs.WS.WSRequest;
 import java.time.Duration;
 
 
-@Every("10mn")
+@On(" 0 0/10  0,1,2,3,4,21,22,23 * * ? *")
 public class MultimediaJob extends Job {
 
 	private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
