@@ -36,7 +36,9 @@ public class AdminDistributors extends AdminBaseController {
 		boolean validDistributor= GeneralMethods.validateParameter(distributor);
 
 		boolean validState = GeneralMethods.validateParameter(active);
-		
+
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
 		//Create a new filter object and add the query for each valid parameter
 		Filter filter = new Filter();
 		
@@ -48,8 +50,8 @@ public class AdminDistributors extends AdminBaseController {
 			filter.addQuery("name like ?", "%"+distributor+"%", Operator.AND);
 		}
 		
-		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-			filter.addQuery("channel = ?", connectedUser().channel, Operator.AND);
+		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+			filter.addQuery("channel = ?", connectedUser.channel, Operator.AND);
 		}
 		if (validState) {
 			filter.addQuery("active = ?", active, Operator.AND);
@@ -88,14 +90,16 @@ public class AdminDistributors extends AdminBaseController {
 	 */
 	
 	private static void addUserChannelArg() {
-		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-			ER_User user = connectedUser();
-			renderArgs.put("userChannel", user.channel);
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser());
+		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+			renderArgs.put("userChannel", connectedUser.channel);
 		}
 	}
 	
 	private static void addChannelsArg() {
-		if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+		Integer userRol = connectedUserRoleCode(connectedUser());
+		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
 			List<ER_Channel> channels = ER_Channel.find("active = true order by name").fetch();
 			renderArgs.put("channels", channels);
 		}
@@ -172,12 +176,13 @@ public class AdminDistributors extends AdminBaseController {
     
     public static void editDistributor(Long id) {
     	List<ER_User> administrators = Collections.emptyList();
-    	
+    	ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
     	ER_Distributor distributor = null;
     	if (id!=null) {
     		distributor = ER_Distributor.findById(id);
-    		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-    			if (distributor.channel.equals(connectedUser().channel)) {
+    		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+    			if (distributor.channel.equals(connectedUser.channel)) {
     				renderArgs.put("distributor", distributor);
     			}
     		} else {
@@ -187,12 +192,12 @@ public class AdminDistributors extends AdminBaseController {
     		administrators = distributor.administrators;
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+    	if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
     		addDistributorAdministratorsArg(connectedUserChannelId(),administrators);
     	} else {
     		if (flash.contains("distributor.channel.id")) {
         		String channelFlash = flash.get("distributor.channel.id");
-        		if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN) && !channelFlash.isEmpty()) {
+        		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) && !channelFlash.isEmpty()) {
             		addDistributorAdministratorsArg(Long.parseLong(channelFlash),administrators);
             	}
         	} else {
@@ -211,6 +216,7 @@ public class AdminDistributors extends AdminBaseController {
 	public static void saveDistributor(@Valid ER_Distributor distributor) {
     	//flash.clear();
     	System.out.print(" save 1");
+		Integer userRol = connectedUserRoleCode(connectedUser());
     	if (validation.hasErrors()) {
 			System.out.print(" save 2");
     		params.flash();
@@ -219,7 +225,7 @@ public class AdminDistributors extends AdminBaseController {
     		editDistributor(distributor.id);
     	} else {
 			System.out.print(" save 3");
-    		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER) && canAccessChannel(distributor.channel)) {
+    		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER) && canAccessChannel(distributor.channel)) {
     			distributor.channel = connectedUser().channel;
     		}
 			System.out.print(" save 31");

@@ -52,28 +52,25 @@ public class AdminBaseController extends Controller {
 		return null;
 	}
 	
-	protected static int connectedUserRoleCode() {
-		ER_User user = connectedUser();
+	protected static Integer connectedUserRoleCode(ER_User user) {
 		Integer role = null;
 		if (user!=null && user.role!=null) {
 			role = user.role.code;
 		}
-		
 		if (role!=null) {
 			return role;
 		}
-		
 		return -1;
 	}
 	
-	protected static boolean checkRole(int code) {
-		return (connectedUserRoleCode() == code);
-	}
+	//protected static boolean checkRole(int code) {
+	//	return (connectedUserRoleCode() == code);
+	//}
 	
 	protected static List<ER_User_Role> authorizedRolesForUser() {
-    	List<ER_User_Role> roles = null;
-    	
-    	switch (connectedUserRoleCode()) {
+    	List<ER_User_Role> roles;
+    	ER_User user = connectedUser();
+    	switch (connectedUserRoleCode(user)) {
 	    	case ERConstants.USER_ROLE_SUPER_ADMIN: {
 	    		roles = ER_User_Role.findAll();
 	    	}
@@ -116,15 +113,15 @@ public class AdminBaseController extends Controller {
 	protected static boolean canAccessChannel(ER_Channel channel) {
 		
 		if (channel!=null) {
-			
-			switch (connectedUserRoleCode()) {
+			ER_User user = connectedUser();
+			switch (connectedUserRoleCode(user)) {
 				case ERConstants.USER_ROLE_SUPER_ADMIN: {
 					return true;
 				}
 				case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
 					boolean canAccess = false;
 					for(ER_User ch :channel.administrators){
-						 if(ch.id == connectedUser().id){
+						 if(ch.id == user.id){
 							 canAccess = true;
 						 }
 					}
@@ -152,11 +149,11 @@ public class AdminBaseController extends Controller {
 			
 			ER_User connectedUser = connectedUser();
 			
-			if (incident.creator.equals(connectedUser())) {
+			if (incident.creator.equals(connectedUser)) {
 				return true;
 			}
 			
-			switch (connectedUserRoleCode()) {
+			switch (connectedUserRoleCode(connectedUser)) {
 				case ERConstants.USER_ROLE_SUPER_ADMIN: {
 					return true;
 				}
@@ -169,7 +166,7 @@ public class AdminBaseController extends Controller {
 					return !distributors.isEmpty();
 				}
 				case ERConstants.USER_ROLE_SUPERVISOR: {
-					List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, connectedUser()).fetch();
+					List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, connectedUser).fetch();
 		    		return !stores.isEmpty();
 				}
 			}
@@ -183,7 +180,7 @@ public class AdminBaseController extends Controller {
 			
 			ER_User connectedUser = connectedUser();
 			
-			switch (connectedUserRoleCode()) {
+			switch (connectedUserRoleCode(connectedUser)) {
 				case ERConstants.USER_ROLE_SUPER_ADMIN: {
 					return true;
 				}
@@ -205,15 +202,15 @@ public class AdminBaseController extends Controller {
 		    		return !incidents.isEmpty();
 				}
 				case ERConstants.USER_ROLE_SUPERVISOR: {
-					long incidentsCount = ER_Incident.count("client = ? and (creator in (select u from ER_Store s join s.sellers u join s.administrators a where a = ?) or creator = ?)", client, connectedUser(), connectedUser());
+					long incidentsCount = ER_Incident.count("client = ? and (creator in (select u from ER_Store s join s.sellers u join s.administrators a where a = ?) or creator = ?)", client, connectedUser, connectedUser);
 		    	    return incidentsCount>0;
 				}
 				case ERConstants.USER_ROLE_SALES_MAN: {
-					long incidentsCount = ER_Incident.count("client = ? and creator = ?", client, connectedUser());
+					long incidentsCount = ER_Incident.count("client = ? and creator = ?", client, connectedUser);
 		    	    return incidentsCount>0;
 				}
 				case ERConstants.USER_ROLE_FINAL_USER: {
-					long incidentsCount = ER_Incident.count("client = ? and creator = ?", client, connectedUser());
+					long incidentsCount = ER_Incident.count("client = ? and creator = ?", client, connectedUser);
 		    	    return incidentsCount>0;
 				}
 			}
@@ -227,28 +224,28 @@ public class AdminBaseController extends Controller {
 
 		List<Long> channels = null;
 		List<Long> distributors = null;
-		
-		switch(connectedUserRoleCode()){
+		ER_User connectedUser = connectedUser();
+		switch(connectedUserRoleCode(connectedUser)){
 			case ERConstants.USER_ROLE_SUPER_ADMIN:
 				productList = ER_Product.find("select p from ER_Product p where p.active = ? and size(p.coverages)>0 order by p.name", true).fetch();
 				//return new ArrayList<ER_Product>(new HashSet<ER_Product>(products));
 				Collections.sort(productList, sortProducts);
 				break;
 			case ERConstants.USER_ROLE_COMMERCIAL_MANAGER:
-				channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ?", connectedUser()).fetch();
-				distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.channel.administrators a where a = ? and d.active = true", connectedUser()).fetch();
+				channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ?", connectedUser).fetch();
+				distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.channel.administrators a where a = ? and d.active = true", connectedUser).fetch();
 				break;
 			case ERConstants.USER_ROLE_CHANNEL_MANAGER:
-				channels = ER_Channel.find("select d.channel.id from ER_Distributor d join d.administrators a where a = ? and d.active= true group by d.channel", connectedUser()).fetch();
-				distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active= true", connectedUser()).fetch();
+				channels = ER_Channel.find("select d.channel.id from ER_Distributor d join d.administrators a where a = ? and d.active= true group by d.channel", connectedUser).fetch();
+				distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active= true", connectedUser).fetch();
 				break;
 			case ERConstants.USER_ROLE_SUPERVISOR:
-		    	channels = ER_Channel.find("select s.distributor.channel.id from ER_Store s join s.administrators a where a = ? and s.active= true group by s.distributor.channel", connectedUser()).fetch();
-		    	distributors = ER_Distributor.find("select s.distributor.id from ER_Store s join s.administrators a where a = ? and s.active= true group by s.distributor", connectedUser()).fetch();
+		    	channels = ER_Channel.find("select s.distributor.channel.id from ER_Store s join s.administrators a where a = ? and s.active= true group by s.distributor.channel", connectedUser).fetch();
+		    	distributors = ER_Distributor.find("select s.distributor.id from ER_Store s join s.administrators a where a = ? and s.active= true group by s.distributor", connectedUser).fetch();
 		    	break;
 			case ERConstants.USER_ROLE_SALES_MAN:
-		    	distributors = ER_Distributor.find("select s.distributor.id from ER_Store s join s.sellers u where u = ? and s.active =true group by s.distributor", connectedUser()).fetch();
-		    	channels = ER_Channel.find("select s.distributor.channel.id from ER_Store s join s.sellers u where u = ? and s.active =true group by s.distributor.channel", connectedUser()).fetch();
+		    	distributors = ER_Distributor.find("select s.distributor.id from ER_Store s join s.sellers u where u = ? and s.active =true group by s.distributor", connectedUser).fetch();
+		    	channels = ER_Channel.find("select s.distributor.channel.id from ER_Store s join s.sellers u where u = ? and s.active =true group by s.distributor.channel", connectedUser).fetch();
 		    	break;
 			case ERConstants.USER_ROLE_FINAL_USER:
 				productList = ER_Product.find("select p from ER_Product p inner join p.distributors d where d.channel.isPublic = true and p.active = ? and size(p.coverages)>0 order by p.name", true).fetch();

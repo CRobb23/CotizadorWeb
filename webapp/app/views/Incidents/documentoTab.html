@@ -6,7 +6,7 @@
 
 
 </style>
-<div class="container">
+    <div class="container">
     <div class="well fixed-sidebar-parent">
 
         <div class="orange-title">
@@ -48,6 +48,63 @@
     #{/if}
 
 <h4 style="border-bottom: groove; text-align: center;"></h4>
+		<!--CheckBox para subir consolidado-->
+        <div class="row">
+				#{field 'client.multimedia.hasConsolidated'}
+					<div class="form-group">
+						<label class="col-sm-4 control-label" for="${field.id}"><h4>Desea subir un unico documento consolidado</h4></label>
+						<div class="col-sm-1">
+							<div class="checkbox">
+								<input type="checkbox" name="${field.id}" id="hasConsolidated" ${field.value == true ? 'checked' : ''}/>
+							</div>
+						</div>
+					</div>
+				#{/}
+        </div>
+        <div class="row" id="consolidado">
+			<!--Campo Consolidado-->
+			<div class="col-sm-6" >
+			#{form @saveClientConsolidated(), class:"form-horizontal", method:"POST", enctype:"multipart/form-data"}
+				#{field 'consolidated'}
+					<div class="form-group">
+						<label class="col-sm-3 control-label" style="text-align: left; padding-right: 0px;" for="${field.id}">#{required/} Documento Consolidado</label>
+						<div class="col-sm-8" style="text-align: center; padding-right: 0px;">
+							#{if client?.multimedia?.urlConsolidated != null && client?.multimedia?.urlConsolidated != ''}
+								<strong><input type="file" name="${field.name}" id="${field.id}" class="form-control inputfile" onchange="ValidateMaxSizeMultimedia(this,'consolidatedDeleteBtn','consolidatedUploadBtn')" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf"/> </strong>
+							#{/if}
+							#{else}
+								<strong><input type="file" name="${field.name}" id="${field.id}" class="form-control inputfile" onchange="ValidateMaxSizeMultimedia(this,'consolidatedDeleteBtn','consolidatedUploadBtn')" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf" required="true"/> </strong>
+							#{/else}
+							#{if client?.multimedia?.urlConsolidated != null && client?.multimedia?.urlConsolidated != ''}
+								#{if client?.multimedia?.isLocalFile(client?.multimedia?.urlConsolidated)}
+									<a style="text-align: center;" target="_download" href="@{getFile(client?.multimedia?.urlConsolidated)}">DESCARGAR ARCHIVO</a>
+
+								#{/if}
+								#{else}
+									<a style="text-align: center;" target="_download" href="${client?.multimedia?.urlConsolidated}">DESCARGAR ARCHIVO</a>
+								#{/else}
+							#{/if}
+						</div>
+						<div class="col-sm-0" style="text-align: left;">
+							<button type="button" style="display:none" id="consolidatedDeleteBtn" onclick="hideIcons('consolidated','consolidatedDeleteBtn','consolidatedUploadBtn')"><img src="/public/images/delete1.png" border="0" width="25" height="25" /></button>
+						</div>
+						<div class="col-sm-offset-3 col-sm-8" style="text-align: left;">
+							<button type="submit" style="display:none" id="consolidatedUploadBtn"><b><span id="consolidatedUploadBtnSpan" class="ui-button-text">My Text</span> </b> <img src="/public/images/upload-icon.png" border="0" width="25" height="25" /></button>
+							<input type="hidden" name="client.multimedia.urlConsolidated" id="urlConsolidated" value="${client?.multimedia?.urlConsolidated}"/>
+						</div>
+					</div>
+				#{/}
+				<input type="hidden" name="clientId" value="${client?.id}"/>
+				<input type="hidden" name="incidentId" value="${incident?.id}"/>
+				<input type="hidden" name="isOldClient" value="${isOldClient}"/>
+				<input type="hidden" name="isOldCar" value="${isOldCar}"/>
+			#{/form}
+			</div>
+        </div>
+
+
+
+		<!--Campos Cliente-->
 		<div class="row fieldsClient">
 			<div class="col-sm-6">
             #{form @saveClientDpi(), class:"form-horizontal", method:"POST", enctype:"multipart/form-data"}
@@ -774,24 +831,39 @@
 #{/}
 <script type="text/javascript">
     $(document).ready(function() {
-        let args =  {
-            formSelect:	"&{'form.select'}",
+        let args = {
+            formSelect: "&{'form.select'}",
             formSelectLoading: "&{'form.select.loading'}",
             formSelectError: "&{'form.select.error'}",
         }
 
-        showFieldsClient();
+        if ($('#hasConsolidated').is(':checked')) {
+            $("#consolidado").show();
+            hideFieldsClient()
+        }
+        else {
+            $("#consolidado").hide();
+            showFieldsClient();
+        }
 
-
+        $("#hasConsolidated").change(function () {
+            if ($('#hasConsolidated').is(':checked')) {
+                $("#consolidado").show();
+                hideFieldsClient()
+            }
+            else {
+                showFieldsClient();
+            	$("#consolidado").hide();
+            }
+        })
     });
+
 </script>
 <script type="text/javascript">
 
-
-
     function ValidateMaxSizeMultimedia(uploadField,uploadIcon,deleteIcon) {
-        if(uploadField.files[0].size > 10000000){
-            alert("El archivo no debe ser mayor a 10 mb, favor comprimir o bajar calidad si es fotografia");
+        if(uploadField.files[0].size > 5000000){
+            alert("El archivo no debe ser mayor a 5 mb, favor comprimir o bajar calidad si es fotografia");
             uploadField.value = "";
         };
         var policy = $('#incidentPolicy').val();
@@ -805,8 +877,8 @@
         }
         for (var i = 0; i<$(uploadField)[0].files.length; i++)
         {
-            if ($(uploadField)[0].files[i].size > 10000000) {
-                alert("El archivo no debe ser mayor a 10 mb, favor comprimir o bajar calidad si es fotografia");
+            if ($(uploadField)[0].files[i].size > 5000000) {
+                alert("El archivo no debe ser mayor a 5 mb, favor comprimir o bajar calidad si es fotografia");
                 uploadField.value = "";
                 }
             ;
@@ -815,12 +887,12 @@
         if (policy == null || policy.trim() == '')
         showIcons(uploadField,uploadIcon,deleteIcon);
     }
-    function showIcons(uploadField,uploadIcon,deleteIcon) {
+    function showIcons(uploadField,deleteIcon,uploadIcon) {
         if(uploadField.files[0].size > 0){
             $("#" + uploadIcon).show();
             $("#" + deleteIcon).show();
             if($(uploadField)[0].files.length == 1) {
-                $("#" + deleteIcon + "Span").text("Subir: " + uploadField.files[0].name);
+                $("#" + uploadIcon + "Span").text("Subir: " + uploadField.files[0].name);
             }
             $(uploadField).css('background', 'palegreen');
         }
@@ -837,6 +909,14 @@
             $("#" + uploadField).val("");
 
     }
+    function hideFieldsClient(){
+        $(".fieldsLegal").hide();
+        $(".fieldsClient").hide();
+        if ($("#consolidated").attr("required")) {
+            $("#consolidated").css('background', '#f79090');
+        }
+    }
+
     function showFieldsClient(){
         if($('#clientIsIndividual').val() === 'true') {
             $(".fieldsLegal").hide();
