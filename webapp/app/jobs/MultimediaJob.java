@@ -147,6 +147,8 @@ public class MultimediaJob extends Job {
                         }
                         Logger.info("Logro subir la multimedia del caso: " + multimediaView.number + " exitoso: " + uploadedFilesGD);
                         multimedia.uploadedFilesGD = uploadedFilesGD;
+                        if(uploadedFilesGD)
+                            multimedia.canUploadFiles = false;
                         multimedia.save();
 
         }

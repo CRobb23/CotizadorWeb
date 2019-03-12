@@ -103,9 +103,9 @@
         <td class="FillFields" colspan="3">${incident?.client?.payer?.marriedSurname}</td>
     #{/if}
     #{else }
-        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentative?.firstSurname}</td>
-        <td class="FillFields" colspan="5">${incident?.client?.payer?.legalRepresentative?.secondSurname}</td>
-        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentative?.marriedSurname}</td>
+        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentativePayer?.firstSurname}</td>
+        <td class="FillFields" colspan="5">${incident?.client?.payer?.legalRepresentativePayer?.secondSurname}</td>
+        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentativePayer?.marriedSurname}</td>
     #{/else}
     </tr>
     <tr>
@@ -120,8 +120,8 @@
         <td class="FillFields" colspan="3"></td>
     #{/if}
     #{else }
-        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentative?.firstName}</td>
-        <td class="FillFields" colspan="5">${incident?.client?.payer?.legalRepresentative?.secondName}</td>
+        <td class="FillFields" colspan="3">${incident?.client?.payer?.legalRepresentativePayer?.firstName}</td>
+        <td class="FillFields" colspan="5">${incident?.client?.payer?.legalRepresentativePayer?.secondName}</td>
         <td class="FillFields" colspan="3"></td>
     #{/else}
     </tr>
@@ -170,7 +170,7 @@
                     #{if incident?.client?.payer?.isIndividual == true}
         ${incident?.client?.payer?.profession?.name}
         #{/if}
-                        #{else }${incident?.client?.payer?.legalRepresentative?.profession?.name?.toLowerCase()}#{/else}
+                        #{else }${incident?.client?.payer?.legalRepresentativePayer?.profession?.name?.toLowerCase()}#{/else}
                         #{/if}
         </td>
         <td class="FillFields" colspan="3"></td>

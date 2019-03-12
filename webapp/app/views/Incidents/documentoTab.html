@@ -52,7 +52,7 @@
         <div class="row">
 				#{field 'client.multimedia.hasConsolidated'}
 					<div class="form-group">
-						<label class="col-sm-4 control-label" for="${field.id}"><h4>Desea subir un unico documento consolidado</h4></label>
+						<label class="col-sm-4 control-label" for="${field.id}"><h4>Desea subir un único documento consolidado</h4></label>
 						<div class="col-sm-1">
 							<div class="checkbox">
 								<input type="checkbox" name="${field.id}" id="hasConsolidated" ${field.value == true ? 'checked' : ''}/>
@@ -63,9 +63,11 @@
         </div>
         <div class="row" id="consolidado">
 			<!--Campo Consolidado-->
+            <label class="col-sm-3 control-label" style="text-align: left; padding-right: 0px;"><h4> #{verbatim} ${specialDocuments} #{/verbatim} </h4></label>
 			<div class="col-sm-6" >
 			#{form @saveClientConsolidated(), class:"form-horizontal", method:"POST", enctype:"multipart/form-data"}
 				#{field 'consolidated'}
+
 					<div class="form-group">
 						<label class="col-sm-3 control-label" style="text-align: left; padding-right: 0px;" for="${field.id}">#{required/} Documento Consolidado</label>
 						<div class="col-sm-8" style="text-align: center; padding-right: 0px;">

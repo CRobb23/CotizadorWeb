@@ -338,8 +338,8 @@ public class AdminReports extends AdminBaseController {
 			//only can see their role
 			ER_User connectedUser = connectedUser();
 			GenericModel.JPAQuery query = null;
-			int userRol = connectedUserRoleCode(connectedUser);
-			if(userRol == ERConstants.USER_ROLE_COMMERCIAL_MANAGER) {
+			Integer userRol = connectedUserRoleCode(connectedUser);
+			if(userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 				List<Long> channelIds = null;
 				channelIds = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c.active = true", connectedUser).fetch();
 				String queryStr = " (";
@@ -358,7 +358,7 @@ public class AdminReports extends AdminBaseController {
 				}
 				query.bind("s", connectedUser);
 			}
-			else if(userRol == ERConstants.USER_ROLE_CHANNEL_MANAGER){
+			else if(userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)){
 				List<Long> distributorIds = null;
 				distributorIds = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active = true", connectedUser).fetch();
 				String queryStr = " (";
@@ -376,14 +376,14 @@ public class AdminReports extends AdminBaseController {
 					query.bind("d", distributorIds);
 				}
 				query.bind("s", connectedUser);
-			}else if(userRol == ERConstants.USER_ROLE_SUPERVISOR){
+			}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
 				userIds.add(connectedUser.id);
 				if (!filter.getQuery().isEmpty())
 					query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by creationDate DESC", filter.getParametersArray()).bind("s", userIds);
 				else
 					query = ER_Incident.find(" creator.id IN :s order by creationDate DESC", filter.getParametersArray()).bind("s", userIds);
-			}else if(userRol == ERConstants.USER_ROLE_SALES_MAN){
+			}else if(userRol.equals(ERConstants.USER_ROLE_SALES_MAN)){
 				if (!filter.getQuery().isEmpty())
 					query = ER_Incident.find(filter.getQuery() + " AND creator = :s order by creationDate DESC", filter.getParametersArray()).bind("s", connectedUser);
 				else
@@ -426,8 +426,8 @@ public class AdminReports extends AdminBaseController {
     
     public static void reportLostSales() {
 		ER_User connectedUser = connectedUser();
-		int userRol = connectedUserRoleCode(connectedUser);
-		if (userRol == ERConstants.USER_ROLE_SUPER_ADMIN || userRol == ERConstants.USER_ROLE_CHANNEL_MANAGER || userRol == ERConstants.USER_ROLE_COMMERCIAL_MANAGER) {
+		Integer userRol = connectedUserRoleCode(connectedUser);
+		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) || userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER) || userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 			List<ER_Channel> channels = new ArrayList<ER_Channel>();
 			switch (connectedUserRoleCode(connectedUser)){
 				case ERConstants.USER_ROLE_COMMERCIAL_MANAGER:
@@ -551,7 +551,7 @@ public static void users (){
    ER_User currentUser = connectedUser();
 
     List<ER_User> users;
-   if(connectedUserRoleCode(currentUser) == ERConstants.USER_ROLE_SUPER_ADMIN)
+   if(connectedUserRoleCode(currentUser).equals(ERConstants.USER_ROLE_SUPER_ADMIN))
          users = ER_User.findAll();
    else
         users = ER_User.find("channel_id = ?", currentUser.channel.id).fetch();
@@ -745,9 +745,9 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 			//only can see their role
 			ER_User connectedUser = connectedUser();
 			GenericModel.JPAQuery query = null;
-			int userRol = connectedUserRoleCode(connectedUser);
+			Integer userRol = connectedUserRoleCode(connectedUser);
 
-			if(userRol == ERConstants.USER_ROLE_COMMERCIAL_MANAGER) {
+			if(userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 				List<Long> channelIds = null;
 				channelIds = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c.active = true", connectedUser).fetch();
 				String queryStr = " (";
@@ -766,7 +766,7 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 				}
 				query.bind("s", connectedUser);
 			}
-			else if(userRol == ERConstants.USER_ROLE_CHANNEL_MANAGER){
+			else if(userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)){
 				List<Long> distributorIds = null;
 				distributorIds = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active = true", connectedUser).fetch();
 				String queryStr = " (";
@@ -784,14 +784,14 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 					query.bind("d", distributorIds);
 				}
 				query.bind("s", connectedUser);
-			}else if(userRol == ERConstants.USER_ROLE_SUPERVISOR){
+			}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
 				userIds.add(connectedUser.id);
 				if (!filter.getQuery().isEmpty())
 					query = ER_Quotation.find(filter.getQuery() + " AND incident.creator.id IN :s order by incident.creationDate DESC", filter.getParametersArray()).bind("s", userIds);
 				else
 					query = ER_Quotation.find(" incident.creator.id IN :s order by incident.creationDate DESC", filter.getParametersArray()).bind("s", userIds);
-			}else if(userRol == ERConstants.USER_ROLE_SALES_MAN){
+			}else if(userRol.equals(ERConstants.USER_ROLE_SALES_MAN)){
 				if (!filter.getQuery().isEmpty())
 					query = ER_Quotation.find(filter.getQuery() + " AND incident.creator = :s order by incident.creationDate DESC", filter.getParametersArray()).bind("s", connectedUser);
 				else
@@ -838,11 +838,11 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
     	List<ER_Incident_Status> statuses = ER_Incident_Status.find("order by code asc").fetch();
 		renderArgs.put("statuses", statuses);
 		ER_User connectedUser = connectedUser();
-		int userRol = connectedUserRoleCode(connectedUser);
+		Integer userRol = connectedUserRoleCode(connectedUser);
 		
 		//List<ER_Channel> channels = ER_Channel.find("select c from ER_Channel c where c.active = true").fetch();
 		//renderArgs.put("channels", channels);
-		if (userRol == ERConstants.USER_ROLE_SUPER_ADMIN || userRol == ERConstants.USER_ROLE_CHANNEL_MANAGER || userRol == ERConstants.USER_ROLE_COMMERCIAL_MANAGER) {
+		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) || userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER) || userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 			List<ER_Channel> channels = new ArrayList<ER_Channel>();
 			switch (connectedUserRoleCode(connectedUser)){
 				case ERConstants.USER_ROLE_COMMERCIAL_MANAGER:
@@ -996,9 +996,9 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 		renderArgs.put("statuses", statuses);
 
 		ER_User connectedUser = connectedUser();
-		int userRol = connectedUserRoleCode(connectedUser);
+		Integer userRol = connectedUserRoleCode(connectedUser);
 
-        if (userRol == ERConstants.USER_ROLE_SUPER_ADMIN || userRol == ERConstants.USER_ROLE_CHANNEL_MANAGER || userRol == ERConstants.USER_ROLE_COMMERCIAL_MANAGER) {
+        if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) || userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER) || userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
             List<ER_Channel> channels = new ArrayList<ER_Channel>();
             switch (connectedUserRoleCode(connectedUser)){
                 case ERConstants.USER_ROLE_COMMERCIAL_MANAGER:

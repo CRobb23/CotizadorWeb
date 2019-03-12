@@ -1390,12 +1390,35 @@ public class Incidents extends AdminBaseController {
 			if (clientId != null) {
 				ER_Incident incident = ER_Incident.findById(incidentId);
 				ER_Client client = ER_Client.findById(clientId);
-				//Temp
 				if (canViewClient(client)) {
 					List<ER_Aditional_Multimedia> aditional_multimedia = null;
 					if (client.multimedia != null)
 						aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
-					render(incident, client,aditional_multimedia,isOldClient,isOldCar);
+					String specialDocuments;
+                    if(client.isIndividual != null && client.isIndividual){
+                        specialDocuments = "Por favor suba: <ul>  <li>DPI</li> <li> Licencia de conducir </li>";
+                        if(isOldCar != null && !isOldCar.equals("") && isOldCar.equals("true")){
+                            specialDocuments += "<li> Tarjeta de circulación </li>";
+                         }
+                         else
+                            specialDocuments += "<li>Factura de vehículo </li>";
+                        if(isOldClient != null && (isOldClient.equals("") || isOldClient.equals("false"))){
+                            specialDocuments += "<li> Recibo de servicios <br></li> </ul>";
+                        }
+                    }
+                    else{
+                        specialDocuments = "Por favor suba: <ul>";
+                        if(isOldCar != null && !isOldCar.equals("") && isOldCar.equals("true")){
+                            specialDocuments += "<li>Tarjeta de circulación </li>";
+                        }
+                        else
+                            specialDocuments += "<li>Factura de vehículo</li>";
+                        if(isOldClient != null && (isOldClient.equals("") || isOldClient.equals("false"))){
+                            specialDocuments += "<li>Patentes</li> <li>DPI de Representante Legal </li> <li>RTU </li><li> Recibo de Servicios</li> <li>Nombramiento Representante Legal</li></ul>";
+                        }
+
+                    }
+					render(incident, client,aditional_multimedia,isOldClient,isOldCar,specialDocuments);
 				}
 			}
 		}
@@ -1648,9 +1671,57 @@ public class Incidents extends AdminBaseController {
 				if((payer.taxNumber != null && !payer.taxNumber.isEmpty())){
 					currentClient.useDataClientPayer = false;
 				}
+				if(client.useDataClientPayer != null && client.useDataClientPayer){
+
+					payer.firstName = currentClient.firstName;
+					payer.secondName = currentClient.secondName;
+					payer.firstSurname = currentClient.firstSurname;
+					payer.isIndividual = currentClient.isIndividual;
+					payer.marriedSurname = currentClient.marriedSurname;
+					payer.address = currentClient.address;
+					payer.addressWork = currentClient.addressWork;
+					payer.economicActivity = currentClient.economicActivity;
+					payer.companyName = currentClient.companyName;
+					payer.country = currentClient.country;
+					payer.department = currentClient.department;
+					payer.email = currentClient.email;
+					payer.municipality = currentClient.municipality;
+					payer.zone = currentClient.zone;
+					payer.taxNumber = currentClient.taxNumber;
+					payer.birthdate = currentClient.birthdate;
+					payer.businessName = currentClient.businessName;
+					payer.identificationDocument = currentClient.identificationDocument;
+					payer.writeDate = currentClient.writeDate;
+					payer.passport = currentClient.passport;
+					payer.expose = currentClient.expose;
+					payer.phoneNumber1 = currentClient.phoneNumber1;
+					payer.phoneNumber2 = currentClient.phoneNumber2;
+					payer.phoneNumber3 = currentClient.phoneNumber3;
+					payer.phoneNumberWork1 = currentClient.phoneNumberWork1;
+					payer.phoneNumberWork2 = currentClient.phoneNumberWork2;
+					payer.phoneNumberWork3 = currentClient.phoneNumberWork3;
+					payer.civilStatus = currentClient.civilStatus;
+					payer.profession = currentClient.profession;
+					payer.nationality = currentClient.nationality;
+					payer.registrationDate = currentClient.registrationDate;
+
+					legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
+					legalRepresentativePayer.secondName = currentClient.legalRepresentative.secondName;
+					legalRepresentativePayer.firstSurname = currentClient.legalRepresentative.firstSurname;
+					legalRepresentativePayer.secondSurname = currentClient.legalRepresentative.secondSurname;
+					legalRepresentativePayer.profession = currentClient.legalRepresentative.profession;
+					legalRepresentativePayer.identificationDocument = currentClient.legalRepresentative.identificationDocument;
+					legalRepresentativePayer.passport = currentClient.legalRepresentative.passport;
+					legalRepresentativePayer.taxNumber = currentClient.taxNumber;
+					payer.legalRepresentativePayer = legalRepresentativePayer;
+
+				}
 
 				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
 					payer.legalRepresentativePayer = legalRepresentativePayer;
+				}
+				else{
+					payer.legalRepresentativePayer = new ER_Legal_Representative();
 				}
 
 				if(payer.expose != null && payer.expose) {
@@ -1665,6 +1736,10 @@ public class Incidents extends AdminBaseController {
 
 					payer.clientPayerPEP = clientPayerPEP;
 				}
+				if(currentClient.payer.id != null)
+					payer.id = currentClient.payer.id;
+
+
 				if (payer!= null && payer.id != null) {
 					currentPayer = ER_Client_Payer.findById(payer.id);
 					payer.ConvertUpper();
@@ -1804,7 +1879,7 @@ public class Incidents extends AdminBaseController {
 						flash.error("Por favor suba la multimedia que es obligatoria");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
-					if(currentClient.multimedia.hasConsolidated){
+					if(currentClient.multimedia.hasConsolidated != null && currentClient.multimedia.hasConsolidated){
                         currentClient.multimedia.canUploadFiles = false;
                         currentClient.save();
                         pagoTab(clientId, incidentId);
@@ -1849,7 +1924,7 @@ public class Incidents extends AdminBaseController {
 						flash.error("Por favor suba la multimedia que es obligatoria");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
-                    if(currentClient.multimedia.hasConsolidated){
+                    if(currentClient.multimedia.hasConsolidated != null && currentClient.multimedia.hasConsolidated){
                         currentClient.multimedia.canUploadFiles = false;
                         currentClient.save();
                         pagoTab(clientId, incidentId);
