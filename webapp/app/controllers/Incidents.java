@@ -1705,14 +1705,16 @@ public class Incidents extends AdminBaseController {
 					payer.nationality = currentClient.nationality;
 					payer.registrationDate = currentClient.registrationDate;
 
-					legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
-					legalRepresentativePayer.secondName = currentClient.legalRepresentative.secondName;
-					legalRepresentativePayer.firstSurname = currentClient.legalRepresentative.firstSurname;
-					legalRepresentativePayer.secondSurname = currentClient.legalRepresentative.secondSurname;
-					legalRepresentativePayer.profession = currentClient.legalRepresentative.profession;
-					legalRepresentativePayer.identificationDocument = currentClient.legalRepresentative.identificationDocument;
-					legalRepresentativePayer.passport = currentClient.legalRepresentative.passport;
-					legalRepresentativePayer.taxNumber = currentClient.taxNumber;
+					if(currentClient.legalRepresentative != null) {
+                        legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
+                        legalRepresentativePayer.secondName = currentClient.legalRepresentative.secondName;
+                        legalRepresentativePayer.firstSurname = currentClient.legalRepresentative.firstSurname;
+                        legalRepresentativePayer.secondSurname = currentClient.legalRepresentative.secondSurname;
+                        legalRepresentativePayer.profession = currentClient.legalRepresentative.profession;
+                        legalRepresentativePayer.identificationDocument = currentClient.legalRepresentative.identificationDocument;
+                        legalRepresentativePayer.passport = currentClient.legalRepresentative.passport;
+                        legalRepresentativePayer.taxNumber = currentClient.taxNumber;
+                    }
 					payer.legalRepresentativePayer = legalRepresentativePayer;
 
 				}
@@ -1736,7 +1738,7 @@ public class Incidents extends AdminBaseController {
 
 					payer.clientPayerPEP = clientPayerPEP;
 				}
-				if(currentClient.payer.id != null)
+				if( currentClient.payer != null && currentClient.payer.id != null)
 					payer.id = currentClient.payer.id;
 
 

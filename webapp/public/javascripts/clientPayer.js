@@ -161,7 +161,7 @@ function init(args) {
     $("#country_payer").trigger("change");
     $("#country_legal_payer").trigger("change");
     $("#country_work_payer").trigger("change");
-
+    $("#country_business_payer").trigger("change");
 }
 function checkPayer() {
     var taxNumber = "";
