@@ -809,73 +809,76 @@ public class Incidents extends AdminBaseController {
 	    				//	inspectionInfo.inspectionDate = new Date();
 	    					inspectionInfo.inspected = true;
 	    				} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
-	    					// Validate All info
-							String validStr = validAutoInspectionFields(incident);
-							if ("OK".equals(validStr)) {
-								InspectionAutoRequest requestAuto = new InspectionAutoRequest();
-								requestAuto.setFirstName(incident.client.firstName);
-								requestAuto.setSecondName(incident.client.secondName);
-								requestAuto.setFirstSurname(incident.client.firstSurname);
-								requestAuto.setSecondSurname(incident.client.secondSurname);
-								requestAuto.setMarriedSurname(incident.client.marriedSurname);
-								requestAuto.setIdentificationDocument(incident.client.identificationDocument);
-								requestAuto.setTaxNumber(incident.client.taxNumber);
-								requestAuto.setLicenseNumber(incident.client.licenseNumber);
-								requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
-								// Add PhoneData
-								List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
-								InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
-								phoneData.setPhone(incident.client.phoneNumber2);
-								phones.add(phoneData);
-								requestAuto.setPhones(phones);
-								// Add Email Data
-								List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
-								InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
-								emailData.setEmail(incident.client.email);
-								emails.add(emailData);
-								requestAuto.setEmails(emails);
-								// Add Email Broker Data
-								List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
-								InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
-								emailBrokerData.setEmail(connectedUser().email);
-								emailsBroker.add(emailBrokerData);
-								requestAuto.setEmailsBroker(emailsBroker);
-								//
-								requestAuto.setAddress(incident.client.address);
-								requestAuto.setVehicleOwner(incident.vehicle.owner);
-								requestAuto.setBrand(incident.vehicle.line.name);
-								requestAuto.setLine(incident.vehicle.line.brand.name);
-								requestAuto.setYear(incident.vehicle.erYear.year);
-								requestAuto.setPlate(incident.vehicle.plate);
-								requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
-								requestAuto.setColor(incident.vehicle.color);
-								requestAuto.setEngine(incident.vehicle.engine);
-								requestAuto.setVin(incident.vehicle.chassis);
-								requestAuto.setMileage(incident.vehicle.mileage);
-								// Other Data
-								requestAuto.setLicenseYears(" ");
-								requestAuto.setUse(" ");
-								requestAuto.setOrigin(" ");
-								requestAuto.setCoin("Q");
+	    					// Check if inspection already sent
+							if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
+								// Validate All info
+								String validStr = validAutoInspectionFields(incident);
+								if ("OK".equals(validStr)) {
+									InspectionAutoRequest requestAuto = new InspectionAutoRequest();
+									requestAuto.setFirstName(incident.client.firstName);
+									requestAuto.setSecondName(incident.client.secondName);
+									requestAuto.setFirstSurname(incident.client.firstSurname);
+									requestAuto.setSecondSurname(incident.client.secondSurname);
+									requestAuto.setMarriedSurname(incident.client.marriedSurname);
+									requestAuto.setIdentificationDocument(incident.client.identificationDocument);
+									requestAuto.setTaxNumber(incident.client.taxNumber);
+									requestAuto.setLicenseNumber(incident.client.licenseNumber);
+									requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
+									// Add PhoneData
+									List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
+									InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
+									phoneData.setPhone(incident.client.phoneNumber2);
+									phones.add(phoneData);
+									requestAuto.setPhones(phones);
+									// Add Email Data
+									List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
+									InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
+									emailData.setEmail(incident.client.email);
+									emails.add(emailData);
+									requestAuto.setEmails(emails);
+									// Add Email Broker Data
+									List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
+									InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
+									emailBrokerData.setEmail(connectedUser().email);
+									emailsBroker.add(emailBrokerData);
+									requestAuto.setEmailsBroker(emailsBroker);
+									//
+									requestAuto.setAddress(incident.client.address);
+									requestAuto.setVehicleOwner(incident.vehicle.owner);
+									requestAuto.setBrand(incident.vehicle.line.brand.name);
+									requestAuto.setLine(incident.vehicle.line.name);
+									requestAuto.setYear(incident.vehicle.erYear.year);
+									requestAuto.setPlate(incident.vehicle.plateType.transferCode.trim()+incident.vehicle.plate);
+									requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
+									requestAuto.setColor(incident.vehicle.color);
+									requestAuto.setEngine(incident.vehicle.engine);
+									requestAuto.setVin(incident.vehicle.chassis);
+									requestAuto.setMileage(incident.vehicle.mileage);
+									// Other Data
+									requestAuto.setLicenseYears(" ");
+									requestAuto.setUse(" ");
+									requestAuto.setOrigin(" ");
+									requestAuto.setCoin("Q");
 
-								InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
-								if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
-									flash.error("Ha ocurrido un error en la conexión con AutoInspecciones - " + inspectionResponse.getMessage());
-									ER_Exceptions exceptions = new ER_Exceptions();
-									exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
-									exceptions.exceptionDate = new Date();
-									exceptions.quotation = quotation;
-									exceptions.active = 1;
-									exceptions.save();
-									incident.status = incidentStatusIncomplete;
-									incident.save();
-									attendIncident(id);
+									InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
+									if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
+										flash.error("Ha ocurrido un error en la conexión con AutoInspecciones - " + inspectionResponse.getMessage());
+										ER_Exceptions exceptions = new ER_Exceptions();
+										exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
+										exceptions.exceptionDate = new Date();
+										exceptions.quotation = quotation;
+										exceptions.active = 1;
+										exceptions.save();
+										incident.status = incidentStatusIncomplete;
+										incident.save();
+										attendIncident(id);
+									} else {
+										inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
+									}
 								} else {
-									inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
+									flash.error("No es posible generar una AutoInspeccion. " + validStr);
+									attendIncident(id);
 								}
-							} else {
-								flash.error("No es posible generar una AutoInspeccion. " + validStr);
-								attendIncident(id);
 							}
 						}
 	    				inspectionInfo.incident = incident;
@@ -1332,14 +1335,18 @@ public class Incidents extends AdminBaseController {
 					if (currentConfiguration.garanteedValueConfig != null) {
 						garanteedValueParam = currentConfiguration.garanteedValueConfig.divide(BigDecimal.valueOf(100));
 					}
-					BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
-					BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-					BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
 					if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
 						quotation.setGaranteedValue(Boolean.TRUE);
-					} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
-						quotation.setGaranteedValue(Boolean.TRUE);
+					} else {
+						if (queryAverage.getAverageValue() != null) {
+							BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
+							BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+							BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+							if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+								quotation.setGaranteedValue(Boolean.TRUE);
+							}
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -1428,14 +1435,19 @@ public class Incidents extends AdminBaseController {
 			quotation.loadDetailJSON();
 			QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
 			if (!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.quotationDetail != null && quotation.carValue != null) {
-				BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
-				BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-				BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
 				if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
 					quotation.quotationDetail.setVehicleValue(queryAverage.getAverageValue());
-				} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
-					quotation.quotationDetail.setVehicleValue(quotation.carValue);
+				} else {
+					if (queryAverage.getAverageValue() != null) {
+						BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
+						BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+						BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+
+						if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+							quotation.quotationDetail.setVehicleValue(quotation.carValue);
+						}
+					}
 				}
 			}
 			quotation.save();
