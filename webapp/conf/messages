@@ -875,7 +875,7 @@ incidentsList.search.form.incidentNumber = No. Caso
 incidentsList.search.form.firstName = Nombre
 incidentsList.search.form.lastName = Apellido
 incidentsList.search.form.plate = Placa
-incidentsList.search.form.searchField = No. Caso, Nombre o Placa
+incidentsList.search.form.searchField = No. Caso
 
 incidentsList.table.number = No. Caso
 incidentsList.table.name = Cliente
@@ -1346,7 +1346,7 @@ centers.update.failed = Ocurrió un error al actualizar el listado de centros
 
 guards.title = Búsqueda de resguardos
 
-guardsList.search.form.searchField = No. Caso, Nombre o Placa
+guardsList.search.form.searchField = No. Caso
 guardsList.search.form.search = Buscar
 
 guardsList.table.number = No. Caso

@@ -43,9 +43,9 @@
                 <tr><td style="font-weight: bold;">País: </td>                                             <td>${incident?.client?.payer?.country?.name?.toUpperCase()}</td></tr>
 
                 <tr><th style="font-size: 16px; padding-bottom: 1em;">Información del Representante Legal</th></tr>
-                <tr><td style="font-weight: bold;">Nombres: </td>                                          <td>${incident?.client?.payer?.legalRepresentativePayer?.firstName} ${incident?.client?.legalRepresentative?.secondName}</td></tr>
+                <tr><td style="font-weight: bold;">Nombres: </td>                                          <td>${incident?.client?.payer?.legalRepresentativePayer?.firstName} ${incident?.client?.payer?.legalRepresentativePayer?.secondName}</td></tr>
                 <tr><td style="font-weight: bold;">Otros Nombres:</td>                                     <td></td></tr>
-                <tr><td style="font-weight: bold;">Apellidos: </td>                                        <td>${incident?.client?.payer?.legalRepresentativePayer?.firstSurname} ${incident?.client?.legalRepresentative?.secondSurname}</td></tr>
+                <tr><td style="font-weight: bold;">Apellidos: </td>                                        <td>${incident?.client?.payer?.legalRepresentativePayer?.firstSurname} ${incident?.client?.payer?.legalRepresentativePayer?.secondSurname}</td></tr>
                 <tr><td style="font-weight: bold;">Apellido de casada: </td>                               <td>${incident?.client?.payer?.legalRepresentativePayer?.marriedSurname}</td></tr>
                 <tr><td style="font-weight: bold;">Profesión u Oficio: </td>                               <td>${incident?.client?.payer?.legalRepresentativePayer?.profession?.name?.toUpperCase()}</td></tr>
                 <tr><td style="font-weight: bold;">Tipo de documento de identificación: </td>              <td>${incident?.client?.payer?.legalRepresentativePayer?.identificationDocument? 'DPI':'Pasaporte'}</td></tr>

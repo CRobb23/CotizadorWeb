@@ -10,12 +10,11 @@ import com.google.gson.Gson;
 
 import helpers.ERConstants;
 import models.ER_Aditional_Multimedia;
-import models.ER_Client;
-import models.ER_Incident;
 import models.ER_Multimedia;
+import models.Multimedia_View;
+
 import play.Logger;
 import play.Play;
-import play.jobs.Every;
 import play.jobs.Job;
 import play.jobs.On;
 import play.libs.WS;
@@ -27,45 +26,41 @@ import java.time.Duration;
 @On(" 0 0/10  0,1,2,3,4,21,22,23 * * ? *")
 public class MultimediaJob extends Job {
 
-	private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
-	private final String WS_GDRIVE = Play.configuration.getProperty("drive.proxy.url");
-	
-	private List<ER_Multimedia> multimediaList;
-	
-	public MultimediaJob(){}
-	
-	public MultimediaJob(Long id){
-		multimediaList = new ArrayList<ER_Multimedia>();
-		multimediaList.add((ER_Multimedia)ER_Multimedia.findById(id));
-	}
-	
-	public void doJob(){
-	    try {
-            multimediaList = ER_Multimedia.find("uploaded_files_gd = false and can_upload_files = true").fetch(10);
-            Logger.info("Inicia multimedia Job, lista de multimedia a subir: " + multimediaList.size());
+    private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
+    private final String WS_GDRIVE = Play.configuration.getProperty("drive.proxy.url");
 
-            for (ER_Multimedia multimedia:multimediaList) {
-                    uploadMultimediaFiles(multimedia);
+    private List<ER_Multimedia> multimediaList;
+    private List<Multimedia_View> multimediaListView;
+
+    public MultimediaJob(){}
+
+    public MultimediaJob(Long id){
+        multimediaListView = new ArrayList<Multimedia_View>();
+        multimediaListView.add(Multimedia_View.findById(id));
+    }
+
+    public void doJob(){
+        try {
+            multimediaListView = Multimedia_View.find("uploaded_files_gd = false and can_upload_files = true").fetch(10);
+            Logger.info("Inicia multimedia Job, lista de multimedia a subir: " + multimediaListView.size());
+
+            for (Multimedia_View multimedia:multimediaListView) {
+                uploadMultimediaFiles(multimedia);
             }
         }
         catch (Exception e){
-	        Logger.error(e.getMessage());
+            Logger.error(e.getMessage());
         }
     }
-	
-	private void uploadMultimediaFiles(ER_Multimedia multimedia){
-	    try {
-            multimedia = ER_Multimedia.findById(multimedia.id);
-            ER_Client client = ER_Client.find("multimedia.id = ?", multimedia.id).first();
-            if (client != null) {
-                ER_Incident incident = ER_Incident.find("client.id = ?", client.id).first();
-                if (incident != null) {
-                    if (incident.status.code == ERConstants.INCIDENT_STATUS_FINALIZED) {
-                        Logger.info("Sube multimedia de caso: " + incident.number);
+
+    private void uploadMultimediaFiles(Multimedia_View multimediaView){
+        try {
+            ER_Multimedia multimedia = ER_Multimedia.findById(multimediaView.id);
+                        Logger.info("Sube multimedia de caso: " + multimediaView.number);
                         Boolean uploadedFilesGD = true;
 
                         WSRequest requestDirectory = WS.url(WS_GDRIVE + "/findFolderByName");
-                        requestDirectory.setParameter("folderName", incident.number);
+                        requestDirectory.setParameter("folderName", multimediaView.number);
                         requestDirectory.setParameter("parentFolderId", null);
                         Map<String, Object> responseDirectory = new Gson().fromJson(requestDirectory.post().getString(), Map.class);
                         if ((Boolean) responseDirectory.get("success")) {
@@ -150,36 +145,36 @@ public class MultimediaJob extends Job {
                         } else {
                             uploadedFilesGD = false;
                         }
-                        Logger.info("Logro subir la multimedia del caso: " + incident.number + " exitoso: " + uploadedFilesGD);
+                        Logger.info("Logro subir la multimedia del caso: " + multimediaView.number + " exitoso: " + uploadedFilesGD);
                         multimedia.uploadedFilesGD = uploadedFilesGD;
+                        if(uploadedFilesGD)
+                            multimedia.canUploadFiles = false;
                         multimedia.save();
-                    }
-                }
-            }
+
         }
         catch(Exception e){
-	        Logger.error(e.getMessage());
+            Logger.error(e.getMessage());
         }
-	}
-	
-	private String uploadFile(Map<String, Object> responseDirectory, File file){
-	    try{
-    	if((Boolean) responseDirectory.get("success") && file != null){
-    		WSRequest request = WS.url(WS_GDRIVE + "/sendPublicFile");
-    		request.setHeader("Content-Type", "multipart/form-data");
-        	request.setParameter("folderId", responseDirectory.get("data"));
-            request.timeout("6min");
-        	request.files(new FileParam(file, "upload"));
-        	Map<String, Object> response = new Gson().fromJson(request.post().getString(), Map.class);
-        	System.out.println(response);
-        	if((Boolean) response.get("success")){
-        		return response.get("data").toString();
-        	}else if ("104".equals(response.get("code"))){
-        	    return  response.get("code").toString();
+    }
+
+    private String uploadFile(Map<String, Object> responseDirectory, File file){
+        try{
+            if((Boolean) responseDirectory.get("success") && file != null){
+                WSRequest request = WS.url(WS_GDRIVE + "/sendPublicFile");
+                request.setHeader("Content-Type", "multipart/form-data");
+                request.setParameter("folderId", responseDirectory.get("data"));
+                request.timeout("6min");
+                request.files(new FileParam(file, "upload"));
+                Map<String, Object> response = new Gson().fromJson(request.post().getString(), Map.class);
+                System.out.println(response);
+                if((Boolean) response.get("success")){
+                    return response.get("data").toString();
+                }else if ("104".equals(response.get("code"))){
+                    return  response.get("code").toString();
+                }
             }
-    	}
-    	
-    	return null;
+
+            return null;
         }
         catch(Exception e){
             Logger.error(e.getMessage());
@@ -188,13 +183,13 @@ public class MultimediaJob extends Job {
     }
 
     private String transferOwner(String fileId){
-	    try{
+        try{
             WSRequest request = WS.url(WS_GDRIVE + "/transferOwner");
             request.setParameter("fileId", fileId);
             Map<String, Object> response = new Gson().fromJson(request.post().getString(), Map.class);
             return  response.get("code").toString();
         }catch (Exception e){
-	        Logger.error(e.getMessage());
+            Logger.error(e.getMessage());
         }
 
         return null;

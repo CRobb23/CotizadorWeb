@@ -20,8 +20,9 @@ import play.mvc.*;
 public class Application extends AdminBaseController {
 	
     public static void index() {
-    	
-    	if (checkRole(ERConstants.USER_ROLE_SALES_MAN)) {
+
+		Integer userRol = connectedUserRoleCode(connectedUser());
+    	if (userRol.equals(ERConstants.USER_ROLE_SALES_MAN)) {
     		UserCases.clientInformation();
     	}
 		//Message for system out of line.
