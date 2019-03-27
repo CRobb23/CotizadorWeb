@@ -21,7 +21,7 @@ import play.libs.WS;
 import play.libs.WS.FileParam;
 import play.libs.WS.WSRequest;
 
-@Every("1mn")
+@Every("100mn")
 public class MultimediaJob extends Job {
 
 	private final String PARENT_FOLDER_ID = Play.configuration.getProperty("drive.parentFolderId");
