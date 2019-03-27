@@ -66,17 +66,17 @@ public class AdminUsers extends AdminBaseController {
 		if (validState) {
 			filter.addQuery("active = ?", active, Operator.AND);
 		}
-		
-		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-			filter.addQuery("channel = ?", connectedUser().channel, Operator.AND);
-		} else if (!checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
-			ER_User connectedUser = connectedUser();
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
+		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+			filter.addQuery("channel = ?", connectedUser.channel, Operator.AND);
+		} else if (!userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
 			filter.addQuery("channel = ?", connectedUser.channel, Operator.AND);
 			filter.addQuery("distributor = ?", connectedUser.distributor, Operator.AND);
 		}
 		
 		List<ER_User_Role> roles = authorizedRolesForUser();
-		if (!checkRole(ERConstants.USER_ROLE_SUPER_ADMIN) && !roles.isEmpty()) {
+		if (!userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) && !roles.isEmpty()) {
 			filter.addGroupStart(Operator.AND);
 			for (ER_User_Role userRole : roles) {
 				filter.addQuery("role = ?", userRole, Operator.OR);
@@ -189,21 +189,21 @@ public class AdminUsers extends AdminBaseController {
     	renderArgs.put("roles", roles);
     	
     	Long channelId = null;
-    	
+		Integer userRol = connectedUserRoleCode(connectedUser());
     	if (userId!=null) {
     		ER_User user = ER_User.findById(userId);
     		if (user!=null && canModifyRole(user.role)) {
     			renderArgs.put("user", user);
     		}
     		
-    		if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+    		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
     			if (user.channel!=null) {
     				channelId = user.channel.id;
     			}
         	}
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+    	if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
     		channelId = connectedUserChannelId();
     	}
     	
@@ -212,7 +212,7 @@ public class AdminUsers extends AdminBaseController {
 			renderArgs.put("distributors", distributors);
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+    	if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
     		List<ER_Channel> channels = ER_Channel.find("active = true order by name").fetch();
     		renderArgs.put("channels", channels);
     	}
@@ -231,7 +231,7 @@ public class AdminUsers extends AdminBaseController {
     	flash.clear();
     	
     	boolean uniqueUser = true;
-
+		Integer userRol = connectedUserRoleCode(connectedUser());
     	if (user.id==null){
     		//Check if user is unique
     		ER_User emailUser = ER_User.find("email=?", user.email).first();
@@ -278,7 +278,7 @@ public class AdminUsers extends AdminBaseController {
 	    		}
 	    		
 	    		//Set user channel
-	    		if (user.channel!=null && checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+	    		if (user.channel!=null && userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
 	        		user.channel = ER_Channel.findById(user.channel.id);
 	        	} else {
 	        		user.channel = connectedUser().channel;
@@ -291,8 +291,8 @@ public class AdminUsers extends AdminBaseController {
 				}
 				user.setQAUser(isQAUser);
 				//Set user distributor
-	    		if (user.distributor!=null && (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN) || 
-	    				checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER))) {
+	    		if (user.distributor!=null && (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) ||
+						userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER))) {
 	        		user.distributor = ER_Distributor.findById(user.distributor.id);
 	        	} else {
 	        		user.distributor = connectedUser().distributor;

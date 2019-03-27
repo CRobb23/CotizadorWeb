@@ -154,7 +154,7 @@ public class ER_Client extends Model {
 
 	public String getFullName() {
 		StringBuilder name = new StringBuilder();
-		if(isIndividual != null && isIndividual){
+ 		if(isIndividual != null && isIndividual){
 			if(firstName != null && !firstName.isEmpty()){
 				name.append(firstName);
 			}

@@ -8,6 +8,10 @@ import play.db.jpa.Model;
 @Entity
 public class ER_Multimedia extends Model{
 
+	@Column(name="has_consolidated")
+	public Boolean hasConsolidated;
+	@Column(name="url_consolidated")
+	public String urlConsolidated;
 	@Column(name="url_dpi")
 	public String urlDPI;
 	@Column(name="url_receipt_services")

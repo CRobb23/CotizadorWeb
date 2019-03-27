@@ -1,5 +1,6 @@
 package jobs;
 
+import play.Logger;
 import play.jobs.Every;
 import play.jobs.Job;
 import service.PolicyFileService;
@@ -14,9 +15,13 @@ public class PolicyFileJob extends Job {
 
 	public void doJob(){
 	    // Search files to Download
-        policyFileService.searchDownloadablePolicies();
-        // Upload files already downloaded
-        policyFileService.searchUploadablePolicies();
+        try {
+            policyFileService.searchDownloadablePolicies();
+            // Upload files already downloaded
+            policyFileService.searchUploadablePolicies();
+        }catch(Exception e){
+            Logger.error(e.getMessage());
+        }
     }
 	
 }

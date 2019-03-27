@@ -11,19 +11,19 @@
 				<h1>&{'payer.edit.title'}</h1>
                 <ul class="steps hidden-xs pull-right">
                  #{if incident?.policy == null || incident?.policy.trim() == ''}
-					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
+                     <li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Cliente</li>
 					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Pagador</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Vehículo</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Documentos</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet"><br />Pago</li>
-                #{/if}
-                #{else}
-                    <li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{clienteTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Cliente</li>
+                 #{/if}
+                    #{else}
+                        <li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{clienteTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Cliente</li>
 					<li><img src="@{'/public/images/bullet-active.png'}" alt="" class="bullet"><br />Pagador</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{vehiculoTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Vehículo</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{documentoTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Documentos</li>
 					<li><img src="@{'/public/images/bullet.png'}" alt="" class="bullet" onclick="location.href='@{pagoTab(client.id,incident.id)}'" style="cursor: pointer;"><br />Pago</li>
-                #{/else}
+                    #{/else}
 				</ul>
 			</span>
         </div>
@@ -38,22 +38,22 @@
             ${flash.success}
             </div>
         #{/if}
-<h4 style="border-bottom: groove; text-align: center;"></h4>
+        <h4 style="border-bottom: groove; text-align: center;"></h4>
 
-		<div class="row " style="min-height: 0px;">
-			<div class="col-sm-12">
-				#{field 'client.useDataClientPayer'}
-					<div class="form-group">
-						<label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
-						<div class="col-sm-8">
-							<div class="checkbox">
-								<input type="checkbox" name="${field.name}" id="useDataClientPayer" class="typePayer" ${field.value == true ? 'checked' : ''}/>
-							</div>
-						</div>
-					</div>
-				#{/}
-			</div>
-		</div>
+        <div class="row " style="min-height: 0px;">
+            <div class="col-sm-12">
+                #{field 'client.useDataClientPayer'}
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                        <div class="col-sm-8">
+                            <div class="checkbox">
+                                <input type="checkbox" name="${field.name}" id="useDataClientPayer" class="typePayer" ${field.value == true ? 'checked' : ''}/>
+                            </div>
+                        </div>
+                    </div>
+                #{/}
+            </div>
+        </div>
 
         <div class="fieldsPayer">
 
@@ -64,11 +64,11 @@
                             <div class="col-sm-12" style="text-align: center;">
                                 <label class="radio-inline">
                                     <input type="radio" value="true" name="${field.name}" id="pagadorIndividual" class="typePayer" ${field.value ? 'checked' : ''} />
-                                    &{'quotation.form.client.individual'}
+                                &{'quotation.form.client.individual'}
                                 </label>
                                 <label class="radio-inline">
                                     <input type="radio" value="false" name="${field.name}" id="pagadorJuridico" class="typePayer" ${!field.value ? 'checked' : ''} />
-                                    &{'quotation.form.client.juridico'}
+                                &{'quotation.form.client.juridico'}
                                 </label>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                     #{field 'payer.identificationDocument'}
                         <div class="form-group">
                             <label class="col-sm-4 control-label" for="${field.id}">
-                              #{required/} &{'quotation.form.'+field.name} <h6>&{'quotation.form.client.messageDPI'}</h6>
+                                #{required/} &{'quotation.form.'+field.name} <h6>&{'quotation.form.client.messageDPI'}</h6>
                             </label>
                             <div class="col-sm-8">
                                 <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
@@ -141,280 +141,280 @@
                     #{/}
                 </div>
                 <div class="col-sm-6">
-                #{field 'payer.expose'}
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.client.expose'}</label>
-                        <div class="col-sm-8">
-                            <div class="checkbox">
-                                <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
-                                <input type="hidden" name="${field.name}" id="hidPayerdExpose" value=false>
-                            *{Valido si esta chequeado}*
-                                <script>
-                                    $("#payer_expose").change(function() {
-                                        if ($('#payer_expose').is(':checked'))
-                                        {
-                                            $("#hidPayerdExpose").attr("disabled", "disabled");
-                                        }
-                                        else {
-                                            $("#hidPayerdExpose").removeAttr("disabled");
-                                        }
-                                    });
-                                </script>
+                    #{field 'payer.expose'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.client.expose'}</label>
+                            <div class="col-sm-8">
+                                <div class="checkbox">
+                                    <input type="checkbox" name="${field.name}" id="${field.id}" ${field.value == true ? 'checked' : ''}/>
+                                    <input type="hidden" name="${field.name}" id="hidPayerdExpose" value=false>
+                                *{Valido si esta chequeado}*
+                                    <script>
+                                        $("#payer_expose").change(function() {
+                                            if ($('#payer_expose').is(':checked'))
+                                            {
+                                                $("#hidPayerdExpose").attr("disabled", "disabled");
+                                            }
+                                            else {
+                                                $("#hidPayerdExpose").removeAttr("disabled");
+                                            }
+                                        });
+                                    </script>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                #{/}
+                    #{/}
                 </div>
 
             </div>
 
             <h4 class=" fieldsClientPayer" style="border-bottom: groove; text-align: center;"></h4>
             <div class="row fieldsClientPayer">
-                  <div class="col-sm-6">
-                      #{field 'payer.firstName'}
-                          <div class="form-group">
-                              <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
-                              <div class="col-sm-8">
-                                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                              </div>
-                          </div>
-                      #{/}
-                  </div>
-                  <div class="col-sm-6">
-                      #{field 'payer.secondName'}
-                          <div class="form-group">
-                              <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
-                              <div class="col-sm-8">
-                                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                              </div>
-                          </div>
-                      #{/}
-                  </div>
+                <div class="col-sm-6">
+                    #{field 'payer.firstName'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
+                </div>
+                <div class="col-sm-6">
+                    #{field 'payer.secondName'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
+                </div>
 
-                  <div class="col-sm-6">
-                      #{field 'payer.firstSurname'}
-                          <div class="form-group">
-                                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
-                                <div class="col-sm-8">
-                                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                                </div>
-                          </div>
-                      #{/}
-                  </div>
-                  <div class="col-sm-6">
-                      #{field 'payer.secondSurname'}
-                          <div class="form-group">
-                              <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
-                              <div class="col-sm-8">
-                                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                              </div>
-                          </div>
-                      #{/}
-                  </div>
+                <div class="col-sm-6">
+                    #{field 'payer.firstSurname'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
+                </div>
+                <div class="col-sm-6">
+                    #{field 'payer.secondSurname'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
+                </div>
 
-                  <div class="col-sm-6">
+                <div class="col-sm-6">
                     #{field 'payer.marriedSurname'}
-                      <div class="form-group">
-                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
-                        <div class="col-sm-8">
-                          <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
                         </div>
-                      </div>
                     #{/}
-                  </div>
-                  <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
                     #{field 'payer.birthdate'}
-                      <div class="form-group">
-                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
-                        <div class="col-sm-8">
-                          <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker" maxlength="10"/>
+                            </div>
                         </div>
-                      </div>
                     #{/}
-                  </div>
+                </div>
 
-                    <div class="col-sm-6">
-                      <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.payer.sex'}</label>
                         <div class="col-sm-8">
-                        #{select 'payer.sex.id', class:'form-control', id:'sex', value: payer?.sex?.id}
+                            #{select 'payer.sex.id', class:'form-control', id:'sex', value: payer?.sex?.id}
                                     #{option}&{'form.select'}#{/option}
                                     #{list items: sex, as: 'sexItem'}
-                            #{option sexItem.id}${sexItem.name}#{/option}
-                        #{/list}
+                                #{option sexItem.id}${sexItem.name}#{/option}
+                            #{/list}
                                 #{/select}
                         </div>
-                      </div>
                     </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.payer.profession'}</label>
                         <div class="col-sm-8">
-                        #{select 'payer.profession.id', class:'form-control', id:'profession', value: payer?.profession?.id}
+                            #{select 'payer.profession.id', class:'form-control', id:'profession', value: payer?.profession?.id}
                                     #{option}&{'form.select'}#{/option}
                                     #{list items: professions, as: 'professionItem'}
-                            #{option professionItem?.id}${professionItem?.name}#{/option}
-                        #{/list}
+                                #{option professionItem?.id}${professionItem?.name}#{/option}
+                            #{/list}
                                 #{/select}
                         </div>
-                      </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-6">
+                <div class="col-sm-6">
                     #{field 'payer.passport'}
-                      <div class="form-group">
-                        <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
-                        <div class="col-sm-8">
-                          <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">&{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
                         </div>
-                      </div>
                     #{/}
-                    </div>
-                    <div class="col-sm-6">
-                      <div class="form-group">
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="brand_line">#{required/}  &{'quotation.form.payer.civilStatus'}</label>
                         <div class="col-sm-8">
-                        #{select 'payer.civilStatus.id', class:'form-control', id:'civilStatus', value: payer?.civilStatus?.id}
+                            #{select 'payer.civilStatus.id', class:'form-control', id:'civilStatus', value: payer?.civilStatus?.id}
                                     #{option}&{'form.select'}#{/option}
                                     #{list items: statuses, as: 'civilStatusItem'}
-                            #{option civilStatusItem?.id}${civilStatusItem?.name}#{/option}
-                        #{/list}
+                                #{option civilStatusItem?.id}${civilStatusItem?.name}#{/option}
+                            #{/list}
                                 #{/select}
                         </div>
-                      </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-6">
-                      <div class="form-group">
+                <div class="col-sm-6">
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.licenseType'}</label>
                         <div class="col-sm-8">
-                        #{select 'payer.licenseType.id', class:'form-control', id:'payer_licenseType', value: payer?.licenseType?.id}
+                            #{select 'payer.licenseType.id', class:'form-control', id:'payer_licenseType', value: payer?.licenseType?.id}
                                     #{option}&{'form.select'}#{/option}
                                     #{list items: licenseTypes, as: 'licenseTypeItem'}
-                            #{option licenseTypeItem?.id}${licenseTypeItem?.name}#{/option}
-                        #{/list}
+                                #{option licenseTypeItem?.id}${licenseTypeItem?.name}#{/option}
+                            #{/list}
                                 #{/select}
                         </div>
-                      </div>
                     </div>
-                    <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
                     #{field 'payer.licenseNumber'}
-                      <div class="form-group">
-                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
-                        <div class="col-sm-8">
-                          <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
                         </div>
-                      </div>
                     #{/}
-                    </div>
+                </div>
             </div>
 
-          <h4 class=" fieldsClientPayer" style="border-bottom: groove; text-align: center;">
-            DIRECCIÓN DE CORRESPONDENCIA
-          </h4>
-          <div class="row  fieldsClientPayer">
-            <div class="col-sm-6">
-            #{field 'payer.address'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.address'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                   <label id="payerAddressLbl"></label>
+            <h4 class=" fieldsClientPayer" style="border-bottom: groove; text-align: center;">
+                DIRECCIÓN DE CORRESPONDENCIA
+            </h4>
+            <div class="row  fieldsClientPayer">
+                <div class="col-sm-6">
+                    #{field 'payer.address'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.address'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                                <label id="payerAddressLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="country_payer">#{required/} &{'quotation.form.payer.country'}</label>
-                <div class="col-sm-8">
-                %{valCountry = (payer?.country?.id)? payer?.country?.id :client?.country?.id}% <!-- if payer.country =  null, set client.country; default country Guatemala -->
-                #{select 'payer.country.id', class:'form-control', id:'country_payer', value: valCountry}
-							#{option}&{'form.select'}#{/option}
-							#{list items: countries, as: 'countryItem'}
-                    #{option countryItem?.id}${countryItem?.name}#{/option}
-                #{/list}
-						#{/select}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="country_payer">#{required/} &{'quotation.form.payer.country'}</label>
+                        <div class="col-sm-8">
+                        %{valCountry = (payer?.country?.id)? payer?.country?.id :client?.country?.id}% <!-- if payer.country =  null, set client.country; default country Guatemala -->
+                            #{select 'payer.country.id', class:'form-control', id:'country_payer', value: valCountry}
+                                #{option}&{'form.select'}#{/option}
+                                #{list items: countries, as: 'countryItem'}
+                                    #{option countryItem?.id}${countryItem?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="department_payer">#{required/} &{'quotation.form.payer.department'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.department.id', class:'form-control', id:'department_payer', value: payer?.department?.id}
-							#{option}&{'form.select'}#{/option}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="department_payer">#{required/} &{'quotation.form.payer.department'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.department.id', class:'form-control', id:'department_payer', value: payer?.department?.id}
+                                #{option}&{'form.select'}#{/option}
                             %{valDepartments = (payerDepartments)? payerDepartments :departments}% <!-- if payer =  null, set client departments list-->
-							#{list items: valDepartments, as: 'departmentItem'}
-                    #{option departmentItem?.id}${departmentItem?.name}#{/option}
-                #{/list}
-						#{/select}
+                                #{list items: valDepartments, as: 'departmentItem'}
+                                    #{option departmentItem?.id}${departmentItem?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="municipality_payer">#{required/} &{'quotation.form.payer.municipality'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.municipality.id', class:'form-control', id:'municipality_payer', value: payer?.municipality?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="municipality_payer">#{required/} &{'quotation.form.payer.municipality'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.municipality.id', class:'form-control', id:'municipality_payer', value: payer?.municipality?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerMunicipalities, as: 'municipalityItem'}
-                    #{option municipalityItem?.id}${municipalityItem?.name}#{/option}
-                #{/list}
+                                #{option municipalityItem?.id}${municipalityItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="zone_payer">#{required/} &{'quotation.form.payer.zone'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.zone.id', class:'form-control', id:'zone_payer', value: payer?.zone?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="zone_payer">#{required/} &{'quotation.form.payer.zone'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.zone.id', class:'form-control', id:'zone_payer', value: payer?.zone?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerZones, as: 'zoneItem'}
-                    #{option zoneItem?.id}${zoneItem?.name}#{/option}
-                #{/list}
+                                #{option zoneItem?.id}${zoneItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber1'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber1'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerPhoneNumberLbl"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber1'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber1'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerPhoneNumberLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber2'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber2'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerPhoneNumberLb2"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber2'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber2'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerPhoneNumberLb2"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber3'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.payer.phoneNumber3'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerPhoneNumberLb3"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber3'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.payer.phoneNumber3'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerPhoneNumberLb3"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
             </div>
-          </div>
-          <h4 class="fieldsClientPayer" style="border-bottom: groove; text-align: center;">
-            DIRECCIÓN DE COBRO
-          </h4>
+            <h4 class="fieldsClientPayer" style="border-bottom: groove; text-align: center;">
+                DIRECCIÓN DE COBRO
+            </h4>
             <div class="row " style="min-height: 0px;">
                 <div class="col-sm-12">
                     <div class="form-group">
@@ -429,356 +429,356 @@
                 </div>
             </div>
 
-          <div class="row fieldsClientPayer">
-            <div class="col-sm-6">
-            #{field 'payer.addressWork'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.address'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
-                    <label id="payerWorkAddressLbl"></label>
+            <div class="row fieldsClientPayer">
+                <div class="col-sm-6">
+                    #{field 'payer.addressWork'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.address'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                                <label id="payerWorkAddressLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="country_work_payer">#{required/} &{'quotation.form.payer.country'}</label>
-                <div class="col-sm-8">
-                %{valueCountryWork = (payer?.countryWork?.id)? payer?.countryWork?.id : 81}%<!-- if payer.country =  null, set client.country; default country Guatemala -->
-                #{select 'payer.countryWork.id', class:'form-control', id:'country_work_payer', value: valueCountryWork}
-							#{option}&{'form.select'}#{/option}
-							#{list items: countries, as: 'country'}
-                    #{option country?.id}${country?.name}#{/option}
-                #{/list}
-						#{/select}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="country_work_payer">#{required/} &{'quotation.form.payer.country'}</label>
+                        <div class="col-sm-8">
+                        %{valueCountryWork = (payer?.countryWork?.id)? payer?.countryWork?.id : 81}%<!-- if payer.country =  null, set client.country; default country Guatemala -->
+                            #{select 'payer.countryWork.id', class:'form-control', id:'country_work_payer', value: valueCountryWork}
+                                #{option}&{'form.select'}#{/option}
+                                #{list items: countries, as: 'country'}
+                                    #{option country?.id}${country?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="work_payer_department">#{required/} &{'quotation.form.payer.department'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.workDepartment.id', class:'form-control', id:'work_payer_department', value: payer?.workDepartment?.id}
-							#{option}&{'form.select'}#{/option}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="work_payer_department">#{required/} &{'quotation.form.payer.department'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.workDepartment.id', class:'form-control', id:'work_payer_department', value: payer?.workDepartment?.id}
+                                #{option}&{'form.select'}#{/option}
                             %{valWorkDepartments = (payerWorkDepartments)? payerWorkDepartments :workDepartments}% <!-- if payer =  null, set client departments list-->
-							#{list items: valWorkDepartments, as: 'department'}
-                    #{option department?.id}${department?.name}#{/option}
-                #{/list}
-						#{/select}
+                                #{list items: valWorkDepartments, as: 'department'}
+                                    #{option department?.id}${department?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="work_payer_municipality">#{required/} &{'quotation.form.payer.municipality'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.workMunicipality.id', class:'form-control', id:'work_payer_municipality', value: payer?.workMunicipality?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="work_payer_municipality">#{required/} &{'quotation.form.payer.municipality'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.workMunicipality.id', class:'form-control', id:'work_payer_municipality', value: payer?.workMunicipality?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerWorkMunicipalities, as: 'municipality'}
-                    #{option municipality?.id}${municipality?.name}#{/option}
-                #{/list}
+                                #{option municipality?.id}${municipality?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="work_payer_zone">#{required/} &{'quotation.form.payer.zone'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.workZone.id', class:'form-control', id:'work_payer_zone', value: payer?.workZone?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="work_payer_zone">#{required/} &{'quotation.form.payer.zone'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.workZone.id', class:'form-control', id:'work_payer_zone', value: payer?.workZone?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerWorkZones, as: 'zoneItem'}
-                    #{option zoneItem?.id}${zoneItem?.name}#{/option}
-                #{/list}
+                                #{option zoneItem?.id}${zoneItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumberWork1'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber1'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerWorkPhoneNumberLbl"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumberWork1'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber1'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerWorkPhoneNumberLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumberWork2'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber2'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerWorkPhoneNumberLb2"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumberWork2'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.payer.phoneNumber2'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerWorkPhoneNumberLb2"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumberWork3'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.payer.phoneNumber3'}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerWorkPhoneNumberLb3"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumberWork3'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}"> &{'quotation.form.payer.phoneNumber3'}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerWorkPhoneNumberLb3"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
             </div>
-          </div>
 
 
 
-          <h4 id="titleFieldsLegal" class="fieldsLegalPayer " style="border-bottom: groove; text-align: center;"></h4>
-          <div class="row fieldsLegalPayer ">
-              <div class="col-sm-6">
-            #{field 'payer.societyType'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                    #{select 'payer.societyType.id', class:'form-control', id:'society_type', value: payer?.societyType?.id}
+            <h4 id="titleFieldsLegal" class="fieldsLegalPayer " style="border-bottom: groove; text-align: center;"></h4>
+            <div class="row fieldsLegalPayer ">
+                <div class="col-sm-6">
+                    #{field 'payer.societyType'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                #{select 'payer.societyType.id', class:'form-control', id:'society_type', value: payer?.societyType?.id}
 								#{option}&{'form.select'}#{/option}
 								#{list items: societyTypes, as: 'societyType'}
-                        #{option societyType?.id}${societyType?.name}#{/option}
-                    #{/list}
+                                    #{option societyType?.id}${societyType?.name}#{/option}
+                                #{/list}
 							#{/select}
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.companyName'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                <div class="col-sm-6">
+                    #{field 'payer.companyName'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
 
-            <div class="col-sm-6">
-            #{field 'payer.businessName'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                <div class="col-sm-6">
+                    #{field 'payer.businessName'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.economicActivity'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                    #{select 'payer.economicActivity.id', class:'form-control', id:'payer_economic_activity', value: payer?.economicActivity?.id}
+                <div class="col-sm-6">
+                    #{field 'payer.economicActivity'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                #{select 'payer.economicActivity.id', class:'form-control', id:'payer_economic_activity', value: payer?.economicActivity?.id}
 								#{option}&{'form.select'}#{/option}
 								#{list items: economicActivities, as: 'economicActivityItem'}
-                        #{option economicActivityItem?.id}${economicActivityItem?.name}#{/option}
-                    #{/list}
+                                    #{option economicActivityItem?.id}${economicActivityItem?.name}#{/option}
+                                #{/list}
 							#{/select}
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
 
 
 
-            <div class="col-sm-6">
-            #{field 'payer.stateProvider'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                    #{select 'payer.stateProvider', class:'form-control', id:'stateProvider', value: payer?.stateProvider}
-                        #{option 'N'}NO#{/option}
-                        #{option 'S'}SI#{/option}
-                    #{/select}
+                <div class="col-sm-6">
+                    #{field 'payer.stateProvider'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                #{select 'payer.stateProvider', class:'form-control', id:'stateProvider', value: payer?.stateProvider}
+                                    #{option 'N'}NO#{/option}
+                                    #{option 'S'}SI#{/option}
+                                #{/select}
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.writeNumber'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                <div class="col-sm-6">
+                    #{field 'payer.writeNumber'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
 
-            <div class="col-sm-6">
-            #{field 'payer.writeDate'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+                <div class="col-sm-6">
+                    #{field 'payer.writeDate'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.registrationDate'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+                <div class="col-sm-6">
+                    #{field 'payer.registrationDate'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="${field.id}" value="${field.value?.format('dd/MM/yyyy')}" class="form-control datePicker"/>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
             </div>
-          </div>
-          <h4 id="titleFieldsLegal" class="fieldsLegalPayer " style="border-bottom: groove; text-align: center;">
-            DIRECCIÓN EMPRESA
-          </h4>
-          <div class="row fieldsLegalPayer ">
-            <div class="col-sm-6">
-            #{field 'payer.address'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="payer_address_business">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="payer_address_business" value="${field.value}" class="form-control"/>
-                    <label id="payerBussinessWorkAddressLbl"></label>
+            <h4 id="titleFieldsLegal" class="fieldsLegalPayer " style="border-bottom: groove; text-align: center;">
+                DIRECCIÓN EMPRESA
+            </h4>
+            <div class="row fieldsLegalPayer ">
+                <div class="col-sm-6">
+                    #{field 'payer.address'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="payer_address_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="payer_address_business" value="${field.value}" class="form-control"/>
+                                <label id="payerBussinessWorkAddressLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.country'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.country.id', class:'form-control', id:'country_business_payer', value: valCountry}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.country'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.country.id', class:'form-control', id:'country_business_payer', value: valCountry}
 							#{option}&{'form.select'}#{/option}
 							#{list items: countries, as: 'countryItem'}
-                    #{option countryItem?.id}${countryItem?.name}#{/option}
-                #{/list}
+                                #{option countryItem?.id}${countryItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.department'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.department.id', class:'form-control', id:'department_business_payer', value: payer?.department?.id}
-							#{option}&{'form.select'}#{/option}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.department'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.department.id', class:'form-control', id:'department_business_payer', value: payer?.department?.id}
+                                #{option}&{'form.select'}#{/option}
                             %{valDepartments = (payerDepartments)? payerDepartments :departments}% <!-- if payer =  null, set client departments list-->
-							#{list items: valDepartments, as: 'departmentItem'}
-                    #{option departmentItem?.id}${departmentItem?.name}#{/option}
-                #{/list}
-						#{/select}
+                                #{list items: valDepartments, as: 'departmentItem'}
+                                    #{option departmentItem?.id}${departmentItem?.name}#{/option}
+                                #{/list}
+                            #{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.municipality'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.municipality.id', class:'form-control', id:'municipality_business_payer', value: payer?.municipality?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="brand_line">#{required/} &{'quotation.form.business.client.municipality'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.municipality.id', class:'form-control', id:'municipality_business_payer', value: payer?.municipality?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerMunicipalities, as: 'municipalityItem'}
-                    #{option municipalityItem?.id}${municipalityItem?.name}#{/option}
-                #{/list}
+                                #{option municipalityItem?.id}${municipalityItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="zone_business">#{required/} &{'quotation.form.client.zone'}</label>
-                <div class="col-sm-8">
-                #{select 'payer.zone.id', class:'form-control', id:'zone_business_payer', value: payer?.zone?.id}
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="zone_business">#{required/} &{'quotation.form.client.zone'}</label>
+                        <div class="col-sm-8">
+                            #{select 'payer.zone.id', class:'form-control', id:'zone_business_payer', value: payer?.zone?.id}
 							#{option}&{'form.select'}#{/option}
 							#{list items: payerZones, as: 'zoneItem'}
-                    #{option zoneItem?.id}${zoneItem?.name}#{/option}
-                #{/list}
+                                #{option zoneItem?.id}${zoneItem?.name}#{/option}
+                            #{/list}
 						#{/select}
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber1'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="payer_phoneNumber1_business">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="payer_phoneNumber1_business" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerBussinessPhoneNumberLbl"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber1'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="payer_phoneNumber1_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="payer_phoneNumber1_business" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerBussinessPhoneNumberLbl"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber2'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="payer_phoneNumber2_business">#{required/} &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="payer_phoneNumber2_business" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerBussinessPhoneNumberLb2"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber2'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="payer_phoneNumber2_business">#{required/} &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="payer_phoneNumber2_business" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerBussinessPhoneNumberLb2"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
-            </div>
-            <div class="col-sm-6">
-            #{field 'payer.phoneNumber3'}
-              <div class="form-group">
-                <label class="col-sm-4 control-label" for="payer_phoneNumber3_business"> &{'quotation.form.business.'+field.name}</label>
-                <div class="col-sm-8">
-                  <input type="text" name="${field.name}" id="payer_phoneNumber3_business" value="${field.value}" class="form-control" maxlength="10"/>
-                    <label id="payerBussinessPhoneNumberLb3"></label>
+                <div class="col-sm-6">
+                    #{field 'payer.phoneNumber3'}
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="payer_phoneNumber3_business"> &{'quotation.form.business.'+field.name}</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="${field.name}" id="payer_phoneNumber3_business" value="${field.value}" class="form-control" maxlength="10"/>
+                                <label id="payerBussinessPhoneNumberLb3"></label>
+                            </div>
+                        </div>
+                    #{/}
                 </div>
-              </div>
-            #{/}
             </div>
-          </div>
 
-          #{include '/Incidents/legalRepresentativePayer.html' /}
+            #{include '/Incidents/legalRepresentativePayer.html' /}
 
-        #{include '/Incidents/payerSelection.html' /}
+            #{include '/Incidents/payerSelection.html' /}
 
-        #{include '/Incidents/clientPayerPEP.html' /}
+            #{include '/Incidents/clientPayerPEP.html' /}
         </div>
-            <div class="row">
-                <div class="col-sm-offset-2 col-3">
-                    #{requiredleyend/}
-                </div>
+        <div class="row">
+            <div class="col-sm-offset-2 col-3">
+                #{requiredleyend/}
             </div>
+        </div>
 
         <div class="row">
-                <div class="col-sm-offset-4 col-sm-2">
-                    <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs" >&{'client.edit.cancel'}</a>
-                </div>
-                <div class="col-sm-2">
-                    <a class="btn btn-primary btn-block" href="@{clienteTab(client.id,incident.id)}" class="btn btn-xs" >&{'client.edit.previous'}</a>
-                </div>
-                #{if incident?.policy == null || incident?.policy.trim() == ''}
-                    #{if incident?.status?.code == 0 || incident?.status?.code == 1 }
-                        <div class="col-sm-2">
-                            <input type="submit" formnovalidate name="accion" id="btnEditPartial" class="btn btn-primary btn-block" value="&{'client.edit.partial'}"/>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.next'}"/>
-                        </div>
-                    #{/if}
-                    #{else}
-                        <div class="col-sm-2">
-                            <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.update'}"/>
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.next'}" />
-                        </div>
-                    #{/else}
+            <div class="col-sm-offset-4 col-sm-2">
+                <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs" >&{'client.edit.cancel'}</a>
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-primary btn-block" href="@{clienteTab(client.id,incident.id)}" class="btn btn-xs" >&{'client.edit.previous'}</a>
+            </div>
+            #{if incident?.policy == null || incident?.policy.trim() == ''}
+                #{if incident?.status?.code == 0 || incident?.status?.code == 1 }
+                    <div class="col-sm-2">
+                        <input type="submit" formnovalidate name="accion" id="btnEditPartial" class="btn btn-primary btn-block" value="&{'client.edit.partial'}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.next'}"/>
+                    </div>
                 #{/if}
+                #{else}
+                    <div class="col-sm-2">
+                        <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.update'}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.next'}" />
+                    </div>
+                #{/else}
+            #{/if}
             #{else}
                 <div class="col-sm-2">
                     <a class="btn btn-primary btn-block" href="@{vehiculoTab(client.id,incident.id)}" class="btn btn-xs" >&{'client.edit.next'}</a>
                 </div>
             #{/else}
-            </div>
+        </div>
 
 
         <input type="hidden" id="country_payer_selection" />
@@ -803,7 +803,7 @@
         <input type="hidden" name="isOldClient" value="${isOldClient}"/>
     </div>
 </div>
-        #{/form}
+#{/form}
 
 #{set 'moreScripts'}
 <script src="@{'/public/javascripts/clientPayer.js'}" type="text/javascript"></script>

@@ -84,7 +84,7 @@ public final class ERConstants {
 	public static final int OUT_OF_LINE_MESSAGE = 12;
 	public static final int ACCESS_TO_CLIENT_DATA = 13;
 
-
+	public static final int FORM_PAYER_PEP = 8;
 
 
 }

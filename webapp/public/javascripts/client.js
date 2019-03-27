@@ -156,10 +156,8 @@ function init(args) {
     $("#country_work").change(refreshDepend);
     $("#country_business").change(refreshDepend);
     $("#country_legal").change(refreshDepend);
-    $("#country_payer").change(refreshDepend);
-    $("#country_work_payer").change(refreshDepend);
-    $("#country_business_payer").change(refreshDepend);
-    $("#country_legal_payer").change(refreshDepend);
+
+
 
     $("#client_licenseNumber").prop('maxlength', 13);
     $("#payer_licenseNumber").prop('maxlength', 13);
