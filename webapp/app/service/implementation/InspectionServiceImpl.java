@@ -74,6 +74,11 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
 				 ER_Incident incident = ER_Incident.find("number = ?", inspectionFinishRequest.getQuotationNumber()).first();
 				 if(incident != null && incident.inspection != null && incident.inspection.id != null) {
                      ER_Inspection inspection = ER_Inspection.findById(incident.inspection.id);
+                     if (inspection.type.code != ERConstants.INSPECTION_TYPE_ADDRESS && inspection.type.code != ERConstants.INSPECTION_TYPE_CENTER) {
+                         inspectionResponse.setSuccess(false);
+                         inspectionResponse.setMessage("La cotización no tiene el tipo de inspección solicitada.");
+                         return inspectionResponse;
+                     }
                      inspection.inspected = true;
                      inspection.inspectionNumber = inspectionFinishRequest.getInspectionNumber();
                      inspection.existentDamage = inspectionFinishRequest.getExistentDamage();
@@ -269,6 +274,11 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
             ER_Incident incident = ER_Incident.find("inspection.inspectionNumber = ?", inspectionFinishRequest.getInspectionNumber()).first();
             if(incident != null ) {
                 ER_Inspection inspection = incident.inspection;
+                if (inspection.type.code != ERConstants.INSPECTION_TYPE_AUTO) {
+                    inspectionResponse.setSuccess(false);
+                    inspectionResponse.setMessage("La cotización no tiene el tipo de inspección solicitada.");
+                    return inspectionResponse;
+                }
                 inspection.inspected = true;
                 inspection.inspectionDate = new Date();
                 incident.inspection = inspection.save();

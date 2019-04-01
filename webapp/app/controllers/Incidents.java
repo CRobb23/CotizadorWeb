@@ -610,9 +610,6 @@ public class Incidents extends AdminBaseController {
 	        		}
         		}
 
-				// check for auto inspection
-
-
 				incident.policyValidity = policyValidity;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
@@ -644,9 +641,9 @@ public class Incidents extends AdminBaseController {
 									currentInspection.save();
 									incident.save();
 								}
-							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
+							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO && StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
 								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
-            				} else {
+            				} else if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
 
             				}
@@ -686,10 +683,12 @@ public class Incidents extends AdminBaseController {
         		incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
         		if(noSaleReason != null){
         			reason = ER_Declined_Sell_Reason.findById(noSaleReason);
-        		}
-        		validation.required("noSaleReason", reason);
-        	}
-        	validation.required("state", incidentStatus);
+        		} else {
+					validation.required("noSaleReason", reason);
+				}
+        	} else {
+				validation.required("state", incidentStatus);
+			}
     	}
     	
     	if(validation.hasErrors()){
@@ -705,7 +704,7 @@ public class Incidents extends AdminBaseController {
             		incident.status.code.equals(ERConstants.INCIDENT_STATUS_INSPECTION) ||
                     incident.status.code.equals(ERConstants.INCIDENT_STATUS_COMPLETED ) ||
 					(incident.status.code.equals(ERConstants.INCIDENT_STATUS_INCOMPLETE) && StringUtil.isNullOrBlank(inspectionNumber))){
-    				
+
 	    			String[] livianos = new String[]{"01", "03", "05", "08", "09", "13", "16", "17"};
 	    			String[] pesados = new String[]{"02", "06", "10", "11", "12", "14", "19", "20", "21", "22", "23"};
 	    			String[] motos = new String[]{"04", "07", "18"};
@@ -741,7 +740,7 @@ public class Incidents extends AdminBaseController {
 	    				if(inspectionType == ERConstants.INSPECTION_TYPE_ADDRESS){
 	    					inspectionInfo.address = inspectionAddress;
 	    					inspectionInfo.appointmentDate = appointmentDate;
-	    					
+
 	    					inspectionR.setAddress(inspectionAddress);
 	    					inspectionR.setDate(DateHelper.formatDate(appointmentDate, "dd/MM/yyyy HH:mm:ss"));
 	    					inspectionR.setQuotationNumber(incident.number);
@@ -767,7 +766,7 @@ public class Incidents extends AdminBaseController {
                                 incident.save();
                                 attendIncident(id);
 	    					}
-	
+
 	    					Mails.addressInspection(incident, inspectionInfo);
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_CENTER){
 	    					inspectionR.setInspectionLocation("CENTRO_ATENCION");
@@ -794,7 +793,7 @@ public class Incidents extends AdminBaseController {
                                 incident.save();
 	    						attendIncident(id);
 	    					}
-	    					
+
 	    					Mails.centersList(incident);
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_SELLER){
 	    					inspectionInfo.inspectionNumber = inspectionNumber;
@@ -878,24 +877,23 @@ public class Incidents extends AdminBaseController {
 	    			}
 	    			incident.inspection = inspectionInfo;
     			}
-    			
-    			if(incidentStatus.code == ERConstants.INCIDENT_STATUS_ANULLED || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
-    				incident.finalizedDate = new Date();
-	    			incident.finalizer = connectedUser();
 
-	    			incident.completeTasks();
-    			}
-    			if(incidentStatus.code == ERConstants.INCIDENT_STATUS_INSPECTION || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
-    				incident.saleDate = new Date();
-    			}
-    			incident.status = incidentStatus;
-    			incident.declinedReason = reason;
-    			incident.selectedQuotation = quotation;
-    			incident.selectedPaymentFrecuency = frecuency;
+    			if (incidentStatus != null) {
+					if(incidentStatus.code == ERConstants.INCIDENT_STATUS_ANULLED || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
+						incident.finalizedDate = new Date();
+						incident.finalizer = connectedUser();
 
+						incident.completeTasks();
+					}
+					if(incidentStatus.code == ERConstants.INCIDENT_STATUS_INSPECTION || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
+						incident.saleDate = new Date();
+					}
+					incident.status = incidentStatus;
+				}
+				incident.declinedReason = reason;
+				incident.selectedQuotation = quotation;
+				incident.selectedPaymentFrecuency = frecuency;
 				incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
-
-
     			incident.save();
     			
     			//Generar resguardo
