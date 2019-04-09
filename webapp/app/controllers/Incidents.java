@@ -70,6 +70,8 @@ public class Incidents extends AdminBaseController {
 	static PersonQueryWebService personServiceBus;
 	@Inject
 	static BusinessQueryWebService businessServiceBus;
+	@Inject
+	static JsonService jsonService;
 
 	public static Long dailyCorrelativeNumber;
 	public static Map<String,String> searchFields;
@@ -2925,7 +2927,8 @@ public class Incidents extends AdminBaseController {
 				transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
 				if(!transaction.complete){
 					BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-					transaction.updateFromResponse(policyService.sendBusinessClient(businessClientRequest));
+					BusinessClientResponse response = policyService.sendBusinessClient(businessClientRequest);
+					transaction.updateFromResponse(response, jsonService.toJson(response));
 					if(!transaction.complete){
 						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 						incident.merge();
@@ -2945,7 +2948,8 @@ public class Incidents extends AdminBaseController {
 				transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
 				if(!transaction.complete){
 					PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-					transaction.updateFromResponse(policyService.sendPersonClient(personClientRequest));
+					PersonClientResponse response = policyService.sendPersonClient(personClientRequest);
+					transaction.updateFromResponse(response, jsonService.toJson(response));
 					if(!transaction.complete){
 						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 						incident.merge();
@@ -2965,7 +2969,8 @@ public class Incidents extends AdminBaseController {
 
 			transaction = incident.getTransaction(PayerRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataPayer(createRequestService.createPayerRequest(incident)));
+				PayerResponse response = policyService.sendDataPayer(createRequestService.createPayerRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -2984,7 +2989,8 @@ public class Incidents extends AdminBaseController {
 
 			transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
+				VehicleResponse response = policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -3001,11 +3007,11 @@ public class Incidents extends AdminBaseController {
 				}
 			}
 
-			PolicyResponse policyResponse = null;
+			PolicyResponse policyResponse;
 			transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
 			if(!transaction.complete){
 				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
-				transaction.updateFromResponse(policyResponse);
+				transaction.updateFromResponse(policyResponse, jsonService.toJson(policyResponse));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -3020,11 +3026,18 @@ public class Incidents extends AdminBaseController {
 					incident.save();
 					incidentDetail(incident.id);
 				}
+			} else {
+				if (transaction.xml.startsWith("<")) {
+					policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+				} else {
+					policyResponse = (PolicyResponse) jsonService.getAsJson(transaction.xml, PolicyResponse.class);
+				}
 			}
 
 			transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
+				CoveragesResponse response = policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -3043,7 +3056,8 @@ public class Incidents extends AdminBaseController {
 
 			transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
+				PrimeResponse response = policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -3062,7 +3076,8 @@ public class Incidents extends AdminBaseController {
 
 			transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
+				PaymentMethodResponse response = policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
@@ -3080,8 +3095,9 @@ public class Incidents extends AdminBaseController {
 			}
 
 			transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
+			if(!transaction.complete) {
+				WorkFlowResponse response = policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
 					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();

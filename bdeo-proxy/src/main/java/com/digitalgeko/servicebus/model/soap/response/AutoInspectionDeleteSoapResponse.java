@@ -14,11 +14,6 @@ public class AutoInspectionDeleteSoapResponse {
     @XmlElement(name = "id")
     private String id;
 
-    public AutoInspectionDeleteSoapResponse(String message, String id) {
-        this.message = message;
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
     }

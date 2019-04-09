@@ -97,8 +97,10 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             // Convert SOAP to JSON, call BDEO, return message
             AutoInspectionDeleteSoapRequest soapRequest = (AutoInspectionDeleteSoapRequest) fromSOAP(soapMessage, AutoInspectionDeleteSoapRequest.class);
             bdeoServiceRestOutbound.deleteAutoInspection(login(), soapRequest.getId());
-            String soapResponse = toSOAP(new AutoInspectionDeleteSoapResponse("SATISFACTORIO", soapRequest.getId()));
-            return soapResponse;
+            AutoInspectionDeleteSoapResponse soapResponse = new AutoInspectionDeleteSoapResponse();
+            soapResponse.setId(soapRequest.getId());
+            soapResponse.setMessage("SATISFACTORIO");
+            return toSOAP(soapResponse);
         } catch (ConvertException e) {
             log.error(e.getMessage(), e);
             return e.getMessage();
@@ -138,8 +140,10 @@ public class BdeoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             AutoInspectionUpdateSoapRequest soapRequest = (AutoInspectionUpdateSoapRequest) fromSOAP(soapMessage, AutoInspectionUpdateSoapRequest.class);
             String restMessage = fromSOAPtoJSON(soapMessage, AutoInspectionUpdateSoapRequest.class, AutoInspectionUpdateRestRequest.class);
             bdeoServiceRestOutbound.updateAutoInspection(login(), soapRequest.getId(), restMessage);
-            String soapResponse = toSOAP(new AutoInspectionUpdateSoapResponse("SATISFACTORIO", soapRequest.getId()));
-            return soapResponse;
+            AutoInspectionUpdateSoapResponse soapResponse = new AutoInspectionUpdateSoapResponse();
+            soapResponse.setId(soapRequest.getId());
+            soapResponse.setMessage("SATISFACTORIO");
+            return toSOAP(soapResponse);
         } catch (ConvertException e) {
             log.error(e.getMessage(), e);
             return e.getMessage();

@@ -14,11 +14,6 @@ public class AutoInspectionUpdateSoapResponse {
     @XmlElement(name = "id")
     private String id;
 
-    public AutoInspectionUpdateSoapResponse(String message, String id) {
-        this.message = message;
-        this.id = id;
-    }
-
     public String getMessage() {
         return message;
     }

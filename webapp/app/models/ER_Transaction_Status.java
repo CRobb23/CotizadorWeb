@@ -46,9 +46,9 @@ public class ER_Transaction_Status extends Model {
 		transactionDate = new Date();
 	}
 
-	public void updateFromResponse(Object response){
+	public void updateFromResponse(Object response, String json){
 		BaseResponse baseResponse = (BaseResponse) response;
-		xml = "";
+		xml = json;
 		message = baseResponse.getMessage();
 		complete = baseResponse.isSuccessful();
 	}
@@ -59,7 +59,7 @@ public class ER_Transaction_Status extends Model {
 		}
 		return null;
 	}
-	
+
 	public String getXMLFromObject(Object obj){
 		if(obj != null){
 			xml =  XmlMarshalUtil.toXml(obj.getClass(), obj);
