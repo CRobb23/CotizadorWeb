@@ -1,27 +1,18 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaVehiculo")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryVehicleRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 710;
-	
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="numeroPlaca")
+	@Expose
 	private String plate;
-	@XmlElement(name="numeroChassis")
+	@Expose
 	private String chassis;
-	@XmlElement(name="marcaLinea")
+	@Expose
 	private String line;
-	@XmlElement(name="modeloVehiculo")
+	@Expose
 	private String yearVehicle;
 	
 	public String getCurrency() {

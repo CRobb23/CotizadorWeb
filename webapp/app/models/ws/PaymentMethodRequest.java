@@ -1,37 +1,30 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="mediosdePago")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentMethodRequest {
-	
-	@XmlTransient
-	public static final Integer TRANSACTION = 755;
 
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 755;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="medioCobro")
+	@Expose
 	private String paymentMethod;
-	@XmlElement(name="numeroCuentaTarjeta")
+	@Expose
 	private String cardNumber;
-	@XmlElement(name="tipoCuentaTarjeta")
+	@Expose
 	private String cardType;
-	@XmlElement(name="codigoCuentaTarjeta")
+	@Expose
 	private String cardCode;
-	@XmlElement(name="claseTarjeta")
+	@Expose
 	private String cardClass;
-	@XmlElement(name="fechaVencimientoTarjeta")
+	@Expose
 	private String cardExpirationDate;
-	@XmlElement(name="numeroCuotas")
+	@Expose
 	private Integer numberInstallments;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="tipoCuentaBancaria")
+	@Expose
 	private String bankAccountType;
 	
 	public String getQuoteNumber() {

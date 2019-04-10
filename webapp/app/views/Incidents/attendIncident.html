@@ -136,7 +136,7 @@
 						<label class="col-sm-4 control-label"></label>
 						<div class="col-sm-6">
 							<label style="margin-bottom: 0px;">
-								Inspecci&oacute;n N&uacute;mero <span style="font-weight: bold;">${inspectionNumber}</span> Fecha de inspeccion: <span style="font-weight: bold;">${inspectionDate}</span>  Finalizada
+								Inspecci&oacute;n N&uacute;mero <span style="font-weight: bold;">#{if inspectionType == 4}DA-#{/if}${inspectionNumber}</span> #{if inspectionType != 4} Fecha de inspeccion: <span style="font-weight: bold;">${inspectionDate}</span>  Finalizada #{/if}
 							</label>
 						</div>
 					</div>
@@ -301,7 +301,7 @@
 					$("#inspection_address").hide();
 					$("#inspection_number").show();
                     $("#inspection_Date").show();
-				} else {
+                } else {
 					$("#inspection_address").hide();
 					$("#inspection_number").hide();
                     $("#inspection_Date").hide();

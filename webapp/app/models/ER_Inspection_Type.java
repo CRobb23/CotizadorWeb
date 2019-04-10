@@ -20,4 +20,8 @@ public class ER_Inspection_Type extends Model {
 	public int code;
 	
 	public Integer typeOrder;
+
+	public static String getPublicListStr() {
+		return "(1, 2, 4)";
+	}
 }

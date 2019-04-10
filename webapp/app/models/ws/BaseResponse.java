@@ -2,7 +2,6 @@ package models.ws;
 
 public abstract class BaseResponse {
 
-	public abstract Integer getTransaction();
 	public abstract String getMessage();
 	
 	public Boolean isSuccessful(){

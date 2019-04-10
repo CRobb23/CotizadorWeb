@@ -1,25 +1,16 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaCliente")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryClientRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 700;
-	
-	@XmlElement(name="nit")
+	@Expose
 	private String taxNumber;
-	@XmlElement(name="dpi")
+	@Expose
 	private String identificationDocument;
-	@XmlElement(name="passaporte")
+	@Expose
 	private String pasport;
-	@XmlElement(name="nombreCliente")
+	@Expose
 	private String name;
 	
 	public String getTaxNumber() {

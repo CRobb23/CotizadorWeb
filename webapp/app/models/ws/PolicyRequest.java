@@ -1,47 +1,40 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlRootElement(name="datosdePoliza")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PolicyRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 730;
-	
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 730;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="fechaCotizacion")
+	@Expose
 	private String quotationDate;
-	@XmlElement(name="zonaEmision")
+	@Expose
 	private String emisionZone;
-	@XmlElement(name="formaPago")
+	@Expose
 	private String paymentMethod;
-	@XmlElement(name="tipoPoliza")
+	@Expose
 	private String typePolicy;
-	@XmlElement(name="tipoProducto")
+	@Expose
 	private String typeProduct;
-	@XmlElement(name="codigoAgente")
+	@Expose
 	private String codeAgent;
-	@XmlElement(name="tipoLinea")
+	@Expose
 	private String typeLine;
-	@XmlElement(name="tipoProduccion")
+	@Expose
 	private String typeProduction;
-	@XmlElement(name="vigenciaDesde")
+	@Expose
 	private String validSice;
-	@XmlElement(name="vigenciaHasta")
+	@Expose
 	private String validUntil;
-	@XmlElement(name="tipoCartera")
+	@Expose
 	private String walletType;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="tasaDescuento")
+	@Expose
 	private BigDecimal discountRate;
 	
 	public String getQuoteNumber() {

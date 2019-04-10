@@ -87,6 +87,7 @@ public class Mails extends Mailer {
             ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(INSPECTION_FINISHED_MAIL));
             String body = mail.body;
             body = body.replace("{NoInspeccion}", incident.inspection.inspectionNumber);
+            body = body.replace("{cliente}", incident.client.getFullName());
 			Future<Boolean> send = send(incident,serverUrl,body);
 			result = send.get();
 		}catch(Exception e){

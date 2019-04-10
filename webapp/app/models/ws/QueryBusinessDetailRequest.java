@@ -1,17 +1,12 @@
 package models.ws;
 
-import javax.xml.bind.annotation.*;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaDatosClienteEmpresarial")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryBusinessDetailRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 780;
-
-    @XmlElement(name="codigoCliente")
+    @Expose
     private String clientCode;
-    @XmlElement(name="cifCliente")
+    @Expose
     private String clientCif;
 
 

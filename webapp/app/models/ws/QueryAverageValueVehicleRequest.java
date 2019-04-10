@@ -1,25 +1,16 @@
 package models.ws;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import com.google.gson.annotations.Expose;
 
-@XmlRootElement(name="consultaValorPromedioVehiculo")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class QueryAverageValueVehicleRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 705;
-	
-	@XmlElement(name="marca")
+	@Expose
 	private String brand;
-	@XmlElement(name="linea")
+	@Expose
 	private String line;
-	@XmlElement(name="ano")
+	@Expose
 	private String year;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
 	
 	public String getBrand() {

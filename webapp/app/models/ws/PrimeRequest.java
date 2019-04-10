@@ -1,62 +1,52 @@
 package models.ws;
 
+import com.google.gson.annotations.Expose;
+
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlRootElement(name="listaPrima")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PrimeRequest {
 
-	@XmlTransient
-	public static final Integer TRANSACTION = 745;
-	
-	@XmlElement(name="numeroCotizacion")
+	public static final int TRANSACTION = 745;
+
+	@Expose
 	private String quoteNumber;
-	@XmlElement(name="moneda")
+	@Expose
 	private String currency;
-	@XmlElement(name="ramo")
+	@Expose
 	private String branch;
-	@XmlElement(name="poliza")
+	@Expose
 	private String policy;
-	@XmlElement(name="flgsuma")
+	@Expose
 	private String flgsuma;
-	@XmlElement(name="frecuenciaPago")
+	@Expose
 	private Integer frequencyPayment;
-	@XmlElement(name="totalSumaAsegurada")
+	@Expose
 	private BigDecimal totalSumInsured;
-	@XmlElement(name="totalPrima")
+	@Expose
 	private BigDecimal totalPrime;
-	@XmlElement(name="totalAsistenciaVial")
+	@Expose
 	private BigDecimal totalRoadAssistance;
-	@XmlElement(name="totalNumeroPagos")
+	@Expose
 	private Integer totalNumberPayments;
-	
-	@XmlElementWrapper(name="lista")
-    @XmlElement(name="primas")
+
+	@Expose
 	private List<Prime> primes;
 	
-	@XmlAccessorType(XmlAccessType.FIELD)
-    public static class Prime{
-		@XmlElement(name="numeroPago")
+	public static class Prime{
+		@Expose
 		private Integer numberPayment;
-		@XmlElement(name="sumaasegurada")
+		@Expose
 		private BigDecimal sumAssured;
-		@XmlElement(name="primaNeta")
+		@Expose
 		private BigDecimal netPrime;
-		@XmlElement(name="derechosEmision")
+		@Expose
 		private BigDecimal emissionRihts;
-		@XmlElement(name="recargos")
+		@Expose
 		private BigDecimal surcharges;
-		@XmlElement(name="asisto")
+		@Expose
 		private BigDecimal iAttend;
-		@XmlElement(name="iva")
+		@Expose
 		private BigDecimal iva;
 		
 		public Integer getNumberPayment() {

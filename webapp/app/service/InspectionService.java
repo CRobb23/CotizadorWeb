@@ -1,8 +1,6 @@
 package service;
 
-import models.ws.rest.Inspection;
-import models.ws.rest.InspectionBrokerResponse;
-import models.ws.rest.InspectionResponse;
+import models.ws.rest.*;
 
 public interface InspectionService {
 
@@ -13,5 +11,9 @@ public interface InspectionService {
 	InspectionResponse createInspectionBroker(Inspection request);
 
 	InspectionBrokerResponse listExternalBrokers();
+
+	InspectionAutoResponse finishAutoInspection(String body);
+
+	InspectionAutoResponse createAutoInspection(InspectionAutoRequest request);
 
 }
