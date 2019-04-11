@@ -3,7 +3,11 @@ package controllers;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Date;
+
+import models.ER_User;
+import play.Logger;
 import play.Play;
+import play.i18n.Messages;
 import play.mvc.*;
 import play.data.validation.*;
 import play.libs.*;
@@ -12,7 +16,7 @@ import utils.StringUtil;
 
 public class Secure extends Controller {
 
-    @Before(unless={"login", "authenticate", "logout", "logoutByForce"})
+    @Before(unless={"login", "authenticate", "logout", "logoutByForce","closeSession","forceCloseSession"})
     static void checkAccess() throws Throwable {
         // Check if username and token is present
         if(!session.contains("username") || !session.contains("token")) {
@@ -52,7 +56,7 @@ public class Secure extends Controller {
         for(String profile : check.value()) {
             boolean hasProfile = (Boolean)Security.invoke("check", profile);
             if(hasProfile) {
-               return; 
+                return;
             }
         }
         Security.invoke("onCheckFailed", "");
@@ -78,6 +82,35 @@ public class Secure extends Controller {
         render();
     }
 
+    public static void closeSession(String userName) throws Throwable {
+        renderArgs.put("userName", userName);
+        render();
+    }
+
+    public static void forceCloseSession(String userName) throws Throwable {
+
+        try
+        {
+            ER_User user = ER_User.find("byEmail", userName).first();
+            if (user!=null) {
+                user.token = null;
+                user.save();
+                flash.success("Se cerró sesión en el otro dispositivo con éxito, por favor ingresa nuevamente en este dispositivo.");
+                login();
+            }
+            else{
+                flash.error("Credenciales invalidas, no es posible cerrar sesión en el otro dispositivo");
+                closeSession(userName);
+            }
+        }
+        catch ( Exception ex )
+        {
+            flash.error(Messages.get("user.edit.error"));
+            Logger.error(ex,"close session user");
+            login();
+        }
+    }
+
     public static void authenticate(@Required String username, String password) throws Throwable {
         // Check tokens
         String allowed = (String)Security.invoke("authenticate", username, password);
@@ -90,23 +123,32 @@ public class Secure extends Controller {
         }
 
         if(!allowed.equals("true")) {
-            flash.keep("url");
-            flash.error(allowed);
-            params.flash();
-            login();
+            if(allowed.equals("token"))
+            {
+                closeSession(username);
+            }
+            else {
+                flash.keep("url");
+                flash.error(allowed);
+                params.flash();
+                login();
+            }
         }
-
-        String token = (String) Security.invoke("generateToken", username);
-        // Mark user as connected
-        session.put("username", username);
-        session.put("token", token);
-        // If here, update timestamp
-        String userTime = (String) Security.invoke("userTime");
-        session.put("usertime", userTime);
-        response.setCookie("auth", username, "5d");
-        // Redirect to the original URL (or /)
-        redirectToOriginalURL();
+        else {
+            String token = (String) Security.invoke("generateToken", username);
+            // Mark user as connected
+            session.put("username", username);
+            session.put("token", token);
+            // If here, update timestamp
+            String userTime = (String) Security.invoke("userTime");
+            session.put("usertime", userTime);
+            response.setCookie("auth", username, "5d");
+            // Redirect to the original URL (or /)
+            redirectToOriginalURL();
+        }
     }
+
+
 
     public static void logout() throws Throwable {
         Security.invoke("onDisconnect");
@@ -138,7 +180,7 @@ public class Secure extends Controller {
 
         /**
          * @Deprecated
-         * 
+         *
          * @param username
          * @param password
          * @return
@@ -162,7 +204,7 @@ public class Secure extends Controller {
 
         /**
          * This method checks that a profile is allowed to view this page/method. This method is called prior
-         * to the method's controller annotated with the @Check method. 
+         * to the method's controller annotated with the @Check method.
          *
          * @param profile
          * @return true if you are allowed to execute this controller method.
@@ -194,14 +236,14 @@ public class Secure extends Controller {
         static void onAuthenticated() {
         }
 
-         /**
+        /**
          * This method is called before a user tries to sign off.
          * You need to override this method if you wish to perform specific actions (eg. Record the name of the user who signed off)
          */
         static void onDisconnect() {
         }
 
-         /**
+        /**
          * This method is called after a successful sign off.
          * You need to override this method if you wish to perform specific actions (eg. Record the time the user signed off)
          */
@@ -250,7 +292,7 @@ public class Secure extends Controller {
         private static Object invoke(String m, Object... args) throws Throwable {
 
             try {
-                return Java.invokeChildOrStatic(Security.class, m, args);       
+                return Java.invokeChildOrStatic(Security.class, m, args);
             } catch(InvocationTargetException e) {
                 throw e.getTargetException();
             }
