@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import jobs.SendQuotationsJob;
 import models.*;
 import models.ws.*;
 import objects.LoJackOptions;
@@ -737,7 +738,10 @@ public class UserCases extends AdminBaseController {
 	    		streamArray.add(quotationPDFData(quotation));
 	    	}
 
-	    	Mails.quotations(incident, streamArray, true);
+			SendQuotationsJob sendQuotationsJob = new SendQuotationsJob(streamArray, incident);
+	    	sendQuotationsJob.now();
+
+	    	//Mails.quotations(incident, streamArray, true);
 	    	
 	    	successful(incident.id);
     	}catch(Exception e){

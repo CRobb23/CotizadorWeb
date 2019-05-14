@@ -13,6 +13,7 @@ import javax.activation.DataSource;
 import javax.mail.internet.InternetAddress;
 
 import models.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.ByteArrayDataSource;
 import org.apache.commons.mail.Email;
@@ -516,6 +517,10 @@ public class Mails extends Mailer {
 			}
 		} catch (Exception e) {
 			Logger.error(e, "Quotations mail user message %s", e.getMessage());
+		} finally {
+			for (ByteArrayOutputStream stream : streamArray) {
+				IOUtils.closeQuietly(stream);
+			}
 		}
 		
 		return result;
