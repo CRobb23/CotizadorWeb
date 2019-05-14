@@ -547,7 +547,7 @@ public class Incidents extends AdminBaseController {
 	    			if (incident.status.code == ERConstants.INCIDENT_STATUS_APPROVED_INSPECTION) {
 	    				if (isApproved == 0) {
 							incident.completeTasks();
-							incident.finalizedDate = new Date();
+
 							incident.finalizer = connectedUser();
 							incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
 							reason = ER_Declined_Sell_Reason.findById(noSaleReason);
@@ -557,7 +557,7 @@ public class Incidents extends AdminBaseController {
 						}
 						else{
 							incident.completeTasks();
-							incident.finalizedDate = new Date();
+
 							incident.finalizer = connectedUser();
 							incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
 							ER_Inspection inspection = ER_Inspection.find("id = ?", incident.inspection.id).first();
@@ -882,7 +882,7 @@ public class Incidents extends AdminBaseController {
 
     			if (incidentStatus != null) {
 					if(incidentStatus.code == ERConstants.INCIDENT_STATUS_ANULLED || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
-						incident.finalizedDate = new Date();
+
 						incident.finalizer = connectedUser();
 
 						incident.completeTasks();
@@ -1328,7 +1328,7 @@ public class Incidents extends AdminBaseController {
 						garanteedValueParam = currentConfiguration.garanteedValueConfig.divide(BigDecimal.valueOf(100));
 					}
 
-					if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
+						if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
 						quotation.setGaranteedValue(Boolean.TRUE);
 					} else {
 						if (queryAverage.getAverageValue() != null) {
@@ -1917,6 +1917,11 @@ public class Incidents extends AdminBaseController {
 				BeanUtils.copyProperties(currentVehicle, vehicle);
 				vehicle.save();
 				String isOldCar;
+				if(vehicle.quotationnNew && !vehicle.isNew){
+					flash.error("No es posible marcar vehiculo como usado ya que en cotización el vehiculo fue marcado como nuevo");
+					vehiculoTab(clientId, incidentId,isOldClient);
+				}
+
 				if(vehicle.isNew){
 					isOldCar = "false";
 				}
@@ -3123,6 +3128,7 @@ public class Incidents extends AdminBaseController {
 				incident.policyFileDownload = Boolean.FALSE;
 			}
 			incident.status = incidentStatus;
+			incident.finalizedDate = new Date();
 			incident.save();
 			//Delete all the exceptions
 			List <ER_Exceptions> Exceptions = ER_Exceptions.find("quotation_Id = ?", incident.selectedQuotation.getId()).fetch();

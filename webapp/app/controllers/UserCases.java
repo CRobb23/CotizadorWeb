@@ -39,6 +39,7 @@ import service.InsurableVehicleQueryWebService;
 import service.PolicyService;
 import utils.StringUtil;
 
+
 @With(Secure.class)
 public class UserCases extends AdminBaseController {
 	
@@ -220,6 +221,10 @@ public class UserCases extends AdminBaseController {
     	
     	ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
     	vehicle.plate = vehicle.plate.toUpperCase();
+
+		if(vehicle.quotationnNew){
+			vehicle.isNew = true;
+		}
 		incident.vehicle = vehicle;
 		//associate inspection with incident
 		if(inspection!=null)
@@ -384,9 +389,12 @@ public class UserCases extends AdminBaseController {
 						BigDecimal lowerValue = incident.vehicle.averageValue.multiply(min);
 						BigDecimal upperValue = incident.vehicle.averageValue.multiply(max);
 						// car value within
-						if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
-							validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+						if(!incident.vehicle.quotationnNew) {
+							if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
+								validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+							}
 						}
+
 					}
 					if ( quotation.carValue != null) {
 						//Checks lower and higher range
@@ -737,7 +745,10 @@ public class UserCases extends AdminBaseController {
 	    		streamArray.add(quotationPDFData(quotation));
 	    	}
 
-	    	Mails.quotations(incident, streamArray, true);
+
+
+
+	    	//Mails.quotations(incident, streamArray, true);
 	    	
 	    	successful(incident.id);
     	}catch(Exception e){

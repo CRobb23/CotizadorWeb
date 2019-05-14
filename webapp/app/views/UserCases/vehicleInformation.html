@@ -144,6 +144,24 @@
 				</div>
 				#{/}
 			</div>
+
+            <div class="col-sm-6">
+                #{field 'vehicle.quotationnNew'}
+                    <div class="form-group ${field.error?'has-error':''}">
+                        <label class="col-sm-4 control-label" for="${field.id}">#{required/} Vehiculo es nuevo y posee factura</label>
+                        <div class="col-sm-6">
+                            <label class="radio-inline">
+                                <input type="radio" value="true" name="${field.name}" id="alreadyInsured" ${(field.flash  == "true")?'checked':''}/>
+                            &{'form.yes'}
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="false" name="${field.name}" id="alreadyInsured" ${(field.flash == "false" || field.flash == null)?'checked':''} />
+                            &{'form.no'}
+                            </label>
+                        </div>
+                    </div>
+                #{/}
+            </div>
 		</div>
 		
 		<br>
