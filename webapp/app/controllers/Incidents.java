@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.inject.Inject;
+import jobs.*;
 import models.*;
 import models.dto.BusinessDetailDTO;
 import models.dto.PersonDetailDTO;
@@ -769,7 +770,9 @@ public class Incidents extends AdminBaseController {
                                 attendIncident(id);
 	    					}
 
-	    					Mails.addressInspection(incident, inspectionInfo);
+	    					//Mails.addressInspection(incident, inspectionInfo);
+							SendAddressInspectionJob sendAddressInspectionJob = new SendAddressInspectionJob(incident, inspectionInfo);
+							sendAddressInspectionJob.now();
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_CENTER){
 	    					inspectionR.setInspectionLocation("CENTRO_ATENCION");
 	    					inspectionR.setInspectionType(inspectionTypeEnum);
@@ -796,7 +799,9 @@ public class Incidents extends AdminBaseController {
 	    						attendIncident(id);
 	    					}
 
-	    					Mails.centersList(incident);
+	    					//Mails.centersList(incident);
+							SendCenterListJob sendCenterListJob = new SendCenterListJob(incident);
+	    					sendCenterListJob.now();
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_SELLER){
 	    					inspectionInfo.inspectionNumber = inspectionNumber;
 	    				//	inspectionInfo.inspectionDate = new Date();
@@ -1040,7 +1045,9 @@ public class Incidents extends AdminBaseController {
                             incident.save();
 							attendIncident(id);
 						}
-						Mails.addressInspection(incident, inspectionInfo);
+						//Mails.addressInspection(incident, inspectionInfo);
+						SendAddressInspectionJob sendAddressInspectionJob = new SendAddressInspectionJob(incident, inspectionInfo);
+						sendAddressInspectionJob.now();
 					}else if(inspectionType == ERConstants.INSPECTION_TYPE_CENTER){
 						inspectionR.setInspectionLocation("CENTRO_ATENCION");
 						inspectionR.setInspectionType(inspectionTypeEnum);
@@ -1057,7 +1064,9 @@ public class Incidents extends AdminBaseController {
                             incident.save();
 							attendIncident(id);
 						}
-						Mails.centersList(incident);
+						//Mails.centersList(incident);
+						SendCenterListJob sendCenterListJob = new SendCenterListJob(incident);
+						sendCenterListJob.now();
 					}
 					inspectionInfo.incident = incident;
 					inspectionInfo = inspectionInfo.save();
@@ -1097,7 +1106,8 @@ public class Incidents extends AdminBaseController {
 		ReminderHelper.createReminderForGuard(guard);
 		
 		//Send email to client
-		Mails.generatedGuard(guard);
+		SendGuardJob sendGuardJob = new SendGuardJob(guard);
+		//Mails.generatedGuard(guard);
     	
     }
     
@@ -1447,12 +1457,16 @@ public class Incidents extends AdminBaseController {
 			List<ByteArrayOutputStream> streamArray = new ArrayList<ByteArrayOutputStream>();
 			streamArray.add(quotationPDFData(quotation));
 
-			boolean result = Mails.quotations(incident, streamArray, true);
-			Mails.incidentDetail(incident);
-			if (!result) {
+			//boolean result = Mails.quotations(incident, streamArray, true);
+			SendQuotationsJob sendQuotationsJob = new SendQuotationsJob(streamArray, incident);
+			sendQuotationsJob.now();
+			SendIncidentDetailJob sendIncidentDetailJob = new SendIncidentDetailJob(incident);
+			sendIncidentDetailJob.now();
+			//Mails.incidentDetail(incident);
+			/*if (!result) {
 				flash.put("incident.quotation.send.warning", Messages.get("incident.quotation.send.warning"));
 				incidentDetail(incident.id);
-			}
+			}/
 
 			flash.success(Messages.get("incident.quotation.send.success"));
 			incidentDetail(incident.id);

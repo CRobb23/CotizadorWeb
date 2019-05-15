@@ -7,7 +7,7 @@ import models.*;
 import models.ws.rest.*;
 
 import com.google.gson.Gson;
-
+import jobs.SendInspectionJob;
 import helpers.ERConstants;
 import notifiers.Mails;
 import play.Logger;
@@ -20,6 +20,7 @@ import service.JsonService;
 import utils.StringUtil;
 
 import javax.inject.Inject;
+
 
 @InjectSupport
 public class InspectionServiceImpl extends ExternalJsonAbstractService implements InspectionService{
@@ -196,8 +197,9 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
                         incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
                     }
 					 incident.save();
-					 
-					 Mails.finishInspection(incident);
+					 SendInspectionJob sendInspectionJob = new SendInspectionJob(incident);
+					 sendInspectionJob.now();
+					 //Mails.finishInspection(incident);
 					 
 					 inspectionResponse.setSuccess(true);
 					 inspectionResponse.setMessage("Satisfactorio");
@@ -291,7 +293,9 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
                     incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
                 }
                 incident.save();
-                Mails.finishInspection(incident);
+                SendInspectionJob sendInspection = new SendInspectionJob(incident);
+                sendInspection.now();
+                //Mails.finishInspection(incident);
                 inspectionResponse.setSuccess(true);
                 inspectionResponse.setMessage("SATISFACTORIO");
             } else {
