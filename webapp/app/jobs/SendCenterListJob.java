@@ -8,13 +8,13 @@ import play.jobs.Job;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-public class SencCenterListJob extends Job {
+public class SendCenterListJob extends Job {
 
 
 	private ER_Incident incident;
 
 
-	public SencCenterListJob( ER_Incident incident) {
+	public SendCenterListJob( ER_Incident incident) {
 
 		this.incident = incident;
 	}

@@ -1,5 +1,6 @@
 package jobs;
 
+import models.ER_Guard;
 import models.ER_Incident;
 import models.ER_Inspection;
 import notifiers.Mails;

@@ -1466,7 +1466,7 @@ public class Incidents extends AdminBaseController {
 			/*if (!result) {
 				flash.put("incident.quotation.send.warning", Messages.get("incident.quotation.send.warning"));
 				incidentDetail(incident.id);
-			}/
+			}*/
 
 			flash.success(Messages.get("incident.quotation.send.success"));
 			incidentDetail(incident.id);
@@ -2706,10 +2706,13 @@ public class Incidents extends AdminBaseController {
 	    			List<ByteArrayOutputStream> streamArray = new ArrayList<ByteArrayOutputStream>();
 	    			streamArray.add(quotationPDFData(quotation));
 		    	
-	    			boolean result = Mails.quotations(incident, streamArray, false);
-	    			if (result) {
+	    			//boolean result = Mails.quotations(incident, streamArray, false);
+	    			SendQuotationsJob resendQuotationJob = new SendQuotationsJob(streamArray,incident);
+	    			resendQuotationJob.now();
+
+					//if (result) {
 	    				flash.success(Messages.get("incident.quotation.send.success"));
-	    			} else {
+	    			/*} else {
 	    				flash.error(Messages.get("incident.quotation.send.error"));
 						ER_Exceptions exceptions = new ER_Exceptions();
 						exceptions.description = Messages.get("incident.quotation.send.error");
@@ -2717,7 +2720,7 @@ public class Incidents extends AdminBaseController {
 						exceptions.quotation = quotation;
                         exceptions.active = 1;
 						exceptions.save();
-	    			}
+	    			}*/
 	    			incidentDetail(incident.id);
     			}
     		}
@@ -3137,6 +3140,7 @@ public class Incidents extends AdminBaseController {
 				incident.policyFileDownload = Boolean.FALSE;
 			}
 			incident.status = incidentStatus;
+			incident.finalizedDate = new Date();
 			incident.save();
 			//Delete all the exceptions
 			List <ER_Exceptions> Exceptions = ER_Exceptions.find("quotation_Id = ?", incident.selectedQuotation.getId()).fetch();
@@ -3229,8 +3233,11 @@ public class Incidents extends AdminBaseController {
 			currentClient.save();
 
 			//Send success message to client
-			Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
-			flash.put("GeneratePolicySuccess",policyResponse.getPolicy());
+			//Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
+			SendPolicyWelcomeJob sendPolicyWelcomeJob = new SendPolicyWelcomeJob(policyResponse,incident);
+			sendPolicyWelcomeJob.now();
+
+            flash.put("GeneratePolicySuccess",policyResponse.getPolicy());
 			incidentDetail(incident.id);
 		} catch(Exception e){
 			Logger.error(e, e.getMessage());
