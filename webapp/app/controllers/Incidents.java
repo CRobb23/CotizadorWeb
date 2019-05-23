@@ -71,6 +71,8 @@ public class Incidents extends AdminBaseController {
 	@Inject
 	static BusinessQueryWebService businessServiceBus;
 	@Inject
+	static PendingTransactionsQueryWebService PendingTransactionsServiceBus;
+	@Inject
 	static JsonService jsonService;
 
 	public static Long dailyCorrelativeNumber;
@@ -2922,195 +2924,236 @@ public class Incidents extends AdminBaseController {
 			}
 
 			Logger.info("Paso todas las validaciones, Generando POLIZA de verdad.");
+
+			//Verifico Transacciones pendientes
+			QueryPendingTransactionsRequest request = new QueryPendingTransactionsRequest();
+			request.setQuotationNumber(incident.number.toString());
+			request.setCurrency("Q");
+			QueryPendingTransactionsResponse queryAverage = PendingTransactionsServiceBus.pendingTransactionsQuery(request) ;
+
+
+			String cotizacionesPendientes = null;
+			if(queryAverage != null && queryAverage.getPendingNumbers() != null){
+				cotizacionesPendientes = queryAverage.getPendingNumbers();
+				Logger.info("Recibo las transacciones pendientes para el caso: " + incident.number + " las pendientes son:" + cotizacionesPendientes);
+			}
+			else{
+				ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+				flash.error("Error: No es posible conectarse con servicio de AS400.");
+				ER_Exceptions exceptions = new ER_Exceptions();
+				exceptions.description = "Error: No es posible conectarse con servicio de AS400.";
+				exceptions.exceptionDate = new Date();
+				exceptions.quotation = incident.selectedQuotation;
+				exceptions.active = 1;
+				exceptions.save();
+				incident.status = incidentStatusIncomplete;
+				incident.save();
+				incidentDetail(incident.id);
+			}
+			//Termino de recibir las transacciones pendientes
 			ER_Transaction_Status transaction;
+
 			if(incident.client.isIndividual != null && !incident.client.isIndividual){
-				transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
-				if(!transaction.complete){
-					BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-					BusinessClientResponse response = policyService.sendBusinessClient(businessClientRequest);
-					transaction.updateFromResponse(response, jsonService.toJson(response));
-					if(!transaction.complete){
-						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-						incident.merge();
-						flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
-						ER_Exceptions exceptions = new ER_Exceptions();
-						exceptions.description = "DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message;
-						exceptions.exceptionDate = new Date();
-						exceptions.quotation = incident.selectedQuotation;
-						exceptions.active = 1;
-						exceptions.save();
-						incident.status = incidentStatusIncomplete;
-						incident.save();
-						incidentDetail(incident.id);
+				if(cotizacionesPendientes != null && cotizacionesPendientes.contains("720")) {
+					transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
+					if (!transaction.complete) {
+						BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
+						BusinessClientResponse response = policyService.sendBusinessClient(businessClientRequest);
+						transaction.updateFromResponse(response, jsonService.toJson(response));
+						if (!transaction.complete) {
+							ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+							incident.merge();
+							flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
+							ER_Exceptions exceptions = new ER_Exceptions();
+							exceptions.description = "DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message;
+							exceptions.exceptionDate = new Date();
+							exceptions.quotation = incident.selectedQuotation;
+							exceptions.active = 1;
+							exceptions.save();
+							incident.status = incidentStatusIncomplete;
+							incident.save();
+							incidentDetail(incident.id);
+						}
 					}
 				}
 			}else if(incident.client.isIndividual == null || incident.client.isIndividual){
-				transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
-				if(!transaction.complete){
-					PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-					PersonClientResponse response = policyService.sendPersonClient(personClientRequest);
-					transaction.updateFromResponse(response, jsonService.toJson(response));
-					if(!transaction.complete){
-						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-						incident.merge();
-						flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
-						ER_Exceptions exceptions = new ER_Exceptions();
-						exceptions.description = "DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message;
-						exceptions.exceptionDate = new Date();
-						exceptions.quotation = incident.selectedQuotation;
-						exceptions.active = 1;
-						exceptions.save();
-						incident.status = incidentStatusIncomplete;
-						incident.save();
-						incidentDetail(incident.id);
+				if(cotizacionesPendientes != null && cotizacionesPendientes.contains("715")) {
+					transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
+					if (!transaction.complete) {
+						PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
+						PersonClientResponse response = policyService.sendPersonClient(personClientRequest);
+						transaction.updateFromResponse(response, jsonService.toJson(response));
+						if (!transaction.complete) {
+							ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+							incident.merge();
+							flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
+							ER_Exceptions exceptions = new ER_Exceptions();
+							exceptions.description = "DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message;
+							exceptions.exceptionDate = new Date();
+							exceptions.quotation = incident.selectedQuotation;
+							exceptions.active = 1;
+							exceptions.save();
+							incident.status = incidentStatusIncomplete;
+							incident.save();
+							incidentDetail(incident.id);
+						}
 					}
 				}
 			}
 
 			transaction = incident.getTransaction(PayerRequest.TRANSACTION);
-			if(!transaction.complete){
-				PayerResponse response = policyService.sendDataPayer(createRequestService.createPayerRequest(incident));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS PAGADOR -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("725")) {
+				if (!transaction.complete) {
+					PayerResponse response = policyService.sendDataPayer(createRequestService.createPayerRequest(incident));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS PAGADOR -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
+				}
+			}
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("735")) {
+				transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
+				if (!transaction.complete) {
+					VehicleResponse response = policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS VEHICULO -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
 
-			transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
-			if(!transaction.complete){
-				VehicleResponse response = policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS VEHICULO -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-			}
-
-			PolicyResponse policyResponse;
-			transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
-			if(!transaction.complete){
-				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
-				transaction.updateFromResponse(policyResponse, jsonService.toJson(policyResponse));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS POLIZA -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS POLIZA -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-			} else {
-				if (transaction.xml.startsWith("<")) {
-					policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+				PolicyResponse policyResponse = null;
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("730")) {
+				transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
+				if (!transaction.complete) {
+					policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
+					transaction.updateFromResponse(policyResponse, jsonService.toJson(policyResponse));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS POLIZA -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS POLIZA -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				} else {
-					policyResponse = (PolicyResponse) jsonService.getAsJson(transaction.xml, PolicyResponse.class);
+					if (transaction.xml.startsWith("<")) {
+						policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+					} else {
+						policyResponse = (PolicyResponse) jsonService.getAsJson(transaction.xml, PolicyResponse.class);
+					}
 				}
 			}
-
-			transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
-			if(!transaction.complete){
-				CoveragesResponse response = policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS COBERTURAS -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("740")) {
+				transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
+				if (!transaction.complete) {
+					CoveragesResponse response = policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS COBERTURAS -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
-
-			transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
-			if(!transaction.complete){
-				PrimeResponse response = policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS PRIMA -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS PRIMA -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("745")) {
+				transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
+				if (!transaction.complete) {
+					PrimeResponse response = policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS PRIMA -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS PRIMA -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
-
-			transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
-			if(!transaction.complete){
-				PaymentMethodResponse response = policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS FORMA DE PAGO -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("755")) {
+				transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
+				if (!transaction.complete) {
+					PaymentMethodResponse response = policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS FORMA DE PAGO -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
-
-			transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
-			if(!transaction.complete) {
-				WorkFlowResponse response = policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident));
-				transaction.updateFromResponse(response, jsonService.toJson(response));
-				if(!transaction.complete){
-					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-					incident.merge();
-					flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "DATOS WORKFLOW -> AS400: " + transaction.message;
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
+			if(cotizacionesPendientes != null && cotizacionesPendientes.contains("760")) {
+				transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
+				if (!transaction.complete) {
+					WorkFlowResponse response = policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident));
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if (!transaction.complete) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS WORKFLOW -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
 
