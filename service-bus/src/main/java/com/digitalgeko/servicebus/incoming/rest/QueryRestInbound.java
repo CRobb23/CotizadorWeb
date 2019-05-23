@@ -44,4 +44,11 @@ public class QueryRestInbound {
         String response = queryBus.businessDetailQuery(message);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/pendingTransactions")
+    ResponseEntity<String> pendingTransactionsQuery(@RequestBody String message) {
+        String response = queryBus.pendingTransactionsQuery(message);
+        return ResponseEntity.ok(response);
+    }
+
 }

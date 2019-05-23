@@ -92,4 +92,20 @@ public class QueryBusServiceImpl extends AbstractBusServiceImpl implements Query
         }
     }
 
+    @Override
+    public String pendingTransactionsQuery(String message) {
+        try {
+            String soapMessage = fromJSONtoSOAP(message, PendingTransactionsRestRequest.class, PendingTransactionsQuerySoapRequest.class);
+            log.info("Soap message pending transaction >: " + soapMessage);
+            soapMessage = PendingTransactionsQuerySoapRequest.RQ_CODE + soapMessage;
+            String soapResponse = brokerSoapOutbound.sendBrokerMessage(soapMessage);
+            soapResponse = soapResponse.replace(PendingTransactionsQuerySoapRequest.RS_CODE, "");
+            String restResponse = fromSOAPtoJSON(soapResponse, PendingTransactionsQuerySoapResponse.class, PendingTransactionsQueryRestResponse.class);
+            return restResponse;
+        } catch (ConvertException | ConnectionException e) {
+            log.error(e.getMessage(), e);
+            return e.getMessage();
+        }
+    }
+
 }
