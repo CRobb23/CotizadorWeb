@@ -1,0 +1,37 @@
+#{extends 'Secure/layout.html' /}
+<div class="login-page">
+    <div class="topBar text-center">
+        <a href="@{login}"><img src="@{'/public/images/ElRoble.png'}" alt=""/></a>
+    </div>
+    <div class="row">
+    #{form @forceCloseSession(), role:"form"}
+        <div class="col-md-6 col-md-offset-3 mt-4">
+            <div class="well">
+                <div class="text-center ribbon-container">
+                    <h1 class="ribbon-title" style="width:75%">Cerrar Sesión</h1>
+                </div>
+                <hr/>
+                <div class="alert alert-danger">
+                 Usuario tiene abierta sesión en otro dispositivo, por favor presione cerrar sesión para poder ingresar en este dispositivo
+                </div>
+                #{if flash.error}
+                    <div class="alert alert-danger">
+                    &{flash.error}
+                    </div>
+                #{/if}
+                #{if flash.success}
+                    <div class="alert alert-success">
+                    &{flash.success}
+                    </div>
+                #{/if}
+                <input type="hidden" name="userName" value="${userName}"/>
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary btn-block" value="Cerrar Sesión" />
+                </div>
+
+            </div>
+        </div>
+    #{/form}
+    </div>
+</div>
