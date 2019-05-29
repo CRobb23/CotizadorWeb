@@ -5,6 +5,7 @@ import play.Play;
 import play.libs.WS;
 import service.JsonService;
 import utils.StringConstants;
+import utils.StringUtil;
 
 import javax.inject.Inject;
 
@@ -28,6 +29,7 @@ public abstract class ExternalJsonAbstractService {
         WS.WSRequest request = prepareWS(url);
         if (getReqObject() != null) {
             String requestStr = jsonService.toJson(getReqObject());
+            requestStr = StringUtil.escapeXml(requestStr);
             Logger.info("SERVICE BUS REQUEST: " + requestStr);
             request.body(requestStr);
         } else {
@@ -36,6 +38,7 @@ public abstract class ExternalJsonAbstractService {
 
         WS.HttpResponse response = request.post();
         String resStr = response.getString();
+        resStr = StringUtil.escapeXmlResponse(resStr);
         Logger.info("SERVICE BUS RESPONSE: " + resStr);
         if (getResClass() != null) {
             setResObject(jsonService.getAsJson(resStr, getResClass()));
