@@ -1,5 +1,6 @@
 package controllers;
 
+import jobs.ResetPasswordJob;
 import notifiers.Mails;
 import helpers.PasswordMethods;
 import models.ER_User;
@@ -58,13 +59,12 @@ public class AdminPasswordReset extends Controller {
 		String code = PasswordMethods.getCode();
 		user.password = code;
 
+		ResetPasswordJob resetPasswordJob = new ResetPasswordJob(user,code);
+		resetPasswordJob.now();
 		//Send the email to the user
-		if (Mails.passwordReset(user, code)) {
 			user.save();
 			return true;
-		}
-		
-		return false;
+
     }
 
 }
