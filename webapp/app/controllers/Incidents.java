@@ -1250,20 +1250,22 @@ public class Incidents extends AdminBaseController {
 		}
 
 		// Validate if has average value and car value is within parameters
-		if (quotation.incident.vehicle.averageValue != null && quotation.carValue != null) {
-			BigDecimal averageValueParam = new BigDecimal(0.25);
-			ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
-			if (currentConfiguration.averageValueConfig != null) {
-				averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
-			}
-			BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
-			BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
-			// Find lower and upper parameter
-			BigDecimal lowerValue = quotation.incident.vehicle.averageValue.multiply(min);
-			BigDecimal upperValue = quotation.incident.vehicle.averageValue.multiply(max);
-			// car value within
-			if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
-				validation.addError("quotation.carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+		if(!quotation.incident.vehicle.quotationnNew) {
+			if (quotation.incident.vehicle.averageValue != null && quotation.carValue != null) {
+				BigDecimal averageValueParam = new BigDecimal(0.25);
+				ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
+				if (currentConfiguration.averageValueConfig != null) {
+					averageValueParam = currentConfiguration.averageValueConfig.divide(BigDecimal.valueOf(100));
+				}
+				BigDecimal min = BigDecimal.valueOf(1).subtract(averageValueParam);
+				BigDecimal max = BigDecimal.valueOf(1).add(averageValueParam);
+				// Find lower and upper parameter
+				BigDecimal lowerValue = quotation.incident.vehicle.averageValue.multiply(min);
+				BigDecimal upperValue = quotation.incident.vehicle.averageValue.multiply(max);
+				// car value within
+				if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
+					validation.addError("quotation.carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+				}
 			}
 		}
 
@@ -1336,6 +1338,9 @@ public class Incidents extends AdminBaseController {
 							BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
 							BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 							if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+								quotation.setGaranteedValue(Boolean.TRUE);
+							}
+							else if(quotation.incident.vehicle.quotationnNew){
 								quotation.setGaranteedValue(Boolean.TRUE);
 							}
 						}
