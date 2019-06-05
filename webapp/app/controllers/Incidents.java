@@ -897,10 +897,13 @@ public class Incidents extends AdminBaseController {
 					}
 					incident.status = incidentStatus;
 				}
+				if(incident.selectedQuotation!= null) {
+						incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
+				}
 				incident.declinedReason = reason;
 				incident.selectedQuotation = quotation;
 				incident.selectedPaymentFrecuency = frecuency;
-				incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
+
     			incident.save();
     			
     			//Generar resguardo
@@ -909,6 +912,7 @@ public class Incidents extends AdminBaseController {
     			}
     			success = true;
     		}catch(Exception e){
+				finalized(incident.id, success);
     			Logger.error(e, "Error finalizing incident");
     		}
     		
