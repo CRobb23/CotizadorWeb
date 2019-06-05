@@ -168,7 +168,10 @@
 					<td data-title="&{'incidentsList.table.detail'}"><a href="@{incidentDelete(current?.id)}" class="btn btn-xs" onclick="return confirm('¿Seguro que desea eliminar el caso permanentemente?')">&{'incidentsList.table.delete'}</a></td>
 					#{/if}
 				</tr>
+
 			#{/paginate.list}
+			#{paginate.controls items:paginator /}
+
 		</tbody>
 	</table>
 	

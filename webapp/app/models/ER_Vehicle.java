@@ -33,6 +33,8 @@ public class ER_Vehicle extends Model {
 	public Integer numberOfPassengers;
 	public Boolean alreadyInsured;
 
+	public Boolean quotationnNew;
+
 	public Date invoiceDate;
 	
 	/** Fields phase II */
