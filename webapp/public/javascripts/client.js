@@ -1,10 +1,11 @@
 function init(args) {
 
-    $("#Search-message").dialog({
+    $("#busca-dialog").dialog({
         resizable: false,
         height: "auto",
         width: 500,
         modal: true,
+        autoOpen: false,
         buttons: {
             OK: function() {
 
@@ -18,6 +19,7 @@ function init(args) {
         height: "auto",
         width: 500,
         modal: true,
+
         buttons: {
             OK: function() {
 
@@ -25,8 +27,6 @@ function init(args) {
                         }
                     }
                 }).prev(".ui-dialog-titlebar").css("color", "white");
-
-    $("#Alert-message").show();
 
     initValidator();
     $(".typeClient").change(showFieldsClient);
@@ -302,7 +302,7 @@ function personDetails(client) {
 
 function fillPerson(person) {
   console.log("Cargando persona individual: ");
-  $("#Alert-message").show();
+  $("#busca-dialog").dialog('open');
   $("#clienteIndividual").click();
 
   $("#isOldClient").val("true");
@@ -469,7 +469,7 @@ function fillPerson(person) {
 
 function fillBusiness(business) {
   $("#isOldClient").val("true");
-  $("#Alert-message").show();
+  $("#busca-dialog").dialog('open');
   console.log("Cargando persona juridica: ");
   $("#clienteJuridico").click();
 

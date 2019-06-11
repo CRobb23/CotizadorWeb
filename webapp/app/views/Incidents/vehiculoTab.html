@@ -204,7 +204,7 @@
 						<div class="form-group ${field.error?'has-error':''}">
 							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
 							<div class="col-sm-8">
-								<input type="number" name="${field.name}" pattern="\d*" id="${field.id}" value="${field.flash ? field.flash : field.value}" min="1" max="100" class="form-control"/>
+								<input type="number" name="${field.name}" pattern="\d*" id="${field.id}" value="${field.flash ? field.flash : field.value}" min="1" max="35" class="form-control"/>
 							</div>
 						</div>
 					#{/}
