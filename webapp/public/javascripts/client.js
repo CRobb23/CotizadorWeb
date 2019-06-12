@@ -190,6 +190,92 @@ function init(args) {
     addEventSelectDepend("municipality_legal", "zone_legal", args);
 }
 function checkClient() {
+
+	//COLOCA ENABLE
+            $("#client_firstName").prop( "readonly", false );
+            $("#client_secondName").prop( "readonly", false );
+            $("#client_firstSurname").prop( "readonly", false );
+            $("#client_secondSurname").prop( "readonly", false );
+            $("#client_marriedSurname").prop( "readonly", false );
+            $("#client_birthdate").prop( "readonly", false );
+            $("#sex").prop( "readonly", false );
+            $("#profession").prop( "readonly", false );
+            $("#client_passport").prop( "readonly", false );
+            $("#civilStatus").prop( "readonly", false );
+            $("#client_nationality").prop( "readonly", false );
+            $("#client_email").prop( "readonly", false );
+            $("#client_licenseType").prop( "readonly", false );
+            $("#client_licenseNumber").prop( "readonly", false );
+            $("#client_codeCifBank").prop( "readonly", false );
+            $("#client_address").prop( "readonly", false );
+            $("#department_selection").prop( "readonly", false );
+            $("#municipality_selection").prop( "readonly", false );
+            $("#zone_selection").prop( "readonly", false );
+            $("#country").prop( "readonly", false );
+            $("#client_phoneNumber1").prop( "readonly", false );
+            $("#client_phoneNumber2").prop( "readonly", false );
+            $("#client_phoneNumber3").prop( "readonly", false );
+            $("#client_addressWork").prop( "readonly", false );
+            $("#work_department_selection").prop( "readonly", false );
+            $("#work_municipality_selection").prop( "readonly", false );
+            $("#work_zone_selection").prop( "readonly", false );
+            $("#country_work").prop( "readonly", false );
+            $("#client_phoneNumberWork1").prop( "readonly", false );
+            $("#client_phoneNumberWork2").prop( "readonly", false );
+            $("#client_phoneNumberWork3").prop( "readonly", false );
+
+	//Add ENABLE
+            $("#client_codeClient").prop( "readonly", false );
+            $("#client_companyName").prop( "readonly", false );
+            $("#client_businessName").prop( "readonly", false );
+            $("#society_type").prop( "readonly", false );
+            $("#client_economic_activity").prop( "readonly", false );
+            $("#client_nationality").prop( "readonly", false );
+            $("#client_email").prop( "readonly", false );
+            $("#stateProvider").prop( "readonly", false );
+            $("#client_registrationDate").prop( "readonly", false );
+            $("#client_writeNumber").prop( "readonly", false );
+            $("#client_writeDate").prop( "readonly", false );
+            $("#client_codeCifBank").prop( "readonly", false );
+            $("#client_address_business").prop( "readonly", false );
+            $("#department_business_selection").prop( "readonly", false );
+            $("#municipality_business_selection").prop( "readonly", false );
+            $("#zone_business_selection").prop( "readonly", false );
+            $("#country_business").prop( "readonly", false );
+            $("#client_phoneNumber1_business").prop( "readonly", false );
+            $("#client_phoneNumber2_business").prop( "readonly", false );
+            $("#client_phoneNumber3_business").prop( "readonly", false );
+            $("#legalRepresentative_taxNumber").prop( "readonly", false );
+            $("#legalRepresentative_firstName").prop( "readonly", false );
+            $("#legalRepresentative_secondName").prop( "readonly", false );
+            $("#legalRepresentative_firstSurname").prop( "readonly", false );
+            $("#legalRepresentative_secondSurname").prop( "readonly", false );
+            $("#legalRepresentative_marriedSurname").prop( "readonly", false );
+            $("#legalRepresentative_birthdate").prop( "readonly", false );
+            $("#sexRep").prop( "readonly", false );
+            $("#professionRep").prop( "readonly", false );
+            $("#legalRepresentative_identificationDocument").prop( "readonly", false );
+            $("#legalRepresentative_passport").prop( "readonly", false );
+            $("#civilStatusRep").prop( "readonly", false );
+            $("#legal_nationality").prop( "readonly", false );
+            $("#legalRepresentative_email").prop( "readonly", false );
+            $("#legalRepresentative_registry").prop( "readonly", false );
+            $("#legalRepresentative_caseFile").prop( "readonly", false );
+            $("#legalRepresentative_extendedIn").prop( "readonly", false );
+            $("#legalRepresentative_registrationDate").prop( "readonly", false );
+            $("#legalRepresentative_book").prop( "readonly", false );
+            $("#legalRepresentative_folio").prop( "readonly", false );
+            $("#legalRepresentative_address").prop( "readonly", false );
+            $("#department_legal_selection").prop( "readonly", false );
+            $("#municipality_legal_selection").prop( "readonly", false );
+            $("#zone_legal_selection").prop( "readonly", false );
+            $("#country_legal").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber1").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber2").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber3").prop( "readonly", false );
+
+
+
   var taxNumber = "NULL";
   var idNumber = "NULL";
 
@@ -222,6 +308,12 @@ function checkClient() {
 }
 
 function personDetails(client) {
+
+	
+
+	
+
+
   $.ajax({
     url:"/incident/getPersonDetails",
     type:"post",
@@ -233,7 +325,6 @@ function personDetails(client) {
         if (result.responseJSON.person != null) {
             $("#isOldClient").val("true");
             $("#client_nationality").rules("remove","required");
-            $("#client_nationality").disable();
             $("#profession").rules("remove","required");
             $("#client_address").rules("remove","required");
             $("#country").rules("remove","required");
@@ -250,6 +341,7 @@ function personDetails(client) {
             $("#client_phoneNumberWork2").rules("remove","required");
             $("#btnEditPartial").hide();
             fillPerson(result.responseJSON.person);
+
         } else if (result.responseJSON.business != null) {
             $("#isOldClient").val("true");
             $("#client_nationality").rules("remove","required");
@@ -295,6 +387,75 @@ function personDetails(client) {
             $("#btnEditPartial").hide();
             fillBusiness(result.responseJSON.business);
         }
+        else if(result.responseJSON.person == null){
+            $("#isOldClient").val("false");
+            $("#client_nationality").rules("add","required");
+            $("#profession").rules("add","required");
+            $("#client_address").rules("add","required");
+            $("#country").rules("add","required");
+            $("#department").rules("add","required");
+            $("#municipality").rules("add","required");
+            $("#zone").rules("add","required");
+            $("#client_phoneNumber1").rules("add","required");
+            $("#client_phoneNumber2").rules("add","required");
+            $("#client_addressWork").rules("add","required");
+            $("#country_work").rules("add","required");
+            $("#work_department").rules("add","required");
+            $("#work_municipality").rules("add","required");
+            $("#client_phoneNumberWork1").rules("add","required");
+            $("#client_phoneNumberWork2").rules("add","required");
+            $("#btnEditPartial").show();
+            
+
+        }
+        else if(result.responseJSON.business == null){
+            $("#isOldClient").val("false");
+            $("#client_nationality").rules("add","required");
+            $("#client_companyName").rules("add","required");
+            $("#clidoValidationnt_businessName").rules("add","required");
+            $("#society_type").rules("add","required");
+            $("#client_economic_activity").rules("add","required");
+            $("#stateProvider").rules("add","required");
+            $("#client_registrationDate").rules("add","required");
+            $("#client_writeNumber").rules("add","required");
+            $("#client_writeDate").rules("add","required");
+            $("#client_address_business").rules("add","required");
+            $("#country_business").rules("add","required");
+            $("#department_business").rules("add","required");
+            $("#municipality_business").rules("add","required");
+            $("#zone_business").rules("add","required");
+            $("#client_phoneNumber1_business").rules("add","required");
+            $("#client_phoneNumber2_business").rules("add","required");
+            $("#legalRepresentative_taxNumber").rules("add","required");
+            $("#legalRepresentative_firstName").rules("add","required");
+            $("#legalRepresentative_firstSurname").rules("add","required");
+            $("#legalRepresentative_birthdate").rules("add","required");
+            $("#sexRep").rules("add","required");
+            $("#professionRep").rules("add","required");
+            $("#legalRepresentative_identificationDocument").rules("add","required");
+            $("#civilStatusRep").rules("add","required");
+            $("#legal_nationality").rules("add","required");
+            $("#legalRepresentative_email").rules("add","required");
+            $("#legalRepresentative_registry").rules("add","required");
+            $("#legalRepresentative_caseFile").rules("add","required");
+            $("#legalRepresentative_extendedIn").rules("add","required");
+            $("#legalRepresentative_registrationDate").rules("add","required");
+            $("#legalRepresentative_book").rules("add","required");
+            $("#legalRepresentative_folio").rules("add","required");
+            $("#legalRepresentative_address").rules("add","required");
+            $("#country_legal").rules("add","required");
+            $("#department_legal").rules("add","required");
+            $("#zone_legal").rules("add","required");
+            $("#municipality_legal").rules("add","required");
+            $("#legalRepresentative_phoneNumber3").rules("add","required");
+            $("#legalRepresentative_phoneNumber2").rules("add","required");
+            $("#zone_legal").rules("add","required");
+            $("#btnEditPartial").show();
+
+            
+
+        }
+
       }
     }
   });
@@ -313,69 +474,69 @@ function fillPerson(person) {
   }
   if (person.firstName != null) {
       $("#client_firstName").val(person.firstName);
-      $("#client_firstName").prop( "disabled", true );
+      $("#client_firstName").prop( "readonly", true );
   }
   if (person.secondName != null) {
       $("#client_secondName").val(person.secondName);
-      $("#client_secondName").prop( "disabled", true );
+      $("#client_secondName").prop( "readonly", true );
   }
   if (person.firstSurname != null) {
       $("#client_firstSurname").val(person.firstSurname);
-      $("#client_firstSurname").prop( "disabled", true );
+      $("#client_firstSurname").prop( "readonly", true );
   }
   if (person.secondSurname != null) {
       $("#client_secondSurname").val(person.secondSurname);
-      $("#client_secondSurname").prop( "disabled", true );
+      $("#client_secondSurname").prop( "readonly", true );
   }
   if (person.marriedSurname != null) {
       $("#client_marriedSurname").val(person.marriedSurname);
-      $("#client_marriedSurname").prop( "disabled", true );
+      $("#client_marriedSurname").prop( "readonly", true );
   }
   if (person.birthdate != null) {
       $("#client_birthdate").val(person.birthdate);
-      $("#client_birthdate").prop( "disabled", true );
+      $("#client_birthdate").prop( "readonly", true );
   }
   if (person.sex != null) {
       $("#sex").val(person.sex).change();
-      $("#sex").prop( "disabled", true );
+      $("#sex").prop( "readonly", true );
   }
   if (person.profession != null) {
       $("#profession").val(person.profession).change();
-      $("#profession").prop( "disabled", true );
+      $("#profession").prop( "readonly", true );
   }
   if (person.passport != null) {
       $("#client_passport").val(person.passport);
-      $("#client_passport").prop( "disabled", true );
+      $("#client_passport").prop( "readonly", true );
   }
   if (person.civilStatus != null) {
       $("#civilStatus").val(person.civilStatus).change();
-      $("#civilStatus").prop( "disabled", true );
+      $("#civilStatus").prop( "readonly", true );
   }
   if (person.nationality != null) {
       $("#client_nationality").val(person.nationality).change();
-      $("#client_nationality").prop( "disabled", true );
+      $("#client_nationality").prop( "readonly", true );
   }
   if (person.email != null) {
       $("#client_email").val(person.email);
-      $("#client_email").prop( "disabled", true );
+      $("#client_email").prop( "readonly", true );
   }
   if (person.licenseType != null) {
       $("#client_licenseType").val(person.licenseType).change();
-      $("#client_licenseType").prop( "disabled", true );
+      $("#client_licenseType").prop( "readonly", true );
   }
   if (person.licenseNumber != null) {
       $("#client_licenseNumber").val(person.licenseNumber);
-      $("#client_licenseNumber").prop( "disabled", true );
+      $("#client_licenseNumber").prop( "readonly", true );
   }
   if (person.codeCifBank != null) {
       $("#client_codeCifBank").val(person.codeCifBank);
-      $("#client_codeCifBank").prop( "disabled", true );
+      $("#client_codeCifBank").prop( "readonly", true );
   }
   if (person.addressHome != null) {
       $("#client_address").prop("type", "password");
       $("#clientAddressLbl").html(person.addressHome.substring(person.addressHome.length - 15,person.addressHome.length));
       $("#client_address").val(person.addressHome);
-      $("#client_address").prop( "disabled", true );
+      $("#client_address").prop( "readonly", true );
       $("#country").rules("remove","required");
       $("#department").rules("remove","required");
       $("#municipality").rules("remove","required");
@@ -383,19 +544,19 @@ function fillPerson(person) {
   }
   if (person.departmentHome != null) {
       $("#department_selection").val(person.departmentHome);
-      $("#department_selection").prop( "disabled", true );
+      $("#department_selection").prop( "readonly", true );
   }
   if (person.municipalityHome != null) {
       $("#municipality_selection").val(person.municipalityHome);
-      $("#municipality_selection").prop( "disabled", true );
+      $("#municipality_selection").prop( "readonly", true );
   }
   if (person.zoneHome != null) {
       $("#zone_selection").val(person.zoneHome);
-      $("#zone_selection").prop( "disabled", true );
+      $("#zone_selection").prop( "readonly", true );
   }
   if (person.countryHome != null) {
       $("#country_selection").val(person.countryHome);
-      $("#country_selection").prop( "disabled", true );
+      $("#country_selection").prop( "readonly", true );
       $("#country").val(person.countryHome).change();
       $("#country").prop( "disabled", true );
   }
@@ -404,24 +565,24 @@ function fillPerson(person) {
       $("#client_phoneNumber1").prop("type", "password");
       $("#clientPhoneNumberLbl").html(person.phone1Home.substring(person.phone1Home.length - 3,person.phone1Home.length));
       $("#client_phoneNumber1").val(person.phone1Home);
-      $("#client_phoneNumber1").prop( "disabled", true );
+      $("#client_phoneNumber1").prop( "readonly", true );
   }
   if (person.phone2Home != null) {
       $("#client_phoneNumber2").val(person.phone2Home);
       $("#client_phoneNumber2").prop("type", "password");
       $("#clientPhoneNumberLbl2").html(person.phone2Home.substring(person.phone2Home.length - 3,person.phone2Home.length));
-      $("#client_phoneNumber2").prop( "disabled", true );
+      $("#client_phoneNumber2").prop( "readonly", true );
   }
   if (person.phone3Home != null) {
       $("#client_phoneNumber3").val(person.phone3Home);
       $("#client_phoneNumber3").prop("type", "password");
       $("#clientPhoneNumberLbl3").html(person.phone3Home.substring(person.phone3Home.length - 3,person.phone3Home.length));
-      $("#client_phoneNumber3").prop( "disabled", true );
+      $("#client_phoneNumber3").prop( "readonly", true );
   }
   if (person.addressWork != null) {
       $("#client_addressWork").prop("type", "password");
       $("#client_addressWork").val(person.addressWork);
-      $("#client_addressWork").prop( "disabled", true );
+      $("#client_addressWork").prop( "readonly", true );
       $("#clientWorkAddressLbl").html(person.addressWork.substring(person.addressWork.length - 15,person.addressWork.length));
       $("#country_work").rules("remove","required");
       $("#work_department").rules("remove","required");
@@ -431,39 +592,39 @@ function fillPerson(person) {
 
   if (person.departmentWork != null) {
       $("#work_department_selection").val(person.departmentWork);
-      $("#work_department_selection").prop( "disabled", true );
+      $("#work_department_selection").prop( "readonly", true );
   }
   if (person.municipalityWork != null) {
       $("#work_municipality_selection").val(person.municipalityWork);
-      $("#work_municipality_selection").prop( "disabled", true );
+      $("#work_municipality_selection").prop( "readonly", true );
   }
   if (person.zoneWork != null) {
       $("#work_zone_selection").val(person.zoneWork);
-      $("#work_zone_selection").prop( "disabled", true );
+      $("#work_zone_selection").prop( "readonly", true );
   }
   if (person.countryWork != null) {
       $("#country_work_selection").val(person.countryWork);
       $("#country_work").val(person.countryWork).change();
-      $("#country_work").prop( "disabled", true );
+      $("#country_work").prop( "readonly", true );
   }
 
   if (person.phone1Work != null) {
       $("#client_phoneNumberWork1").prop("type", "password");
       $("#clientWorkPhoneNumberLbl").html(person.phone1Work.substring(person.phone1Work.length - 3,person.phone1Work.length));
       $("#client_phoneNumberWork1").val(person.phone1Work);
-      $("#client_phoneNumberWork1").prop( "disabled", true );
+      $("#client_phoneNumberWork1").prop( "readonly", true );
   }
   if (person.phone2Work != null) {
       $("#client_phoneNumberWork2").val(person.phone2Work);
       $("#client_phoneNumberWork2").prop("type", "password");
       $("#clientWorkPhoneNumberLbl2").html(person.phone2Work.substring(person.phone2Work.length - 3,person.phone2Work.length));
-      $("#client_phoneNumberWork2").prop( "disabled", true );
+      $("#client_phoneNumberWork2").prop( "readonly", true );
   }
   if (person.phone3Work != null) {
       $("#client_phoneNumberWork3").val(person.phone3Work);
       $("#client_phoneNumberWork3").prop("type", "password");
       $("#clientWorkPhoneNumberLbl3").html(person.phone3Work.substring(person.phone3Work.length - 3,person.phone3Work.length));
-      $("#client_phoneNumberWork3").prop( "disabled", true );
+      $("#client_phoneNumberWork3").prop( "readonly", true );
   }
 }
 
@@ -477,56 +638,56 @@ function fillBusiness(business) {
   $("#client_identificationDocument").val(business.identificationDocument);
   if (business.codeClient != null) {
       $("#client_codeClient").val(business.codeClient);
-      $("#client_codeClient").prop( "disabled", true );
+      $("#client_codeClient").prop( "readonly", true );
   }
   if (business.companyName != null) {
       $("#client_companyName").val(business.companyName);
-      $("#client_companyName").prop( "disabled", true );
+      $("#client_companyName").prop( "readonly", true );
   }
     if (business.businessName != null) {
         $("#client_businessName").val(business.businessName);
-        $("#client_businessName").prop( "disabled", true );
+        $("#client_businessName").prop( "readonly", true );
     }
     if (business.societyType != null) {
         $("#society_type").val(business.societyType).change();
-        $("#society_type").prop( "disabled", true );
+        $("#society_type").prop( "readonly", true );
     }
     if (business.economicActivity != null) {
         $("#client_economic_activity").val(business.economicActivity).change();
-        $("#client_economic_activity").prop( "disabled", true );
+        $("#client_economic_activity").prop( "readonly", true );
     }
     if (business.nationality != null) {
         $("#client_nationality").val(business.nationality).change();
-        $("#client_nationality").prop( "disabled", true );
+        $("#client_nationality").prop( "readonly", true );
     }
     if (business.email != null) {
         $("#client_email").val(business.email);
-        $("#client_email").prop( "disabled", true );
+        $("#client_email").prop( "readonly", true );
     }
     if (business.stateProvider != null) {
         $("#stateProvider").val(business.stateProvider).change();
-        $("#stateProvider").prop( "disabled", true );
+        $("#stateProvider").prop( "readonly", true );
     }
     if (business.registrationDate != null) {
         $("#client_registrationDate").val(business.registrationDate);
-        $("#client_registrationDate").prop( "disabled", true );
+        $("#client_registrationDate").prop( "readonly", true );
     }
     if (business.writeNumber != null) {
         $("#client_writeNumber").val(business.writeNumber);
-        $("#client_writeNumber").prop( "disabled", true );
+        $("#client_writeNumber").prop( "readonly", true );
     }
     if (business.writeDate != null) {
         $("#client_writeDate").val(business.writeDate);
-        $("#client_writeDate").prop( "disabled", true );
+        $("#client_writeDate").prop( "readonly", true );
     }
     if (business.condeCifBank != null) {
         $("#client_codeCifBank").val(business.condeCifBank);
-        $("#client_codeCifBank").prop( "disabled", true );
+        $("#client_codeCifBank").prop( "readonly", true );
     }
 
     if (business.addressWork != null) {
         $("#client_address_business").val(business.addressWork);
-        $("#client_address_business").prop( "disabled", true );
+        $("#client_address_business").prop( "readonly", true );
         $("#client_address_business").prop("type", "password");
         $("#clientBussinessWorkAddressLbl").html(business.addressWork.substring(business.addressWork.length - 15,business.addressWork.length));
         $("#country_business").rules("remove","required");
@@ -536,126 +697,126 @@ function fillBusiness(business) {
   }
     if (business.departmentWork != null) {
         $("#department_business_selection").val(business.departmentWork);
-        $("#department_business_selection").prop( "disabled", true );
+        $("#department_business_selection").prop( "readonly", true );
     }
     if (business.municipalityWork != null) {
         $("#municipality_business_selection").val(business.municipalityWork);
-        $("#municipality_business_selection").prop( "disabled", true );
+        $("#municipality_business_selection").prop( "readonly", true );
     }
     if (business.zoneWork != null) {
         $("#zone_business_selection").val(business.zoneWork);
-        $("#zone_business_selection").prop( "disabled", true );
+        $("#zone_business_selection").prop( "readonly", true );
     }
     if (business.countryWork != null) {
         $("#country_business_selection").val(business.countryWork);
         $("#country_business").val(business.countryWork).change();
-        $("#country_business").prop( "disabled", true );
+        $("#country_business").prop( "readonly", true );
     }
 
     if (business.phone1Work != null) {
         $("#client_phoneNumber1_business").val(business.phone1Work);
         $("#client_phoneNumber1_business").prop("type", "password");
-        $("#client_phoneNumber1_business").prop( "disabled", true );
+        $("#client_phoneNumber1_business").prop( "readonly", true );
         $("#clientBussinessPhoneNumberLbl").html(business.phone1Work.substring(business.phone1Work.length - 3,business.phone1Work.length));
     }
     if (business.phone2Work != null) {
         $("#client_phoneNumber2_business").val(business.phone2Work);
-        $("#client_phoneNumber2_business").prop( "disabled", true );
+        $("#client_phoneNumber2_business").prop( "readonly", true );
         $("#client_phoneNumber2_business").prop("type", "password");
         $("#clientBussinessPhoneNumberLbl2").html(business.phone2Work.substring(business.phone2Work.length - 3,business.phone2Work.length));
     }
     if (business.phone3Work != null) {
         $("#client_phoneNumber3_business").val(business.phone3Work);
         $("#client_phoneNumber3_business").prop("type", "password");
-        $("#client_phoneNumber3_business").prop( "disabled", true );
+        $("#client_phoneNumber3_business").prop( "readonly", true );
         $("#clientBussinessPhoneNumberLbl3").html(business.phone3Work.substring(business.phone3Work.length - 3,business.phone3Work.length));
     }
 
     if (business.taxNumberRep != null) {
         $("#legalRepresentative_taxNumber").val(business.taxNumberRep);
-        $("#legalRepresentative_taxNumber").prop( "disabled", true );
+        $("#legalRepresentative_taxNumber").prop( "readonly", true );
     }
     if (business.firstNameRep != null) {
         $("#legalRepresentative_firstName").val(business.firstNameRep);
-        $("#legalRepresentative_firstName").prop( "disabled", true );
+        $("#legalRepresentative_firstName").prop( "readonly", true );
     }
     if (business.secondNameRep != null) {
         $("#legalRepresentative_secondName").val(business.secondNameRep);
-        $("#legalRepresentative_secondName").prop( "disabled", true );
+        $("#legalRepresentative_secondName").prop( "readonly", true );
     }
     if (business.firstSurnameRep != null) {
         $("#legalRepresentative_firstSurname").val(business.firstSurnameRep);
-        $("#legalRepresentative_firstSurname").prop( "disabled", true );
+        $("#legalRepresentative_firstSurname").prop( "readonly", true );
     }
     if (business.secondSurnameRep != null) {
         $("#legalRepresentative_secondSurname").val(business.secondSurnameRep);
-        $("#legalRepresentative_secondSurname").prop( "disabled", true );
+        $("#legalRepresentative_secondSurname").prop( "readonly", true );
     }
     if (business.marriedSurnameRep != null) {
         $("#legalRepresentative_marriedSurname").val(business.marriedSurnameRep);
-        $("#legalRepresentative_marriedSurname").prop( "disabled", true );
+        $("#legalRepresentative_marriedSurname").prop( "readonly", true );
     }
     if (business.birthdateRep != null) {
         $("#legalRepresentative_birthdate").val(business.birthdateRep);
-        $("#legalRepresentative_birthdate").prop( "disabled", true );
+        $("#legalRepresentative_birthdate").prop( "readonly", true );
     }
     if (business.sexRep != null) {
         $("#sexRep").val(business.sexRep).change();
-        $("#sexRep").prop( "disabled", true );
+        $("#sexRep").prop( "readonly", true );
     }
     if (business.professionRep != null) {
         $("#professionRep").val(business.professionRep).change();
-        $("#professionRep").prop( "disabled", true );
+        $("#professionRep").prop( "readonly", true );
     }
     if (business.dpiRep != null) {
         $("#legalRepresentative_identificationDocument").val(business.dpiRep);
-        $("#legalRepresentative_identificationDocument").prop( "disabled", true );
+        $("#legalRepresentative_identificationDocument").prop( "readonly", true );
     }
     if (business.passportRep != null) {
         $("#legalRepresentative_passport").val(business.passportRep);
-        $("#legalRepresentative_passport").prop( "disabled", true );
+        $("#legalRepresentative_passport").prop( "readonly", true );
     }
     if (business.civilStatusRep != null) {
         $("#civilStatusRep").val(business.civilStatusRep).change();
-        $("#civilStatusRep").prop( "disabled", true );
+        $("#civilStatusRep").prop( "readonly", true );
     }
     if (business.nationalityRep != null) {
         $("#legal_nationality").val(business.nationalityRep).change();
-        $("#legal_nationality").prop( "disabled", true );
+        $("#legal_nationality").prop( "readonly", true );
     }
     if (business.emailRep != null) {
         $("#legalRepresentative_email").val(business.emailRep);
-        $("#legalRepresentative_email").prop( "disabled", true );
+        $("#legalRepresentative_email").prop( "readonly", true );
     }
     if (business.registerRep != null) {
         $("#legalRepresentative_registry").val(business.registerRep);
-        $("#legalRepresentative_registry").prop( "disabled", true );
+        $("#legalRepresentative_registry").prop( "readonly", true );
     }
     if (business.caseFileRep != null) {
         $("#legalRepresentative_caseFile").val(business.caseFileRep);
-        $("#legalRepresentative_caseFile").prop( "disabled", true );
+        $("#legalRepresentative_caseFile").prop( "readonly", true );
     }
     if (business.extendedInRep != null) {
         $("#legalRepresentative_extendedIn").val(business.extendedInRep);
-        $("#legalRepresentative_extendedIn").prop( "disabled", true );
+        $("#legalRepresentative_extendedIn").prop( "readonly", true );
     }
     if (business.registrationDateRep != null) {
         $("#legalRepresentative_registrationDate").val(business.registrationDateRep);
-        $("#legalRepresentative_registrationDate").prop( "disabled", true );
+        $("#legalRepresentative_registrationDate").prop( "readonly", true );
     }
     if (business.bookRep != null) {
         $("#legalRepresentative_book").val(business.bookRep);
-        $("#legalRepresentative_book").prop( "disabled", true );
+        $("#legalRepresentative_book").prop( "readonly", true );
     }
     if (business.folioRep != null) {
         $("#legalRepresentative_folio").val(business.folioRep);
-        $("#legalRepresentative_folio").prop( "disabled", true );
+        $("#legalRepresentative_folio").prop( "readonly", true );
     }
 
     if (business.addressLegal != null) {
         $("#legalRepresentative_address").val(business.addressLegal);
         $("#legalRepresentative_address").prop("type", "password");
-        $("#legalRepresentative_address").prop( "disabled", true );
+        $("#legalRepresentative_address").prop( "readonly", true );
         $("#clientLegalBussinessWorkAddressLbl").html(business.addressLegal.substring(business.addressLegal.length - 15,business.addressLegal.length));
         $("#country_legal").rules("remove","required");
         $("#department_legal").rules("remove","required");
@@ -664,38 +825,38 @@ function fillBusiness(business) {
     }
     if (business.departmentLegal != null) {
         $("#department_legal_selection").val(business.departmentLegal);
-        $("#department_legal_selection").prop( "disabled", true );
+        $("#department_legal_selection").prop( "readonly", true );
     }
     if (business.municipalityLegal != null) {
         $("#municipality_legal_selection").val(business.municipalityLegal);
-        $("#municipality_legal_selection").prop( "disabled", true );
+        $("#municipality_legal_selection").prop( "readonly", true );
     }
     if (business.zoneLegal != null) {
         $("#zone_legal_selection").val(business.zoneLegal);
-        $("#zone_legal_selection").prop( "disabled", true );
+        $("#zone_legal_selection").prop( "readonly", true );
     }
     if (business.countryLegal != null) {
         $("#country_legal_selection").val(business.countryLegal);
         $("#country_legal").val(business.countryLegal).change();
-        $("#country_legal").prop( "disabled", true );
+        $("#country_legal").prop( "readonly", true );
     }
 
     if (business.phone1Legal != null) {
         $("#legalRepresentative_phoneNumber1").prop("type", "password");
         $("#legalRepresentative_phoneNumber1").val(business.phone1Legal);
-        $("#legalRepresentative_phoneNumber1").prop( "disabled", true );
+        $("#legalRepresentative_phoneNumber1").prop( "readonly", true );
         $("#clientLegalBussinessPhoneNumberLbl").html(business.addressLegal.substring(business.phone1Legal.length - 3,business.phone1Legal.length));
     }
     if (business.phone2Legal != null) {
         $("#legalRepresentative_phoneNumber2").val(business.phone2Legal);
         $("#legalRepresentative_phoneNumber2").prop("type", "password");
-        $("#legalRepresentative_phoneNumber2").prop( "disabled", true );
+        $("#legalRepresentative_phoneNumber2").prop( "readonly", true );
         $("#clientLegalBussinessPhoneNumberLb2").html(business.phone2Legal.substring(business.phone2Legal.length - 3,business.phone2Legal.length));
     }
     if (business.phone3Legal != null) {
         $("#legalRepresentative_phoneNumber3").val(business.phone3Legal);
         $("#legalRepresentative_phoneNumber3").prop("type", "password");
-        $("#legalRepresentative_phoneNumber3").prop( "disabled", true );
+        $("#legalRepresentative_phoneNumber3").prop( "readonly", true );
         $("#clientLegalBussinessPhoneNumberLb3").html(business.phone3Legal.substring(business.phone3Legal.length - 3,business.phone3Legal.length));
     }
 
