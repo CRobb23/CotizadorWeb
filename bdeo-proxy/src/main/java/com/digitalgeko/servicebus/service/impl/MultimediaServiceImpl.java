@@ -44,7 +44,7 @@ public class MultimediaServiceImpl extends AbstractBusServiceImpl {
         this.restTemplate = restTemplate;
     }
 
-    @Async
+    @Async ("threadPoolExecutor")
     public void processMultimedia(String caseRef, String folderId, List<String> list) {
         log.info("PROCESANDO MULTIMEDIAS " + list.size());
         Path tempDir = null;

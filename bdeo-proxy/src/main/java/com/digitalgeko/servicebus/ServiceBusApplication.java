@@ -16,13 +16,13 @@ public class ServiceBusApplication {
         SpringApplication.run(ServiceBusApplication.class, args);
     }
 
-    @Bean
+    @Bean (name = "threadPoolExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
+        executor.setCorePoolSize(25);
+        executor.setMaxPoolSize(50);
         executor.setQueueCapacity(500);
-        executor.setThreadNamePrefix("BdeoDrive-");
+        executor.setThreadNamePrefix("threadPoolExecutor-");
         executor.initialize();
         return executor;
     }
