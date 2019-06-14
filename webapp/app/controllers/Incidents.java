@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.inject.Inject;
-
+import jobs.*;
 import models.*;
 import models.dto.BusinessDetailDTO;
 import models.dto.PersonDetailDTO;
@@ -22,7 +22,6 @@ import models.ws.*;
 import models.ws.rest.InspectionAutoRequest;
 import models.ws.rest.InspectionAutoResponse;
 import objects.LoJackOptions;
-import objects.PaymentOption;
 import org.allcolor.yahp.converter.IHtmlToPdfTransformer;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
@@ -59,7 +58,7 @@ import utils.StringUtil;
 public class Incidents extends AdminBaseController {
 
 	@Inject
-	static PolicyService policyService;
+	static PolicyInputWebService policyService;
 	@Inject
 	static CreateRequestService createRequestService;
 	@Inject
@@ -72,6 +71,8 @@ public class Incidents extends AdminBaseController {
 	static PersonQueryWebService personServiceBus;
 	@Inject
 	static BusinessQueryWebService businessServiceBus;
+	@Inject
+	static JsonService jsonService;
 
 	public static Long dailyCorrelativeNumber;
 	public static Map<String,String> searchFields;
@@ -80,183 +81,161 @@ public class Incidents extends AdminBaseController {
 	 * Filters
 	 * ************************************************************************************************************************
 	 */
-	
 	private static void filterIncidents(String searchField,String multipleSearch,Map<String,String> searchFields) {
 		try{
-		//Validate the parameters
-		boolean valid = GeneralMethods.validateParameter(searchField);
-		valid = valid | GeneralMethods.validateParameter(multipleSearch);
-		//Create a new filter object and add the query for each valid parameter
-		Filter filter = new Filter();
-
-		if(valid){
-			if(multipleSearch.equals("true")){
-				if(connectedUser().role.code == ERConstants.USER_ROLE_FINAL_USER){
-					filter.addQuery("creator.id = ?", connectedUser().id, Operator.AND);
-				}
-				if(!searchFields.get("number_case").equals("")) {
-					if(searchFields.get("number_case").matches("[0-9]+")){
-						Long number = Long.valueOf(searchFields.get("number_case"));
-						filter.addQuery("number = ?", number, Operator.AND);
-					}					
-				}
-				//search number_policy
-                if(!searchFields.get("number_policy").equals("")) {
-                    String policy = ("%" + searchFields.get("number_policy") + "%").trim();
-                    filter.addQuery("lower(policy) like ?", policy, Operator.AND);
-
-                }
-				if(!searchFields.get("client_name").equals("")) {
-					String name = ("%" + searchFields.get("client_name") + "%").toLowerCase();
-					filter.addGroupStart(Operator.AND);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(client.companyName) like ?", name, Operator.OR);
-					filter.addQuery("lower(client.businessName) like ?", name, Operator.OR);
-					filter.addGroupEnd();
-				}
-				if(!searchFields.get("vehicle_plate").equals("")) {
-					if(searchFields.get("vehicle_plate").indexOf("-") > 0){
-						String[] plateType = searchFields.get("vehicle_plate").split("-");
-						filter.addQuery("lower(vehicle.plateType.transferCode) like ?", "%" + plateType[0] + "%", Operator.AND);
-						filter.addQuery("lower(vehicle.plate) like ?", "%" + plateType[1] + "%", Operator.AND);
-					}else{
-						filter.addQuery("lower(vehicle.plate) like ?", "%" + searchFields.get("vehicle_plate").toLowerCase() + "%", Operator.AND);
-					}
-				}
-				if(!searchFields.get("vehicle_line").equals("")) {
-					filter.addQuery("lower(vehicle.line.name) like ?", "%" + searchFields.get("vehicle_line").toLowerCase() + "%", Operator.AND);
-				}
-				if(!searchFields.get("vehicle_brand").equals("")) {
-					filter.addQuery("lower(vehicle.line.brand.name) like ?", "%" + searchFields.get("vehicle_brand").toLowerCase() + "%", Operator.AND);
-				}
-				if(!searchFields.get("vehicle_year").equals("")) {
-					try{
-						filter.addQuery("vehicle.erYear.year = ?", searchFields.get("vehicle_year"), Operator.AND);
-					}catch(Exception e){
-						e.printStackTrace();
-					}
-				}
-				if(!FieldAccesor.isEmptyOrNull(searchFields.get("case_status"))) {
-					try {
-						Long status = Long.parseLong(searchFields.get("case_status"));
-						filter.addQuery("status.id = ?",status,Operator.AND);
-					}catch(Exception e) {
-						e.printStackTrace();
-					}
-				}
-				if(!searchFields.get("incident_date").equals("")) {
-					filter.addQuery("convert(nvarchar(10), creationDate, 103) = ?", searchFields.get("incident_date") , Operator.AND);
-				}
-				
-			}else{
-				searchField = searchField.trim();
-				if(connectedUser().role.code == ERConstants.USER_ROLE_FINAL_USER){
-					filter.addQuery("creator.id = ?", connectedUser().id, Operator.AND);
-				}				
-				if(searchField.matches("[0-9]+")){
-					Long number = Long.valueOf(searchField);
-					filter.addQuery("number = ?", number, Operator.AND);
-				}else{
-					String name = ("%" + searchField + "%").toLowerCase();
-					filter.addGroupStart(Operator.AND);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.secondName,coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(concat(client.firstName,coalesce(concat(' ',client.secondSurname),''))) like ?", name, Operator.OR);
-					filter.addQuery("lower(client.companyName) like ?", name, Operator.OR);
-					filter.addQuery("lower(client.businessName) like ?", name, Operator.OR);
-					if(searchField.indexOf("-") > 0){
-						String[] plateType = searchField.split("-");
-						filter.addQuery("lower(vehicle.plateType.transferCode) like ?", "%" + plateType[0] + "%", Operator.OR);
-						filter.addQuery("lower(vehicle.plate) like ?", "%" + plateType[1] + "%", Operator.OR);
-					}else{
-						filter.addQuery("lower(vehicle.plate) like ?", "%" + searchField.toLowerCase() + "%", Operator.OR);	
-					}
-					filter.addGroupEnd();
-				}
-				
-			}
-		}
-		
-		//Validate the filter to create the model paginator. If the filter is invalid, all rows are returned.
-		if(filter.isValidFilter() ||  (multipleSearch != null && multipleSearch.equals("true"))){
+			//Validate the parameters
+			boolean valid = GeneralMethods.validateParameter(searchField);
+			valid = valid | GeneralMethods.validateParameter(multipleSearch);
+			//Create a new filter object and add the query for each valid parameter
+			Filter filter = new Filter();
 			ER_User connectedUser = connectedUser();
-			JPAQuery query = null;
-				if(checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)){
-					List<Long> channelIds = null;
+			if(valid){
+				if(multipleSearch.equals("true")){
+					if(connectedUser.role.code.equals(ERConstants.USER_ROLE_FINAL_USER)){
+						filter.addQuery("creator.id = ?", connectedUser.id, Operator.AND);
+					}
+					if(!searchFields.get("number_case").isEmpty()) {
+						if(searchFields.get("number_case").matches("[0-9]+")){
+							Long number = Long.valueOf(searchFields.get("number_case"));
+							filter.addQuery("number = ?", number, Operator.AND);
+						}
+					}
+					//search number_policy
+					if(!searchFields.get("number_policy").isEmpty()) {
+						String policy = ("%" + searchFields.get("number_policy") + "%").trim();
+						filter.addQuery("policy like ?", policy, Operator.AND);
+					}
+					if(!searchFields.get("client_name").isEmpty()) {
+						String name = ("%" + searchFields.get("client_name") + "%");
+						filter.addGroupStart(Operator.AND);
+						filter.addQuery("concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("concat(client.firstName,coalesce(concat(' ',client.firstSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("concat(client.firstName,coalesce(concat(' ',client.secondName),''),coalesce(concat(' ',client.firstSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("concat(client.secondName,coalesce(concat(' ',client.firstSurname),'')) like ?",  name, Operator.OR);
+						filter.addQuery("concat(client.secondName,coalesce(concat(' ',client.firstSurname),''),coalesce(concat(' ',client.secondSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("concat(client.secondName,coalesce(concat(' ',client.secondSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("concat(client.firstName,coalesce(concat(' ',client.secondSurname),'')) like ?", name, Operator.OR);
+						filter.addQuery("client.companyName like ?", name, Operator.OR);
+						filter.addQuery("client.businessName like ?", name, Operator.OR);
+						filter.addGroupEnd();
+					}
+					if(!searchFields.get("vehicle_plate").isEmpty()) {
+						if(searchFields.get("vehicle_plate").contains("-")){
+							String[] plateType = searchFields.get("vehicle_plate").split("-");
+							filter.addQuery("vehicle.plateType.transferCode like ?", "%" + plateType[0] + "%", Operator.AND);
+							filter.addQuery("vehicle.plate like ?", "%" + plateType[1] + "%", Operator.AND);
+						}else{
+							filter.addQuery("vehicle.plate like ?", "%" + searchFields.get("vehicle_plate") + "%", Operator.AND);
+						}
+					}
+					if(!searchFields.get("vehicle_line").isEmpty()) {
+						filter.addQuery("vehicle.line.name like ?", "%" + searchFields.get("vehicle_line") + "%", Operator.AND);
+					}
+					if(!searchFields.get("vehicle_brand").isEmpty()) {
+						filter.addQuery("vehicle.line.brand.name like ?", "%" + searchFields.get("vehicle_brand") + "%", Operator.AND);
+					}
+					if(!searchFields.get("vehicle_year").isEmpty()) {
+						try{
+							filter.addQuery("vehicle.erYear.year = ?", searchFields.get("vehicle_year"), Operator.AND);
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+					}
+					if(!FieldAccesor.isEmptyOrNull(searchFields.get("case_status"))) {
+						try {
+							Long status = Long.parseLong(searchFields.get("case_status"));
+							filter.addQuery("status.id = ?",status,Operator.AND);
+						}catch(Exception e) {
+							e.printStackTrace();
+						}
+					}
+					if(!searchFields.get("incident_date").isEmpty()) {
+						filter.addQuery("convert(nvarchar(10), creationDate, 103) = ?", searchFields.get("incident_date") , Operator.AND);
+					}
+
+				}else{
+					searchField = searchField.trim();
+					if(connectedUser.role.code.equals(ERConstants.USER_ROLE_FINAL_USER)){
+						filter.addQuery("creator.id = ?", connectedUser.id, Operator.AND);
+					}
+					if(searchField.matches("[0-9]+")){
+						Long number = Long.valueOf(searchField);
+						filter.addQuery("number = ?", number, Operator.AND);
+					}
+				}
+			}
+
+			//Validate the filter to create the model paginator. If the filter is invalid, all rows are returned.
+			if(filter.isValidFilter() ||  (multipleSearch != null && multipleSearch.equals("true"))){
+				JPAQuery query;
+				//Get the user rol
+				Integer userRol = connectedUserRoleCode(connectedUser);
+
+				if(userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)){
+					List<Long> channelIds;
 					channelIds = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c.active = true", connectedUser).fetch();
 
-				String queryStr = " (";
-				if (channelIds != null && !channelIds.isEmpty()) {
-					queryStr = queryStr + " channel.id IN :c OR ";
+					String queryStr = " (";
+					if (channelIds != null && !channelIds.isEmpty()) {
+						queryStr = queryStr + " channel.id IN :c OR ";
+					}
+					queryStr = queryStr + " creator = :s )";
+					if (!filter.getQuery().isEmpty()) {
+						queryStr = "AND" + queryStr;
+						query = ER_Incident.find(filter.getQuery() + queryStr + " order by id DESC", filter.getParametersArray());
+					}
+					else {
+						query = ER_Incident.find(queryStr + " order by id DESC", filter.getParametersArray());
+					}
+					if (channelIds != null && !channelIds.isEmpty()) {
+						query.bind("c", channelIds);
+					}
+					query.bind("s", connectedUser);
 				}
-				queryStr = queryStr + " creator = :s )";
-				if (!filter.getQuery().isEmpty()) {
-					queryStr = "AND" + queryStr;
-					query = ER_Incident.find(filter.getQuery() + queryStr + " order by creationDate DESC", filter.getParametersArray());
+				else if(userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)){
+					List<Long> distributorIds = null;
+					distributorIds = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active = true", connectedUser).fetch();
+					String queryStr = " (";
+					if (distributorIds != null && !distributorIds.isEmpty()) {
+						queryStr = queryStr + " distributor.id IN :d OR ";
+					}
+					queryStr = queryStr + " creator = :s )";
+					if (!filter.getQuery().isEmpty()) {
+						queryStr = "AND " + queryStr;
+						query = ER_Incident.find(filter.getQuery() + queryStr + "  order by id DESC", filter.getParametersArray());
+					}else {
+						query = ER_Incident.find( queryStr + "  order by id DESC", filter.getParametersArray());
+					}
+					if (distributorIds != null && !distributorIds.isEmpty()) {
+						query.bind("d", distributorIds);
+					}
+					query.bind("s", connectedUser);
+				}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
+					List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
+					userIds.add(connectedUser.id);
+					if (!filter.getQuery().isEmpty())
+						query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by id DESC", filter.getParametersArray()).bind("s", userIds);
+					else
+						query = ER_Incident.find(" creator.id IN :s order by id DESC", filter.getParametersArray()).bind("s", userIds);
+				}else if(userRol.equals(ERConstants.USER_ROLE_SALES_MAN)){
+					if (!filter.getQuery().isEmpty())
+						query = ER_Incident.find(filter.getQuery() + " AND creator = :s order by id DESC", filter.getParametersArray()).bind("s", connectedUser);
+					else
+						query = ER_Incident.find( " creator = :s order by id DESC", filter.getParametersArray()).bind("s", connectedUser);
+				}else{
+					query = ER_Incident.find(filter.getQuery() + " order by id DESC", filter.getParametersArray());
 				}
-				else {
-					query = ER_Incident.find(queryStr + " order by creationDate DESC", filter.getParametersArray());
-				}
-				if (channelIds != null && !channelIds.isEmpty()) {
-					query.bind("c", channelIds);
-				}
-				query.bind("s", connectedUser);
-			}else if(checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)){
-				List<Long> distributorIds = null;
-				distributorIds = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active = true", connectedUser).fetch();
-				String queryStr = " (";
-				if (distributorIds != null && !distributorIds.isEmpty()) {
-					queryStr = queryStr + " distributor.id IN :d OR ";
-				}
-				queryStr = queryStr + " creator = :s )";
-				if (!filter.getQuery().isEmpty()) {
-					queryStr = "AND " + queryStr;
-					query = ER_Incident.find(filter.getQuery() + queryStr + "  order by creationDate DESC", filter.getParametersArray());
-				}else {
-					query = ER_Incident.find( queryStr + "  order by creationDate DESC", filter.getParametersArray());
-				}
-				if (distributorIds != null && !distributorIds.isEmpty()) {
-					query.bind("d", distributorIds);
-				}
-				query.bind("s", connectedUser);
-			}else if(checkRole(ERConstants.USER_ROLE_SUPERVISOR)){
-				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
-				userIds.add(connectedUser.id);
-				if (!filter.getQuery().isEmpty())
-				query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by creationDate DESC", filter.getParametersArray()).bind("s", userIds);
-				else
-					query = ER_Incident.find(" creator.id IN :s order by creationDate DESC", filter.getParametersArray()).bind("s", userIds);
-			}else if(checkRole(ERConstants.USER_ROLE_SALES_MAN)){
-                if (!filter.getQuery().isEmpty())
-				query = ER_Incident.find(filter.getQuery() + " AND creator = :s order by creationDate DESC", filter.getParametersArray()).bind("s", connectedUser);
-                else
-                    query = ER_Incident.find( " creator = :s order by creationDate DESC", filter.getParametersArray()).bind("s", connectedUser);
-			}else{
-				query = ER_Incident.find(filter.getQuery() + " order by creationDate DESC", filter.getParametersArray());
+
+				List<ER_Incident> incidentsList = query.fetch();
+				ValuePaginator incidents = new ValuePaginator(incidentsList);
+				incidents.setPageSize(10);
+				renderArgs.put("incidents", incidents);
 			}
-			
-			List<ER_Incident> incidentsList = query.fetch();
-			ValuePaginator incidents = new ValuePaginator(incidentsList);
-			incidents.setPageSize(10);
-			renderArgs.put("incidents", incidents);
-		}
 		}
 		catch(Exception e){
-		Logger.error("error: " + e.getMessage());
-		e.printStackTrace();
-	}
-
-
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
@@ -283,7 +262,7 @@ public class Incidents extends AdminBaseController {
     	
     	ValuePaginator list = (ValuePaginator) renderArgs.get("incidents");
     	
-    	List<ER_Incident_Status> statuses = ER_Incident_Status.find("order by code").fetch();
+    	List<ER_Incident_Status> statuses = ER_Incident_Status.findAll();
     	renderArgs.put("statuses", statuses);
     	
     	if(search!=null && search && (list==null || list.size()==0)){
@@ -301,12 +280,27 @@ public class Incidents extends AdminBaseController {
     public static void searchIncidents(String searchField,String multipleSearch) {
 		try{
 			flash.clear();
-			if (!GeneralMethods.validateParameter(searchField)&&!GeneralMethods.validateParameter(multipleSearch)) {
+			if (!GeneralMethods.validateParameter(searchField)&& !GeneralMethods.validateParameter(multipleSearch)) {
 					flash.error(Messages.get("incidents.list.searcherror"));
 
 				incidentsList(null, false);
 			} else {
 
+				if(!GeneralMethods.validateParameter(params.get("number_case")) &&
+					!GeneralMethods.validateParameter(params.get("number_policy")) &&
+					!GeneralMethods.validateParameter(params.get("client_name")) &&
+					!GeneralMethods.validateParameter(params.get("vehicle_plate")) &&
+					!GeneralMethods.validateParameter(params.get("vehicle_brand")) &&
+					!GeneralMethods.validateParameter(params.get("vehicle_line")) &&
+					!GeneralMethods.validateParameter(params.get("vehicle_year")) &&
+					!GeneralMethods.validateParameter(params.get("case_status")) &&
+					!GeneralMethods.validateParameter(params.get("incident_date")) &&
+					GeneralMethods.validateParameter(multipleSearch) &&
+					!GeneralMethods.validateParameter(searchField)){
+
+					flash.error(Messages.get("incidents.list.searcherror"));
+					incidentsList(null, false);
+				}
 				searchFields = new HashMap<String,String>();
 				searchFields.put("number_case", params.get("number_case"));
 				searchFields.put("number_policy", params.get("number_policy"));
@@ -318,6 +312,7 @@ public class Incidents extends AdminBaseController {
 				searchFields.put("case_status", params.get("case_status"));
 				searchFields.put("incident_date", params.get("incident_date"));
 				searchFields.put("multiple", String.valueOf(GeneralMethods.validateParameter(multipleSearch)));
+
 
 				incidentsList(searchField, true);
 			}
@@ -345,33 +340,33 @@ public class Incidents extends AdminBaseController {
     	try{
     	if (id!=null) {
 	    	ER_Incident incident = ER_Incident.findById(id);
-	    	
+			ER_User currentUser = connectedUser();
 	    	if (canViewIncident(incident)) {
-	    		List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by dueDate asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
+	    		List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by id asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
 	    	
-	    		boolean isOwner = (incident.creator == connectedUser());
+	    		boolean isOwner = (incident.creator == currentUser);
 	    		boolean isQAUser = false;
-	    		if(connectedUser().isQAUser != null && connectedUser().isQAUser)
+	    		if(currentUser.isQAUser != null && currentUser.isQAUser)
 					isQAUser = true;
 
 	    		if (!isOwner) {
-					switch (connectedUserRoleCode()) {
+					switch (connectedUserRoleCode(currentUser)) {
 						case ERConstants.USER_ROLE_SUPER_ADMIN: {
 							isOwner = true;
 							break;
 						}
 						case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
-							List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", connectedUser(), incident.channel).fetch();
+							List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", currentUser, incident.channel).fetch();
 							isOwner = !channels.isEmpty();
 							break;
 						}
 						case ERConstants.USER_ROLE_CHANNEL_MANAGER: {
-							List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", connectedUser(), incident.distributor).fetch();
+							List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", currentUser, incident.distributor).fetch();
 							isOwner = !distributors.isEmpty();
 							break;
 						}
 						case ERConstants.USER_ROLE_SUPERVISOR: {
-							List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, connectedUser()).fetch();
+							List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
 							isOwner = !stores.isEmpty();
 							break;
 						}
@@ -586,10 +581,7 @@ public class Incidents extends AdminBaseController {
     									 Long selectedQuotation, Long selectedPaymentForm, Boolean inspection,
     									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
-    									 String inspectionNumber,Date inspectionDate,
-										 Boolean inspectionAutoQ1, Boolean inspectionAutoQ2, Boolean inspectionAutoQ3,
-										 Boolean inspectionAutoQ4, Boolean inspectionAutoQ5, Boolean inspectionAutoQ6,
-										 Boolean inspectionAutoQ7) {
+    									 String inspectionNumber,Date inspectionDate) {
     	flash.clear();
     	flash.discard();
     	
@@ -620,9 +612,6 @@ public class Incidents extends AdminBaseController {
                         }
 	        		}
         		}
-
-				// check for auto inspection
-
 
 				incident.policyValidity = policyValidity;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
@@ -655,15 +644,9 @@ public class Incidents extends AdminBaseController {
 									currentInspection.save();
 									incident.save();
 								}
-							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
+							} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO && StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
 								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
-								if (!Boolean.TRUE.equals(inspectionAutoQ1) || !Boolean.TRUE.equals(inspectionAutoQ2) || !Boolean.TRUE.equals(inspectionAutoQ3)
-										|| !Boolean.TRUE.equals(inspectionAutoQ4) || !Boolean.TRUE.equals(inspectionAutoQ5)
-										|| !Boolean.TRUE.equals(inspectionAutoQ6) || !Boolean.TRUE.equals(inspectionAutoQ7)) {
-									flash.error("No es posible acceder a Auto Inspección. Favor de seleccionar otro tipo de inspección.");
-									attendIncident(id);
-								}
-            				} else {
+            				} else if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
 
             				}
@@ -703,10 +686,12 @@ public class Incidents extends AdminBaseController {
         		incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
         		if(noSaleReason != null){
         			reason = ER_Declined_Sell_Reason.findById(noSaleReason);
-        		}
-        		validation.required("noSaleReason", reason);
-        	}
-        	validation.required("state", incidentStatus);
+        		} else {
+					validation.required("noSaleReason", reason);
+				}
+        	} else {
+				validation.required("state", incidentStatus);
+			}
     	}
     	
     	if(validation.hasErrors()){
@@ -722,7 +707,7 @@ public class Incidents extends AdminBaseController {
             		incident.status.code.equals(ERConstants.INCIDENT_STATUS_INSPECTION) ||
                     incident.status.code.equals(ERConstants.INCIDENT_STATUS_COMPLETED ) ||
 					(incident.status.code.equals(ERConstants.INCIDENT_STATUS_INCOMPLETE) && StringUtil.isNullOrBlank(inspectionNumber))){
-    				
+
 	    			String[] livianos = new String[]{"01", "03", "05", "08", "09", "13", "16", "17"};
 	    			String[] pesados = new String[]{"02", "06", "10", "11", "12", "14", "19", "20", "21", "22", "23"};
 	    			String[] motos = new String[]{"04", "07", "18"};
@@ -758,7 +743,7 @@ public class Incidents extends AdminBaseController {
 	    				if(inspectionType == ERConstants.INSPECTION_TYPE_ADDRESS){
 	    					inspectionInfo.address = inspectionAddress;
 	    					inspectionInfo.appointmentDate = appointmentDate;
-	    					
+
 	    					inspectionR.setAddress(inspectionAddress);
 	    					inspectionR.setDate(DateHelper.formatDate(appointmentDate, "dd/MM/yyyy HH:mm:ss"));
 	    					inspectionR.setQuotationNumber(incident.number);
@@ -784,8 +769,10 @@ public class Incidents extends AdminBaseController {
                                 incident.save();
                                 attendIncident(id);
 	    					}
-	
-	    					Mails.addressInspection(incident, inspectionInfo);
+
+	    					//Mails.addressInspection(incident, inspectionInfo);
+							SendAddressInspectionJob sendAddressInspectionJob = new SendAddressInspectionJob(incident, inspectionInfo);
+							sendAddressInspectionJob.now();
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_CENTER){
 	    					inspectionR.setInspectionLocation("CENTRO_ATENCION");
 	    					inspectionR.setInspectionType(inspectionTypeEnum);
@@ -811,72 +798,85 @@ public class Incidents extends AdminBaseController {
                                 incident.save();
 	    						attendIncident(id);
 	    					}
-	    					
-	    					Mails.centersList(incident);
+
+	    					//Mails.centersList(incident);
+							SendCenterListJob sendCenterListJob = new SendCenterListJob(incident);
+	    					sendCenterListJob.now();
 	    				}else if(inspectionType == ERConstants.INSPECTION_TYPE_SELLER){
 	    					inspectionInfo.inspectionNumber = inspectionNumber;
 	    				//	inspectionInfo.inspectionDate = new Date();
 	    					inspectionInfo.inspected = true;
 	    				} else if (inspectionType == ERConstants.INSPECTION_TYPE_AUTO) {
-							InspectionAutoRequest requestAuto = new InspectionAutoRequest();
-							requestAuto.setFirstName(incident.client.firstName);
-							requestAuto.setSecondName(incident.client.secondName);
-							requestAuto.setFirstSurname(incident.client.firstSurname);
-							requestAuto.setSecondSurname(incident.client.secondSurname);
-							requestAuto.setMarriedSurname(incident.client.marriedSurname);
-							requestAuto.setIdentificationDocument(incident.client.identificationDocument);
-							requestAuto.setTaxNumber(incident.client.taxNumber);
-							requestAuto.setLicenseNumber(incident.client.licenseNumber);
-							requestAuto.setLicenseType(incident.client.licenseType.transferCode);
-							// Add PhoneData
-							List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
-							InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
-							phoneData.setPhone(incident.client.phoneNumber1);
-							phones.add(phoneData);
-							requestAuto.setPhones(phones);
-							// Add Email Data
-							List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
-							InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
-							emailData.setEmail(incident.client.email);
-							emails.add(emailData);
-							requestAuto.setEmails(emails);
-							// Add Email Broker Data
-							List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
-							InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
-							emailBrokerData.setEmail(connectedUser().email);
-							emailsBroker.add(emailBrokerData);
-							requestAuto.setEmailsBroker(emailsBroker);
-							//
-							requestAuto.setAddress(incident.client.address);
-							requestAuto.setVehicleOwner(incident.vehicle.owner);
-							requestAuto.setBrand(incident.vehicle.line.transferCode);
-							requestAuto.setYear(incident.vehicle.erYear.year);
-							requestAuto.setPlate(incident.vehicle.plate);
-							requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
-							requestAuto.setColor(incident.vehicle.color);
-							requestAuto.setEngine(incident.vehicle.engine);
-							requestAuto.setVin(incident.vehicle.chassis);
-							requestAuto.setMileage(incident.vehicle.mileage);
-							// Other Data
-							requestAuto.setLicenseYears(" ");
-							requestAuto.setUse(" ");
-							requestAuto.setOrigin(" ");
-							requestAuto.setCoin("Q");
+	    					// Check if inspection already sent
+							if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
+								// Validate All info
+								String validStr = validAutoInspectionFields(incident);
+								if ("OK".equals(validStr)) {
+									InspectionAutoRequest requestAuto = new InspectionAutoRequest();
+									requestAuto.setFirstName(incident.client.firstName);
+									requestAuto.setSecondName(incident.client.secondName);
+									requestAuto.setFirstSurname(incident.client.firstSurname);
+									requestAuto.setSecondSurname(incident.client.secondSurname);
+									requestAuto.setMarriedSurname(incident.client.marriedSurname);
+									requestAuto.setIdentificationDocument(incident.client.identificationDocument);
+									requestAuto.setTaxNumber(incident.client.taxNumber);
+									requestAuto.setLicenseNumber(incident.client.licenseNumber);
+									requestAuto.setLicenseType(incident.client.licenseType != null ? incident.client.licenseType.transferCode : "");
+									// Add PhoneData
+									List<InspectionAutoRequest.PhoneData> phones = new ArrayList();
+									InspectionAutoRequest.PhoneData phoneData = new InspectionAutoRequest.PhoneData();
+									phoneData.setPhone(incident.client.phoneNumber2);
+									phones.add(phoneData);
+									requestAuto.setPhones(phones);
+									// Add Email Data
+									List<InspectionAutoRequest.EmailData> emails = new ArrayList<>();
+									InspectionAutoRequest.EmailData emailData = new InspectionAutoRequest.EmailData();
+									emailData.setEmail(incident.client.email);
+									emails.add(emailData);
+									requestAuto.setEmails(emails);
+									// Add Email Broker Data
+									List<InspectionAutoRequest.EmailBrokerData> emailsBroker = new ArrayList<>();
+									InspectionAutoRequest.EmailBrokerData emailBrokerData = new InspectionAutoRequest.EmailBrokerData();
+									emailBrokerData.setEmail(connectedUser().email);
+									emailsBroker.add(emailBrokerData);
+									requestAuto.setEmailsBroker(emailsBroker);
+									//
+									requestAuto.setAddress(incident.client.address);
+									requestAuto.setVehicleOwner(incident.vehicle.owner);
+									requestAuto.setBrand(incident.vehicle.line.brand.name);
+									requestAuto.setLine(incident.vehicle.line.name);
+									requestAuto.setYear(incident.vehicle.erYear.year);
+									requestAuto.setPlate(incident.vehicle.plateType.transferCode.trim()+incident.vehicle.plate);
+									requestAuto.setTypeVehicle(incident.vehicle.type.transferCode);
+									requestAuto.setColor(incident.vehicle.color);
+									requestAuto.setEngine(incident.vehicle.engine);
+									requestAuto.setVin(incident.vehicle.chassis);
+									requestAuto.setMileage(incident.vehicle.mileage);
+									// Other Data
+									requestAuto.setLicenseYears(" ");
+									requestAuto.setUse(" ");
+									requestAuto.setOrigin(" ");
+									requestAuto.setCoin("Q");
 
-							InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
-							if(!inspectionResponse.getSuccess()){
-								flash.error("Ha ocurrido un error en la conexión con AutoInspecciones.");
-								ER_Exceptions exceptions = new ER_Exceptions();
-								exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
-								exceptions.exceptionDate = new Date();
-								exceptions.quotation = quotation;
-								exceptions.active = 1;
-								exceptions.save();
-								incident.status = incidentStatusIncomplete;
-								incident.save();
-								attendIncident(id);
-							} else {
-								inspectionInfo.inspectionNumber = inspectionResponse.getNumber();
+									InspectionAutoResponse inspectionResponse = inspectionService.createAutoInspection(requestAuto);
+									if(!"SATISFACTORIO".equalsIgnoreCase(inspectionResponse.getMessage())) {
+										flash.error("Ha ocurrido un error en la conexión con AutoInspecciones - " + inspectionResponse.getMessage());
+										ER_Exceptions exceptions = new ER_Exceptions();
+										exceptions.description = "Ha ocurrido un error en la conexión con AutoInspecciones.";
+										exceptions.exceptionDate = new Date();
+										exceptions.quotation = quotation;
+										exceptions.active = 1;
+										exceptions.save();
+										incident.status = incidentStatusIncomplete;
+										incident.save();
+										attendIncident(id);
+									} else {
+										inspectionInfo.inspectionNumber = String.valueOf(inspectionResponse.getInspectionNumber());
+									}
+								} else {
+									flash.error("No es posible generar una AutoInspeccion. " + validStr);
+									attendIncident(id);
+								}
 							}
 						}
 	    				inspectionInfo.incident = incident;
@@ -884,23 +884,25 @@ public class Incidents extends AdminBaseController {
 	    			}
 	    			incident.inspection = inspectionInfo;
     			}
-    			
-    			if(incidentStatus.code == ERConstants.INCIDENT_STATUS_ANULLED || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
-    				incident.finalizedDate = new Date();
-	    			incident.finalizer = connectedUser();
 
-	    			incident.completeTasks();
-    			}
-    			if(incidentStatus.code == ERConstants.INCIDENT_STATUS_INSPECTION || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
-    				incident.saleDate = new Date();
-    			}
-    			incident.status = incidentStatus;
-    			incident.declinedReason = reason;
-    			incident.selectedQuotation = quotation;
-    			incident.selectedPaymentFrecuency = frecuency;
+    			if (incidentStatus != null) {
+					if(incidentStatus.code == ERConstants.INCIDENT_STATUS_ANULLED || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
+						incident.finalizedDate = new Date();
+						incident.finalizer = connectedUser();
 
-				incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
-
+						incident.completeTasks();
+					}
+					if(incidentStatus.code == ERConstants.INCIDENT_STATUS_INSPECTION || incidentStatus.code == ERConstants.INCIDENT_STATUS_COMPLETED){
+						incident.saleDate = new Date();
+					}
+					incident.status = incidentStatus;
+				}
+				if(incident.selectedQuotation!= null) {
+						incident.selectedTotalPrime = incident.selectedQuotation.quotationDetail.getPrimeDiscount();
+				}
+				incident.declinedReason = reason;
+				incident.selectedQuotation = quotation;
+				incident.selectedPaymentFrecuency = frecuency;
 
     			incident.save();
     			
@@ -910,12 +912,35 @@ public class Incidents extends AdminBaseController {
     			}
     			success = true;
     		}catch(Exception e){
+				finalized(incident.id, success);
     			Logger.error(e, "Error finalizing incident");
     		}
     		
     		finalized(incident.id, success);
     	}
     }
+
+    private static String validAutoInspectionFields(final ER_Incident incident) {
+		String validStr = "OK";
+		if (StringUtil.isNullOrBlank(incident.client.firstName) && StringUtil.isNullOrBlank(incident.client.secondName)) {
+			validStr = "Nombres cliente incompleto.";
+		} else if (StringUtil.isNullOrBlank(incident.client.firstSurname) && StringUtil.isNullOrBlank(incident.client.secondSurname)) {
+			validStr = "Apellidos cliente incompleto.";
+		} else if (StringUtil.isNullOrBlank(incident.client.phoneNumber2)) {
+			validStr = "Numero teléfono incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.client.email)) {
+			validStr = "Correo electrónico incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.line.name)) {
+			validStr = "Linea de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.line.brand.name)) {
+			validStr = "Marca de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.erYear.year)) {
+			validStr = "Modelo de vehículo incompleto";
+		} else if (StringUtil.isNullOrBlank(incident.vehicle.plate)) {
+			validStr = "Placa de vehículo incompleto";
+		}
+		return validStr;
+	}
 	
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void saveIncidentStatePublic(@Required Long id, 
@@ -1024,7 +1049,9 @@ public class Incidents extends AdminBaseController {
                             incident.save();
 							attendIncident(id);
 						}
-						Mails.addressInspection(incident, inspectionInfo);
+						//Mails.addressInspection(incident, inspectionInfo);
+						SendAddressInspectionJob sendAddressInspectionJob = new SendAddressInspectionJob(incident, inspectionInfo);
+						sendAddressInspectionJob.now();
 					}else if(inspectionType == ERConstants.INSPECTION_TYPE_CENTER){
 						inspectionR.setInspectionLocation("CENTRO_ATENCION");
 						inspectionR.setInspectionType(inspectionTypeEnum);
@@ -1041,7 +1068,9 @@ public class Incidents extends AdminBaseController {
                             incident.save();
 							attendIncident(id);
 						}
-						Mails.centersList(incident);
+						//Mails.centersList(incident);
+						SendCenterListJob sendCenterListJob = new SendCenterListJob(incident);
+						sendCenterListJob.now();
 					}
 					inspectionInfo.incident = incident;
 					inspectionInfo = inspectionInfo.save();
@@ -1081,7 +1110,8 @@ public class Incidents extends AdminBaseController {
 		ReminderHelper.createReminderForGuard(guard);
 		
 		//Send email to client
-		Mails.generatedGuard(guard);
+		SendGuardJob sendGuardJob = new SendGuardJob(guard);
+		//Mails.generatedGuard(guard);
     	
     }
     
@@ -1303,7 +1333,7 @@ public class Incidents extends AdminBaseController {
 				request.setLine(line.name);
 				request.setYear(erYear.year);
 				request.setCurrency("Q");
-				QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+				QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
 				if (!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.carValue != null) {
 					// Garanteed value check
 					BigDecimal garanteedValueParam = new BigDecimal(0.15);
@@ -1311,14 +1341,18 @@ public class Incidents extends AdminBaseController {
 					if (currentConfiguration.garanteedValueConfig != null) {
 						garanteedValueParam = currentConfiguration.garanteedValueConfig.divide(BigDecimal.valueOf(100));
 					}
-					BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
-					BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-					BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
 					if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
 						quotation.setGaranteedValue(Boolean.TRUE);
-					} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
-						quotation.setGaranteedValue(Boolean.TRUE);
+					} else {
+						if (queryAverage.getAverageValue() != null) {
+							BigDecimal diff = queryAverage.getAverageValue().multiply(garanteedValueParam).setScale(2, RoundingMode.HALF_UP);
+							BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+							BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+							if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+								quotation.setGaranteedValue(Boolean.TRUE);
+							}
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -1405,16 +1439,21 @@ public class Incidents extends AdminBaseController {
 			request.setYear(incident.vehicle.erYear.year);
 			request.setCurrency("Q");
 			quotation.loadDetailJSON();
-			QueryAverageValueVehicleResponse queryAverage = policyService.queryAverageValueVehicle(request);
+			QueryAverageValueVehicleResponse queryAverage = averageValueServiceBus.averageValueQuery(request);
 			if (!FieldAccesor.isEmptyOrNull(queryAverage, "averageValue") && quotation.quotationDetail != null && quotation.carValue != null) {
-				BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
-				BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
-				BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
 				if (quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0) {
 					quotation.quotationDetail.setVehicleValue(queryAverage.getAverageValue());
-				} else if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
-					quotation.quotationDetail.setVehicleValue(quotation.carValue);
+				} else {
+					if (queryAverage.getAverageValue() != null) {
+						BigDecimal diff = queryAverage.getAverageValue().multiply(new BigDecimal(0.15)).setScale(2, RoundingMode.HALF_UP);
+						BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
+						BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
+
+						if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
+							quotation.quotationDetail.setVehicleValue(quotation.carValue);
+						}
+					}
 				}
 			}
 			quotation.save();
@@ -1422,12 +1461,16 @@ public class Incidents extends AdminBaseController {
 			List<ByteArrayOutputStream> streamArray = new ArrayList<ByteArrayOutputStream>();
 			streamArray.add(quotationPDFData(quotation));
 
-			boolean result = Mails.quotations(incident, streamArray, true);
-			Mails.incidentDetail(incident);
-			if (!result) {
+			//boolean result = Mails.quotations(incident, streamArray, true);
+			SendQuotationsJob sendQuotationsJob = new SendQuotationsJob(streamArray, incident);
+			sendQuotationsJob.now();
+			SendIncidentDetailJob sendIncidentDetailJob = new SendIncidentDetailJob(incident);
+			sendIncidentDetailJob.now();
+			//Mails.incidentDetail(incident);
+			/*if (!result) {
 				flash.put("incident.quotation.send.warning", Messages.get("incident.quotation.send.warning"));
 				incidentDetail(incident.id);
-			}
+			}*/
 
 			flash.success(Messages.get("incident.quotation.send.success"));
 			incidentDetail(incident.id);
@@ -1453,13 +1496,11 @@ public class Incidents extends AdminBaseController {
 				ER_Client client = incident.client;
 				ER_Client_PEP clientPEP = client.clientPEP;
 				ER_Legal_Representative legalRepresentative = client.legalRepresentative;
-				//Temp
-				ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
 				if (canViewClient(client)) {
 					renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
 					renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
 					renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
-					loadAddressCatalogs(client, payer);
+					loadClientAddressCatalogs(client);
 					loadCatalogsClient();
 					ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(ACCESS_TO_CLIENT_DATA));
 					String mensajeAlerta = messages.body;
@@ -1479,12 +1520,35 @@ public class Incidents extends AdminBaseController {
 			if (clientId != null) {
 				ER_Incident incident = ER_Incident.findById(incidentId);
 				ER_Client client = ER_Client.findById(clientId);
-				//Temp
 				if (canViewClient(client)) {
 					List<ER_Aditional_Multimedia> aditional_multimedia = null;
 					if (client.multimedia != null)
 						aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
-					render(incident, client,aditional_multimedia,isOldClient,isOldCar);
+					String specialDocuments;
+                    if(client.isIndividual != null && client.isIndividual){
+                        specialDocuments = "Por favor suba: <ul>  <li>DPI</li> <li> Licencia de conducir </li>";
+                        if(isOldCar != null && !isOldCar.equals("") && isOldCar.equals("true")){
+                            specialDocuments += "<li> Tarjeta de circulación </li>";
+                         }
+                         else
+                            specialDocuments += "<li>Factura de vehículo </li>";
+                        if(isOldClient != null && (isOldClient.equals("") || isOldClient.equals("false"))){
+                            specialDocuments += "<li> Recibo de servicios <br></li> </ul>";
+                        }
+                    }
+                    else{
+                        specialDocuments = "Por favor suba: <ul>";
+                        if(isOldCar != null && !isOldCar.equals("") && isOldCar.equals("true")){
+                            specialDocuments += "<li>Tarjeta de circulación </li>";
+                        }
+                        else
+                            specialDocuments += "<li>Factura de vehículo</li>";
+                        if(isOldClient != null && (isOldClient.equals("") || isOldClient.equals("false"))){
+                            specialDocuments += "<li>Patentes</li> <li>DPI de Representante Legal </li> <li>RTU </li><li> Recibo de Servicios</li> <li>Nombramiento Representante Legal</li></ul>";
+                        }
+
+                    }
+					render(incident, client,aditional_multimedia,isOldClient,isOldCar,specialDocuments);
 				}
 			}
 		}
@@ -1508,7 +1572,8 @@ public class Incidents extends AdminBaseController {
 					renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
 					renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
 					renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
-					loadAddressCatalogs(client, payer);
+					loadPayerAddressCatalogs(client, payer);
+					//Change for payer catalog
 					loadCatalogsClient();
 					if (payer == null) {
 						payer = new ER_Client_Payer();
@@ -1534,12 +1599,12 @@ public class Incidents extends AdminBaseController {
 				if (canViewClient(client)) {
 					if (vehicle != null) {
 						if (vehicle.line != null && vehicle.line.brand != null) {
-							List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
+							List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null", vehicle.line.brand.id).fetch();
 							renderArgs.put("lines", lines);
 						}
-						List<ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
+						List<ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL").fetch();
 						renderArgs.put("brands", brands);
-						renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
+						renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("").fetch());
 						renderArgs.put("vehicleRates", ER_Rate.findAll());
 						renderArgs.put("vehicleERYears", ER_Year.findAll());
 						renderArgs.put("vehicleReminderTypes", ER_Reminder_Type.find("order by name asc").fetch());
@@ -1587,75 +1652,6 @@ public class Incidents extends AdminBaseController {
 			e.printStackTrace();
 		}
 	}
-    /*
-	 * ************************************************************************************************************************
-	 * Client editing
-	 * ************************************************************************************************************************
-	 */
-    @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-    public static void editClient(Long clientId, Long incidentId, Integer activeTab) {
-		try {
-		if (clientId != null) {
-			ER_Incident incident = ER_Incident.findById(incidentId);
-			ER_Client client = incident.client;
-			ER_Client_Payer payer = client.payer != null ? (ER_Client_Payer) ER_Client_Payer.findById(client.payer.id) : null;
-			ER_Legal_Representative legalRepresentative = client.legalRepresentative;
-			ER_Legal_Representative legalRepresentativePayer = client.payer != null ? client.payer.legalRepresentativePayer : null;
-			ER_Vehicle vehicle = incident.vehicle;
-			ER_Payment payment = incident.payment;
-			ER_Client_PEP clientPEP = client.clientPEP;
-			ER_Client_PayerPEP clientPayerPEP = client.payer != null ? client.payer.clientPayerPEP : null;
-			if (canViewClient(client)) {
-				renderArgs.put("countries", ER_Geographic_Area.find("id_father is null order by name asc").fetch());
-				renderArgs.put("professions", ER_Profession.find("order by name asc").fetch());
-				renderArgs.put("beneficiaries", ER_Beneficiaries.find(" order by name asc").fetch());
-
-				loadAddressCatalogs(client, payer);
-
-				if (vehicle != null) {
-					if (vehicle.line != null && vehicle.line.brand != null) {
-						List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1  and v.transferCode is not null order by v.name", vehicle.line.brand.id).fetch();
-						renderArgs.put("lines", lines);
-					}
-					List<ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
-					renderArgs.put("brands", brands);
-					renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
-					renderArgs.put("vehicleRates", ER_Rate.findAll());
-					renderArgs.put("vehicleERYears", ER_Year.findAll());
-					renderArgs.put("vehicleReminderTypes", ER_Reminder_Type.find("order by name asc").fetch());
-					renderArgs.put("vehiclePlateTypes", ER_Plate_Type.findAll());
-					renderArgs.put("chargeTypes", ER_Charge_Type.find("order by name asc").fetch());
-					renderArgs.put("bankAccountTypes", ER_Bank_Account_Type.find("order by name asc").fetch());
-					renderArgs.put("banks", ER_Bank.find("select distinct b from ER_Bank as b where b.active = ?", true).fetch());
-					renderArgs.put("cardTypes", ER_Card_Type.find("order by name asc").fetch());
-					renderArgs.put("cardClassz", ER_Card_Class.find("order by name asc").fetch());
-
-					if (vehicle.armor == null) {
-						vehicle.armor = "N";
-					}
-					if (vehicle.isNew == null) {
-						vehicle.isNew = true;
-					}
-				}
-				if (payer == null) {
-					payer = new ER_Client_Payer();
-					payer.isIndividual = true;
-				}
-				loadCatalogsClient();
-
-				List<ER_Aditional_Multimedia> aditional_multimedia = null;
-				if (client.multimedia != null)
-					aditional_multimedia = ER_Aditional_Multimedia.find("multimedia_id = ?", client.multimedia.id).fetch();
-				render(incident, client, vehicle, payment, payer, legalRepresentative, legalRepresentativePayer, incidentId, activeTab, clientPEP, clientPayerPEP, aditional_multimedia);
-			}
-		}
-		incidentsList(null, null);
-		}
-    	catch(Exception e){
-			Logger.error("error: " + e.getMessage());
-			e.printStackTrace();
-		}
-    }
 
     /**
      * Load all the catalogs to the client form
@@ -1691,9 +1687,54 @@ public class Incidents extends AdminBaseController {
 
     }
 
+	//* -------- Function to load address lists boxes for individual and legal client, payer forms.-----------------------------------------------
+	// --------- by default country = GUATEMALA and load DEPARTMENTS for father country. if payer is null or empty, set client parameters.--------
+	private static void loadPayerAddressCatalogs(ER_Client client, ER_Client_Payer payer) {
+		try{
+			if (payer != null) {
+				//-----------------------------------------------------------------------PAYER ADDRESS MAIL LISTS --------------------------------------------------------
+				if (payer.country != null && payer.country.id != null) {
+					renderArgs.put("payerDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.country.id).fetch());
+				}
+				if (payer.department != null && payer.department.id != null) {
+					renderArgs.put("payerMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.department.id).fetch());
+				}
+				if (payer.municipality != null && payer.municipality.id != null) {
+					renderArgs.put("payerZones", ER_Geographic_Area.find("id_father = ? order by name asc", payer.municipality.id).fetch());
+				}
+				//----------------------------------------------------PAYER PAYMENT ADDRESS LISTS---------------------------------------------------------------------
+				if (payer.countryWork != null && payer.countryWork.id != null) {
+					renderArgs.put("payerWorkDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.countryWork.id).fetch());
+				}
+				if (payer.workDepartment != null && payer.workDepartment.id != null) {
+					renderArgs.put("payerWorkMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.workDepartment.id).fetch());
+				}
+				if (payer.workMunicipality != null && payer.workMunicipality.id != null) {
+					renderArgs.put("payerWorkZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.workMunicipality.id).fetch());
+				}
+				//----------------------------------------------------PAYER LEGAL REPRESENTATIVE ADDRESS BUSINESS LIST-----------------------------------------------
+				if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.country != null && payer.legalRepresentativePayer.country.id != null) {
+					renderArgs.put("payerLegalDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.country.id).fetch());
+				}
+				if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.department != null && payer.legalRepresentativePayer.department.id != null) {
+					renderArgs.put("payerLegalMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.department.id).fetch());
+				}
+				if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.municipality != null && payer.legalRepresentativePayer.municipality.id != null) {
+					renderArgs.put("payerLegalZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.legalRepresentativePayer.municipality.id).fetch());
+				}
+				//----------------------------------------------------------------------------------------------------------------
+			}
+
+		}
+		catch(Exception e){
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
     //* -------- Function to load address lists boxes for individual and legal client, payer forms.-----------------------------------------------
 	// --------- by default country = GUATEMALA and load DEPARTMENTS for father country. if payer is null or empty, set client parameters.--------
-    private static void loadAddressCatalogs(ER_Client client, ER_Client_Payer payer) {
+    private static void loadClientAddressCatalogs(ER_Client client) {
     	try{
 		if (client != null) {
 			//----------------------------------------------------CLIENT MAIL ADDRESS LISTS---------------------------------------------------------------------
@@ -1736,40 +1777,6 @@ public class Incidents extends AdminBaseController {
 				renderArgs.put("legalZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", client.legalRepresentative.municipality.id).fetch());
 			}
 		}
-		if (payer != null) {
-			//-----------------------------------------------------------------------PAYER ADDRESS MAIL LISTS --------------------------------------------------------
-			if (payer.country != null && payer.country.id != null) {
-				renderArgs.put("payerDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.country.id).fetch());
-			}
-			if (payer.department != null && payer.department.id != null) {
-				renderArgs.put("payerMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.department.id).fetch());
-			}
-			if (payer.municipality != null && payer.municipality.id != null) {
-				renderArgs.put("payerZones", ER_Geographic_Area.find("id_father = ? order by name asc", payer.municipality.id).fetch());
-			}
-			//----------------------------------------------------PAYER PAYMENT ADDRESS LISTS---------------------------------------------------------------------
-			if (payer.countryWork != null && payer.countryWork.id != null) {
-				renderArgs.put("payerWorkDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.countryWork.id).fetch());
-			}
-			if (payer.workDepartment != null && payer.workDepartment.id != null) {
-				renderArgs.put("payerWorkMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.workDepartment.id).fetch());
-			}
-			if (payer.workMunicipality != null && payer.workMunicipality.id != null) {
-				renderArgs.put("payerWorkZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.workMunicipality.id).fetch());
-			}
-			//----------------------------------------------------PAYER LEGAL REPRESENTATIVE ADDRESS BUSINESS LIST-----------------------------------------------
-			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.country != null && payer.legalRepresentativePayer.country.id != null) {
-				renderArgs.put("payerLegalDepartments", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.country.id).fetch());
-			}
-			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.department != null && payer.legalRepresentativePayer.department.id != null) {
-				renderArgs.put("payerLegalMunicipalities", ER_Geographic_Area.find("id_father = ? order by name asc", payer.legalRepresentativePayer.department.id).fetch());
-			}
-			if (payer.legalRepresentativePayer != null && payer.legalRepresentativePayer.municipality != null && payer.legalRepresentativePayer.municipality.id != null) {
-				renderArgs.put("payerLegalZones", ER_Geographic_Area.find("id_father = ? order by transfer_code asc", payer.legalRepresentativePayer.municipality.id).fetch());
-			}
-			//----------------------------------------------------------------------------------------------------------------
-		}
-
 		}
 		catch(Exception e){
 			Logger.error("error: " + e.getMessage());
@@ -1794,9 +1801,59 @@ public class Incidents extends AdminBaseController {
 				if((payer.taxNumber != null && !payer.taxNumber.isEmpty())){
 					currentClient.useDataClientPayer = false;
 				}
+				if(client.useDataClientPayer != null && client.useDataClientPayer){
+
+					payer.firstName = currentClient.firstName;
+					payer.secondName = currentClient.secondName;
+					payer.firstSurname = currentClient.firstSurname;
+					payer.isIndividual = currentClient.isIndividual;
+					payer.marriedSurname = currentClient.marriedSurname;
+					payer.address = currentClient.address;
+					payer.addressWork = currentClient.addressWork;
+					payer.economicActivity = currentClient.economicActivity;
+					payer.companyName = currentClient.companyName;
+					payer.country = currentClient.country;
+					payer.department = currentClient.department;
+					payer.email = currentClient.email;
+					payer.municipality = currentClient.municipality;
+					payer.zone = currentClient.zone;
+					payer.taxNumber = currentClient.taxNumber;
+					payer.birthdate = currentClient.birthdate;
+					payer.businessName = currentClient.businessName;
+					payer.identificationDocument = currentClient.identificationDocument;
+					payer.writeDate = currentClient.writeDate;
+					payer.passport = currentClient.passport;
+					payer.expose = currentClient.expose;
+					payer.phoneNumber1 = currentClient.phoneNumber1;
+					payer.phoneNumber2 = currentClient.phoneNumber2;
+					payer.phoneNumber3 = currentClient.phoneNumber3;
+					payer.phoneNumberWork1 = currentClient.phoneNumberWork1;
+					payer.phoneNumberWork2 = currentClient.phoneNumberWork2;
+					payer.phoneNumberWork3 = currentClient.phoneNumberWork3;
+					payer.civilStatus = currentClient.civilStatus;
+					payer.profession = currentClient.profession;
+					payer.nationality = currentClient.nationality;
+					payer.registrationDate = currentClient.registrationDate;
+
+					if(currentClient.legalRepresentative != null) {
+                        legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
+                        legalRepresentativePayer.secondName = currentClient.legalRepresentative.secondName;
+                        legalRepresentativePayer.firstSurname = currentClient.legalRepresentative.firstSurname;
+                        legalRepresentativePayer.secondSurname = currentClient.legalRepresentative.secondSurname;
+                        legalRepresentativePayer.profession = currentClient.legalRepresentative.profession;
+                        legalRepresentativePayer.identificationDocument = currentClient.legalRepresentative.identificationDocument;
+                        legalRepresentativePayer.passport = currentClient.legalRepresentative.passport;
+                        legalRepresentativePayer.taxNumber = currentClient.taxNumber;
+                    }
+					payer.legalRepresentativePayer = legalRepresentativePayer;
+
+				}
 
 				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
 					payer.legalRepresentativePayer = legalRepresentativePayer;
+				}
+				else{
+					payer.legalRepresentativePayer = new ER_Legal_Representative();
 				}
 
 				if(payer.expose != null && payer.expose) {
@@ -1811,11 +1868,15 @@ public class Incidents extends AdminBaseController {
 
 					payer.clientPayerPEP = clientPayerPEP;
 				}
+				if( currentClient.payer != null && currentClient.payer.id != null)
+					payer.id = currentClient.payer.id;
+
+
 				if (payer!= null && payer.id != null) {
 					currentPayer = ER_Client_Payer.findById(payer.id);
 					payer.ConvertUpper();
 					legalRepresentativePayer.ConvertUpper();
-					clientPayerPEP.ConvertUpper();
+					currentPayer.legalRepresentativePayer = legalRepresentativePayer;
 					BeanUtils.copyProperties(currentPayer, payer);
 					currentPayer.save();
 					currentClient.payer = currentPayer;
@@ -1824,11 +1885,12 @@ public class Incidents extends AdminBaseController {
 					currentPayer = new ER_Client_Payer();
 					payer.ConvertUpper();
 					legalRepresentativePayer.ConvertUpper();
-					clientPayerPEP.ConvertUpper();
+                    currentPayer.legalRepresentativePayer = legalRepresentativePayer;
 					BeanUtils.copyProperties(currentPayer, payer);
 					currentPayer.save();
 					currentClient.payer = currentPayer;
 				}
+
 				String completeAction = Messages.get("client.edit.next") != null ? Messages.get("client.edit.next") : "Siguiente";
 				String partialAction = Messages.get("client.edit.partial") != null ? Messages.get("client.edit.partial") : "Guardar Parcial";
 				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
@@ -1949,6 +2011,11 @@ public class Incidents extends AdminBaseController {
 						flash.error("Por favor suba la multimedia que es obligatoria");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
+					if(currentClient.multimedia.hasConsolidated != null && currentClient.multimedia.hasConsolidated){
+                        currentClient.multimedia.canUploadFiles = false;
+                        currentClient.save();
+                        pagoTab(clientId, incidentId);
+                    }
 					if(currentClient.multimedia.urlDPI == null || currentClient.multimedia.urlDPI.equals("")){
 						flash.error("Por favor suba el DPI ya que es obligatorio");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
@@ -1989,7 +2056,12 @@ public class Incidents extends AdminBaseController {
 						flash.error("Por favor suba la multimedia que es obligatoria");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
-					else if((isOldClient.equals("false") || isOldClient.equals("")) && ( currentClient.multimedia.urlScanPatents == null || currentClient.multimedia.urlScanPatents.equals(""))){
+                    if(currentClient.multimedia.hasConsolidated != null && currentClient.multimedia.hasConsolidated){
+                        currentClient.multimedia.canUploadFiles = false;
+                        currentClient.save();
+                        pagoTab(clientId, incidentId);
+                    }
+					if((isOldClient.equals("false") || isOldClient.equals("")) && ( currentClient.multimedia.urlScanPatents == null || currentClient.multimedia.urlScanPatents.equals(""))){
 						flash.error("Por favor suba las patentes escaneadas");
 						documentoTab(clientId,incidentId,isOldClient,isOldCar);
 					}
@@ -2062,6 +2134,33 @@ public class Incidents extends AdminBaseController {
 			e.printStackTrace();
 		}
 	}
+
+    @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
+    public static void saveClientConsolidated(Long clientId,Long incidentId,File consolidated,String isOldClient,String isOldCar){
+        flash.discard();
+        try{
+            if(validation.hasErrors()){
+                params.flash();
+                validation.keep();
+            }else{
+                ER_Client currentClient = ER_Client.findById(clientId);
+                if(currentClient.multimedia == null) {
+                    ER_Multimedia multimedia = new ER_Multimedia();
+                    multimedia.save();
+                    currentClient.multimedia = multimedia;
+                }
+                currentClient.multimedia.uploadedFilesGD = false;
+                currentClient.multimedia.urlConsolidated = consolidated != null ? saveFile(consolidated) : currentClient.multimedia.urlConsolidated;
+                currentClient.multimedia.hasConsolidated = consolidated != null ? true : false;
+                currentClient.save();
+            }
+            flash.success(Messages.get("client.edit.success"));
+            documentoTab(clientId,incidentId,isOldClient,isOldCar);
+        }catch(Exception e){
+            Logger.error(e, e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
 	public static void saveClientReceiptServices(Long clientId,Long incidentId,File receiptServices,String isOldClient,String isOldCar){
@@ -2407,7 +2506,7 @@ public class Incidents extends AdminBaseController {
 					ConvertUtils.register(converter, Date.class);
 					client.useDataClientPayer = currentClient.useDataClientPayer;
 					client.multimedia = currentClient.multimedia;
-					client.legalRepresentative = currentClient.legalRepresentative;
+
 					client.payer = currentClient.payer;
 					BeanUtils.copyProperties(currentClient, client);
 					currentClient.save();
@@ -2611,10 +2710,13 @@ public class Incidents extends AdminBaseController {
 	    			List<ByteArrayOutputStream> streamArray = new ArrayList<ByteArrayOutputStream>();
 	    			streamArray.add(quotationPDFData(quotation));
 		    	
-	    			boolean result = Mails.quotations(incident, streamArray, false);
-	    			if (result) {
+	    			//boolean result = Mails.quotations(incident, streamArray, false);
+	    			SendQuotationsJob resendQuotationJob = new SendQuotationsJob(streamArray,incident);
+	    			resendQuotationJob.now();
+
+					//if (result) {
 	    				flash.success(Messages.get("incident.quotation.send.success"));
-	    			} else {
+	    			/*} else {
 	    				flash.error(Messages.get("incident.quotation.send.error"));
 						ER_Exceptions exceptions = new ER_Exceptions();
 						exceptions.description = Messages.get("incident.quotation.send.error");
@@ -2622,7 +2724,7 @@ public class Incidents extends AdminBaseController {
 						exceptions.quotation = quotation;
                         exceptions.active = 1;
 						exceptions.save();
-	    			}
+	    			}*/
 	    			incidentDetail(incident.id);
     			}
     		}
@@ -2695,461 +2797,463 @@ public class Incidents extends AdminBaseController {
 	}
     
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
-    public static void generatePolicy(	Long incidentId, 
-    									Boolean sendClient,
-    									Boolean sendPayer,
-    									Boolean sendPolicy,
-    									Boolean sendVehicle,
-    									Boolean sendCoverages,
-    									Boolean sendPrimes,
-    									Boolean sendPayment,
-    									Boolean sendWorkFlow,
-    									Boolean sendQueryVehicle){
-    	try{
-    	ER_Incident incident = ER_Incident.findById(incidentId);
+    public static void generatePolicy(	Long incidentId ){
+		ER_Incident incident = ER_Incident.findById(incidentId);
+		try {
 			Logger.info("Ingresa a generar poliza del caso: " + incident.number);
-			ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
-    	if(incident.status.code == ERConstants.INCIDENT_STATUS_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_APPROVED_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_INCOMPLETE){
-    		flash.error("Error: La inspección no se ha completado.");
-            ER_Exceptions exceptions = new ER_Exceptions();
-            exceptions.description = "Error: La inspección no se ha completado.";
-            exceptions.exceptionDate = new Date();
-            exceptions.quotation = incident.selectedQuotation;
-            exceptions.active = 1;
-            exceptions.save();
-    		incidentDetail(incident.id);
-    	}
-    	if(!isValidateFields(incident)){
-    		incidentDetail(incident.id);
-    	}
-        //check code agent
-        ER_General_Configuration configuration = ER_General_Configuration.find("").first();
-        if(FieldAccesor.isEmptyOrNull(configuration.agentCodeAS400)){
-            if(FieldAccesor.isEmptyOrNull(incident, "creator.profile.agentCode")){
-                flash.error("Error: Usuario no tiene codigo de agente asignado.");
-                ER_Exceptions exceptions = new ER_Exceptions();
-                exceptions.description = "Error: Usuario no tiene codigo de agente asignado.";
-                exceptions.exceptionDate = new Date();
-                exceptions.quotation = incident.selectedQuotation;
-                exceptions.active = 1;
-                exceptions.save();
-                incident.status = incidentStatusIncomplete;
-                incident.save();
-                incidentDetail(incident.id);
-            }
-        }
-    	//Valida nuevamente los 6 pagos y cobrador
-		ER_Payment_Frecuency frecuency = incident.selectedPaymentFrecuency;
-		if(frecuency.numberOfPayments > 6 &&  incident.payment.chargeType.id == 5) {
-			flash.error("No puede seleccionar medio de pago cobrador y número de pagos mayor a 6, favor modificar.");
-			incidentDetail(incident.id);
-		}
-		ER_Quotation quotation = ER_Quotation.findById(incident.selectedQuotation.id);
-    	if(quotation.carValue != null && quotation.carValue.compareTo(BigDecimal.ZERO)>0){
-			if(incident.vehicle.isNew == null || (incident.vehicle.isNew != null && !incident.vehicle.isNew)) {
-				if(incident.inspection == null || incident.inspection.inspectionDate == null){
-					flash.error("Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.");
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.";
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-				int days = differenceBetweenDates(incident.inspection.inspectionDate,incident.policyValidity);
-				if (days>15 || days<0) {
-					flash.error("Error: La vigencia de póliza no se encuentra dentro de los 15 días posteriores a inspección.");
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "Error: La vigencia de póliza no se encuentra dentro de los 15 días posteriores a inspección.";
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-				int daysFromToday = differenceBetweenDates(incident.inspection.inspectionDate, new Date());
-				if (daysFromToday > 15 || daysFromToday < 0) {
-					flash.error("Error: La fecha actual no se encuentra dentro de los 15 días posteriores a inspección.");
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "Error: La fecha actual no se encuentra dentro de los 15 días posteriores a inspección.";
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-			}
-			else{
-				if(incident.vehicle.invoiceDate != null) {
-					int days = differenceBetweenDates(incident.vehicle.invoiceDate, incident.policyValidity);
-					if (days > 30 || days < 0) {
-						flash.error("Error: La vigencia de poliza no se encuentra dentro de los 30 días posteriores a factura de vehículo.");
-						ER_Exceptions exceptions = new ER_Exceptions();
-						exceptions.description = "Error: La vigencia de poliza no se encuentra dentro de los 30 días posteriores a factura de vehículo.";
-						exceptions.exceptionDate = new Date();
-						exceptions.quotation = incident.selectedQuotation;
-						exceptions.active = 1;
-						exceptions.save();
-						incident.status = incidentStatusIncomplete;
-						incident.save();
-						incidentDetail(incident.id);
-					}
-					int daysFromToday = differenceBetweenDates(incident.vehicle.invoiceDate, new Date());
-					if (daysFromToday > 30 || daysFromToday < 0) {
-						flash.error("Error: La fecha actual no se encuentra dentro de los 30 días posteriores a factura de vehículo.");
-						ER_Exceptions exceptions = new ER_Exceptions();
-						exceptions.description = "Error: La fecha actual no se encuentra dentro de los 30 días posteriores a factura de vehículo.";
-						exceptions.exceptionDate = new Date();
-						exceptions.quotation = incident.selectedQuotation;
-						exceptions.active = 1;
-						exceptions.save();
-						incident.status = incidentStatusIncomplete;
-						incident.save();
-						incidentDetail(incident.id);
-					}
-
-				}
-				else {
-					flash.error("Error: No se encuentra la fecha de factura de vehículo");
-					ER_Exceptions exceptions = new ER_Exceptions();
-					exceptions.description = "Error: No se encuentra la fecha de factura de vehículo";
-					exceptions.exceptionDate = new Date();
-					exceptions.quotation = incident.selectedQuotation;
-					exceptions.active = 1;
-					exceptions.save();
-					incident.status = incidentStatusIncomplete;
-					incident.save();
-					incidentDetail(incident.id);
-				}
-			}
-		}
-		else{
-			int daysFromToday = differenceBetweenDates(incident.policyValidity, new Date());
-			if (daysFromToday > 8 || daysFromToday < -8) {
-				flash.error("Error: La fecha actual no se encuentra dentro de los 8 días posteriores a vigencia de poliza.");
+			if (incident.status.code == ERConstants.INCIDENT_STATUS_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_APPROVED_INSPECTION || incident.status.code == ERConstants.INCIDENT_STATUS_INCOMPLETE) {
+				flash.error("Error: La inspección no se ha completado.");
 				ER_Exceptions exceptions = new ER_Exceptions();
-				exceptions.description = "Error: La fecha actual no se encuentra dentro de los 8 días posteriores a vigencia de poliza.";
+				exceptions.description = "Error: La inspección no se ha completado.";
 				exceptions.exceptionDate = new Date();
 				exceptions.quotation = incident.selectedQuotation;
 				exceptions.active = 1;
 				exceptions.save();
-				incident.status = incidentStatusIncomplete;
-				incident.save();
 				incidentDetail(incident.id);
 			}
-		}
-
-    	
-    	if(sendClient != null && sendClient){
-    		if(incident.client.isIndividual != null && !incident.client.isIndividual){
-    			ER_Transaction_Status transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
-    			if(!transaction.complete){
-    				BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
-        			transaction.updateFromResponse(policyService.sendBusinessClient(businessClientRequest));
-        			if(!transaction.complete){
-        				incident.merge();
-        				flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
-                        ER_Exceptions exceptions = new ER_Exceptions();
-                        exceptions.description = "DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message;
-                        exceptions.exceptionDate = new Date();
-                        exceptions.quotation = incident.selectedQuotation;
-                        exceptions.active = 1;
-                        exceptions.save();
-                        incident.status = incidentStatusIncomplete;
-                        incident.save();
-                        incidentDetail(incident.id);
-    				}
-    			}
-    		}else if(incident.client.isIndividual == null || incident.client.isIndividual){
-    			ER_Transaction_Status transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
-    			if(!transaction.complete){
-    				PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
-        			transaction.updateFromResponse(policyService.sendPersonClient(personClientRequest));
-        			if(!transaction.complete){
-        				incident.merge();
-        				flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
-                        ER_Exceptions exceptions = new ER_Exceptions();
-                        exceptions.description = "DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message;
-                        exceptions.exceptionDate = new Date();
-                        exceptions.quotation = incident.selectedQuotation;
-                        exceptions.active = 1;
-                        exceptions.save();
-                        incident.status = incidentStatusIncomplete;
-                        incident.save();
+			if (!isValidateFields(incident)) {
+				incidentDetail(incident.id);
+			}
+			//check code agent
+			ER_General_Configuration configuration = ER_General_Configuration.find("").first();
+			if (FieldAccesor.isEmptyOrNull(configuration.agentCodeAS400)) {
+				if (FieldAccesor.isEmptyOrNull(incident, "creator.profile.agentCode")) {
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					flash.error("Error: Usuario no tiene codigo de agente asignado.");
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "Error: Usuario no tiene codigo de agente asignado.";
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
+			}
+			//Valida nuevamente los 6 pagos y cobrador
+			ER_Payment_Frecuency frecuency = incident.selectedPaymentFrecuency;
+			if (frecuency.numberOfPayments > 6 && incident.payment.chargeType.id == 5) {
+				flash.error("No puede seleccionar medio de pago cobrador y número de pagos mayor a 6, favor modificar.");
+				incidentDetail(incident.id);
+			}
+			ER_Quotation quotation = ER_Quotation.findById(incident.selectedQuotation.id);
+			if (quotation.carValue != null && quotation.carValue.compareTo(BigDecimal.ZERO) > 0) {
+				if (incident.vehicle.isNew == null || (incident.vehicle.isNew != null && !incident.vehicle.isNew)) {
+					if (incident.inspection == null || incident.inspection.inspectionDate == null) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						flash.error("Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.");
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "Error: El vehiculo debe ser nuevo para no requerir inspección, por favor coloque fecha de inspección.";
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
 						incidentDetail(incident.id);
-    				}
-    			}
-    		}
-    	}
-    	
-    	if(sendPayer != null && sendPayer){
-    		ER_Transaction_Status transaction = incident.getTransaction(PayerRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataPayer(createRequestService.createPayerRequest(incident)));
-				if(!transaction.complete){
-					incident.merge();
-    				flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS PAGADOR -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
+					}
+					int days = differenceBetweenDates(incident.inspection.inspectionDate, incident.policyValidity);
+					if (days > 15 || days < 0) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						flash.error("Error: La vigencia de póliza no se encuentra dentro de los 15 días posteriores a inspección.");
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "Error: La vigencia de póliza no se encuentra dentro de los 15 días posteriores a inspección.";
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
+					int daysFromToday = differenceBetweenDates(incident.inspection.inspectionDate, new Date());
+					if (daysFromToday > 15 || daysFromToday < 0) {
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						flash.error("Error: La fecha actual no se encuentra dentro de los 15 días posteriores a inspección.");
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "Error: La fecha actual no se encuentra dentro de los 8 días posteriores a vigencia de poliza.";
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
+				} else {
+					if (incident.vehicle.invoiceDate != null) {
+						int days = differenceBetweenDates(incident.vehicle.invoiceDate, incident.policyValidity);
+						if (days > 30 || days < 0) {
+							ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+							flash.error("Error: La vigencia de poliza no se encuentra dentro de los 30 días posteriores a factura de vehículo.");
+							ER_Exceptions exceptions = new ER_Exceptions();
+							exceptions.description = "Error: La vigencia de poliza no se encuentra dentro de los 30 días posteriores a factura de vehículo.";
+							exceptions.exceptionDate = new Date();
+							exceptions.quotation = incident.selectedQuotation;
+							exceptions.active = 1;
+							exceptions.save();
+							incident.status = incidentStatusIncomplete;
+							incident.save();
+							incidentDetail(incident.id);
+						}
+						int daysFromToday = differenceBetweenDates(incident.vehicle.invoiceDate, new Date());
+						if (daysFromToday > 30 || daysFromToday < 0) {
+							ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+							flash.error("Error: La fecha actual no se encuentra dentro de los 30 días posteriores a factura de vehículo.");
+							ER_Exceptions exceptions = new ER_Exceptions();
+							exceptions.description = "Error: La fecha actual no se encuentra dentro de los 30 días posteriores a factura de vehículo.";
+							exceptions.exceptionDate = new Date();
+							exceptions.quotation = incident.selectedQuotation;
+							exceptions.active = 1;
+							exceptions.save();
+							incident.status = incidentStatusIncomplete;
+							incident.save();
+							incidentDetail(incident.id);
+						}
+					} else {
+						flash.error("Error: No se encuentra la fecha de factura de vehículo");
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "Error: No se encuentra la fecha de factura de vehículo";
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
+				}
+			} else {
+				int daysFromToday = differenceBetweenDates(incident.policyValidity, new Date());
+				if (daysFromToday > 8 || daysFromToday < -8) {
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					flash.error("Error: La fecha actual no se encuentra dentro de los 8 días posteriores a vigencia de poliza.");
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "Error: La fecha actual no se encuentra dentro de los 8 días posteriores a vigencia de poliza.";
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
 				}
 			}
-    	}
-    	
-    	if(sendVehicle != null && sendVehicle){
-    		ER_Transaction_Status transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident)));
+
+			Logger.info("Paso todas las validaciones, Generando POLIZA de verdad.");
+			ER_Transaction_Status transaction;
+			if(incident.client.isIndividual != null && !incident.client.isIndividual){
+				transaction = incident.getTransaction(BusinessClientRequest.TRANSACTION);
 				if(!transaction.complete){
-					incident.merge();
-    				flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS VEHICULO -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
+					BusinessClientRequest businessClientRequest = createRequestService.createBusinessClientRequest(incident);
+					BusinessClientResponse response = policyService.sendBusinessClient(businessClientRequest);
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if(!transaction.complete){
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS CLIENTE EMPRESARIAL -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
+				}
+			}else if(incident.client.isIndividual == null || incident.client.isIndividual){
+				transaction = incident.getTransaction(PersonClientRequest.TRANSACTION);
+				if(!transaction.complete){
+					PersonClientRequest personClientRequest = createRequestService.createPersonClientRequest(incident);
+					PersonClientResponse response = policyService.sendPersonClient(personClientRequest);
+					transaction.updateFromResponse(response, jsonService.toJson(response));
+					if(!transaction.complete){
+						ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+						incident.merge();
+						flash.error("DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message);
+						ER_Exceptions exceptions = new ER_Exceptions();
+						exceptions.description = "DATOS CLIENTE INDIVIDUAL -> AS400: " + transaction.message;
+						exceptions.exceptionDate = new Date();
+						exceptions.quotation = incident.selectedQuotation;
+						exceptions.active = 1;
+						exceptions.save();
+						incident.status = incidentStatusIncomplete;
+						incident.save();
+						incidentDetail(incident.id);
+					}
 				}
 			}
-    	}
-    	
-    	PolicyResponse policyResponse = null;
-    	if(sendPolicy != null && sendPolicy){
-    		ER_Transaction_Status transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
+
+			transaction = incident.getTransaction(PayerRequest.TRANSACTION);
+			if(!transaction.complete){
+				PayerResponse response = policyService.sendDataPayer(createRequestService.createPayerRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
+				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					incident.merge();
+					flash.error("DATOS PAGADOR -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS PAGADOR -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
+			}
+
+			transaction = incident.getTransaction(VehicleRequest.TRANSACTION);
+			if(!transaction.complete){
+				VehicleResponse response = policyService.sendDataVehicle(createRequestService.createVehicleRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
+				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					incident.merge();
+					flash.error("DATOS VEHICULO -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS VEHICULO -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
+			}
+
+			PolicyResponse policyResponse;
+			transaction = incident.getTransaction(PolicyRequest.TRANSACTION);
 			if(!transaction.complete){
 				policyResponse = policyService.sendDataPolicy(createRequestService.createPolicyRequest(incident));
-				transaction.updateFromResponse(policyResponse);
+				transaction.updateFromResponse(policyResponse, jsonService.toJson(policyResponse));
 				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
-    				flash.error("DATOS POLIZA -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS POLIZA -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
+					flash.error("DATOS POLIZA -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS POLIZA -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
 				}
-			}else{
-				policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+			} else {
+				if (transaction.xml.startsWith("<")) {
+					policyResponse = transaction.getObjectResponseFromXML(PolicyResponse.class);
+				} else {
+					policyResponse = (PolicyResponse) jsonService.getAsJson(transaction.xml, PolicyResponse.class);
+				}
 			}
-    	}
 
-        ER_Incident_Status incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_FINALIZED).first();
+			transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
+			if(!transaction.complete){
+				CoveragesResponse response = policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
+				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					incident.merge();
+					flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS COBERTURAS -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
+			}
 
+			transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
+			if(!transaction.complete){
+				PrimeResponse response = policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
+				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
+					incident.merge();
+					flash.error("DATOS PRIMA -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS PRIMA -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
+				}
+			}
 
-    	if(sendCoverages != null && sendCoverages){
-    		ER_Transaction_Status transaction = incident.getTransaction(CoveragesRequest.TRANSACTION);
+			transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
 			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendListCoverages(createRequestService.createCoveragesRequest(incident)));
+				PaymentMethodResponse response = policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
-    				flash.error("DATOS COBERTURAS -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS COBERTURAS -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
+					flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS FORMA DE PAGO -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
 				}
 			}
-    	}
-    	
-    	if(sendPrimes != null && sendPrimes){
-    		ER_Transaction_Status transaction = incident.getTransaction(PrimeRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPrimeList(createRequestService.createPrimeRequest(incident, policyResponse)));
+
+			transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
+			if(!transaction.complete) {
+				WorkFlowResponse response = policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident));
+				transaction.updateFromResponse(response, jsonService.toJson(response));
 				if(!transaction.complete){
+					ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 					incident.merge();
-    				flash.error("DATOS PRIMA -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS PRIMA -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
+					flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
+					ER_Exceptions exceptions = new ER_Exceptions();
+					exceptions.description = "DATOS WORKFLOW -> AS400: " + transaction.message;
+					exceptions.exceptionDate = new Date();
+					exceptions.quotation = incident.selectedQuotation;
+					exceptions.active = 1;
+					exceptions.save();
+					incident.status = incidentStatusIncomplete;
+					incident.save();
+					incidentDetail(incident.id);
 				}
 			}
-    	}
-    	
-    	if(sendPayment != null && sendPayment){
-    		ER_Transaction_Status transaction = incident.getTransaction(PaymentMethodRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendPaymentMethod(createRequestService.createPaymentMethodRequest(incident)));
-				if(!transaction.complete){
-					incident.merge();
-    				flash.error("DATOS FORMA DE PAGO -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS FORMA DE PAGO -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
-				}
+
+			Logger.info("Poliza Generada");
+			ER_Incident_Status incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_FINALIZED).first();
+			if(policyResponse != null){
+				incident.branch = policyResponse.getBranch();
+				incident.policy = policyResponse.getPolicy();
+				incident.policyFileName = policyResponse.getFilename();
+				incident.policyFileDownload = Boolean.FALSE;
 			}
-    	}
-    	
-    	if(sendWorkFlow != null && sendWorkFlow){
-    		ER_Transaction_Status transaction = incident.getTransaction(WorkFlowRequest.TRANSACTION);
-			if(!transaction.complete){
-				transaction.updateFromResponse(policyService.sendDataWorkFlow(createRequestService.createWorkFlowRequest(incident)));
-				if(!transaction.complete){
-					incident.merge();
-    				flash.error("DATOS WORKFLOW -> AS400: " + transaction.message);
-                    ER_Exceptions exceptions = new ER_Exceptions();
-                    exceptions.description = "DATOS WORKFLOW -> AS400: " + transaction.message;
-                    exceptions.exceptionDate = new Date();
-                    exceptions.quotation = incident.selectedQuotation;
-                    exceptions.active = 1;
-                    exceptions.save();
-                    incident.status = incidentStatusIncomplete;
-                    incident.save();
-    				incidentDetail(incident.id);
-				}
-			}
-    	}
-		if(policyResponse != null){
-			incident.branch = policyResponse.getBranch();
-			incident.policy = policyResponse.getPolicy();
-			incident.policyFileName = policyResponse.getFilename();
-			incident.policyFileDownload = Boolean.FALSE;
 			incident.status = incidentStatus;
+			incident.finalizedDate = new Date();
 			incident.save();
-		}
-    	incident.status = incidentStatus;
-        incident.save();
-    	incident.merge();
-    	//Delete all the exceptions
-        List <ER_Exceptions> Exceptions = ER_Exceptions.find("quotation_Id = ?", incident.selectedQuotation.getId()).fetch();
-        for (ER_Exceptions except:Exceptions){
-            except.active = 0;
-            except.save();
-        }
-        //Generate all pdf to TMP and then to drive.
-		List<ER_Form> availForms = ER_Form.find("order by name asc").fetch();
-        //Constantes de formularios
-		//1=IVE, 2=Solicitud Auto, 7=IVE JURIDICO, 8= PEP 9 = pagador PEP
-		for(ER_Form form: availForms) {
-			Logger.info("Inicia a generar formularios del caso: " + incident.number);
-			  if(form.id == 1 || form.id == 2 ||  form.id == 7 ||  form.id == 8 ||  form.id == 9)
-			  {
-				if  ((form.id == 9 ||  form.id == 8) && incident.client.expose == false){
-					continue;
+			//Delete all the exceptions
+			List <ER_Exceptions> Exceptions = ER_Exceptions.find("quotation_Id = ?", incident.selectedQuotation.getId()).fetch();
+			for (ER_Exceptions except:Exceptions){
+				except.active = 0;
+				except.save();
+			}
+			Logger.info("Generando PDFS");
+			//Generate all pdf to TMP and then to drive.
+			List<ER_Form> availForms = ER_Form.find("order by name asc").fetch();
+			//Constantes de formularios
+			//1=IVE, 2=Solicitud Auto, 7=IVE JURIDICO, 8= PEP 9 = pagador PEP
+			for(ER_Form form: availForms) {
+				Logger.info("Inicia a generar formularios del caso: " + incident.number);
+				if(form.id == 1 || form.id == 2 ||  form.id == 7 ||  form.id == 8 ||  form.id == 9)
+				{
+					if  ((form.id == 9 ||  form.id == 8) && incident.client.expose == false){
+						continue;
+					}
+					if(form.id==7 && incident.client.isIndividual == true)
+						continue;
+					if (form!=null && !form.parameters.isEmpty()) {
+						List<ER_Incident_Parameter> parameters = ER_Incident_Parameter.find("incident.id = :i AND parameter IN (:p)").bind("p", form.parameters).bind("i", incidentId).fetch();
+
+						if (parameters!=null) {
+							//Put the parameters in the renderArgs with the parameter identifier as the key
+							for (ER_Incident_Parameter parameter : parameters) {
+								renderArgs.put(parameter.parameter.identifier, parameter.getValueString());
+							}
+						}
+					}
+					//Set the size of the PDF to Letter portrait
+					Options options = new Options();
+					options.filename = form.name;
+					if (form.landscape) {
+						options.pageSize = IHtmlToPdfTransformer.LETTERL;
+					} else {
+						options.pageSize = IHtmlToPdfTransformer.LETTERP;
+					}
+
+					renderArgs.put("incident", incident);
+					renderArgs.put( "configuration", configuration);
+					//Render the PDF
+
+					String files = Play.applicationPath.getAbsolutePath() + "/tmpFiles/";
+					Logger.info("ruta a guardar files de forms: " +files + " del caso: " + incident.number);
+					File directory = new File(files);
+					if(!directory.exists()){
+						directory.mkdirs();
+					}
+					String generatedFileName = files + "Caso-" + incident.number + "-" +form.name + ".pdf";
+					PDF.MultiPDFDocuments docs = new PDF.MultiPDFDocuments();
+					docs.add(form.templatePath, options);
+					File filePDF = new File(generatedFileName);
+					writePDF(filePDF,docs,incident,configuration, options);
+					ER_Client currentClient = incident.client;
+					//Formulario IVE individual
+					if (form.id == 1 && incident.client.isIndividual == true){
+						currentClient.multimedia.urlFormIVE = generatedFileName;
+						currentClient.multimedia.uploadedFilesGD = false;
+
+					}
+					//Formulario solicitud Auto
+					else if (form.id == 2){
+						currentClient.multimedia.urlformRequestAuto = generatedFileName;
+						currentClient.multimedia.uploadedFilesGD = false;
+						Logger.info("Guarda formulario solicitud auto ");
+					}
+					//Formulario PEP
+					else if(form.id == 8){
+						currentClient.multimedia.urlFormPEP= generatedFileName;
+						currentClient.multimedia.uploadedFilesGD = false;
+					}
+					//Formulario IVE JURIDICO
+					else if(form.id == 7){
+						currentClient.multimedia.urlFormIVE = generatedFileName;
+						currentClient.multimedia.uploadedFilesGD = false;
+					}
+					//Formulario Pagador PEP
+					else if(form.id == 9){
+						currentClient.multimedia.urlFormPayerPEP = generatedFileName;
+						currentClient.multimedia.uploadedFilesGD = false;
+					}
+
+					currentClient.save();
 				}
-				if(form.id==7 && incident.client.isIndividual == true)
-				    continue;
-				  if (form!=null && !form.parameters.isEmpty()) {
-					  List<ER_Incident_Parameter> parameters = ER_Incident_Parameter.find("incident.id = :i AND parameter IN (:p)").bind("p", form.parameters).bind("i", incidentId).fetch();
+			}
+			ER_Client currentClient = incident.client;
+			currentClient.multimedia.canUploadFiles = true;
+			currentClient.save();
 
-					  if (parameters!=null) {
-						  //Put the parameters in the renderArgs with the parameter identifier as the key
-						  for (ER_Incident_Parameter parameter : parameters) {
-							  renderArgs.put(parameter.parameter.identifier, parameter.getValueString());
-						  }
-					  }
-				  }
-				  //Set the size of the PDF to Letter portrait
-				  Options options = new Options();
-				  options.filename = form.name;
-				  if (form.landscape) {
-					  options.pageSize = IHtmlToPdfTransformer.LETTERL;
-				  } else {
-					  options.pageSize = IHtmlToPdfTransformer.LETTERP;
-				  }
+			//Send success message to client
+			//Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
+			SendPolicyWelcomeJob sendPolicyWelcomeJob = new SendPolicyWelcomeJob(policyResponse,incident);
+			sendPolicyWelcomeJob.now();
 
-				  renderArgs.put("incident", incident);
-				  renderArgs.put( "configuration", configuration);
-				  //Render the PDF
-
-				  String files = Play.applicationPath.getAbsolutePath() + "/tmpFiles/";
-				  Logger.info("ruta a guardar files de forms: " +files + " del caso: " + incident.number);
-				  File directory = new File(files);
-				  if(!directory.exists()){
-					  directory.mkdirs();
-				  }
-				  String generatedFileName = files + "Caso-" + incident.number + "-" +form.name + ".pdf";
-				  PDF.MultiPDFDocuments docs = new PDF.MultiPDFDocuments();
-				  docs.add(form.templatePath, options);
-				  File filePDF = new File(generatedFileName);
-				  writePDF(filePDF,docs,incident,configuration, options);
-				  ER_Client currentClient = incident.client;
-				  //Formulario IVE individual
-				  if (form.id == 1 && incident.client.isIndividual == true){
-					  currentClient.multimedia.urlFormIVE = generatedFileName;
-					  currentClient.multimedia.uploadedFilesGD = false;
-
-				  }
-				  //Formulario solicitud Auto
-				  else if (form.id == 2){
-					  currentClient.multimedia.urlformRequestAuto = generatedFileName;
-					  currentClient.multimedia.uploadedFilesGD = false;
-					  Logger.info("Guarda formulario solicitud auto ");
-				  }
-				  //Formulario PEP
-				  else if(form.id == 8){
-					  currentClient.multimedia.urlFormPEP= generatedFileName;
-					  currentClient.multimedia.uploadedFilesGD = false;
-				  }
-                  //Formulario IVE JURIDICO
-                  else if(form.id == 7){
-                      currentClient.multimedia.urlFormIVE = generatedFileName;
-					  currentClient.multimedia.uploadedFilesGD = false;
-                  }
-				  //Formulario Pagador PEP
-				  else if(form.id == 9){
-					  currentClient.multimedia.urlFormPayerPEP = generatedFileName;
-					  currentClient.multimedia.uploadedFilesGD = false;
-				  }
-
-				  currentClient.save();
-			  }
+            flash.put("GeneratePolicySuccess",policyResponse.getPolicy());
+			incidentDetail(incident.id);
+		} catch(Exception e){
+			Logger.error(e, e.getMessage());
+			flash.error("NO PUEDE GENERARSE LA POLIZA - EXISTE UN ERROR DE CONEXION");
+			incidentDetail(incident.id);
 		}
-            ER_Client currentClient = incident.client;
-            currentClient.multimedia.canUploadFiles = true;
-            currentClient.save();
-
-        //Send success message to client
-		Mails.welcomePolicyGenerated(incident, policyResponse.getPolicy());
-    	flash.put("GeneratePolicySuccess",policyResponse.getPolicy());
-    	incidentDetail(incident.id);
-	}
-		catch(Exception e){
-		Logger.error("error: " + e.getMessage());
-		e.printStackTrace();
-	}
     }
     
     private static boolean isValidateFields(ER_Incident incident){
     	boolean isValid = true;
 
-			StringBuilder errors = new StringBuilder("CAMPOS DE CLIENTE REQUERIDOS:");
+		StringBuilder errors = new StringBuilder("CAMPOS DE CLIENTE REQUERIDOS:");
 		if(!checkClientsByIdExist(incident.client.taxNumber + "|" + incident.client.identificationDocument)) {
 			if (incident.client.isIndividual != null && !incident.client.isIndividual) {
 				errors = new StringBuilder("CAMPOS DE CLIENTE JURIDICO REQUERIDOS:");

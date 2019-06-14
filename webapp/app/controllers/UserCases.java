@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import jobs.SendQuotationsJob;
 import models.*;
 import models.ws.*;
 import objects.LoJackOptions;
@@ -62,6 +63,7 @@ public class UserCases extends AdminBaseController {
     
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     private static void renderClientInformation(String iField) {
+		Integer userRol = connectedUserRoleCode(connectedUser());
     	ER_Client client = new ER_Client();
     	client.isIndividual = true;
     	client.useDataClientPayer = true;
@@ -71,7 +73,7 @@ public class UserCases extends AdminBaseController {
     		renderArgs.put("incident", incident);
     		renderArgs.put("client", incident.client);
     		renderArgs.put("iField", iField);
-    	}else if(checkRole(ERConstants.USER_ROLE_FINAL_USER)){
+    	}else if(userRol.equals(ERConstants.USER_ROLE_FINAL_USER)){
     		ER_User user = connectedUser();
     		client.email = user.email;
     		if(user.firstName != null){
@@ -186,17 +188,17 @@ public class UserCases extends AdminBaseController {
     		ER_Vehicle_Line line = ER_Vehicle_Line.findById(lineId);
     		if(line != null){
     			brandId = line.brand.id;
-    			List<ER_Vehicle_Value> values = ER_Vehicle_Value.find("year != null and line.insurable = 1 and line.id = ? order by year asc", line.id).fetch();
-    			renderArgs.put("values", values);
+    			//List<ER_Vehicle_Value> values = ER_Vehicle_Value.find("year != null and line.insurable = 1 and line.id = ? order by year asc", line.id).fetch();
+    			//renderArgs.put("values", values);
     		}
     	}
     	if(brandId != null){
 //    		List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v.line from ER_Vehicle_Value v where v.year != null and v.line.insurable = 1 and v.line.vehicleClass IS NOT NULL and v.line.transferCode is not null and v.line.brand.id = ? order by v.line.name", brandId).fetch();
-    		List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1 and v.transferCode is not null order by v.name", brandId).fetch();
+    		List<ER_Vehicle_Line> lines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1 and v.transferCode is not null", brandId).fetch();
     		
 			renderArgs.put("lines", lines);
     	}
-    	List <ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL order by v.brand.name").fetch();
+    	List <ER_Vehicle_Brand> brands = ER_Vehicle_Brand.find("select distinct v.brand from ER_Vehicle_Line v where v.insurable = 1 and v.vehicleClass IS NOT NULL").fetch();
     	renderArgs.put("brands", brands);
     	renderArgs.put("vehicleTypes", ER_Vehicle_Type.find("order by name").fetch());
 		renderArgs.put("vehicleRates", ER_Rate.findAll());
@@ -617,6 +619,7 @@ public class UserCases extends AdminBaseController {
 	 */
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor"})
     public static synchronized void saveAndSend(String iField, String back, @Valid ER_Task task, Long loJackId) {
+		Integer userRol = connectedUserRoleCode(connectedUser());
     	flash.clear();
     	ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
     	if(back != null){
@@ -646,7 +649,7 @@ public class UserCases extends AdminBaseController {
 			}
     		//create inspection if car is not new
 	    	if(incident.vehicle.isNew != null && !incident.vehicle.isNew){
-	    		if(checkRole(ERConstants.USER_ROLE_RUNNER_SELLER)){
+	    		if(userRol.equals(ERConstants.USER_ROLE_RUNNER_SELLER)){
 		    		//data from web service
 		    		incident.inspection.inspected = false;
 		    		//incident.inspection.inspectionNumber = "ws inspection number";
@@ -735,7 +738,10 @@ public class UserCases extends AdminBaseController {
 	    		streamArray.add(quotationPDFData(quotation));
 	    	}
 
-	    	Mails.quotations(incident, streamArray, true);
+			SendQuotationsJob sendQuotationsJob = new SendQuotationsJob(streamArray, incident);
+	    	sendQuotationsJob.now();
+
+	    	//Mails.quotations(incident, streamArray, true);
 	    	
 	    	successful(incident.id);
     	}catch(Exception e){
@@ -769,6 +775,7 @@ public class UserCases extends AdminBaseController {
     public static synchronized void saveAndSendPublic(String iField, String back, Long loJackId) {
     	flash.clear();
     	ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
+
     	if(back != null){
     		validation.clear();
     		for(ER_Quotation quotation: incident.quotations){
@@ -783,6 +790,7 @@ public class UserCases extends AdminBaseController {
     	}*/
     	
     	try{
+			Integer userRol = connectedUserRoleCode(connectedUser());
     		incident.status = ER_Incident_Status.find("byCode", ERConstants.INCIDENT_STATUS_CREATED).first();
     		incident.number = ER_Incident.generateIncidentNumber();
 			incident.creator = ER_User.find("byEmail", Security.connected()).first();
@@ -796,7 +804,7 @@ public class UserCases extends AdminBaseController {
 			}
     		//create inspection if car is not new
 	    	if(incident.vehicle.isNew != null && !incident.vehicle.isNew){
-	    		if(checkRole(ERConstants.USER_ROLE_RUNNER_SELLER)){
+	    		if(userRol.equals(ERConstants.USER_ROLE_RUNNER_SELLER)){
 		    		incident.inspection.inspected = false;
 	    		}
 	    	}
@@ -847,9 +855,11 @@ public class UserCases extends AdminBaseController {
 	    		quotation.loadDetailJSON();
 	    		streamArray.add(quotationPDFData(quotation));
 	    	}
-	    	Mails.quotations(incident, streamArray, false);
+			SendQuotationsJob sendQuotationsJob = new SendQuotationsJob(streamArray, incident);
+			sendQuotationsJob.now();
+	    	/*Mails.quotations(incident, streamArray, false);
 	    	Mails.incidentDetail(incident);
-	    	
+	    	*/
 	    	successful(incident.id);
     	}catch(Exception e){
     		Logger.error(e, "Error saving incident");

@@ -1,78 +1,89 @@
 package com.digitalgeko.servicebus.model.rest.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AutoInspectionRestResponse {
 
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("url")
+    private String url;
     @JsonProperty("case_id")
-    private String caseId;
-    private String caseRef;
-    private String address;
-    @JsonProperty("master_company_id")
-    private String masterCompanyId;
-    @JsonProperty("company_name")
-    private String companyName;
-    private Boolean isOpen;
-    private Integer status;
-    private String comments;
-    @JsonProperty("createdBy")
-    private String createdById;
+    private String caseNumber;
+    @JsonProperty("registration_number")
+    private String plate;
     @JsonProperty("created_by")
     private String createdByName;
+    @JsonProperty("status")
+    private Integer status;
     @JsonProperty("updatedBy")
     private String updatedById;
-    @JsonProperty("createdAt")
-    private Long createdDate;
-    @JsonProperty("updatedAt")
-    private Long updatedDate;
+    @JsonProperty("createdBy")
+    private String createdById;
 
-    private List<InspectionImage> images;
+    @JsonProperty("goodConditions")
+    private String goodConditions;
+    @JsonProperty("carYears")
+    private String carYears;
+    @JsonProperty("art908")
+    private String article908;
 
-    @JsonProperty("chassis")
-    private String vin;
-    @JsonProperty("circulationOwner")
-    private String owner;
-    private String color;
-    private String dpi;
-    @JsonProperty("drivingLicense")
-    private String licenseNumber;
-    @JsonProperty("drivingLicenseTypes")
-    private String licenseType;
-    private String email;
-    private String engine;
-    private Boolean goodConditions;
-    private Boolean haveDocs;
-    private Boolean havePhone;
-    private Integer grade;
-    private Boolean carYears;
+    @JsonProperty("numRef")
+    private String numRef;
+    @JsonProperty("caseRef")
+    private String caseRef;
     @JsonProperty("insured_name")
     private String insuredName;
+    @JsonProperty("isOpen")
+    private String isOpen;
+    @JsonProperty("phone")
+    private String phone;
+    @JsonProperty("model")
+    private String model;
+    @JsonProperty("grade")
+    private String grade;
+    @JsonProperty("master_company_id")
+    private String masterCompanyId;
+    @JsonProperty("driving_license")
+    private String licenseNumber;
+    @JsonProperty("brand")
+    private String brand;
+    @JsonProperty("createdAt")
+    private Long createdDate;
+    @JsonProperty("prefixInput")
+    private String prefixInput;
+    @JsonProperty("company_name")
+    private String companyName;
+    @JsonProperty("line")
+    private String line;
     @JsonProperty("insured_surname")
     private String insuredSurname;
-    private String insuredStreet;
-    private String prefixInput;
-    private String isOwner;
-    @JsonProperty("kmCar")
-    private String milage;
-    @JsonProperty("licenseYear")
-    private Integer licenseYears;
-    private String line;
-    private String model;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("circulationOwner")
+    private String owner;
+    @JsonProperty("color")
+    private String color;
     @JsonProperty("typeCar")
     private String carType;
-    private String origin;
-    @JsonProperty("over_excess")
-    private Integer overExcess;
-    private String phone;
-    @JsonProperty("policy_number")
-    private String policy;
-    @JsonProperty("safePlace")
-    private Boolean goodPlace;
     @JsonProperty("useCar")
     private String carUse;
+    @JsonProperty("chassis")
+    private String vin;
+    @JsonProperty("engine")
+    private String engine;
+    @JsonProperty("kmCar")
+    private String mileage;
+    @JsonProperty("updatedAt")
+    private Long updatedDate;
+    @JsonProperty("images")
+    private List<String> images;
+    @JsonProperty("report")
+    private String report;
 
     public String getId() {
         return id;
@@ -82,76 +93,28 @@ public class AutoInspectionRestResponse {
         this.id = id;
     }
 
-    public String getCaseId() {
-        return caseId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setCaseId(String caseId) {
-        this.caseId = caseId;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getCaseRef() {
-        return caseRef;
+    public String getCaseNumber() {
+        return caseNumber;
     }
 
-    public void setCaseRef(String caseRef) {
-        this.caseRef = caseRef;
+    public void setCaseNumber(String caseNumber) {
+        this.caseNumber = caseNumber;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPlate() {
+        return plate;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMasterCompanyId() {
-        return masterCompanyId;
-    }
-
-    public void setMasterCompanyId(String masterCompanyId) {
-        this.masterCompanyId = masterCompanyId;
-    }
-
-    public String getCompanyName() {
-        return companyName;
-    }
-
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
-    }
-
-    public Boolean getOpen() {
-        return isOpen;
-    }
-
-    public void setOpen(Boolean open) {
-        isOpen = open;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    public String getCreatedById() {
-        return createdById;
-    }
-
-    public void setCreatedById(String createdById) {
-        this.createdById = createdById;
+    public void setPlate(String plate) {
+        this.plate = plate;
     }
 
     public String getCreatedByName() {
@@ -162,12 +125,132 @@ public class AutoInspectionRestResponse {
         this.createdByName = createdByName;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public String getUpdatedById() {
         return updatedById;
     }
 
     public void setUpdatedById(String updatedById) {
         this.updatedById = updatedById;
+    }
+
+    public String getCreatedById() {
+        return createdById;
+    }
+
+    public void setCreatedById(String createdById) {
+        this.createdById = createdById;
+    }
+
+    public String getGoodConditions() {
+        return goodConditions;
+    }
+
+    public void setGoodConditions(String goodConditions) {
+        this.goodConditions = goodConditions;
+    }
+
+    public String getCarYears() {
+        return carYears;
+    }
+
+    public void setCarYears(String carYears) {
+        this.carYears = carYears;
+    }
+
+    public String getArticle908() {
+        return article908;
+    }
+
+    public void setArticle908(String article908) {
+        this.article908 = article908;
+    }
+
+    public String getNumRef() {
+        return numRef;
+    }
+
+    public void setNumRef(String numRef) {
+        this.numRef = numRef;
+    }
+
+    public String getCaseRef() {
+        return caseRef;
+    }
+
+    public void setCaseRef(String caseRef) {
+        this.caseRef = caseRef;
+    }
+
+    public String getInsuredName() {
+        return insuredName;
+    }
+
+    public void setInsuredName(String insuredName) {
+        this.insuredName = insuredName;
+    }
+
+    public String getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(String isOpen) {
+        this.isOpen = isOpen;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getMasterCompanyId() {
+        return masterCompanyId;
+    }
+
+    public void setMasterCompanyId(String masterCompanyId) {
+        this.masterCompanyId = masterCompanyId;
+    }
+
+    public String getLicenseNumber() {
+        return licenseNumber;
+    }
+
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public Long getCreatedDate() {
@@ -178,6 +261,38 @@ public class AutoInspectionRestResponse {
         this.createdDate = createdDate;
     }
 
+    public String getPrefixInput() {
+        return prefixInput;
+    }
+
+    public void setPrefixInput(String prefixInput) {
+        this.prefixInput = prefixInput;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getInsuredSurname() {
+        return insuredSurname;
+    }
+
+    public void setInsuredSurname(String insuredSurname) {
+        this.insuredSurname = insuredSurname;
+    }
+
     public Long getUpdatedDate() {
         return updatedDate;
     }
@@ -186,20 +301,12 @@ public class AutoInspectionRestResponse {
         this.updatedDate = updatedDate;
     }
 
-    public List<InspectionImage> getImages() {
-        return images;
+    public String getEmail() {
+        return email;
     }
 
-    public void setImages(List<InspectionImage> images) {
-        this.images = images;
-    }
-
-    public String getVin() {
-        return vin;
-    }
-
-    public void setVin(String vin) {
-        this.vin = vin;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getOwner() {
@@ -218,204 +325,12 @@ public class AutoInspectionRestResponse {
         this.color = color;
     }
 
-    public String getDpi() {
-        return dpi;
-    }
-
-    public void setDpi(String dpi) {
-        this.dpi = dpi;
-    }
-
-    public String getLicenseNumber() {
-        return licenseNumber;
-    }
-
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
-    }
-
-    public String getLicenseType() {
-        return licenseType;
-    }
-
-    public void setLicenseType(String licenseType) {
-        this.licenseType = licenseType;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEngine() {
-        return engine;
-    }
-
-    public void setEngine(String engine) {
-        this.engine = engine;
-    }
-
-    public Boolean getGoodConditions() {
-        return goodConditions;
-    }
-
-    public void setGoodConditions(Boolean goodConditions) {
-        this.goodConditions = goodConditions;
-    }
-
-    public Boolean getHaveDocs() {
-        return haveDocs;
-    }
-
-    public void setHaveDocs(Boolean haveDocs) {
-        this.haveDocs = haveDocs;
-    }
-
-    public Boolean getHavePhone() {
-        return havePhone;
-    }
-
-    public void setHavePhone(Boolean havePhone) {
-        this.havePhone = havePhone;
-    }
-
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
-    public Boolean getCarYears() {
-        return carYears;
-    }
-
-    public void setCarYears(Boolean carYears) {
-        this.carYears = carYears;
-    }
-
-    public String getInsuredName() {
-        return insuredName;
-    }
-
-    public void setInsuredName(String insuredName) {
-        this.insuredName = insuredName;
-    }
-
-    public String getInsuredSurname() {
-        return insuredSurname;
-    }
-
-    public void setInsuredSurname(String insuredSurname) {
-        this.insuredSurname = insuredSurname;
-    }
-
-    public String getInsuredStreet() {
-        return insuredStreet;
-    }
-
-    public void setInsuredStreet(String insuredStreet) {
-        this.insuredStreet = insuredStreet;
-    }
-
-    public String getPrefixInput() {
-        return prefixInput;
-    }
-
-    public void setPrefixInput(String prefixInput) {
-        this.prefixInput = prefixInput;
-    }
-
-    public String getIsOwner() {
-        return isOwner;
-    }
-
-    public void setIsOwner(String isOwner) {
-        this.isOwner = isOwner;
-    }
-
-    public String getMilage() {
-        return milage;
-    }
-
-    public void setMilage(String milage) {
-        this.milage = milage;
-    }
-
-    public Integer getLicenseYears() {
-        return licenseYears;
-    }
-
-    public void setLicenseYears(Integer licenseYears) {
-        this.licenseYears = licenseYears;
-    }
-
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public String getCarType() {
         return carType;
     }
 
     public void setCarType(String carType) {
         this.carType = carType;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
-    public Integer getOverExcess() {
-        return overExcess;
-    }
-
-    public void setOverExcess(Integer overExcess) {
-        this.overExcess = overExcess;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPolicy() {
-        return policy;
-    }
-
-    public void setPolicy(String policy) {
-        this.policy = policy;
-    }
-
-    public Boolean getGoodPlace() {
-        return goodPlace;
-    }
-
-    public void setGoodPlace(Boolean goodPlace) {
-        this.goodPlace = goodPlace;
     }
 
     public String getCarUse() {
@@ -426,186 +341,43 @@ public class AutoInspectionRestResponse {
         this.carUse = carUse;
     }
 
-    public class InspectionImage {
-        @JsonProperty("front")
-        private String front;
-        @JsonProperty("rear")
-        private String rear;
-        @JsonProperty("frontRight")
-        private String frontRight;
-        @JsonProperty("rearRight")
-        private String rearRight;
-        @JsonProperty("right")
-        private String right;
-        @JsonProperty("tablero")
-        private String board;
-        @JsonProperty("paneInterior")
-        private String interiorBoard;
-        @JsonProperty("maletero")
-        private String trunk;
-        @JsonProperty("llanta")
-        private String tyre;
-        @JsonProperty("llantaRepuesto")
-        private String trunkTyre;
-        @JsonProperty("capo")
-        private String hood;
-        @JsonProperty("accesoriosRadioAire")
-        private String radioAir;
-        @JsonProperty("accesoriosAlzaVidrios")
-        private String windowSwitch;
-        @JsonProperty("tarjetaCirculacion")
-        private String registration;
-        @JsonProperty("license")
-        private String license;
-        @JsonProperty("dpi")
-        private String dpi;
-        @JsonProperty("car")
-        private String car;
-        @JsonProperty("signature")
-        private String signature;
+    public String getVin() {
+        return vin;
+    }
 
-        public String getFront() {
-            return front;
-        }
+    public void setVin(String vin) {
+        this.vin = vin;
+    }
 
-        public void setFront(String front) {
-            this.front = front;
-        }
+    public String getEngine() {
+        return engine;
+    }
 
-        public String getRear() {
-            return rear;
-        }
+    public void setEngine(String engine) {
+        this.engine = engine;
+    }
 
-        public void setRear(String rear) {
-            this.rear = rear;
-        }
+    public String getMileage() {
+        return mileage;
+    }
 
-        public String getFrontRight() {
-            return frontRight;
-        }
+    public void setMileage(String mileage) {
+        this.mileage = mileage;
+    }
 
-        public void setFrontRight(String frontRight) {
-            this.frontRight = frontRight;
-        }
+    public List<String> getImages() {
+        return images;
+    }
 
-        public String getRearRight() {
-            return rearRight;
-        }
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
-        public void setRearRight(String rearRight) {
-            this.rearRight = rearRight;
-        }
+    public String getReport() {
+        return report;
+    }
 
-        public String getRight() {
-            return right;
-        }
-
-        public void setRight(String right) {
-            this.right = right;
-        }
-
-        public String getBoard() {
-            return board;
-        }
-
-        public void setBoard(String board) {
-            this.board = board;
-        }
-
-        public String getInteriorBoard() {
-            return interiorBoard;
-        }
-
-        public void setInteriorBoard(String interiorBoard) {
-            this.interiorBoard = interiorBoard;
-        }
-
-        public String getTrunk() {
-            return trunk;
-        }
-
-        public void setTrunk(String trunk) {
-            this.trunk = trunk;
-        }
-
-        public String getTyre() {
-            return tyre;
-        }
-
-        public void setTyre(String tyre) {
-            this.tyre = tyre;
-        }
-
-        public String getTrunkTyre() {
-            return trunkTyre;
-        }
-
-        public void setTrunkTyre(String trunkTyre) {
-            this.trunkTyre = trunkTyre;
-        }
-
-        public String getHood() {
-            return hood;
-        }
-
-        public void setHood(String hood) {
-            this.hood = hood;
-        }
-
-        public String getRadioAir() {
-            return radioAir;
-        }
-
-        public void setRadioAir(String radioAir) {
-            this.radioAir = radioAir;
-        }
-
-        public String getWindowSwitch() {
-            return windowSwitch;
-        }
-
-        public void setWindowSwitch(String windowSwitch) {
-            this.windowSwitch = windowSwitch;
-        }
-
-        public String getRegistration() {
-            return registration;
-        }
-
-        public void setRegistration(String registration) {
-            this.registration = registration;
-        }
-
-        public String getLicense() {
-            return license;
-        }
-
-        public void setLicense(String license) {
-            this.license = license;
-        }
-
-        public String getDpi() {
-            return dpi;
-        }
-
-        public void setDpi(String dpi) {
-            this.dpi = dpi;
-        }
-
-        public String getCar() {
-            return car;
-        }
-
-        public void setCar(String car) {
-            this.car = car;
-        }
-
-        public String getSignature() {
-            return signature;
-        }
-
-        public void setSignature(String signature) {
-            this.signature = signature;
-        }
+    public void setReport(String report) {
+        this.report = report;
     }
 }

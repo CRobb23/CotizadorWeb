@@ -1,16 +1,14 @@
 package jobs;
 
 import helpers.ERConstants;
+import models.ER_Guard_Reminder;
+import models.ER_Task_Reminder;
+import notifiers.Mails;
+import play.Logger;
+import play.jobs.Job;
 
 import java.util.Date;
 import java.util.List;
-
-import notifiers.Mails;
-
-import models.ER_Guard_Reminder;
-import models.ER_Task_Reminder;
-import play.jobs.*;
-import play.Logger;
 
 public class RemindersJob extends Job {
 	public void doJob() {

@@ -15,6 +15,7 @@ import play.db.jpa.Model;
 import play.libs.Crypto;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

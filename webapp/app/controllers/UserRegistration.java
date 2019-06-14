@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import helpers.ERConstants;
 import helpers.FieldAccesor;
+import jobs.UserRegistrationJob;
 import models.ER_Channel;
 import models.ER_User;
 import models.ER_User_Role;
@@ -34,7 +35,11 @@ public class UserRegistration extends Controller {
 	    	user.save();
 	    	
 	    	Cache.delete(randomID);
-	    	Mails.welcomeUserFinal(user);
+
+	    	//Send the welcome mail
+			UserRegistrationJob userRegistrationJob = new UserRegistrationJob(user);
+	    	userRegistrationJob.now();
+
 	    	render();
 	    }
     }

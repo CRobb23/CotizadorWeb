@@ -47,7 +47,7 @@ public class ServiceVehicles extends AdminBaseController {
 
     	
 //    	List<ER_Vehicle_Line> vehicleLines = ER_Vehicle_Line.find("select distinct v.line from ER_Vehicle_Value v where v.year != null and v.line.brand.id = ? and v.line.insurable = 1 and v.line.vehicleClass IS NOT NULL order by v.line.name", id).fetch();
-    	List<ER_Vehicle_Line> vehicleLines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1 and v.transferCode is not null order by v.name", id).fetch();
+    	List<ER_Vehicle_Line> vehicleLines = ER_Vehicle_Line.find("select distinct v from ER_Vehicle_Line as v where v.brand.id = ? and v.insurable = 1 and v.transferCode is not null", id).fetch();
     	if (vehicleLines!=null) {
     		List<Map<String, String>> lines = new ArrayList<Map<String, String>>();
     		for (ER_Vehicle_Line line : vehicleLines) {

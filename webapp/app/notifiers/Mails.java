@@ -13,6 +13,7 @@ import javax.activation.DataSource;
 import javax.mail.internet.InternetAddress;
 
 import models.*;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.ByteArrayDataSource;
 import org.apache.commons.mail.Email;
@@ -87,6 +88,7 @@ public class Mails extends Mailer {
             ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(INSPECTION_FINISHED_MAIL));
             String body = mail.body;
             body = body.replace("{NoInspeccion}", incident.inspection.inspectionNumber);
+            body = body.replace("{cliente}", incident.client.getFullName());
 			Future<Boolean> send = send(incident,serverUrl,body);
 			result = send.get();
 		}catch(Exception e){
@@ -515,6 +517,10 @@ public class Mails extends Mailer {
 			}
 		} catch (Exception e) {
 			Logger.error(e, "Quotations mail user message %s", e.getMessage());
+		} finally {
+			for (ByteArrayOutputStream stream : streamArray) {
+				IOUtils.closeQuietly(stream);
+			}
 		}
 		
 		return result;

@@ -17,7 +17,7 @@ import play.mvc.*;
 
 @With(Secure.class)
 @Check({"Administrador maestro", "Gerente comercial", "Gerente de canal"})
-public class AdminStores extends AdminBaseController {
+public class  	AdminStores extends AdminBaseController {
 
 	/*
 	 * ************************************************************************************************************************
@@ -50,12 +50,12 @@ public class AdminStores extends AdminBaseController {
 		if (validState) {
 			filter.addQuery("active = ?", active, Operator.AND);
 		}
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
 
-		if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-			ER_User connectedUser = connectedUser();
+		if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 			filter.addQuery("distributor.channel = ?", connectedUser.channel, Operator.AND);
-		} else if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
-			ER_User connectedUser = connectedUser();
+		} else if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
 			filter.addQuery("distributor = ?", connectedUser.distributor, Operator.AND);
 		}
 		
@@ -104,14 +104,15 @@ public class AdminStores extends AdminBaseController {
     	}
     	
 		filterStores(channelId, distributorId, store,active);
-		
-		if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
+		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
 			if (channelId!=null) {
 				List<ER_Distributor> distributors = ER_Distributor.find("active = true and channel.id = ? order by name", channelId).fetch();
 				renderArgs.put("distributors", distributors);
 			}
-		} else if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-			List<ER_Distributor> distributors = ER_Distributor.find("active = true and channel.id = ? order by name", connectedUser().channel.id).fetch();
+		} else if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+			List<ER_Distributor> distributors = ER_Distributor.find("active = true and channel.id = ? order by name", connectedUser.channel.id).fetch();
 			renderArgs.put("distributors", distributors);
 		}
 		
@@ -158,7 +159,8 @@ public class AdminStores extends AdminBaseController {
 	 */
 	
 	private static void addUserChannelArg() {
-		if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
+		Integer userRol = connectedUserRoleCode(connectedUser());
+		if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
 			ER_User user = connectedUser();
 			renderArgs.put("userDistributor", user.distributor);
 		}
@@ -237,20 +239,21 @@ public class AdminStores extends AdminBaseController {
     	Long distributorId = null;
     	ER_Store store = null;
 
-
-    	
+		ER_User connectedUser = connectedUser();
+		Integer userRol = connectedUserRoleCode(connectedUser);
     	if (id!=null) {
     		
     		store = ER_Store.findById(id);
+
     		if (store!=null && store.distributor!=null) {
-				if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-					if (!store.distributor.channel.equals(connectedUser().channel)) {
+				if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+					if (!store.distributor.channel.equals(connectedUser.channel)) {
 						store=null;
 					} else {
 						channelId = store.distributor.channel.id;
 					}
-				} else if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
-					if (!store.distributor.equals(connectedUser().distributor)) {
+				} else if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
+					if (!store.distributor.equals(connectedUser.distributor)) {
 						store=null;
 					} else {
 						channelId = store.distributor.channel.id;
@@ -264,7 +267,7 @@ public class AdminStores extends AdminBaseController {
     		renderArgs.put("store", store);
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+    	if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
     		List<ER_Channel> channels = ER_Channel.find("active = true order by name").fetch();
     		renderArgs.put("channels", channels);
     		
@@ -273,8 +276,8 @@ public class AdminStores extends AdminBaseController {
     		}
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
-    		channelId = connectedUser().channel.id;
+    	if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+    		channelId = connectedUser.channel.id;
     		if (store!=null) {
     			distributorId = store.distributor.id;
     		}
@@ -287,9 +290,9 @@ public class AdminStores extends AdminBaseController {
         	}
     	}
     	
-    	if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
-			if(connectedUser().distributor != null){
-				distributorId = connectedUser().distributor.id;
+    	if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
+			if(connectedUser.distributor != null){
+				distributorId = connectedUser.distributor.id;
 			}
     	} else {
     		if (flash.contains("store.distributor.id")) {
@@ -308,7 +311,6 @@ public class AdminStores extends AdminBaseController {
 
     	addUserChannelArg();
     	addFilteredSupervisorsAndSellers(distributorId, (ER_Store) renderArgs.get("store"));
-    	
         render();
     }
 
@@ -322,9 +324,12 @@ public class AdminStores extends AdminBaseController {
     		validation.keep();
     		editStore(store.id);
     	} else {
-    		
-    		if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
-    			store.distributor = connectedUser().distributor;
+
+			ER_User connectedUser = connectedUser();
+			Integer userRol = connectedUserRoleCode(connectedUser);
+
+    		if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
+    			store.distributor = connectedUser.distributor;
     		}
     		
     		if (storeId!=null) {

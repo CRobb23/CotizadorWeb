@@ -66,8 +66,9 @@ public class IncidentForms extends AdminBaseController {
 			
 			ER_User connectedUser = connectedUser();
 			JPAQuery query = null;
-			
-			if (checkRole(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
+
+			Integer userRol = connectedUserRoleCode(connectedUser);
+			if (userRol.equals(ERConstants.USER_ROLE_COMMERCIAL_MANAGER)) {
 				
 				List<Long> channelIds = null;
 				channelIds = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c.active =true", connectedUser).fetch();
@@ -77,7 +78,7 @@ public class IncidentForms extends AdminBaseController {
 						.bind("c", channelIds)
 						.bind("s", connectedUser);
 				
-			} else if (checkRole(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
+			} else if (userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER)) {
 				
 				List<Long> distributorIds = null;
 				distributorIds = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d.active =true", connectedUser).fetch();
@@ -87,7 +88,7 @@ public class IncidentForms extends AdminBaseController {
 						.bind("d", distributorIds)
 						.bind("s", connectedUser);
 				
-			} else if (checkRole(ERConstants.USER_ROLE_SUPERVISOR)) {
+			} else if (userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)) {
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u join d.administrators a where a = ?", connectedUser).fetch();
 				userIds.add(connectedUser.id);
 				
@@ -95,7 +96,7 @@ public class IncidentForms extends AdminBaseController {
 						filter.getParametersArray())
 						.bind("s", userIds);
 				
-			} else if (checkRole(ERConstants.USER_ROLE_SALES_MAN)) {
+			} else if (userRol.equals(ERConstants.USER_ROLE_SALES_MAN)) {
 				
 				query = ER_Incident.find(filter.getQuery() + " AND creator = :s order by creationDate DESC",
 						filter.getParametersArray())
@@ -154,7 +155,7 @@ public class IncidentForms extends AdminBaseController {
 	public static void showAvailForms(Long incidentId) {
 		
 		if (canViewIncident(incidentId)) {		
-			List<ER_Form> availForms = ER_Form.find("order by name asc").fetch();
+			List<ER_Form> availForms = ER_Form.findAll();
 	
 			if(availForms != null) {
 				renderArgs.put("availForms", availForms);

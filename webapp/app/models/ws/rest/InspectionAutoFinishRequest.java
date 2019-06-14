@@ -1,8 +1,12 @@
 package models.ws.rest;
 
+import com.google.gson.annotations.Expose;
+
 public class InspectionAutoFinishRequest {
 
+	@Expose
 	private String inspectionNumber;
+	@Expose
 	private Integer status;
 
 	public String getInspectionNumber() {

@@ -8,15 +8,24 @@ public class AutoInspectionCreateRestRequest {
 
     @JsonProperty("case")
     private String caseNumber;
-    private String phone;
     @JsonProperty("insured_name")
     private String insuredName;
     @JsonProperty("insured_surname")
     private String insuredSurname;
-    @JsonProperty("identificationDocument")
-    private String identificationDocument;
+    @JsonProperty("driving_license")
+    private String licenseNumber;
+    @JsonProperty("email")
+    private String email;
+    @JsonProperty("brand")
+    private String brand;
+    @JsonProperty("line")
+    private String line;
+    @JsonProperty("model")
+    private String model;
     @JsonProperty("registration_number")
     private String plate;
+    @JsonProperty("remote_phone")
+    private String phone;
 
     public String getCaseNumber() {
         return caseNumber;
@@ -24,14 +33,6 @@ public class AutoInspectionCreateRestRequest {
 
     public void setCaseNumber(String caseNumber) {
         this.caseNumber = caseNumber;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getInsuredName() {
@@ -50,12 +51,44 @@ public class AutoInspectionCreateRestRequest {
         this.insuredSurname = insuredSurname;
     }
 
-    public String getIdentificationDocument() {
-        return identificationDocument;
+    public String getLicenseNumber() {
+        return licenseNumber;
     }
 
-    public void setIdentificationDocument(String identificationDocument) {
-        this.identificationDocument = identificationDocument;
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getPlate() {
@@ -64,5 +97,13 @@ public class AutoInspectionCreateRestRequest {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

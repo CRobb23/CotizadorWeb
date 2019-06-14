@@ -120,9 +120,9 @@ public class AdminChannels extends AdminBaseController {
     }
 	
 	private static List<ER_User> channelAdministrators() {
-		List<ER_User> administrators = null;
-		
-		if (checkRole(ERConstants.USER_ROLE_SUPER_ADMIN)) {
+		List<ER_User> administrators;
+		Integer userRol = connectedUserRoleCode(connectedUser());
+		if (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN)) {
     		administrators = ER_User.find("role.code = ? and active = true order by firstName", ERConstants.USER_ROLE_COMMERCIAL_MANAGER).fetch();
     	} else {
     		administrators = new ArrayList<ER_User>();

@@ -7,7 +7,7 @@ import models.*;
 import models.ws.rest.*;
 
 import com.google.gson.Gson;
-
+import jobs.SendInspectionJob;
 import helpers.ERConstants;
 import notifiers.Mails;
 import play.Logger;
@@ -20,6 +20,7 @@ import service.JsonService;
 import utils.StringUtil;
 
 import javax.inject.Inject;
+
 
 @InjectSupport
 public class InspectionServiceImpl extends ExternalJsonAbstractService implements InspectionService{
@@ -74,6 +75,11 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
 				 ER_Incident incident = ER_Incident.find("number = ?", inspectionFinishRequest.getQuotationNumber()).first();
 				 if(incident != null && incident.inspection != null && incident.inspection.id != null) {
                      ER_Inspection inspection = ER_Inspection.findById(incident.inspection.id);
+                     if (inspection.type.code != ERConstants.INSPECTION_TYPE_ADDRESS && inspection.type.code != ERConstants.INSPECTION_TYPE_CENTER) {
+                         inspectionResponse.setSuccess(false);
+                         inspectionResponse.setMessage("La cotización no tiene el tipo de inspección solicitada.");
+                         return inspectionResponse;
+                     }
                      inspection.inspected = true;
                      inspection.inspectionNumber = inspectionFinishRequest.getInspectionNumber();
                      inspection.existentDamage = inspectionFinishRequest.getExistentDamage();
@@ -191,8 +197,9 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
                         incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_COMPLETED).first();
                     }
 					 incident.save();
-					 
-					 Mails.finishInspection(incident);
+					 SendInspectionJob sendInspectionJob = new SendInspectionJob(incident);
+					 sendInspectionJob.now();
+					 //Mails.finishInspection(incident);
 					 
 					 inspectionResponse.setSuccess(true);
 					 inspectionResponse.setMessage("Satisfactorio");
@@ -269,6 +276,11 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
             ER_Incident incident = ER_Incident.find("inspection.inspectionNumber = ?", inspectionFinishRequest.getInspectionNumber()).first();
             if(incident != null ) {
                 ER_Inspection inspection = incident.inspection;
+                if (inspection.type.code != ERConstants.INSPECTION_TYPE_AUTO) {
+                    inspectionResponse.setSuccess(false);
+                    inspectionResponse.setMessage("La cotización no tiene el tipo de inspección solicitada.");
+                    return inspectionResponse;
+                }
                 inspection.inspected = true;
                 inspection.inspectionDate = new Date();
                 incident.inspection = inspection.save();
@@ -281,7 +293,9 @@ public class InspectionServiceImpl extends ExternalJsonAbstractService implement
                     incident.status = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_ANULLED).first();
                 }
                 incident.save();
-                Mails.finishInspection(incident);
+                SendInspectionJob sendInspection = new SendInspectionJob(incident);
+                sendInspection.now();
+                //Mails.finishInspection(incident);
                 inspectionResponse.setSuccess(true);
                 inspectionResponse.setMessage("SATISFACTORIO");
             } else {

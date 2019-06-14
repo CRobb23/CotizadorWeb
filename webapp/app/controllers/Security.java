@@ -16,7 +16,8 @@ public class Security extends Secure.Security {
 				if (StringUtil.isNullOrBlank(user.token)) {
 					return "true";
 				} else {
-					return Messages.get("secure.inuse");
+					//Tiene token activo en otro dispositivo
+					return "token";
 				}
 			} else {
 				return Messages.get("secure.blocked");
@@ -24,19 +25,19 @@ public class Security extends Secure.Security {
 		} else {
 			return Messages.get("secure.incorrect");
 		}
-    }
+	}
 
 	public boolean check(String... profiles) {
-	    for (String profile : profiles) {
-	    	ER_User user = ER_User.find("byEmail", connected()).first();
-	        if (user!=null && user.role!=null) {
-	        	if (user.role.name.equalsIgnoreCase(profile)) {
-	        		return true;
-	        	}
-	        }
-	    }
-	    
-	    return false;
+		for (String profile : profiles) {
+			ER_User user = ER_User.find("byEmail", connected()).first();
+			if (user!=null && user.role!=null) {
+				if (user.role.name.equalsIgnoreCase(profile)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public static boolean checkIsQA() {
@@ -50,29 +51,29 @@ public class Security extends Secure.Security {
 		}
 		return false;
 	}
-	
+
 	static boolean check(String profile) {
-        ER_User user = ER_User.find("byEmail", connected()).first();
-        if (user!=null && user.role!=null) {
-        	if (user.email.equals(profile)) {
-        		return true;
-        	}
-        	return user.role.name.equalsIgnoreCase(profile);
-        } else {
-        	return false;
-        }
-    }
+		ER_User user = ER_User.find("byEmail", connected()).first();
+		if (user!=null && user.role!=null) {
+			if (user.email.equals(profile)) {
+				return true;
+			}
+			return user.role.name.equalsIgnoreCase(profile);
+		} else {
+			return false;
+		}
+	}
 
 	static boolean check(int roleCode) {
-        ER_User user = ER_User.find("byEmail", connected()).first();
-        if (user!=null && user.role!=null) {
-            return user.role.code == roleCode;
-        } else {
-        	return false;
-        }
-    }
+		ER_User user = ER_User.find("byEmail", connected()).first();
+		if (user!=null && user.role!=null) {
+			return user.role.code == roleCode;
+		} else {
+			return false;
+		}
+	}
 
-    static boolean validSession(String username, String token) {
+	static boolean validSession(String username, String token) {
 		ER_User user = ER_User.find("byEmailAndToken", username, token).first();
 		return user != null;
 	}
