@@ -85,12 +85,18 @@
     </div>
 
     <div id="busca-dialog" title="AVISO" style="display: none">
-		#{verbatim} BUSQUEDA EXITOSA #{/verbatim}
+		#{verbatim}
+			<span style="text-align: center"> <h3>  BÚSQUEDA EXITOSA </h3> </span>#{/verbatim}
+    </div>
+
+    <div id="busca-notfound-dialog" title="AVISO" style="display: none">
+		#{verbatim}
+            <span style="text-align: center"> <h3>NO SE ENCONTRARON RESULTADOS, POR FAVOR INGRESAR DATOS</h3> </span>#{/verbatim}
     </div>
 
 
 <div class="row" style="min-height: 0px;">
-
+    <h4 id="searchField" style="border-bottom: groove; text-align: center; color:red; display: none;">BÚSQUEDA EXITOSA</h4>
 			<div class="col-sm-12">
 				#{field 'client.isIndividual'}
 					<div class="form-group">

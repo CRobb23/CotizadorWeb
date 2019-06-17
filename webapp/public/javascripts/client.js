@@ -14,6 +14,20 @@ function init(args) {
         }
     }).prev(".ui-dialog-titlebar").css("color", "white");
 
+    $("#busca-notfound-dialog").dialog({
+        resizable: false,
+        height: "auto",
+        width: 500,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            OK: function() {
+
+                $(this).dialog("close");
+            }
+        }
+    }).prev(".ui-dialog-titlebar").css("color", "white");
+
     $("#Alert-message").dialog({
         resizable: false,
         height: "auto",
@@ -273,7 +287,7 @@ function checkClient() {
             $("#legalRepresentative_phoneNumber1").prop( "readonly", false );
             $("#legalRepresentative_phoneNumber2").prop( "readonly", false );
             $("#legalRepresentative_phoneNumber3").prop( "readonly", false );
-
+            $("#searchField").hide()
 
 
   var taxNumber = "NULL";
@@ -300,8 +314,12 @@ function checkClient() {
         } else if (result.responseJSON.clientList != null) {
           modalClient(result.responseJSON.clientList);
         }
+        else {
+            $("#busca-notfound-dialog").dialog('open');
+        }
       } else {
           $("#client_codeClient").val("");
+          $("#busca-notfound-dialog").dialog('open');
       }
     }
   });
@@ -318,6 +336,7 @@ function personDetails(client) {
       console.log(result.responseJSON);
       if(result.responseJSON.success){
         if (result.responseJSON.person != null) {
+            $("#searchField").show()
             $("#isOldClient").val("true");
             $("#client_nationality").rules("remove","required");
             $("#profession").rules("remove","required");
@@ -339,6 +358,7 @@ function personDetails(client) {
 
         } else if (result.responseJSON.business != null) {
             $("#isOldClient").val("true");
+            $("#searchField").show()
             $("#client_nationality").rules("remove","required");
             $("#client_companyName").rules("remove","required");
             $("#clidoValidationnt_businessName").rules("remove","required");
@@ -463,23 +483,23 @@ function fillPerson(person) {
   if (person.codeClient != null) {
       $("#client_codeClient").val(person.codeClient);
   }
-  if (person.firstName != null && person.firstName != "" ) {
+  if (person.firstName != null && person.firstName !== "" ) {
       $("#client_firstName").val(person.firstName);
       $("#client_firstName").prop( "readonly", true );
   }
-  if (person.secondName != null && person.secondName != "") {
+  if (person.secondName != null && person.secondName !== "") {
       $("#client_secondName").val(person.secondName);
       $("#client_secondName").prop( "readonly", true );
   }
-  if (person.firstSurname != null && person.firstSurname != "") {
+  if (person.firstSurname != null && person.firstSurname !== "") {
       $("#client_firstSurname").val(person.firstSurname);
       $("#client_firstSurname").prop( "readonly", true );
   }
-  if (person.secondSurname != null && person.secondSurname != "") {
+  if (person.secondSurname != null && person.secondSurname !== "") {
       $("#client_secondSurname").val(person.secondSurname);
       $("#client_secondSurname").prop( "readonly", true );
   }
-  if (person.marriedSurname != null && person.marriedSurname != "") {
+  if (person.marriedSurname != null && person.marriedSurname !== "") {
       $("#client_marriedSurname").val(person.marriedSurname);
       $("#client_marriedSurname").prop( "readonly", true );
   }
@@ -514,7 +534,7 @@ function fillPerson(person) {
   if (person.codeCifBank != null) {
       $("#client_codeCifBank").val(person.codeCifBank);
   }
-  if (person.addressHome != null && person.addressHome != "") {
+  if (person.addressHome != null && person.addressHome !== "") {
       $("#client_address").prop("type", "password");
       $("#clientAddressLbl").html(person.addressHome.substring(person.addressHome.length - 15,person.addressHome.length));
       $("#client_address").val(person.addressHome);
@@ -553,7 +573,7 @@ function fillPerson(person) {
       $("#client_phoneNumber3").prop("type", "password");
       $("#clientPhoneNumberLbl3").html(person.phone3Home.substring(person.phone3Home.length - 3,person.phone3Home.length));
   }
-  if (person.addressWork != null && person.addressWork != "") {
+  if (person.addressWork != null && person.addressWork !== "") {
       $("#client_addressWork").prop("type", "password");
       $("#client_addressWork").val(person.addressWork);
       $("#client_addressWork").prop( "readonly", true );
@@ -610,7 +630,7 @@ function fillBusiness(business) {
       $("#client_companyName").val(business.companyName);
       $("#client_companyName").prop( "readonly", true );
   }
-    if (business.businessName != null && business.companyName != "") {
+    if (business.businessName != null && business.businessName !== "") {
         $("#client_businessName").val(business.businessName);
         $("#client_businessName").prop( "readonly", true );
     }
@@ -642,7 +662,7 @@ function fillBusiness(business) {
         $("#client_codeCifBank").val(business.condeCifBank);
     }
 
-    if (business.addressWork != null && business.addressWork != "") {
+    if (business.addressWork != null && business.addressWork !== "") {
         $("#client_address_business").val(business.addressWork);
         $("#client_address_business").prop( "readonly", true );
         $("#client_address_business").prop("type", "password");
@@ -743,7 +763,7 @@ function fillBusiness(business) {
         $("#legalRepresentative_folio").val(business.folioRep);
     }
 
-    if (business.addressLegal != null &&  business.addressLegal != "") {
+    if (business.addressLegal != null &&  business.addressLegal !== "") {
         $("#legalRepresentative_address").val(business.addressLegal);
         $("#legalRepresentative_address").prop("type", "password");
         $("#legalRepresentative_address").prop( "readonly", true );

@@ -14,6 +14,20 @@ function init(args) {
         }
     }).prev(".ui-dialog-titlebar").css("color", "white");
 
+    $("#busca-notfound-dialog").dialog({
+        resizable: false,
+        height: "auto",
+        width: 500,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            OK: function() {
+
+                $(this).dialog("close");
+            }
+        }
+    }).prev(".ui-dialog-titlebar").css("color", "white");
+
     initValidator();
     $("#useDataClientPayer").change(showFieldsPayer);
     $("#useDataClientPayer").trigger("change");
@@ -191,6 +205,7 @@ function checkPayer() {
     $("#payer_businessName").prop( "readonly", false );
     $("#payer_address_business").prop( "readonly", false );
     $("#legalRepresentativePayer_addres").prop( "readonly", false );
+    $("#searchField").hide()
 
     var taxNumber = "";
     var idNumber = "";
@@ -214,8 +229,12 @@ function checkPayer() {
                 } else if (result.responseJSON.clientList != null) {
                     modalPayer(result.responseJSON.clientList);
                 }
+                else{
+                    $("#busca-notfound-dialog").dialog('open');
+                }
             } else {
                 $("#payer_codeClient").val("");
+                $("#busca-notfound-dialog").dialog('open');
             }
         }
     });
@@ -231,6 +250,7 @@ function personPayerDetails(client) {
             console.log(result.responseJSON);
             if (result.responseJSON.success) {
                 if (result.responseJSON.person != null) {
+                    $("#searchField").show()
                     $("#payer_nationality").rules("remove", "required");
                     $("#payer_email").rules("remove", "required");
                     $("#profession").rules("remove", "required");
@@ -250,9 +270,17 @@ function personPayerDetails(client) {
                     $("#work_payer_municipality").rules("remove", "required");
                     $("#payer_phoneNumberWork1").rules("remove", "required");
                     $("#payer_phoneNumberWork2").rules("remove", "required");
+
+                    $("#payer_firstName").rules("remove", "required");
+                    $("#payer_secondName").rules("remove", "required");
+                    $("#payer_firstSurname").rules("remove", "required");
+                    $("#payer_secondSurname").rules("remove", "required");
+                    $("#payer_marriedSurname").rules("remove", "required");
+
                     $("#btnEditPartial").hide();
                     fillPersonPayer(result.responseJSON.person);
                 } else if (result.responseJSON.business != null) {
+                    $("#searchField").show()
                     $("#payer_nationality").rules("remove", "required");
                     $("#payer_email").rules("remove", "required");
                     $("#payer_address_business").rules("remove", "required");
@@ -302,21 +330,21 @@ function fillPersonPayer(person) {
     if (person.codeClient != null) {
         $("#payer_codeClient").val(person.codeClient);
     }
-    if (person.firstName != null && person.firstName != "") {
+    if (person.firstName != null && person.firstName !== "") {
         $("#payer_firstName").val(person.firstName);
         $("#payer_firstName").prop( "readonly", true );
     }
-    if (person.secondName != null && person.secondName != "") {
+    if (person.secondName != null && person.secondName !== "") {
         $("#payer_secondName").val(person.secondName);
         $("#payer_secondName").prop( "readonly", true );
     }
-    if (person.firstSurname != null) {
+    if (person.firstSurname != null && person.firstSurname !== "") {
         $("#payer_firstSurname").val(person.firstSurname);
     }
-    if (person.secondSurname != null) {
+    if (person.secondSurname != null && person.secondSurname !== "") {
         $("#payer_secondSurname").val(person.secondSurname);
     }
-    if (person.marriedSurname != null) {
+    if (person.marriedSurname != null && person.marriedSurname !== "") {
         $("#payer_marriedSurname").val(person.marriedSurname);
     }
     if (person.birthdate != null) {
@@ -389,7 +417,7 @@ function fillPersonPayer(person) {
         $("#payer_phoneNumber3").prop("type", "password");
         $("#payerPhoneNumberLb3").html(person.phone3Home.substring(person.phone3Home.length - 3, person.phone3Home.length));
     }
-    if (person.addressWork != null && person.addressWork != "") {
+    if (person.addressWork != null && person.addressWork !== "") {
         $("#payer_addressWork").prop("type", "password");
         $("#payer_addressWork").val(person.addressWork);
         $("#payerWorkAddressLbl").html(person.addressWork.substring(person.addressWork.length - 15, person.addressWork.length));
@@ -440,11 +468,11 @@ function fillBusinessPayer(business) {
     if (business.codeClient != null) {
         $("#payer_codeClient").val(business.codeClient);
     }
-    if (business.companyName != null && business.companyName != "") {
+    if (business.companyName != null && business.companyName !== "") {
         $("#payer_companyName").val(business.companyName);
         $("#payer_companyName").prop( "readonly", true );
     }
-    if (business.businessName != null && business.businessName != "") {
+    if (business.businessName != null && business.businessName !== "") {
         $("#payer_businessName").val(business.businessName);
         $("#payer_businessName").prop( "readonly", true );
     }
@@ -476,7 +504,7 @@ function fillBusinessPayer(business) {
         $("#payer_codeCifBank").val(business.condeCifBank);
 
     }
-    if (business.addressWork != null && business.addressWork != "") {
+    if (business.addressWork != null && business.addressWork !== "") {
         $("#payer_address_business").prop("type", "password");
         $("#payerBussinessWorkAddressLbl").html(business.addressWork.substring(business.addressWork.length - 15, business.addressWork.length));
         $("#payer_address_business").val(business.addressWork);
@@ -576,7 +604,7 @@ function fillBusinessPayer(business) {
     if (business.folioRep != null) {
         $("#legalRepresentativePayer_folio").val(business.folioRep);
     }
-    if (business.addressLegal != null && business.addressLegal != "") {
+    if (business.addressLegal != null && business.addressLegal !== "") {
         $("#legalRepresentativePayer_address").prop("type", "password");
         $("#legalRepresentativePayer_address").val(business.addressLegal);
         $("#legalRepresentantivePayerAddressLbl").html(business.addressLegal.substring(business.addressLegal.length - 15, business.addressLegal.length));
