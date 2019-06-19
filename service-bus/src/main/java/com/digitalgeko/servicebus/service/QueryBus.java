@@ -11,4 +11,6 @@ public interface QueryBus {
     String personDetailQuery(String message);
 
     String businessDetailQuery(String message);
+
+    String pendingTransactionsQuery(String message);
 }

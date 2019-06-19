@@ -19,8 +19,8 @@ public class ServiceBusApplication {
     @Bean
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
+        executor.setCorePoolSize(25);
+        executor.setMaxPoolSize(100);
         executor.setQueueCapacity(500);
         executor.setThreadNamePrefix("BdeoDrive-");
         executor.initialize();

@@ -16,6 +16,7 @@ public class WebServiceModule extends AbstractModule {
 		bind(PolicyFileService.class).to(PolicyFileServiceFtpImpl.class);
 		bind(ClientsQueryWebService.class).to(ClientsQueryServiceBusImpl.class);
 		bind(AverageValueQueryWebService.class).to(AverageValueQueryServiceBusImpl.class);
+		bind(PendingTransactionsQueryWebService.class).to(PendingTransactionsQueryServiceBusImpl.class);
 		bind(PersonQueryWebService.class).to(PersonQueryServiceBusImpl.class);
 		bind(BusinessQueryWebService.class).to(BusinessQueryServiceBusImpl.class);
 		bind(PolicyInputWebService.class).to(PolicyInputServiceBusImpl.class);

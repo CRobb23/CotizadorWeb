@@ -37,7 +37,7 @@ public class StringUtil {
      */
     public static String escapeXml(String str) {
         // Espace characters
-        str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
+      //  str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
         str = str.replaceAll("Á","+01").replaceAll("á","+02").replaceAll("É","+03").replaceAll("é","+04").replaceAll("Í","+05");
         str = str.replaceAll("í","+06").replaceAll("Ó","+07").replaceAll("ó","+08").replaceAll("Ú","+09").replaceAll("ú","+10");
         str = str.replaceAll("Ñ","+11").replaceAll("ñ","+12").replaceAll("\\p{Pd}","+13").replaceAll("Ü","+14").replaceAll("ü","+15");
@@ -47,7 +47,7 @@ public class StringUtil {
     }
     public static String escapeXmlResponse(String str) {
         // Espace characters
-        str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
+       // str = str.replaceAll("&(?!amp;)","&amp;").replaceAll("\\'", "&apos;").replaceAll("\\\"", "&quot;").replaceAll("\\~", "");
         str = str.replace("+01","Á").replace("+02","á").replace("+03","É").replace("+04","é").replace("+05","Í");
         str = str.replace("+06","í").replace("+07","Ó").replace("+08","ó").replace("+09","Ú").replace("+10","ú");
         str = str.replace("+11","Ñ").replace("+12","ñ").replace("+14","Ü").replace("+15","ü");
