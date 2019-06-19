@@ -1214,8 +1214,7 @@ public class Incidents extends AdminBaseController {
 		Logger.error("error: " + e.getMessage());
 		e.printStackTrace();
 	}
-
-    }
+	}
     
     @Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void simulateQuotation(@Valid ER_Quotation quotation, @Required Long[] paymentFrecuencies, Long loJackId) {
@@ -1266,7 +1265,7 @@ public class Incidents extends AdminBaseController {
 		}
 
 		// Validate if has average value and car value is within parameters
-		if(!quotation.incident.vehicle.quotationnNew) {
+		if(quotation.incident.vehicle.quotationnNew != null && !quotation.incident.vehicle.quotationnNew) {
 			if (quotation.incident.vehicle.averageValue != null && quotation.carValue != null) {
 				BigDecimal averageValueParam = new BigDecimal(0.25);
 				ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
@@ -1356,7 +1355,7 @@ public class Incidents extends AdminBaseController {
 							if (quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0) {
 								quotation.setGaranteedValue(Boolean.TRUE);
 							}
-							else if(quotation.incident.vehicle.quotationnNew){
+							else if(quotation.incident.vehicle.quotationnNew != null && quotation.incident.vehicle.quotationnNew){
 								quotation.setGaranteedValue(Boolean.TRUE);
 							}
 						}
@@ -1942,7 +1941,7 @@ public class Incidents extends AdminBaseController {
 				BeanUtils.copyProperties(currentVehicle, vehicle);
 				vehicle.save();
 				String isOldCar;
-				if(vehicle.quotationnNew && !vehicle.isNew){
+				if(vehicle.quotationnNew != null && vehicle.quotationnNew && !vehicle.isNew){
 					flash.error("No es posible marcar vehiculo como usado ya que en cotización el vehiculo fue marcado como nuevo");
 					vehiculoTab(clientId, incidentId,isOldClient);
 				}

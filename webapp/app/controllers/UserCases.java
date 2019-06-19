@@ -377,7 +377,7 @@ public class UserCases extends AdminBaseController {
 						validation.min("quotations[" + i + "].discount", quotation.discount, 0.0);
 					}
 					// Validate if has average value and car value is within parameters
-					if(!incident.vehicle.quotationnNew) {
+					if(incident.vehicle.quotationnNew != null && !incident.vehicle.quotationnNew) {
 					if (incident.vehicle.averageValue != null && quotation.carValue != null) {
 
 						BigDecimal averageValueParam = new BigDecimal(0.25);
@@ -398,9 +398,7 @@ public class UserCases extends AdminBaseController {
 						}
 
 					}
-					if ( quotation.carValue == null) {
-						validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
-					}
+
 					if ( quotation.carValue != null) {
 						//Checks lower and higher range
 						boolean valueCorrect;

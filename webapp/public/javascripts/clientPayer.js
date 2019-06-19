@@ -126,12 +126,12 @@ function init(args) {
 
 
     $("#checkPayerTaxNumber").click(function () {
-        $("#loading").show()
+
         checkPayer();
         return false;
     });
     $("#checkPayerIdentificationDoc").click(function () {
-        $("#loading").show()
+
         checkPayer();
         return false;
     });
