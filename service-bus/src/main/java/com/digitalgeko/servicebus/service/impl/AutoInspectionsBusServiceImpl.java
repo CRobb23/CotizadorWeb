@@ -27,7 +27,7 @@ public class AutoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
     @Override
     public String updateInspectionState(String soapMessage) {
         try {
-            soapMessage = soapMessage.replace(AutoInspectionUpdateSoapRequest.RQ_CODE, "");
+            soapMessage = soapMessage.replaceFirst(AutoInspectionUpdateSoapRequest.RQ_CODE, "");
             String restMessage = fromSOAPtoJSON(soapMessage, AutoInspectionUpdateSoapRequest.class, AutoInspectionUpdateRestRequest.class);
             String restResponse = autoInspectionServiceRestOutbound.updateAutoInspectionState(restMessage);
             String soapResponse = fromJSONtoSOAP(restResponse, AutoInspectionUpdateRestResponse.class, AutoInspectionUpdateSoapResponse.class);
@@ -45,7 +45,7 @@ public class AutoInspectionsBusServiceImpl extends AbstractBusServiceImpl implem
             String soapMessage = fromJSONtoSOAP(restMessage, AutoInspectionCreateRestRequest.class, AutoInspectionCreateSoapRequest.class);
             soapMessage = AutoInspectionCreateSoapRequest.RQ_CODE + soapMessage;
             String soapResponse = brokerSoapOutbound.sendBrokerMessage(soapMessage);
-            soapResponse = soapResponse.replace(AutoInspectionCreateSoapRequest.RS_CODE, "");
+            soapResponse = soapResponse.replaceFirst(AutoInspectionCreateSoapRequest.RS_CODE, "");
             String restResponse = fromSOAPtoJSON(soapResponse, AutoInspectionCreateSoapResponse.class, AutoInspectionCreateRestResponse.class);
             return restResponse;
         } catch (ConvertException | ConnectionException e) {
