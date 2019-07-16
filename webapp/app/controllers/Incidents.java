@@ -584,12 +584,13 @@ public class Incidents extends AdminBaseController {
     									 String inspectionNumber,Date inspectionDate) {
     	flash.clear();
     	flash.discard();
-    	
+
     	ER_Incident_Status incidentStatus = null;
     	ER_Declined_Sell_Reason reason = null;
     	ER_Quotation quotation = null;
     	ER_Payment_Frecuency frecuency = null;
     	ER_Incident incident = ER_Incident.findById(id);
+		Logger.info("Actualiza estado de caso: " + incident.number);
 		ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 		if(incident.inspection == null) {
 			ER_Inspection newInspection = new ER_Inspection();
@@ -766,6 +767,7 @@ public class Incidents extends AdminBaseController {
                                 exceptions.active = 1;
                                 exceptions.save();
                                 incident.status = incidentStatusIncomplete;
+
                                 incident.save();
                                 attendIncident(id);
 	    					}
@@ -1111,6 +1113,7 @@ public class Incidents extends AdminBaseController {
 		
 		//Send email to client
 		SendGuardJob sendGuardJob = new SendGuardJob(guard);
+		sendGuardJob.now();
 		//Mails.generatedGuard(guard);
     	
     }
