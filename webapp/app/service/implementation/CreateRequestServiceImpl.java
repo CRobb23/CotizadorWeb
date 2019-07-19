@@ -3,6 +3,7 @@ package service.implementation;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -866,21 +867,22 @@ public class CreateRequestServiceImpl implements CreateRequestService{
     public WorkFlowRequest createWorkFlowRequest(ER_Incident incident){
     	try{
     		String date = DateHelper.formatDate(incident.selectedQuotation.creationDate, "dd/MM/yyyy");
+			String emissionDate = DateHelper.formatDate(new Date(), "dd/MM/yyyy");
     		WorkFlowRequest request = new WorkFlowRequest();
     		request.setQuoteNumber(incident.number.toString());
     		request.setCurrency("Q");
     		request.setMovementType("01");
     		request.setSubMovementType("01");
     		request.setDocumentType("01");
-    		request.setDocumentDate(date);
-    		request.setReceptionDate(date);
+    		request.setDocumentDate(emissionDate);
+    		request.setReceptionDate(emissionDate);
     		request.setInsuredName(null);
     		request.setObservations(null);
     		request.setUrgent("N");
     		request.setLine((incident.client.isIndividual != null && !incident.client.isIndividual) ? "02" : "01");
-    		request.setReviewDate(date);
-    		request.setDateAssignment(date);
-    		request.setEmissionDate(date);
+    		request.setReviewDate(emissionDate);
+    		request.setDateAssignment(emissionDate);
+    		request.setEmissionDate(emissionDate);
     		request.setBarcode(null);
     		
 	    	return request;

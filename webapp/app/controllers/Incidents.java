@@ -211,7 +211,13 @@ public class Incidents extends AdminBaseController {
 					}
 					query.bind("s", connectedUser);
 				}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
+					//Vendedores
 					List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
+					//Administradores
+					List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+					//Agrega lista de administradores a lista de usuarios
+					userIds.addAll(supervisoresIds);
+
 					userIds.add(connectedUser.id);
 					if (!filter.getQuery().isEmpty())
 						query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by id DESC", filter.getParametersArray()).bind("s", userIds);
@@ -365,11 +371,17 @@ public class Incidents extends AdminBaseController {
 							isOwner = !distributors.isEmpty();
 							break;
 						}
+
 						case ERConstants.USER_ROLE_SUPERVISOR: {
-							List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
-							isOwner = !stores.isEmpty();
+						//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
+						//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+							//Agrega lista de administradores a lista de usuarios
+						//	stores.addAll(supervisoresIds);
+
+							isOwner = true;
 							break;
 						}
+
 					}
 				}
 				if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
@@ -1837,6 +1849,25 @@ public class Incidents extends AdminBaseController {
 					payer.profession = currentClient.profession;
 					payer.nationality = currentClient.nationality;
 					payer.registrationDate = currentClient.registrationDate;
+					if(currentClient.clientPEP != null) {
+						clientPayerPEP.specificRelationship = currentClient.clientPEP.specificRelationship;
+						clientPayerPEP.typeOfrelationship = currentClient.clientPEP.typeOfrelationship;
+						clientPayerPEP.relationship = currentClient.clientPEP.relationship;
+						clientPayerPEP.relationCompanyName = currentClient.clientPEP.relationCompanyName;
+						clientPayerPEP.relationFirstSurname = currentClient.clientPEP.relationFirstSurname;
+						clientPayerPEP.relationFirtName = currentClient.clientPEP.relationFirtName;
+						clientPayerPEP.relationJob = currentClient.clientPEP.relationJob;
+						clientPayerPEP.relationMarriedSurname = currentClient.clientPEP.relationMarriedSurname;
+						clientPayerPEP.relationOtherName = currentClient.clientPEP.relationOtherName;
+						clientPayerPEP.relationSecondName = currentClient.clientPEP.relationSecondName;
+						clientPayerPEP.relationshipIsPep = currentClient.clientPEP.relationshipIsPep;
+						clientPayerPEP.relationIsNational = currentClient.clientPEP.relationIsNational;
+						clientPayerPEP.relationSex = currentClient.clientPEP.relationSex;
+						clientPayerPEP.companyCountry = currentClient.clientPEP.companyCountry;
+						clientPayerPEP.idRelationCompanyCountry = currentClient.clientPEP.idRelationCompanyCountry;
+						clientPayerPEP.relationSecondSurname = currentClient.clientPEP.relationSecondSurname;
+						clientPayerPEP.relationshipIsPep = currentClient.clientPEP.relationshipIsPep;
+					}
 
 					if(currentClient.legalRepresentative != null) {
                         legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
@@ -1860,16 +1891,17 @@ public class Incidents extends AdminBaseController {
 				}
 
 				if(payer.expose != null && payer.expose) {
-					if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
-						clientPayerPEP.relationshipIsPep = true;
-						if (!clientPayerPEP.relationship.equals("Otro"))
-							clientPayerPEP.specificRelationship = null;
-					}
-					else
-						clientPayerPEP.relationshipIsPep = false;
-					clientPayerPEP.save();
+					if(clientPayerPEP.typeOfrelationship != null) {
+						if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
+							clientPayerPEP.relationshipIsPep = true;
+							if (!clientPayerPEP.relationship.equals("Otro"))
+								clientPayerPEP.specificRelationship = null;
+						} else
+							clientPayerPEP.relationshipIsPep = false;
+						clientPayerPEP.save();
 
-					payer.clientPayerPEP = clientPayerPEP;
+						payer.clientPayerPEP = clientPayerPEP;
+					}
 				}
 				if( currentClient.payer != null && currentClient.payer.id != null)
 					payer.id = currentClient.payer.id;
