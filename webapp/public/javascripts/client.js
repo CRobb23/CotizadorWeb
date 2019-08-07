@@ -1,11 +1,39 @@
 function init(args) {
 
+    $("#busca-dialog").dialog({
+        resizable: false,
+        height: "auto",
+        width: 500,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            OK: function() {
+
+                $(this).dialog("close");
+            }
+        }
+    }).prev(".ui-dialog-titlebar").css("color", "white");
+
+    $("#busca-notfound-dialog").dialog({
+        resizable: false,
+        height: "auto",
+        width: 500,
+        modal: true,
+        autoOpen: false,
+        buttons: {
+            OK: function() {
+
+                $(this).dialog("close");
+            }
+        }
+    }).prev(".ui-dialog-titlebar").css("color", "white");
 
     $("#Alert-message").dialog({
         resizable: false,
         height: "auto",
         width: 500,
         modal: true,
+
         buttons: {
             OK: function() {
 
@@ -13,8 +41,6 @@ function init(args) {
                         }
                     }
                 }).prev(".ui-dialog-titlebar").css("color", "white");
-
-    $("#Alert-message").show();
 
     initValidator();
     $(".typeClient").change(showFieldsClient);
@@ -111,10 +137,12 @@ function init(args) {
     }
 
     $("#checkClientTaxNumber").click(function(){
+        $("#loading").show()
         checkClient();
         return false;
     });
     $("#checkClientIdentificationDoc").click(function(){
+        $("#loading").show()
         checkClient();
         return false;
     });
@@ -176,6 +204,92 @@ function init(args) {
     addEventSelectDepend("municipality_legal", "zone_legal", args);
 }
 function checkClient() {
+
+	//COLOCA ENABLE
+            $("#client_firstName").prop( "readonly", false );
+            $("#client_secondName").prop( "readonly", false );
+            $("#client_firstSurname").prop( "readonly", false );
+            $("#client_secondSurname").prop( "readonly", false );
+            $("#client_marriedSurname").prop( "readonly", false );
+            $("#client_birthdate").prop( "readonly", false );
+            $("#sex").prop( "readonly", false );
+            $("#profession").prop( "readonly", false );
+            $("#client_passport").prop( "readonly", false );
+            $("#civilStatus").prop( "readonly", false );
+            $("#client_nationality").prop( "readonly", false );
+            $("#client_email").prop( "readonly", false );
+            $("#client_licenseType").prop( "readonly", false );
+            $("#client_licenseNumber").prop( "readonly", false );
+            $("#client_codeCifBank").prop( "readonly", false );
+            $("#client_address").prop( "readonly", false );
+            $("#department_selection").prop( "readonly", false );
+            $("#municipality_selection").prop( "readonly", false );
+            $("#zone_selection").prop( "readonly", false );
+            $("#country").prop( "readonly", false );
+            $("#client_phoneNumber1").prop( "readonly", false );
+            $("#client_phoneNumber2").prop( "readonly", false );
+            $("#client_phoneNumber3").prop( "readonly", false );
+            $("#client_addressWork").prop( "readonly", false );
+            $("#work_department_selection").prop( "readonly", false );
+            $("#work_municipality_selection").prop( "readonly", false );
+            $("#work_zone_selection").prop( "readonly", false );
+            $("#country_work").prop( "readonly", false );
+            $("#client_phoneNumberWork1").prop( "readonly", false );
+            $("#client_phoneNumberWork2").prop( "readonly", false );
+            $("#client_phoneNumberWork3").prop( "readonly", false );
+
+	//Add ENABLE
+            $("#client_codeClient").prop( "readonly", false );
+            $("#client_companyName").prop( "readonly", false );
+            $("#client_businessName").prop( "readonly", false );
+            $("#society_type").prop( "readonly", false );
+            $("#client_economic_activity").prop( "readonly", false );
+            $("#client_nationality").prop( "readonly", false );
+            $("#client_email").prop( "readonly", false );
+            $("#stateProvider").prop( "readonly", false );
+            $("#client_registrationDate").prop( "readonly", false );
+            $("#client_writeNumber").prop( "readonly", false );
+            $("#client_writeDate").prop( "readonly", false );
+            $("#client_codeCifBank").prop( "readonly", false );
+            $("#client_address_business").prop( "readonly", false );
+            $("#department_business_selection").prop( "readonly", false );
+            $("#municipality_business_selection").prop( "readonly", false );
+            $("#zone_business_selection").prop( "readonly", false );
+            $("#country_business").prop( "readonly", false );
+            $("#client_phoneNumber1_business").prop( "readonly", false );
+            $("#client_phoneNumber2_business").prop( "readonly", false );
+            $("#client_phoneNumber3_business").prop( "readonly", false );
+            $("#legalRepresentative_taxNumber").prop( "readonly", false );
+            $("#legalRepresentative_firstName").prop( "readonly", false );
+            $("#legalRepresentative_secondName").prop( "readonly", false );
+            $("#legalRepresentative_firstSurname").prop( "readonly", false );
+            $("#legalRepresentative_secondSurname").prop( "readonly", false );
+            $("#legalRepresentative_marriedSurname").prop( "readonly", false );
+            $("#legalRepresentative_birthdate").prop( "readonly", false );
+            $("#sexRep").prop( "readonly", false );
+            $("#professionRep").prop( "readonly", false );
+            $("#legalRepresentative_identificationDocument").prop( "readonly", false );
+            $("#legalRepresentative_passport").prop( "readonly", false );
+            $("#civilStatusRep").prop( "readonly", false );
+            $("#legal_nationality").prop( "readonly", false );
+            $("#legalRepresentative_email").prop( "readonly", false );
+            $("#legalRepresentative_registry").prop( "readonly", false );
+            $("#legalRepresentative_caseFile").prop( "readonly", false );
+            $("#legalRepresentative_extendedIn").prop( "readonly", false );
+            $("#legalRepresentative_registrationDate").prop( "readonly", false );
+            $("#legalRepresentative_book").prop( "readonly", false );
+            $("#legalRepresentative_folio").prop( "readonly", false );
+            $("#legalRepresentative_address").prop( "readonly", false );
+            $("#department_legal_selection").prop( "readonly", false );
+            $("#municipality_legal_selection").prop( "readonly", false );
+            $("#zone_legal_selection").prop( "readonly", false );
+            $("#country_legal").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber1").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber2").prop( "readonly", false );
+            $("#legalRepresentative_phoneNumber3").prop( "readonly", false );
+            $("#searchField").hide()
+
+
   var taxNumber = "NULL";
   var idNumber = "NULL";
 
@@ -191,29 +305,38 @@ function checkClient() {
     type:"post",
     data:{information:taxNumber+"|"+idNumber},
     complete:function(result){
+        $("#loading").hide()
       console.log(result.responseJSON);
       if(result.responseJSON.success){
         if (result.responseJSON.client != null) {
-          personDetails(result.responseJSON.client);
+
+            personDetails(result.responseJSON.client);
         } else if (result.responseJSON.clientList != null) {
           modalClient(result.responseJSON.clientList);
         }
+        else {
+            $("#busca-notfound-dialog").dialog('open');
+        }
       } else {
           $("#client_codeClient").val("");
+          $("#busca-notfound-dialog").dialog('open');
       }
     }
   });
 }
 
 function personDetails(client) {
+
   $.ajax({
     url:"/incident/getPersonDetails",
     type:"post",
     data:{information:client.personType + "|" + client.codeClient +"|"+ client.cifClient},
     complete:function(result){
+        $("#loading").hide()
       console.log(result.responseJSON);
       if(result.responseJSON.success){
         if (result.responseJSON.person != null) {
+            $("#searchField").show()
             $("#isOldClient").val("true");
             $("#client_nationality").rules("remove","required");
             $("#profession").rules("remove","required");
@@ -232,8 +355,10 @@ function personDetails(client) {
             $("#client_phoneNumberWork2").rules("remove","required");
             $("#btnEditPartial").hide();
             fillPerson(result.responseJSON.person);
+
         } else if (result.responseJSON.business != null) {
             $("#isOldClient").val("true");
+            $("#searchField").show()
             $("#client_nationality").rules("remove","required");
             $("#client_companyName").rules("remove","required");
             $("#clidoValidationnt_businessName").rules("remove","required");
@@ -277,6 +402,71 @@ function personDetails(client) {
             $("#btnEditPartial").hide();
             fillBusiness(result.responseJSON.business);
         }
+        else if(result.responseJSON.person == null){
+            $("#isOldClient").val("false");
+            $("#client_nationality").rules("add","required");
+            $("#profession").rules("add","required");
+            $("#client_address").rules("add","required");
+            $("#country").rules("add","required");
+            $("#department").rules("add","required");
+            $("#municipality").rules("add","required");
+            $("#zone").rules("add","required");
+            $("#client_phoneNumber1").rules("add","required");
+            $("#client_phoneNumber2").rules("add","required");
+            $("#client_addressWork").rules("add","required");
+            $("#country_work").rules("add","required");
+            $("#work_department").rules("add","required");
+            $("#work_municipality").rules("add","required");
+            $("#client_phoneNumberWork1").rules("add","required");
+            $("#client_phoneNumberWork2").rules("add","required");
+            $("#btnEditPartial").show();
+            
+
+        }
+        else if(result.responseJSON.business == null){
+            $("#isOldClient").val("false");
+            $("#client_nationality").rules("add","required");
+            $("#client_companyName").rules("add","required");
+            $("#clidoValidationnt_businessName").rules("add","required");
+            $("#society_type").rules("add","required");
+            $("#client_economic_activity").rules("add","required");
+            $("#stateProvider").rules("add","required");
+            $("#client_registrationDate").rules("add","required");
+            $("#client_writeNumber").rules("add","required");
+            $("#client_writeDate").rules("add","required");
+            $("#client_address_business").rules("add","required");
+            $("#country_business").rules("add","required");
+            $("#department_business").rules("add","required");
+            $("#municipality_business").rules("add","required");
+            $("#zone_business").rules("add","required");
+            $("#client_phoneNumber1_business").rules("add","required");
+            $("#client_phoneNumber2_business").rules("add","required");
+            $("#legalRepresentative_taxNumber").rules("add","required");
+            $("#legalRepresentative_firstName").rules("add","required");
+            $("#legalRepresentative_firstSurname").rules("add","required");
+            $("#legalRepresentative_birthdate").rules("add","required");
+            $("#sexRep").rules("add","required");
+            $("#professionRep").rules("add","required");
+            $("#legalRepresentative_identificationDocument").rules("add","required");
+            $("#civilStatusRep").rules("add","required");
+            $("#legal_nationality").rules("add","required");
+            $("#legalRepresentative_email").rules("add","required");
+            $("#legalRepresentative_registry").rules("add","required");
+            $("#legalRepresentative_caseFile").rules("add","required");
+            $("#legalRepresentative_extendedIn").rules("add","required");
+            $("#legalRepresentative_registrationDate").rules("add","required");
+            $("#legalRepresentative_book").rules("add","required");
+            $("#legalRepresentative_folio").rules("add","required");
+            $("#legalRepresentative_address").rules("add","required");
+            $("#country_legal").rules("add","required");
+            $("#department_legal").rules("add","required");
+            $("#zone_legal").rules("add","required");
+            $("#municipality_legal").rules("add","required");
+            $("#legalRepresentative_phoneNumber3").rules("add","required");
+            $("#legalRepresentative_phoneNumber2").rules("add","required");
+            $("#zone_legal").rules("add","required");
+            $("#btnEditPartial").show();
+        }
       }
     }
   });
@@ -284,6 +474,7 @@ function personDetails(client) {
 
 function fillPerson(person) {
   console.log("Cargando persona individual: ");
+  $("#busca-dialog").dialog('open');
   $("#clienteIndividual").click();
 
   $("#isOldClient").val("true");
@@ -292,23 +483,29 @@ function fillPerson(person) {
   if (person.codeClient != null) {
       $("#client_codeClient").val(person.codeClient);
   }
-  if (person.firstName != null) {
+  if (person.firstName != null && person.firstName !== "" ) {
       $("#client_firstName").val(person.firstName);
+      $("#client_firstName").prop( "readonly", true );
   }
-  if (person.secondName != null) {
+  if (person.secondName != null && person.secondName !== "") {
       $("#client_secondName").val(person.secondName);
+      $("#client_secondName").prop( "readonly", true );
   }
-  if (person.firstSurname != null) {
+  if (person.firstSurname != null && person.firstSurname !== "") {
       $("#client_firstSurname").val(person.firstSurname);
+      $("#client_firstSurname").prop( "readonly", true );
   }
-  if (person.secondSurname != null) {
+  if (person.secondSurname != null && person.secondSurname !== "") {
       $("#client_secondSurname").val(person.secondSurname);
+      $("#client_secondSurname").prop( "readonly", true );
   }
-  if (person.marriedSurname != null) {
+  if (person.marriedSurname != null && person.marriedSurname !== "") {
       $("#client_marriedSurname").val(person.marriedSurname);
+      $("#client_marriedSurname").prop( "readonly", true );
   }
   if (person.birthdate != null) {
       $("#client_birthdate").val(person.birthdate);
+
   }
   if (person.sex != null) {
       $("#sex").val(person.sex).change();
@@ -337,10 +534,11 @@ function fillPerson(person) {
   if (person.codeCifBank != null) {
       $("#client_codeCifBank").val(person.codeCifBank);
   }
-  if (person.addressHome != null) {
+  if (person.addressHome != null && person.addressHome !== "") {
       $("#client_address").prop("type", "password");
       $("#clientAddressLbl").html(person.addressHome.substring(person.addressHome.length - 15,person.addressHome.length));
       $("#client_address").val(person.addressHome);
+      $("#client_address").prop( "readonly", true );
       $("#country").rules("remove","required");
       $("#department").rules("remove","required");
       $("#municipality").rules("remove","required");
@@ -375,9 +573,10 @@ function fillPerson(person) {
       $("#client_phoneNumber3").prop("type", "password");
       $("#clientPhoneNumberLbl3").html(person.phone3Home.substring(person.phone3Home.length - 3,person.phone3Home.length));
   }
-  if (person.addressWork != null) {
+  if (person.addressWork != null && person.addressWork !== "") {
       $("#client_addressWork").prop("type", "password");
       $("#client_addressWork").val(person.addressWork);
+      $("#client_addressWork").prop( "readonly", true );
       $("#clientWorkAddressLbl").html(person.addressWork.substring(person.addressWork.length - 15,person.addressWork.length));
       $("#country_work").rules("remove","required");
       $("#work_department").rules("remove","required");
@@ -418,6 +617,7 @@ function fillPerson(person) {
 
 function fillBusiness(business) {
   $("#isOldClient").val("true");
+  $("#busca-dialog").dialog('open');
   console.log("Cargando persona juridica: ");
   $("#clienteJuridico").click();
 
@@ -426,11 +626,13 @@ function fillBusiness(business) {
   if (business.codeClient != null) {
       $("#client_codeClient").val(business.codeClient);
   }
-  if (business.companyName != null) {
+  if (business.companyName != null && business.companyName != "") {
       $("#client_companyName").val(business.companyName);
+      $("#client_companyName").prop( "readonly", true );
   }
-    if (business.businessName != null) {
+    if (business.businessName != null && business.businessName !== "") {
         $("#client_businessName").val(business.businessName);
+        $("#client_businessName").prop( "readonly", true );
     }
     if (business.societyType != null) {
         $("#society_type").val(business.societyType).change();
@@ -460,8 +662,9 @@ function fillBusiness(business) {
         $("#client_codeCifBank").val(business.condeCifBank);
     }
 
-    if (business.addressWork != null) {
+    if (business.addressWork != null && business.addressWork !== "") {
         $("#client_address_business").val(business.addressWork);
+        $("#client_address_business").prop( "readonly", true );
         $("#client_address_business").prop("type", "password");
         $("#clientBussinessWorkAddressLbl").html(business.addressWork.substring(business.addressWork.length - 15,business.addressWork.length));
         $("#country_business").rules("remove","required");
@@ -560,9 +763,10 @@ function fillBusiness(business) {
         $("#legalRepresentative_folio").val(business.folioRep);
     }
 
-    if (business.addressLegal != null) {
+    if (business.addressLegal != null &&  business.addressLegal !== "") {
         $("#legalRepresentative_address").val(business.addressLegal);
         $("#legalRepresentative_address").prop("type", "password");
+        $("#legalRepresentative_address").prop( "readonly", true );
         $("#clientLegalBussinessWorkAddressLbl").html(business.addressLegal.substring(business.addressLegal.length - 15,business.addressLegal.length));
         $("#country_legal").rules("remove","required");
         $("#department_legal").rules("remove","required");

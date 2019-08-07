@@ -94,6 +94,7 @@ public class ER_General_Configuration extends Model {
 
     public Boolean fullAccess;
 
+	@Column(length=8000)
     public String guardMails;
 	
 	public void setParametersInConfiguration(ER_General_Configuration configuration) {

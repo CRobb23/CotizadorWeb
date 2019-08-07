@@ -281,8 +281,8 @@ public class AdminReports extends AdminBaseController {
 			if(GeneralMethods.validateParameter(startDate)&&GeneralMethods.validateParameter(endDate)) {
 				if(simpleformat.parse(startDate).before(simpleformat.parse(endDate)) || simpleformat.parse(startDate).equals(simpleformat.parse(endDate))){
 					filter.addGroupStart(Operator.AND);
-					filter.addQuery("creationDate  >= ?", format.parse(startDate + " 00:00:00"));
-					filter.addQuery("creationDate  <= ?", format.parse(endDate + " 23:59:59"),Operator.AND);
+					filter.addQuery("finalizedDate  >= ?", format.parse(startDate + " 00:00:00"));
+					filter.addQuery("finalizedDate  <= ?", format.parse(endDate + " 23:59:59"),Operator.AND);
 					filter.addGroupEnd();
 				}
 			}
@@ -320,7 +320,7 @@ public class AdminReports extends AdminBaseController {
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e   .printStackTrace();
 		}
 
 		int page;
