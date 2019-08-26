@@ -1937,7 +1937,7 @@ public class Incidents extends AdminBaseController {
 				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
 				if (completeAction.equals(accion)) {
 					currentClient.save();
-					vehiculoTab(clientId, incidentId,isOldClient);
+					vehiculoTab(clientId,    incidentId,isOldClient);
 				}
 				if (partialAction.equals(accion)) {
 					currentClient.save();
