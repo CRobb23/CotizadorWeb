@@ -54,6 +54,9 @@ public class ER_Incident extends Model {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	public ER_Quotation selectedQuotation;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	public ER_ReviewDetail reviewDetail;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	public ER_Payment_Frecuency selectedPaymentFrecuency;

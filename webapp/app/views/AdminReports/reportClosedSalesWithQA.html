@@ -89,11 +89,14 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="isAccepted">#{required/} Dictamen Revision</label>
                 <div class="col-sm-6">
-                    <select class="form-control" id="search.review" name="search.review">
-                        <option value= none> Todos </option>
-                        <option value= true> Aceptados </option>
-                        <option value= false>Denegados </option>
-                    </select>
+
+
+                    #{select 'search.review', class:'form-control', id:'search.review'}
+                        #{option}&{'form.select'}#{/option}
+                        #{list items: status, as: 'statusItem'}
+                            #{option statusItem?.id}${statusItem?.name}#{/option}
+                        #{/list}
+                    #{/select}
                 </div>
             </div>
     #{/}

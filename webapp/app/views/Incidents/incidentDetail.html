@@ -71,8 +71,14 @@
 					</tr>
 					<tr>
 						<th>&{'incident.field.status'}</th>
-						<td>${incident?.status?.name} / ${incident?.declinedReason?.description}</td>
+						<td>${incident?.status?.name} /  ${incident?.declinedReason?.description}</td>
 					</tr>
+						#{if incident?.reviewDetail != null}
+						<tr>
+							<th>&{'incident.field.statusQA'}</th>
+							<td>${incident?.reviewDetail?.status.name} <b>/ FECHA: </b> ${incident?.reviewDate}</td>
+						</tr>
+					#{/if}
 					#{if incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_INSPECTION}
 					<tr>
 						<th>&{'incident.field.inspectionType'}</th>
@@ -227,11 +233,24 @@
                     <a href="@{sendPolicyByMail(incident?.id)}" class="btn btn-block btn-large">&{"incident.attend.sendpolicyByMail"}</a>
 				#{/if}
 			#{/if}
-			#{if isQAUser}
+            <!----------------------- CONTROL DE CALIDAD-->
+
+                <!----------------------- SI CASO ESTA FINALIZADO-->
 				#{if  incident?.status?.code == 7}
-                    <a href="@{reviewCase(incident?.id)}" class="btn btn-block btn-large">&{'incident.review'}</a>
+                    <!----------------------- SI STATUS ES DISTINTO A AREA COMERCIAL 2-->
+					#{if isQAUser}
+						#{if  incident?.reviewDetail?.status.id != 2}
+							<a href="@{reviewCase(incident?.id)}" class="btn btn-block btn-large">&{'incident.review'}</a>
+						#{/if}
+					#{/if}
+                    <!----------------------- SI STATUS ES IGUAL A AREA COMERCIAL-->
+					#{if isCommercialQAUser}
+						#{if  incident?.reviewDetail?.status.id == 2}
+							<a href="@{reviewCase(incident?.id)}" class="btn btn-block btn-large">&{'incident.review'}</a>
+						#{/if}
+					#{/if}
 				#{/if}
-			#{/if}
+
 
 		</div>
 	</div>
