@@ -76,7 +76,7 @@
 						#{if incident?.reviewDetail != null}
 						<tr>
 							<th>&{'incident.field.statusQA'}</th>
-							<td>${incident?.reviewDetail?.status.name} <b>/ FECHA: </b> ${incident?.reviewDate}</td>
+							<td>${incident?.reviewDetail?.status.name} <b>/ FECHA: </b> ${incident?.getReviewDate()}</td>
 						</tr>
 					#{/if}
 					#{if incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_INSPECTION}
@@ -239,13 +239,13 @@
 				#{if  incident?.status?.code == 7}
                     <!----------------------- SI STATUS ES DISTINTO A AREA COMERCIAL 2-->
 					#{if isQAUser}
-						#{if  incident?.reviewDetail?.status.id != 2}
+						#{if  incident?.reviewDetail?.status?.id != 2}
 							<a href="@{reviewCase(incident?.id)}" class="btn btn-block btn-large">&{'incident.review'}</a>
 						#{/if}
 					#{/if}
                     <!----------------------- SI STATUS ES IGUAL A AREA COMERCIAL-->
 					#{if isCommercialQAUser}
-						#{if  incident?.reviewDetail?.status.id == 2}
+						#{if  incident?.reviewDetail?.status?.id == 2}
 							<a href="@{reviewCase(incident?.id)}" class="btn btn-block btn-large">&{'incident.review'}</a>
 						#{/if}
 					#{/if}

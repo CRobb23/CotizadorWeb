@@ -461,6 +461,7 @@ public class Incidents extends AdminBaseController {
 					comment.status = ER_ReviewStatus.find("id = 1").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.reviewDate = new Date();
+					currentIncident.reviewDetail.reviewUser = currentIncident.reviewUser;
 
 				}
                 //CAMBIA A AREA COMERCIAL
@@ -468,12 +469,14 @@ public class Incidents extends AdminBaseController {
 					comment.status = ER_ReviewStatus.find("id = 2").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.comercialTransferDate = new Date();
+					currentIncident.reviewDetail.comercialTransferUser = currentIncident.reviewUser;
 				}
 				//CAMBIA A AREA TECNICA
 				else if(review_status == 3){
 					comment.status = ER_ReviewStatus.find("id = 3").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.technicianTransferDate = new Date();
+					currentIncident.reviewDetail.tecchnicianTransferUser = currentIncident.reviewUser;
 				}
 				//CAMBIA A ACEPTAR CASO
 				else if(review_status == 4){
@@ -483,6 +486,7 @@ public class Incidents extends AdminBaseController {
 					currentIncident.reviewAccepted = true;
 					currentIncident.review = comments;
 					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.acceptanceUser = currentIncident.reviewUser;
 				}
 				//CAMBIA A DENEGAR CASO
 				else if(review_status == 5){
@@ -492,9 +496,10 @@ public class Incidents extends AdminBaseController {
 					currentIncident.reviewAccepted = false;
 					currentIncident.review = comments;
 					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.declineUser = currentIncident.reviewUser;
 				}
 				//GUARDA LOS COMENTARIOS
-				if(review_status != 5 || review_status != 4) {
+				if(review_status != 5 && review_status != 4) {
 
 					comment.comment = comments;
 					comment.incident = currentIncident;
@@ -507,12 +512,14 @@ public class Incidents extends AdminBaseController {
 				currentIncident.save();
             }
             else{
-                ER_Incident_Comments comment = new ER_Incident_Comments();
-                comment.comment = comments;
-                comment.incident = currentIncident;
-                comment.reviewDate = new Date();
-                comment.user = connectedUser();
-                comment.save();
+				if(review_status != 5 && review_status != 4) {
+					ER_Incident_Comments comment = new ER_Incident_Comments();
+					comment.comment = comments;
+					comment.incident = currentIncident;
+					comment.reviewDate = new Date();
+					comment.user = connectedUser();
+					comment.save();
+				}
             }
 			finalized(currentIncident.id, true);
 		}

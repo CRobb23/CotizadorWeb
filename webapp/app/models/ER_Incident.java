@@ -16,6 +16,7 @@ import play.libs.Crypto;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,6 +58,15 @@ public class ER_Incident extends Model {
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	public ER_ReviewDetail reviewDetail;
+
+	public ER_ReviewDetail getReviewDetail() {
+		if(this.reviewDetail != null) {
+
+			return this.reviewDetail;
+		}
+		else
+			return new ER_ReviewDetail();
+	}
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	public ER_Payment_Frecuency selectedPaymentFrecuency;
@@ -88,12 +98,33 @@ public class ER_Incident extends Model {
 
 	public Date reviewDate;
 
+	public String getReviewDate() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		if(this.reviewDate != null) {
+
+			String strDate = dateFormat.format(this.reviewDate);
+			return strDate;
+		}
+		else
+			return " ";
+	}
+
 	public String review;
 
     public Boolean reviewAccepted;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	public ER_User reviewUser;
+
+	public String getReviewUser() {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		if(this.reviewUser != null) {
+
+			return this.reviewUser.getFullName();
+		}
+		else
+			return " ";
+	}
 
 	public Date policyValidity;
 	
