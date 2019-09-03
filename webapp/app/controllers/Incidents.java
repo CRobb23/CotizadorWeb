@@ -354,8 +354,11 @@ public class Incidents extends AdminBaseController {
 	    	
 	    		boolean isOwner = (incident.creator == currentUser);
 	    		boolean isQAUser = false;
+				boolean isCommercialQAUser = false;
 	    		if(currentUser.isQAUser != null && currentUser.isQAUser)
 					isQAUser = true;
+				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+					isCommercialQAUser = true;
 
 	    		if (!isOwner) {
 					switch (connectedUserRoleCode(currentUser)) {
@@ -395,7 +398,7 @@ public class Incidents extends AdminBaseController {
 				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
 				String outOfLineMessage = mail.body;
 				renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
-	    		render(incident, tasks, isOwner,body,isQAUser);
+	    		render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
 	    	} 
     	}
     	
@@ -414,36 +417,109 @@ public class Incidents extends AdminBaseController {
 			ER_Incident incident = ER_Incident.findById(id);
 			if(canViewIncident(incident)){
 				boolean isQAUser = false;
+				boolean isCommercialQAUser = false;
 				if(connectedUser().isQAUser != null && connectedUser().isQAUser)
 					isQAUser = true;
+				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+					isCommercialQAUser = true;
 
 				List <ER_Incident_Comments> comments = ER_Incident_Comments.find("incident_id = ?" , incident).fetch();
-				render(incident, isQAUser, comments);
+				ER_User currentUser = connectedUser();
+				List <ER_ReviewStatus> status = null;
+				//Tiene ambos permisos
+				if (currentUser.isCommercialQAUser != null && currentUser.isCommercialQAUser && currentUser.isQAUser!= null && currentUser.isQAUser){
+					status = ER_ReviewStatus.findAll();
+				}
+				//Tiene permiso de QA
+				else if(currentUser.isQAUser!= null && currentUser.isQAUser)
+				  status = ER_ReviewStatus.find("forQAUser = true").fetch();
+				//Tiene permiso de QA Comercial
+				else if (currentUser.isCommercialQAUser != null && currentUser.isCommercialQAUser)
+					status = ER_ReviewStatus.find("forCommercialQAUser = true").fetch();
+
+				render(incident, isQAUser, isCommercialQAUser,comments,status);
 			}
 		}
 	}
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor"})
-	public static void saveQAComments(String comments, Long id,Boolean isAccepted){
+	public static void saveQAComments(String comments, Long id,Integer review_status){
 		flash.clear();
 		flash.discard();
 
 
 		try {
 			ER_Incident currentIncident = ER_Incident.findById(id);
+
+				currentIncident.reviewDetail = currentIncident.getReviewDetail();
+
 			if(currentIncident.reviewAccepted == null) {
-                currentIncident.review = comments;
                 currentIncident.reviewUser = connectedUser();
-                currentIncident.reviewDate = new Date();
-                currentIncident.reviewAccepted = isAccepted;
-                currentIncident.save();
+
+				ER_Incident_Comments comment = new ER_Incident_Comments();
+                //CAMBIA A REVISION TECNICA
+                if(review_status == 1){
+					comment.status = ER_ReviewStatus.find("id = 1").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.reviewDate = new Date();
+					currentIncident.reviewDetail.reviewUser = currentIncident.reviewUser;
+
+				}
+                //CAMBIA A AREA COMERCIAL
+				else if(review_status == 2){
+					comment.status = ER_ReviewStatus.find("id = 2").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.comercialTransferDate = new Date();
+					currentIncident.reviewDetail.comercialTransferUser = currentIncident.reviewUser;
+				}
+				//CAMBIA A AREA TECNICA
+				else if(review_status == 3){
+					comment.status = ER_ReviewStatus.find("id = 3").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.technicianTransferDate = new Date();
+					currentIncident.reviewDetail.tecchnicianTransferUser = currentIncident.reviewUser;
+				}
+				//CAMBIA A ACEPTAR CASO
+				else if(review_status == 4){
+					comment.status = ER_ReviewStatus.find("id = 4").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.acceptanceDate = new Date();
+					currentIncident.reviewAccepted = true;
+					currentIncident.review = comments;
+					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.acceptanceUser = currentIncident.reviewUser;
+				}
+				//CAMBIA A DENEGAR CASO
+				else if(review_status == 5){
+					currentIncident.reviewDetail.status = ER_ReviewStatus.find("id = 5").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.declineDate = new Date();
+					currentIncident.reviewAccepted = false;
+					currentIncident.review = comments;
+					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.declineUser = currentIncident.reviewUser;
+				}
+				//GUARDA LOS COMENTARIOS
+				if(review_status != 5 && review_status != 4) {
+
+					comment.comment = comments;
+					comment.incident = currentIncident;
+					comment.reviewDate = new Date();
+					comment.user = connectedUser();
+					comment.save();
+				}
+				//GUARDA EL DETALLE
+				currentIncident.reviewDetail.save();
+				currentIncident.save();
             }
             else{
-                ER_Incident_Comments comment = new ER_Incident_Comments();
-                comment.comment = comments;
-                comment.incident = currentIncident;
-                comment.reviewDate = new Date();
-                comment.user = connectedUser();
-                comment.save();
+				if(review_status == null || (review_status != 5 && review_status != 4)) {
+					ER_Incident_Comments comment = new ER_Incident_Comments();
+					comment.comment = comments;
+					comment.incident = currentIncident;
+					comment.reviewDate = new Date();
+					comment.user = connectedUser();
+					comment.save();
+				}
             }
 			finalized(currentIncident.id, true);
 		}
@@ -1937,7 +2013,7 @@ public class Incidents extends AdminBaseController {
 				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
 				if (completeAction.equals(accion)) {
 					currentClient.save();
-					vehiculoTab(clientId, incidentId,isOldClient);
+					vehiculoTab(clientId,    incidentId,isOldClient);
 				}
 				if (partialAction.equals(accion)) {
 					currentClient.save();

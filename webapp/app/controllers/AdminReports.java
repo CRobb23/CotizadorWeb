@@ -219,6 +219,8 @@ public class AdminReports extends AdminBaseController {
 				}
 			}
 		}
+		List <ER_ReviewStatus> status = ER_ReviewStatus.findAll();
+		renderArgs.put("status", status);
 
 		//Render the list
 		render();
@@ -291,12 +293,13 @@ public class AdminReports extends AdminBaseController {
 
 				filter.addQuery("status.id = ?", Long.valueOf(INCIDENT_STATUS_FINALIZED), Operator.AND);
 				if(search.get("review")!=null&&!search.get("review").isEmpty()) {
+					Long review = Long.valueOf(search.get("review"));
 					if 	(!search.get("review").equals("none"))
-					filter.addQuery("reviewAccepted = ?", Boolean.valueOf(search.get("review")), Operator.AND);
+					filter.addQuery("reviewDetail.status.id = ?",review, Operator.AND);
                     else {
                         filter.addGroupStart(Operator.AND);
-                        filter.addQuery("reviewAccepted = ?", true);
-                        filter.addQuery("reviewAccepted = ?", false, Operator.OR);
+                        filter.addQuery("inspection.inspectionNumber = ?", true);
+                        filter.addQuery("reviewDetail.status.id = ?", review, Operator.OR);
                         filter.addGroupEnd();
                     }
 				}

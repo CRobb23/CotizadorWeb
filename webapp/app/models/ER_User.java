@@ -59,8 +59,18 @@ public class ER_User extends Model {
         isQAUser = QAUser;
     }
 
+    public Boolean getCommercialQAUser() {
+        return isCommercialQAUser;
+    }
+
+    public void setCommercialQAUser(Boolean QAUser) {
+        isCommercialQAUser = QAUser;
+    }
+
     public Boolean isQAUser;
-    
+
+    public Boolean isCommercialQAUser;
+
     @GsonExclude
     @ManyToOne
     public ER_Channel channel;

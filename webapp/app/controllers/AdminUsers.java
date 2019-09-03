@@ -226,7 +226,7 @@ public class AdminUsers extends AdminBaseController {
         render();
     }
     
-    public static void saveUser(ER_User user, String reset, String agentCode, Integer phoneNumber,Boolean isQAUser) {
+    public static void saveUser(ER_User user, String reset, String agentCode, Integer phoneNumber,Boolean isQAUser,Boolean isCommercialQAUser) {
     	
     	flash.clear();
     	
@@ -290,6 +290,14 @@ public class AdminUsers extends AdminBaseController {
                     isQAUser = Boolean.FALSE;
 				}
 				user.setQAUser(isQAUser);
+
+				//Set Commercial QA USER
+				if(isCommercialQAUser == null)
+				{
+					isCommercialQAUser = Boolean.FALSE;
+				}
+				user.setCommercialQAUser(isCommercialQAUser);
+
 				//Set user distributor
 	    		if (user.distributor!=null && (userRol.equals(ERConstants.USER_ROLE_SUPER_ADMIN) ||
 						userRol.equals(ERConstants.USER_ROLE_CHANNEL_MANAGER))) {
