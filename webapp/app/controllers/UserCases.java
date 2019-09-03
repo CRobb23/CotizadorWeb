@@ -913,11 +913,32 @@ public class UserCases extends AdminBaseController {
     	//Set the size of the PDF to Letter portrait
     	Options options = new Options();
     	options.pageSize = IHtmlToPdfTransformer.LETTERP;
-    	
+
+        Long idCreator = quotation.incident.creator.id;
+
+		ER_User userTemp = ER_User.findById(idCreator);
+		ER_Distributor_Custom_Logo customLogoDistributor = null;
+		if(userTemp.distributor != null)
+			customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id",userTemp.distributor.id).first();
+
+        Boolean hasCustomLogo = false;
+        String customLogoPath = "";
+
+		if(customLogoDistributor !=null && customLogoDistributor.active && customLogoDistributor.bannerName != null){
+			hasCustomLogo = customLogoDistributor.active;
+			customLogoPath = "/public/images/custom/" + customLogoDistributor.bannerName;
+		}else {
+			ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.id", idCreator).first();
+			if (customLogo != null && customLogo.bannerName != null) {
+				hasCustomLogo = customLogo.active;
+				customLogoPath = "/public/images/custom/" + customLogo.bannerName;
+			}
+		}
+
     	PDF.MultiPDFDocuments docs = new PDF.MultiPDFDocuments();
     	docs.add("Forms/Quotation.html", options);
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefits, additionalBenefitsArray);
+    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefits, additionalBenefitsArray,hasCustomLogo, customLogoPath);
     	
     	return os;
     }

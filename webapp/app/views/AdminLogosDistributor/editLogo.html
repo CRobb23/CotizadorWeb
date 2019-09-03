@@ -1,0 +1,119 @@
+#{extends 'admin.html' /}
+
+<form action="@{saveLogo()}" method="POST", class="form-horizontal" enctype="multipart/form-data" role="form"  >
+
+    <div class="well">
+        <div class="orange-title">
+            <span>
+                <h1>${customLogo==null ? messages.get('createLogo.title') : messages.get('editLogo.title')}</h1>
+            </span>
+        </div>
+
+    #{if flash.error}
+        <div class="alert alert-danger">
+        ${flash.error}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+
+    #{if distributor}
+        <input type="hidden" name="distributor.id" value="${distributor?.id}" />
+    #{/if}
+    #{if customLogo}
+        <input type="hidden" name="customLogo.id" value="${customLogo?.id}" />
+    #{/if}
+
+    #{field 'distributor.name'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'distributor.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control" readonly/>
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+    #{/}
+
+    #{field 'logoFile'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'logo.form.'+field.name} </label>
+            <div class="col-sm-4">
+                <input type="file" name="${field.name}" id="${field.id}" class="form-control" accept="image/x-png,image/gif,image/jpeg" />
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+            <label class="col-sm-3" for="${field.id}">&{'logo.form.logo.size'} </label>
+        </div>
+    #{/}
+
+    #{if customLogo?.logoName != null}
+    #{field 'existingLogo'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" > </label>
+            <div  class="col-sm-4" >
+                <img src="${"../../public/images/custom/"+customLogo?.logoName}" style="max-width: 100%;" >
+            </div>
+            <div class="col-sm-2">
+                <input type="submit" class="btn btn-primary btn-block" name="delLogo" value="Borrar" />
+            </div>
+        </div>
+    #{/}
+    #{/if}
+
+    #{field 'bannerFile'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'logo.form.'+field.name} </label>
+            <div class="col-sm-4">
+                <input type="file" name="${field.name}" id="${field.id}" class="form-control" accept="image/x-png,image/gif,image/jpeg" />
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+            <label class="col-sm-3" for="${field.id}">&{'logo.form.banner.size'} </label>
+        </div>
+    #{/}
+
+    #{if customLogo?.bannerName != null}
+    #{field 'existingBanner'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" > </label>
+            <div  class="col-sm-4">
+                <img src="${"../../public/images/custom/"+customLogo?.bannerName}" style="max-width: 100%;" >
+            </div>
+            <div class="col-sm-2">
+                <input class="btn btn-primary btn-block" style="" type="submit" name="delBanner" value="Borrar" />
+            </div>
+        </div>
+    #{/}
+    #{/if}
+
+
+    #{field 'customLogo.active'}
+        <div class="form-group ${field.error?'has-error':''}">
+            <label class="col-sm-3 control-label" for="${field.id}">#{required/} &{'logo.form.'+field.name}</label>
+            <div class="col-sm-6">
+                #{select field.name, value: field.flash ? field.flash : (customLogo) ? (field.value) ? 1: 0 : "", class:'form-control'}
+                    #{option 1}&{'usersList.table.state.active'}#{/option}
+                    #{option 0}&{'usersList.table.state.inactive'}#{/option}
+                #{/select}
+                #{if field.error}<span class="help-block">${field.error}</span>#{/if}
+            </div>
+        </div>
+    #{/}
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-6">
+                <input type="submit" class="btn btn-primary btn-block" value="${customLogo==null ? messages.get('logo.form.create') : messages.get('logo.form.edit')}" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6">
+            #{requiredleyend/}
+            </div>
+        </div>
+
+    </div>
+
+</form>

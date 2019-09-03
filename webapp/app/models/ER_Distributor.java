@@ -38,4 +38,23 @@ public class ER_Distributor extends Model {
 	@MaxSize(75)
 	@Column(length=75)
 	public String inspectionEmail;
+
+	@GsonExclude
+	@OneToOne(mappedBy="distributor")
+	public ER_Distributor_Custom_Logo logo;
+
+	public Map<String, Object> toMap() {
+		Map<String, Object> map = new HashMap<String,Object>();
+		if (id!=null) {
+			map.put("id", this.id);
+		}
+		if (name!=null) {
+			map.put("name", this.name);
+		}
+		if (active) {
+			map.put("active", active);
+		}
+		return map;
+	}
+
 }

@@ -110,6 +110,55 @@ menu.profile.userprofile = Perfil
 menu.profile.changepassword = Cambio de contraseña
 menu.profile.signout = Salir
 
+
+menu.logos.title= Administración de Logos por Usuario
+menu.logos.titleDistributor= Administración de Logos por Distribuidor
+
+#######################################################################
+# Custom Logos messages
+#######################################################################
+
+# Logos
+logosList.newLogo = Nueva Configuración
+
+# Logos Search form
+logosList.title = Logos
+logosList.search.form.email = Correo electrónico
+logosList.search.form.state = Estado
+logosList.search.form.search = Buscar
+logosList.search.form.all = Todos
+
+# Users list table
+logosList.table.name = Nombre
+logosList.table.email = Correo electrónico
+logosList.table.distributor=Distribuidor
+logosList.table.role = Rol
+logosList.table.state = Estado
+logosList.table.logo = Logo
+logosList.table.banner = Banner
+logosList.table.state.active = Activo
+logosList.table.state.inactive = Inactivo
+logosList.table.edit = Editar
+logosList.table.delete = Eliminar
+
+createLogo.title=Crear Logos
+editLogo.title=Modificar Logos
+
+logo.form.create=Crear Logos
+logo.form.edit=Modificar Logos
+logo.form.customLogo.active = Estado
+logo.form.logoFile=Logo
+logo.form.bannerFile=Banner
+logo.form.logo.size=Dimensiones: 300 x 100
+logo.form.banner.size=Dimensiones: 1048 x 138
+customLogo.create.fileerrors=Error al cargar archivos
+customLogo.create.fileerrorsNotFound=Debe ingresar ambos archivos
+logo.delete.error = No fue posible eliminar la configuración,por favor revisar
+logo.delete.success = La configuración ha sido eliminada exitosamente
+
+logo.create.success = El registro ha sido creado exitosamente
+logo.edit.success = El registro ha sido modificado exitosamente
+
 #######################################################################
 # User messages
 #######################################################################
