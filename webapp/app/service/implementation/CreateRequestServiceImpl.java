@@ -3,6 +3,7 @@ package service.implementation;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.Years;
@@ -34,6 +35,7 @@ import models.ws.YoungerRequest;
 import objects.CoverageCost;
 import objects.CoverageCostCategory;
 import objects.PaymentOption;
+import play.Logger;
 import play.modules.guice.InjectSupport;
 import service.CreateRequestService;
 
@@ -769,9 +771,12 @@ public class CreateRequestServiceImpl implements CreateRequestService{
     		request.setPrimes(new ArrayList<PrimeRequest.Prime>());
     		
     		Integer numberOfPayments = incident.selectedPaymentFrecuency.numberOfPayments;
+    		//Recorre arreglo de numero de pagos cotizados
     		for(PaymentOption paymentOption: incident.selectedQuotation.quotationDetail.getPaymentOptions()){
+    		    //Si numero de pagos es igual a numero de pago seleccionado
     			if(paymentOption.numberOfPayments.equals(numberOfPayments) && paymentOption.frecuency.equals(incident.selectedPaymentFrecuency.frecuency.name)){
     				paymentOption.netPrime = incident.selectedQuotation.quotationDetail.getInternalPrime();
+    				//Recorre desde 1 hasta el numero de pagos seleccionado
     				for(Integer i=1; i<=numberOfPayments; i++){
     	    			PrimeRequest.Prime prime = new PrimeRequest.Prime();
     	    			prime.setNumberPayment(i);
@@ -779,28 +784,61 @@ public class CreateRequestServiceImpl implements CreateRequestService{
     	    			if (incident.selectedQuotation.carValue != null) {
 							prime.setSumAssured(incident.selectedQuotation.carValue.divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
 						}
+                        //Calculo de prima neta = prima neta de pago / numero de pagos
     	    			prime.setNetPrime(paymentOption.netPrime.divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
-						prime.setEmissionRihts(paymentOption.getTotalEmissionFee().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
-						prime.setSurcharges(paymentOption.getTotalFractioningFee().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
-						prime.setiAttend(paymentOption.coverageExternal.divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
-						prime.setIva(paymentOption.getIva().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
-    	    			if(i.equals(1)){
+						//Calculo de gastos de emision = GASTO EMISION DE PAGO / NUMERO DE PAGOS
+    	    			prime.setEmissionRihts(paymentOption.getTotalEmissionFee().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
+    	    			//Calculo de recargo = GASTO DE RECARGO DE PAGO / NUMERO DE PAGOS
+    	    			prime.setSurcharges(paymentOption.getTotalFractioningFee().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
+						//Calculo de ASISTO = COBERTURA EXTERNA DE PAGO / NUMERO DE PAGOS
+    	    			prime.setiAttend(paymentOption.coverageExternal.divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
+						//Calculo de IVA = IVA DE PAGO / Numero de pagos
+    	    			prime.setIva(paymentOption.getIva().divide(new BigDecimal(numberOfPayments), 2, RoundingMode.HALF_UP));
+    	    			//Si es primera iteracion, primer pago
+						if(i.equals(1)){
 							BigDecimal sumAssured = new BigDecimal(0);
     	    				if (incident.selectedQuotation.carValue != null) {
 								sumAssured = incident.selectedQuotation.carValue.subtract(prime.getSumAssured().multiply(new BigDecimal(numberOfPayments)));
 							}
-    						BigDecimal netPrime = paymentOption.netPrime.subtract(prime.getNetPrime().multiply(new BigDecimal(numberOfPayments)));
-    						BigDecimal emission = paymentOption.getTotalEmissionFee().subtract(prime.getEmissionRihts().multiply(new BigDecimal(numberOfPayments)));
-    						BigDecimal surcharges = paymentOption.getTotalFractioningFee().subtract(prime.getSurcharges().multiply(new BigDecimal(numberOfPayments)));
-    						BigDecimal iAttend = paymentOption.coverageExternal.subtract(prime.getiAttend().multiply(new BigDecimal(numberOfPayments)));
-    						BigDecimal iva = paymentOption.getIva().subtract(prime.getIva().multiply(new BigDecimal(numberOfPayments)));
+							//CALCULO DE PRIMA NETA = PRIMA NETA DE PAGO - (PRIMA NETA DE PRIMA * NUMERO DE PAGOS)
+ 					Logger.info("IVA PORCENTAJE: " + incident.selectedQuotation.quotationDetail.getVat());
 
-    						prime.setSumAssured(prime.getSumAssured().add(sumAssured).setScale(2, RoundingMode.HALF_UP));
-        	    			prime.setNetPrime(prime.getNetPrime().add(netPrime).setScale(2, RoundingMode.HALF_UP));
+    						BigDecimal netPrime = paymentOption.netPrime.subtract(prime.getNetPrime().multiply(new BigDecimal(numberOfPayments)));
+    					 Logger.info("netPrime : " + netPrime );
+	
+					//CALCULO DE EMISION = EMISION DE PAGO - (RECARGO DE PRIMA * NUMERO DE PAGOS)
+    	    				BigDecimal emission = paymentOption.getTotalEmissionFee().subtract(prime.getEmissionRihts().multiply(new BigDecimal(numberOfPayments)));
+					 Logger.info("emission  : " + emission );
+    					
+					//CALCULO DE RECARGO = RECARGO DE PAGOS - (RECARGO DE PRIMA * NUMERO DE PAGOS)
+    	    				BigDecimal surcharges = paymentOption.getTotalFractioningFee().subtract(prime.getSurcharges().multiply(new BigDecimal(numberOfPayments)));
+    					Logger.info("surcharges : " + surcharges );
+				
+					//CALCULO DE ASISTO = COBERTURA DE PAGOS - (ASISTO DE PRIMA * NUMERO DE PAGOS)
+    	    				BigDecimal iAttend = paymentOption.coverageExternal.subtract(prime.getiAttend().multiply(new BigDecimal(numberOfPayments)));
+				    		Logger.info("iAttend : " + iAttend );
+			
+			   //CALCULO DE IVA = IVA DE PRIMA NETA
+						prime.setSumAssured(prime.getSumAssured().add(sumAssured).setScale(2, RoundingMode.HALF_UP));
+        	    				prime.setNetPrime(prime.getNetPrime().add(netPrime).setScale(2, RoundingMode.HALF_UP));
     						prime.setEmissionRihts(prime.getEmissionRihts().add(emission).setScale(2, RoundingMode.HALF_UP));
     						prime.setSurcharges(prime.getSurcharges().add(surcharges).setScale(2, RoundingMode.HALF_UP));
     						prime.setiAttend(prime.getiAttend().add(iAttend).setScale(2, RoundingMode.HALF_UP));
-    						prime.setIva(prime.getIva().add(iva).setScale(2, RoundingMode.HALF_UP));
+
+                            BigDecimal ivaNetPrime = prime.getNetPrime().multiply(incident.selectedQuotation.quotationDetail.getVat()).setScale(2, RoundingMode.HALF_UP);
+                            Logger.info("IVA ivaNetPrime: " + ivaNetPrime);
+                            BigDecimal ivaEmission = prime.getEmissionRihts().multiply(incident.selectedQuotation.quotationDetail.getVat()).setScale(2, RoundingMode.HALF_UP);
+                            Logger.info("IVA ivaEmission: " + ivaEmission);
+                            BigDecimal ivaSurcharges = prime.getSurcharges().multiply(incident.selectedQuotation.quotationDetail.getVat()).setScale(2, RoundingMode.HALF_UP);
+                            Logger.info("IVA ivaSurcharges: " + ivaSurcharges);
+                            BigDecimal ivaIAttend = prime.getiAttend().multiply(incident.selectedQuotation.quotationDetail.getVat()).setScale(2, RoundingMode.HALF_UP);
+                            Logger.info("IVA ivaIAttend: " + ivaIAttend);
+    	    				BigDecimal iva = ivaNetPrime.add(ivaEmission).add(ivaSurcharges).add(ivaIAttend);
+
+                            Logger.info("IVA DE PRIMER PAGO: " + iva);
+
+    						
+    						prime.setIva(iva.setScale(2, RoundingMode.HALF_UP));
     	    			}
     	    			request.getPrimes().add(prime);
     	    		}
@@ -866,21 +904,22 @@ public class CreateRequestServiceImpl implements CreateRequestService{
     public WorkFlowRequest createWorkFlowRequest(ER_Incident incident){
     	try{
     		String date = DateHelper.formatDate(incident.selectedQuotation.creationDate, "dd/MM/yyyy");
+			String emissionDate = DateHelper.formatDate(new Date(), "dd/MM/yyyy");
     		WorkFlowRequest request = new WorkFlowRequest();
     		request.setQuoteNumber(incident.number.toString());
     		request.setCurrency("Q");
     		request.setMovementType("01");
     		request.setSubMovementType("01");
     		request.setDocumentType("01");
-    		request.setDocumentDate(date);
-    		request.setReceptionDate(date);
+    		request.setDocumentDate(emissionDate);
+    		request.setReceptionDate(emissionDate);
     		request.setInsuredName(null);
     		request.setObservations(null);
     		request.setUrgent("N");
     		request.setLine((incident.client.isIndividual != null && !incident.client.isIndividual) ? "02" : "01");
-    		request.setReviewDate(date);
-    		request.setDateAssignment(date);
-    		request.setEmissionDate(date);
+    		request.setReviewDate(emissionDate);
+    		request.setDateAssignment(emissionDate);
+    		request.setEmissionDate(emissionDate);
     		request.setBarcode(null);
     		
 	    	return request;
