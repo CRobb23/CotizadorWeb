@@ -76,6 +76,10 @@ public class ER_User extends Model {
     public String token;
 
     public Long selectedBroker;
+
+    @GsonExclude
+    @OneToOne(mappedBy="user")
+    public ER_User_Custom_Logo logo;
     
     public Map<String, Object> toMap() {
     	Map<String, Object> map = new HashMap<String,Object>();

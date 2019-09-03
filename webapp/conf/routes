@@ -74,12 +74,27 @@ GET		/stores/edit/{id}						AdminStores.editStore
 GET		/stores/new								AdminStores.editStore
 POST	/stores/save							AdminStores.saveStore
 GET		/stores/delete/{id}						AdminStores.deleteStore
+
 # AdminUsers
 GET		/users									AdminUsers.usersList
 *		/users/search							AdminUsers.search
 GET		/users/edit/{userId}					AdminUsers.editUser
 GET		/users/new								AdminUsers.editUser
 POST	/users/save								AdminUsers.saveUser
+
+# AdminLogosUser
+GET     /logos                                  AdminLogos.logosList
+*       /logos/search                           AdminLogos.search
+GET     /logos/edit/{logoId}                    AdminLogos.editLogo
+GET     /logos/new                              AdminLogos.editLogo
+POST    /logos/save                             AdminLogos.saveLogo
+
+# AdminLogosDistributors
+GET     /logosDistributors                      AdminLogosDistributor.logosList
+*       /logosDistributors/search               AdminLogosDistributor.search
+GET     /logosDistributors/edit/{logoId}        AdminLogosDistributor.editLogo
+GET     /logosDistributors/new                  AdminLogosDistributor.editLogo
+POST    /logosDistributors/save                 AdminLogosDistributor.saveLogo
 
 # AdminVehicles
 GET		/brands									AdminVehicles.vehicleBrands
