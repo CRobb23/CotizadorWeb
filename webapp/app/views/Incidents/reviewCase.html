@@ -25,7 +25,7 @@
 
         #{if incident?.review != null}
             <li type="circle">
-                <b>FECHA: </b>${incident.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${incident.reviewUser.getFullName()}   <b style='margin-left: 10em'>ESTADO:</b> ${incident?.reviewDetail?.status?.name} </br> <p> <ul> <li type="square"><b>COMENTARIO: </b> ${incident.review} </li></ul></p>
+                <b>FECHA: </b>${incident.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${incident.getReviewUser()}   <b style='margin-left: 10em'>ESTADO:</b> ${incident?.reviewDetail?.status?.name} </br> <p> <ul> <li type="square"><b>COMENTARIO: </b> ${incident.review} </li></ul></p>
             </li>
             <hr width="100%" size=20>
         #{/if}

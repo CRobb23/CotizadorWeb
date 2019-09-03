@@ -117,7 +117,7 @@ public class ER_Incident extends Model {
 	public ER_User reviewUser;
 
 	public String getReviewUser() {
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
 		if(this.reviewUser != null) {
 
 			return this.reviewUser.getFullName();
@@ -287,15 +287,20 @@ public class ER_Incident extends Model {
     }
 
     public String getPolicyValidityString() {
-    	if(this.policyValidity != null)
-			return  new SimpleDateFormat("dd/MM/yyyy").format(this.policyValidity);
+    	if(this.policyValidity != null) {
+
+			return new SimpleDateFormat("dd/MM/yyyy").format(this.policyValidity);
+		}
     	else
     		return "";
 	}
 
 	public String getFinalizedDateCase() {
-        if(this.finalizedDate != null)
-            return this.finalizedDate.toString();
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        if(this.finalizedDate != null) {
+			String strDate = dateFormat.format(this.finalizedDate);
+			return strDate;
+		}
         else
             return "";
     }

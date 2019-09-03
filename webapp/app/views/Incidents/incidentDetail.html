@@ -76,7 +76,7 @@
 						#{if incident?.reviewDetail != null}
 						<tr>
 							<th>&{'incident.field.statusQA'}</th>
-							<td>${incident?.reviewDetail?.status.name} <b>/ FECHA: </b> ${incident?.getReviewDate()}</td>
+							<td>${incident?.reviewDetail?.status?.name} <b>/ FECHA: </b> ${incident?.getReviewDate()}</td>
 						</tr>
 					#{/if}
 					#{if incident?.status?.code == helpers.ERConstants.INCIDENT_STATUS_INSPECTION}
@@ -104,7 +104,7 @@
                     #{if isQAUser}
                         <tr>
                             <th>&{'incident.field.user.review'}</th>
-                            <td>${incident?.reviewUser?.getFullName()}</td>
+                            <td>${incident?.getReviewUser()}</td>
                         </tr>
                     #{/if}
                         <tr>

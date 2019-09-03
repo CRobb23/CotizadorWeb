@@ -449,9 +449,9 @@ public class Incidents extends AdminBaseController {
 
 		try {
 			ER_Incident currentIncident = ER_Incident.findById(id);
-			if (currentIncident.reviewDetail == null){
-				currentIncident.reviewDetail = new ER_ReviewDetail();
-			}
+
+				currentIncident.reviewDetail = currentIncident.getReviewDetail();
+
 			if(currentIncident.reviewAccepted == null) {
                 currentIncident.reviewUser = connectedUser();
 
@@ -512,7 +512,7 @@ public class Incidents extends AdminBaseController {
 				currentIncident.save();
             }
             else{
-				if(review_status != 5 && review_status != 4) {
+				if(review_status == null || (review_status != 5 && review_status != 4)) {
 					ER_Incident_Comments comment = new ER_Incident_Comments();
 					comment.comment = comments;
 					comment.incident = currentIncident;
