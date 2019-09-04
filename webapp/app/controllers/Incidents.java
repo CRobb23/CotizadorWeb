@@ -461,7 +461,11 @@ public class Incidents extends AdminBaseController {
 					comment.status = ER_ReviewStatus.find("id = 1").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.reviewDate = new Date();
-					currentIncident.reviewDetail.reviewUser = currentIncident.reviewUser;
+					currentIncident.reviewDetail.reviewUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstReviewDate().equals(" ")){
+						currentIncident.reviewDetail.firstReviewDate = new Date();
+					}
 
 				}
                 //CAMBIA A AREA COMERCIAL
@@ -469,14 +473,27 @@ public class Incidents extends AdminBaseController {
 					comment.status = ER_ReviewStatus.find("id = 2").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.comercialTransferDate = new Date();
-					currentIncident.reviewDetail.comercialTransferUser = currentIncident.reviewUser;
+					currentIncident.reviewDetail.comercialTransferUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstComercialTransferDate().equals(" ")){
+						currentIncident.reviewDetail.firstComercialTransferDate = new Date();
+					}
+					if(currentIncident.reviewDetail.timesReturned == null)
+					currentIncident.reviewDetail.timesReturned = 1;
+					else
+					currentIncident.reviewDetail.timesReturned = currentIncident.reviewDetail.timesReturned +1;
 				}
 				//CAMBIA A AREA TECNICA
 				else if(review_status == 3){
 					comment.status = ER_ReviewStatus.find("id = 3").first();
 					currentIncident.reviewDetail.status = comment.status;
 					currentIncident.reviewDetail.technicianTransferDate = new Date();
-					currentIncident.reviewDetail.tecchnicianTransferUser = currentIncident.reviewUser;
+					currentIncident.reviewDetail.tecchnicianTransferUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstTechnicianTransferDate().equals(" ")){
+						currentIncident.reviewDetail.firstTechnicianTransferDate = new Date();
+					}
+
 				}
 				//CAMBIA A ACEPTAR CASO
 				else if(review_status == 4){
@@ -486,7 +503,7 @@ public class Incidents extends AdminBaseController {
 					currentIncident.reviewAccepted = true;
 					currentIncident.review = comments;
 					currentIncident.reviewDate = new Date();
-					currentIncident.reviewDetail.acceptanceUser = currentIncident.reviewUser;
+					currentIncident.reviewDetail.acceptanceUser = connectedUser();
 				}
 				//CAMBIA A DENEGAR CASO
 				else if(review_status == 5){
@@ -496,7 +513,7 @@ public class Incidents extends AdminBaseController {
 					currentIncident.reviewAccepted = false;
 					currentIncident.review = comments;
 					currentIncident.reviewDate = new Date();
-					currentIncident.reviewDetail.declineUser = currentIncident.reviewUser;
+					currentIncident.reviewDetail.declineUser = connectedUser();
 				}
 				//GUARDA LOS COMENTARIOS
 				if(review_status != 5 && review_status != 4) {
@@ -508,6 +525,8 @@ public class Incidents extends AdminBaseController {
 					comment.save();
 				}
 				//GUARDA EL DETALLE
+				currentIncident.reviewDate = new Date();
+
 				currentIncident.reviewDetail.save();
 				currentIncident.save();
             }

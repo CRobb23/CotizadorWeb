@@ -73,7 +73,7 @@
 						<th>&{'incident.field.status'}</th>
 						<td>${incident?.status?.name} /  ${incident?.declinedReason?.description}</td>
 					</tr>
-						#{if incident?.reviewDetail != null}
+						#{if  incident?.getReviewDate() != ""}
 						<tr>
 							<th>&{'incident.field.statusQA'}</th>
 							<td>${incident?.reviewDetail?.status?.name} <b>/ FECHA: </b> ${incident?.getReviewDate()}</td>
