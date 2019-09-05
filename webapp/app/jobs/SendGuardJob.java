@@ -21,7 +21,7 @@ public class SendGuardJob extends Job {
 	}
 
 	public void doJob() {
-		Mails.generatedGuard(guard);
+		Mails.generatedGuard(this.guard);
 
     }
 }

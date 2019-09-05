@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Date;
 
 import models.ER_User;
+import models.ER_User_Custom_Logo;
+import models.ER_Distributor_Custom_Logo;
 import play.Logger;
 import play.Play;
 import play.i18n.Messages;
@@ -142,6 +144,26 @@ public class Secure extends Controller {
             // If here, update timestamp
             String userTime = (String) Security.invoke("userTime");
             session.put("usertime", userTime);
+
+            //Get data of user
+            ER_User userTemp = ER_User.find("email",username).first();
+
+            //If user´s distributor has custom logo...
+            ER_Distributor_Custom_Logo customLogoDistributor = null;
+            if(userTemp.distributor != null)
+                customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id", userTemp.distributor.id).first();
+
+            if(customLogoDistributor != null && customLogoDistributor.active && customLogoDistributor.logoName != null ){
+                session.put("customUserLogo", customLogoDistributor.logoName);
+            }
+            else{
+                //If user has custom logo
+                ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.email", username).first();
+                if(customLogo != null && customLogo.active && customLogo.logoName!=null){
+                    session.put("customUserLogo", customLogo.logoName);
+                }
+            }
+
             response.setCookie("auth", username, "5d");
             // Redirect to the original URL (or /)
             redirectToOriginalURL();

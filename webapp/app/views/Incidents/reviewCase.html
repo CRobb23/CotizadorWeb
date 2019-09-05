@@ -22,27 +22,36 @@
 
         <h3>BITACORA DE COMENTARIOS: </h3>
         <ul>
+
         #{if incident?.review != null}
-            <b>FECHA: </b>${incident.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${incident.reviewUser.getFullName()}  </br><p> <b>COMENTARIO: </b> ${incident.review}</p>
+            <li type="circle">
+                <b>FECHA: </b>${incident.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${incident.getReviewUser()}   <b style='margin-left: 10em'>ESTADO:</b> ${incident?.reviewDetail?.status?.name} </br> <p> <ul> <li type="square"><b>COMENTARIO: </b> ${incident.review} </li></ul></p>
+            </li>
+            <hr width="100%" size=20>
         #{/if}
         </ul>
-
             <ul>
-            #{list items:comments, as:'comment' }
-                <b>FECHA: </b>${comment.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${comment.user.getFullName()}              </br><p> <b>COMENTARIO: </b> ${comment.comment}</p></li>
-            #{/list}
-        </ul>
+                #{list items:comments, as:'comment' }
 
+                    <li type="circle">
+                        <b>FECHA: </b>${comment.reviewDate}          <b style='margin-left: 10em'>USUARIO:</b>${comment.user.getFullName()}   <b style='margin-left: 10em'>ESTADO:</b> ${comment?.status?.name}           </br><p> <ul> <li type="square"><b>COMENTARIO: </b> ${comment.comment} </li></ul></p>
+                    </li>
+                    <hr width="100%">
+                #{/list}
+             </ul>
     </div>
 
     #{if incident?.reviewAccepted == null}
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="isAccepted">#{required/} Aceptar Caso:</label>
                 <div class="col-sm-9">
-                    <select class="form-control" id="isAccepted" name="isAccepted">
-                        <option value= true> Aceptar </option>
-                        <option value= false>Denegar </option>
-                    </select>
+
+                    #{select 'review_status', class:'form-control', id:'review_status', value: incident?.reviewDetail?.status?.id}
+                                    #{option}&{'form.select'}#{/option}
+                                        #{list items: status, as: 'statusItem'}
+                                    #{option statusItem?.id}${statusItem?.name}#{/option}
+                        #{/list}
+                    #{/select}
                 </div>
             </div>
     #{/if}
@@ -62,7 +71,7 @@
                 <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs">&{'client.edit.cancel'}</a>
             </div>
          <div class="col-sm-2">
-         #{if isQAUser}
+         #{if isQAUser || isCommercialQAUser}
             <input type="submit" class="btn btn-primary btn-block" value="&{'incident.attend.save'}" />
          #{/if}
             <input type="hidden" name="id" value="${incident?.id}"/>

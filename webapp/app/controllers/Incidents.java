@@ -213,7 +213,13 @@ public class Incidents extends AdminBaseController {
 					}
 					query.bind("s", connectedUser);
 				}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
+					//Vendedores
 					List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
+					//Administradores
+					List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+					//Agrega lista de administradores a lista de usuarios
+					userIds.addAll(supervisoresIds);
+
 					userIds.add(connectedUser.id);
 					if (!filter.getQuery().isEmpty())
 						query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by id DESC", filter.getParametersArray()).bind("s", userIds);
@@ -348,8 +354,11 @@ public class Incidents extends AdminBaseController {
 	    	
 	    		boolean isOwner = (incident.creator == currentUser);
 	    		boolean isQAUser = false;
+				boolean isCommercialQAUser = false;
 	    		if(currentUser.isQAUser != null && currentUser.isQAUser)
 					isQAUser = true;
+				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+					isCommercialQAUser = true;
 
 	    		if (!isOwner) {
 					switch (connectedUserRoleCode(currentUser)) {
@@ -367,11 +376,17 @@ public class Incidents extends AdminBaseController {
 							isOwner = !distributors.isEmpty();
 							break;
 						}
+
 						case ERConstants.USER_ROLE_SUPERVISOR: {
-							List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
-							isOwner = !stores.isEmpty();
+						//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
+						//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+							//Agrega lista de administradores a lista de usuarios
+						//	stores.addAll(supervisoresIds);
+
+							isOwner = true;
 							break;
 						}
+
 					}
 				}
 				if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
@@ -383,7 +398,7 @@ public class Incidents extends AdminBaseController {
 				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
 				String outOfLineMessage = mail.body;
 				renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
-	    		render(incident, tasks, isOwner,body,isQAUser);
+	    		render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
 	    	} 
     	}
     	
@@ -402,36 +417,128 @@ public class Incidents extends AdminBaseController {
 			ER_Incident incident = ER_Incident.findById(id);
 			if(canViewIncident(incident)){
 				boolean isQAUser = false;
+				boolean isCommercialQAUser = false;
 				if(connectedUser().isQAUser != null && connectedUser().isQAUser)
 					isQAUser = true;
+				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+					isCommercialQAUser = true;
 
 				List <ER_Incident_Comments> comments = ER_Incident_Comments.find("incident_id = ?" , incident).fetch();
-				render(incident, isQAUser, comments);
+				ER_User currentUser = connectedUser();
+				List <ER_ReviewStatus> status = null;
+				//Tiene ambos permisos
+				if (currentUser.isCommercialQAUser != null && currentUser.isCommercialQAUser && currentUser.isQAUser!= null && currentUser.isQAUser){
+					status = ER_ReviewStatus.findAll();
+				}
+				//Tiene permiso de QA
+				else if(currentUser.isQAUser!= null && currentUser.isQAUser)
+				  status = ER_ReviewStatus.find("forQAUser = true").fetch();
+				//Tiene permiso de QA Comercial
+				else if (currentUser.isCommercialQAUser != null && currentUser.isCommercialQAUser)
+					status = ER_ReviewStatus.find("forCommercialQAUser = true").fetch();
+
+				render(incident, isQAUser, isCommercialQAUser,comments,status);
 			}
 		}
 	}
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor"})
-	public static void saveQAComments(String comments, Long id,Boolean isAccepted){
+	public static void saveQAComments(String comments, Long id,Integer review_status){
 		flash.clear();
 		flash.discard();
 
 
 		try {
 			ER_Incident currentIncident = ER_Incident.findById(id);
+
+				currentIncident.reviewDetail = currentIncident.getReviewDetail();
+
 			if(currentIncident.reviewAccepted == null) {
-                currentIncident.review = comments;
                 currentIncident.reviewUser = connectedUser();
-                currentIncident.reviewDate = new Date();
-                currentIncident.reviewAccepted = isAccepted;
-                currentIncident.save();
+
+				ER_Incident_Comments comment = new ER_Incident_Comments();
+                //CAMBIA A REVISION TECNICA
+                if(review_status == 1){
+					comment.status = ER_ReviewStatus.find("id = 1").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.reviewDate = new Date();
+					currentIncident.reviewDetail.reviewUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstReviewDate().equals(" ")){
+						currentIncident.reviewDetail.firstReviewDate = new Date();
+					}
+
+				}
+                //CAMBIA A AREA COMERCIAL
+				else if(review_status == 2){
+					comment.status = ER_ReviewStatus.find("id = 2").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.comercialTransferDate = new Date();
+					currentIncident.reviewDetail.comercialTransferUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstComercialTransferDate().equals(" ")){
+						currentIncident.reviewDetail.firstComercialTransferDate = new Date();
+					}
+					if(currentIncident.reviewDetail.timesReturned == null)
+					currentIncident.reviewDetail.timesReturned = 1;
+					else
+					currentIncident.reviewDetail.timesReturned = currentIncident.reviewDetail.timesReturned +1;
+				}
+				//CAMBIA A AREA TECNICA
+				else if(review_status == 3){
+					comment.status = ER_ReviewStatus.find("id = 3").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.technicianTransferDate = new Date();
+					currentIncident.reviewDetail.tecchnicianTransferUser = connectedUser();
+					//Coloca primera fecha si aun no tenia
+					if(currentIncident.reviewDetail.getFirstTechnicianTransferDate().equals(" ")){
+						currentIncident.reviewDetail.firstTechnicianTransferDate = new Date();
+					}
+
+				}
+				//CAMBIA A ACEPTAR CASO
+				else if(review_status == 4){
+					comment.status = ER_ReviewStatus.find("id = 4").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.acceptanceDate = new Date();
+					currentIncident.reviewAccepted = true;
+					currentIncident.review = comments;
+					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.acceptanceUser = connectedUser();
+				}
+				//CAMBIA A DENEGAR CASO
+				else if(review_status == 5){
+					currentIncident.reviewDetail.status = ER_ReviewStatus.find("id = 5").first();
+					currentIncident.reviewDetail.status = comment.status;
+					currentIncident.reviewDetail.declineDate = new Date();
+					currentIncident.reviewAccepted = false;
+					currentIncident.review = comments;
+					currentIncident.reviewDate = new Date();
+					currentIncident.reviewDetail.declineUser = connectedUser();
+				}
+				//GUARDA LOS COMENTARIOS
+				if(review_status != 5 && review_status != 4) {
+
+					comment.comment = comments;
+					comment.incident = currentIncident;
+					comment.reviewDate = new Date();
+					comment.user = connectedUser();
+					comment.save();
+				}
+				//GUARDA EL DETALLE
+				currentIncident.reviewDate = new Date();
+
+				currentIncident.reviewDetail.save();
+				currentIncident.save();
             }
             else{
-                ER_Incident_Comments comment = new ER_Incident_Comments();
-                comment.comment = comments;
-                comment.incident = currentIncident;
-                comment.reviewDate = new Date();
-                comment.user = connectedUser();
-                comment.save();
+				if(review_status == null || (review_status != 5 && review_status != 4)) {
+					ER_Incident_Comments comment = new ER_Incident_Comments();
+					comment.comment = comments;
+					comment.incident = currentIncident;
+					comment.reviewDate = new Date();
+					comment.user = connectedUser();
+					comment.save();
+				}
             }
 			finalized(currentIncident.id, true);
 		}
@@ -586,12 +693,13 @@ public class Incidents extends AdminBaseController {
     									 String inspectionNumber,Date inspectionDate) {
     	flash.clear();
     	flash.discard();
-    	
+
     	ER_Incident_Status incidentStatus = null;
     	ER_Declined_Sell_Reason reason = null;
     	ER_Quotation quotation = null;
     	ER_Payment_Frecuency frecuency = null;
     	ER_Incident incident = ER_Incident.findById(id);
+		Logger.info("Actualiza estado de caso: " + incident.number);
 		ER_Incident_Status incidentStatusIncomplete = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INCOMPLETE).first();
 		if(incident.inspection == null) {
 			ER_Inspection newInspection = new ER_Inspection();
@@ -768,6 +876,7 @@ public class Incidents extends AdminBaseController {
                                 exceptions.active = 1;
                                 exceptions.save();
                                 incident.status = incidentStatusIncomplete;
+
                                 incident.save();
                                 attendIncident(id);
 	    					}
@@ -1113,6 +1222,7 @@ public class Incidents extends AdminBaseController {
 		
 		//Send email to client
 		SendGuardJob sendGuardJob = new SendGuardJob(guard);
+		sendGuardJob.now();
 		//Mails.generatedGuard(guard);
     	
     }
@@ -1840,6 +1950,25 @@ public class Incidents extends AdminBaseController {
 					payer.profession = currentClient.profession;
 					payer.nationality = currentClient.nationality;
 					payer.registrationDate = currentClient.registrationDate;
+					if(currentClient.clientPEP != null) {
+						clientPayerPEP.specificRelationship = currentClient.clientPEP.specificRelationship;
+						clientPayerPEP.typeOfrelationship = currentClient.clientPEP.typeOfrelationship;
+						clientPayerPEP.relationship = currentClient.clientPEP.relationship;
+						clientPayerPEP.relationCompanyName = currentClient.clientPEP.relationCompanyName;
+						clientPayerPEP.relationFirstSurname = currentClient.clientPEP.relationFirstSurname;
+						clientPayerPEP.relationFirtName = currentClient.clientPEP.relationFirtName;
+						clientPayerPEP.relationJob = currentClient.clientPEP.relationJob;
+						clientPayerPEP.relationMarriedSurname = currentClient.clientPEP.relationMarriedSurname;
+						clientPayerPEP.relationOtherName = currentClient.clientPEP.relationOtherName;
+						clientPayerPEP.relationSecondName = currentClient.clientPEP.relationSecondName;
+						clientPayerPEP.relationshipIsPep = currentClient.clientPEP.relationshipIsPep;
+						clientPayerPEP.relationIsNational = currentClient.clientPEP.relationIsNational;
+						clientPayerPEP.relationSex = currentClient.clientPEP.relationSex;
+						clientPayerPEP.companyCountry = currentClient.clientPEP.companyCountry;
+						clientPayerPEP.idRelationCompanyCountry = currentClient.clientPEP.idRelationCompanyCountry;
+						clientPayerPEP.relationSecondSurname = currentClient.clientPEP.relationSecondSurname;
+						clientPayerPEP.relationshipIsPep = currentClient.clientPEP.relationshipIsPep;
+					}
 
 					if(currentClient.legalRepresentative != null) {
                         legalRepresentativePayer.firstName = currentClient.legalRepresentative.firstName;
@@ -1863,16 +1992,17 @@ public class Incidents extends AdminBaseController {
 				}
 
 				if(payer.expose != null && payer.expose) {
-					if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
-						clientPayerPEP.relationshipIsPep = true;
-						if (!clientPayerPEP.relationship.equals("Otro"))
-							clientPayerPEP.specificRelationship = null;
-					}
-					else
-						clientPayerPEP.relationshipIsPep = false;
-					clientPayerPEP.save();
+					if(clientPayerPEP.typeOfrelationship != null) {
+						if (clientPayerPEP.typeOfrelationship.equals("Parentesco") || clientPayerPEP.typeOfrelationship.equals("Asociado")) {
+							clientPayerPEP.relationshipIsPep = true;
+							if (!clientPayerPEP.relationship.equals("Otro"))
+								clientPayerPEP.specificRelationship = null;
+						} else
+							clientPayerPEP.relationshipIsPep = false;
+						clientPayerPEP.save();
 
-					payer.clientPayerPEP = clientPayerPEP;
+						payer.clientPayerPEP = clientPayerPEP;
+					}
 				}
 				if( currentClient.payer != null && currentClient.payer.id != null)
 					payer.id = currentClient.payer.id;
@@ -1902,7 +2032,7 @@ public class Incidents extends AdminBaseController {
 				String updateAction = Messages.get("client.edit.update") != null ? Messages.get("client.edit.update") : "Actualizar";
 				if (completeAction.equals(accion)) {
 					currentClient.save();
-					vehiculoTab(clientId, incidentId,isOldClient);
+					vehiculoTab(clientId,    incidentId,isOldClient);
 				}
 				if (partialAction.equals(accion)) {
 					currentClient.save();
@@ -2685,6 +2815,26 @@ public class Incidents extends AdminBaseController {
     public static void viewQuotationPDF(Long id,Integer index) {
     	ER_General_Configuration configuration = ER_General_Configuration.find("").first();
     	ER_Quotation quotation = ER_Quotation.findById(id);
+
+    	Long idCreator = quotation.incident.creator.id;
+    	ER_User userTemp = ER_User.findById(idCreator);
+		ER_Distributor_Custom_Logo customLogoDistributor = null;
+		if(userTemp.distributor != null)
+			customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id",userTemp.distributor.id).first();
+
+		Boolean hasCustomLogo = false;
+		String customLogoPath = "";
+
+		if(customLogoDistributor !=null && customLogoDistributor.active && customLogoDistributor.bannerName != null){
+			hasCustomLogo = customLogoDistributor.active;
+			customLogoPath = "/public/images/custom/" + customLogoDistributor.bannerName;
+		}else {
+			ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.id",idCreator).first();
+			if (customLogo != null && customLogo.bannerName != null) {
+				hasCustomLogo = customLogo.active;
+				customLogoPath = "/public/images/custom/" + customLogo.bannerName;
+			}
+		}
     	
     	if (quotation!=null && quotation.incident!=null && canViewIncident(quotation.incident)) {
     		//Set the size of the PDF to Letter portrait
@@ -2701,7 +2851,7 @@ public class Incidents extends AdminBaseController {
         	}
         	String[] additionalBenefitsArray = additionalBenefits.split("[\r\n]+");
         	
-        	renderPDF("Forms/Quotation.html", options, quotation, configuration, additionalBenefits,additionalBenefitsArray);
+        	renderPDF("Forms/Quotation.html", options, quotation, configuration, additionalBenefits,additionalBenefitsArray, hasCustomLogo, customLogoPath);
     	}
     }
     
@@ -2766,12 +2916,34 @@ public class Incidents extends AdminBaseController {
     	//Set the size of the PDF to Letter portrait
     	Options options = new Options();
     	options.pageSize = IHtmlToPdfTransformer.LETTERP;
+
+
+		Long idCreator = quotation.incident.creator.id;
+
+		ER_User userTemp = ER_User.findById(idCreator);
+		ER_Distributor_Custom_Logo customLogoDistributor = null;
+		if(userTemp.distributor != null)
+			customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id",userTemp.distributor.id).first();
+
+		Boolean hasCustomLogo = false;
+		String customLogoPath = "";
+
+		if(customLogoDistributor != null && customLogoDistributor.active && customLogoDistributor.bannerName != null){
+			hasCustomLogo = customLogoDistributor.active;
+			customLogoPath = "/public/images/custom/" + customLogoDistributor.bannerName;
+		}else {
+			ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.id",idCreator).first();
+			if (customLogo != null && customLogo.bannerName != null) {
+				hasCustomLogo = customLogo.active;
+				customLogoPath = "/public/images/custom/" + customLogo.bannerName;
+			}
+		}
     	
     	PDF.MultiPDFDocuments docs = new PDF.MultiPDFDocuments();
     	docs.add("Forms/Quotation.html", options);
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefitsArray, additionalBenefits);
-    	
+    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefitsArray, additionalBenefits,hasCustomLogo, customLogoPath);
+
     	return os;
     }
     

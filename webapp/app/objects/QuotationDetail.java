@@ -37,6 +37,15 @@ public class QuotationDetail {
 	
 	private BigDecimal emissionFee;
 	private Boolean emissionFeeFirstPayment;
+
+	public BigDecimal getVat() {
+		return vat;
+	}
+
+	public void setVat(BigDecimal vat) {
+		this.vat = vat;
+	}
+
 	private BigDecimal vat;
 	
 	private BigDecimal additionalDiscount;

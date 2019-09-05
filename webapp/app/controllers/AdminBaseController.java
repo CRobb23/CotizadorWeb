@@ -166,8 +166,10 @@ public class AdminBaseController extends Controller {
 					return !distributors.isEmpty();
 				}
 				case ERConstants.USER_ROLE_SUPERVISOR: {
-					List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, connectedUser).fetch();
-		    		return !stores.isEmpty();
+					//List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, connectedUser).fetch();
+
+
+					return true;
 				}
 			}
 		}
@@ -202,7 +204,7 @@ public class AdminBaseController extends Controller {
 		    		return !incidents.isEmpty();
 				}
 				case ERConstants.USER_ROLE_SUPERVISOR: {
-					long incidentsCount = ER_Incident.count("client = ? and (creator in (select u from ER_Store s join s.sellers u join s.administrators a where a = ?) or creator = ?)", client, connectedUser, connectedUser);
+					long incidentsCount = ER_Incident.count("client = ? and (creator in (select u from ER_Store s join s.sellers u join s.administrators a where a = ?) or creator = ? or creator in (select a.id from ER_Store s join s.administrators a where s.distributor = ?))", client, connectedUser, connectedUser, connectedUser.distributor);
 		    	    return incidentsCount>0;
 				}
 				case ERConstants.USER_ROLE_SALES_MAN: {
