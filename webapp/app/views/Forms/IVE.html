@@ -142,7 +142,11 @@
     		</tr>
     		<tr>
 	    		<td class="field center" colspan="4">Guatemala</td>
-	    		<td class="field center" colspan="4">${incident?.finalizedDate.format('dd/MM/yyyy')}</td>
+	    		<td class="field center" colspan="4">
+					#{if incident?.finalizedDate != null}
+						${incident?.finalizedDate.format('dd/MM/yyyy')}
+					#{/if}
+				</td>
     		</tr>
     	</table>
     	

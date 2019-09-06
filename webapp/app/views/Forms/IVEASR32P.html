@@ -26,7 +26,7 @@
         </div>
         <table class="Border">
             <tbody>
-                <tr><td style="font-weight: bold;">Lugar y fecha:</td>                                     <td>Guatemala, ${incident?.finalizedDate.format('dd/MM/yy HH:mm')}</td></tr>
+                <tr><td style="font-weight: bold;">Lugar y fecha:</td>                                     <td>#{if incident?.finalizedDate != null}Guatemala, ${incident?.finalizedDate.format('dd/MM/yy HH:mm')}#{/if}</td></tr>
                 <tr><td style="font-weight: bold;">Nombre comercial o denominación:</td>                   <td>${incident?.client?.payer?.companyName}</td></tr>
                 <tr><td style="font-weight: bold;">Razón social: </td>                                     <td>${incident?.client?.payer?.businessName}</td></tr>
                 <tr><td style="font-weight: bold;">Fecha de constitución:</td>                             <td>${incident?.client?.payer?.registrationDate}</td></tr>

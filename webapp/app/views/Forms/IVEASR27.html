@@ -242,7 +242,11 @@
 	    		<td class="headerTopCell thickBorderRight medBorderBottom">Tipo de Documento de Identificación</td>
     		</tr>
     		<tr>
-	    		<td class="fieldCell thickBorderRight thickBorderLeft">${incident?.finalizedDate.format('dd/MM/yyyy')}</td>
+	    		<td class="fieldCell thickBorderRight thickBorderLeft">
+					#{if incident?.finalizedDate != null}
+						${incident?.finalizedDate.format('dd/MM/yyyy')}
+					#{/if}
+				</td>
 	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.name}</td>
 	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.currency?.name}</td>
 	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.selectedTotalPrime?.doubleValue()?.decimalFormat()}</td>

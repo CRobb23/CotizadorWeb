@@ -106,7 +106,9 @@
 					Fecha:
 				</td>
 				<td class="border center borderBottom field" colspan="3">
-					${incident?.finalizedDate.format('dd/MM/yyyy')}
+					#{if incident?.finalizedDate != null}
+						${incident?.finalizedDate.format('dd/MM/yyyy')}
+					#{/if}
 				</td>
 				<td></td>
 				<td class="right">
