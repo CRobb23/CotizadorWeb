@@ -107,5 +107,20 @@ public class QueryBusServiceImpl extends AbstractBusServiceImpl implements Query
             return e.getMessage();
         }
     }
+    @Override
+    public String policyProduct(String message) {
+        try {
+            String soapMessage = fromJSONtoSOAP(message, ProductPolicyRestRequest.class, PolicyProductSoapRequest.class);
+            log.info("Soap message policyProduct transaction >: " + soapMessage);
+            soapMessage = PolicyProductSoapRequest.RQ_CODE + soapMessage;
+            String soapResponse = brokerSoapOutbound.sendBrokerMessage(soapMessage);
+            soapResponse = soapResponse.replaceFirst(PolicyProductSoapRequest.RS_CODE, "");
+            String restResponse = fromSOAPtoJSON(soapResponse, PolicyProductSoapResponse.class, PolicyProductRestResponse.class);
+            return restResponse;
+        } catch (ConvertException | ConnectionException e) {
+            log.error(e.getMessage(), e);
+            return e.getMessage();
+        }
+    }
 
 }

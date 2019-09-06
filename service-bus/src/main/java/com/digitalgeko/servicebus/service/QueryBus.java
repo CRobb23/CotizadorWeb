@@ -13,4 +13,6 @@ public interface QueryBus {
     String businessDetailQuery(String message);
 
     String pendingTransactionsQuery(String message);
+
+    String policyProduct(String message);
 }
