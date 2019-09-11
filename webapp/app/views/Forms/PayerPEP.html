@@ -53,6 +53,9 @@
             #{if incident?.finalizedDate != null}
 			    ${incident?.finalizedDate.format('dd/MM/yy')}
 			#{/if}
+            #{else }
+                ${actualDate.format('dd/MM/yy')}
+            #{/else}
         </td>
     </tr>
     <tr>

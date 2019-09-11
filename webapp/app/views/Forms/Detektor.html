@@ -109,6 +109,9 @@
 					#{if incident?.finalizedDate != null}
 						${incident?.finalizedDate.format('dd/MM/yyyy')}
 					#{/if}
+                    #{else }
+						${actualDate.format('dd/MM/yyyy')}
+					#{/else}
 				</td>
 				<td></td>
 				<td class="right">

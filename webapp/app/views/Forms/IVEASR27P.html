@@ -246,6 +246,9 @@
 					#{if incident?.finalizedDate != null}
 						${incident?.finalizedDate.format('dd/MM/yyyy')}
 					#{/if}
+					#{else }
+						${actualDate.format('dd/MM/yyyy')}
+					#{/else}
 				</td>
 	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.name}</td>
 	    		<td class="fieldCell medBorderRight">${incident?.selectedQuotation?.product?.currency?.name}</td>
