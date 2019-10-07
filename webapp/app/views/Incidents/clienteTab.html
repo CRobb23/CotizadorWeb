@@ -9,8 +9,40 @@
 	 border: 1px solid #f44336;
 	 box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
  }
+
+ .spinner-container{
+     position: fixed;
+     width: 100%;
+     height: 100%;
+     background-color: white;
+     z-index: 2;
+     opacity: 0.8;
+     top: 0;
+     left: 0;
+     visibility: visible;
+ }
+ .loading2{
+     position: fixed;
+     margin-top: 20%;
+     background-size: 150px;
+     background: url('/public/images/loading.gif') no-repeat center center;
+     width: 150px;
+     height: 150px;
+     position: absolute;
+
+     left: 50%;
+     transform: translate(-50%, -50%);
+ }
+
+
 </style>
 #{form @saveClient(), id:"formClient", class:"form-horizontal", method:"POST"}
+
+<div id="loading" class="spinner-container" style="display: none;">
+    <div class="d-flex justify-content-center">
+        <div class="loading2"></div>
+    </div>
+</div>
 
 <div class="container">
 <div class="well fixed-sidebar-parent">
@@ -52,8 +84,19 @@
 		#{verbatim} ${mensajeAlerta} #{/verbatim}
     </div>
 
+    <div id="busca-dialog" title="AVISO" style="display: none">
+		#{verbatim}
+			<span style="text-align: center"> <h3>  BÚSQUEDA EXITOSA </h3> </span>#{/verbatim}
+    </div>
+
+    <div id="busca-notfound-dialog" title="AVISO" style="display: none">
+		#{verbatim}
+            <span style="text-align: center"> <h3>NO SE ENCONTRARON RESULTADOS, POR FAVOR INGRESAR DATOS</h3> </span>#{/verbatim}
+    </div>
+
 
 <div class="row" style="min-height: 0px;">
+    <h4 id="searchField" style="border-bottom: groove; text-align: center; color:red; display: none;">BÚSQUEDA EXITOSA</h4>
 			<div class="col-sm-12">
 				#{field 'client.isIndividual'}
 					<div class="form-group">

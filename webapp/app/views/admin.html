@@ -29,20 +29,53 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-7">
-				<a href="@{Application.index()}" class="pt-20 logo-img"><img src="@{'/public/images/ElRoble.png'}" alt="el roble"/></a>
-			</div>
-			<div class="mt-20 col-sm-5 my-acount-box">		
-				<div class="well">
-					<div class="ribbon-container"><h1 class="ribbon-title-small">Mi cuenta</h1></div>
-					<strong>Bienvenido</strong>
-					<div class="clear"></div>
-					<a href="@{AdminProfile.profile()}" class="btn btn-sm">
-						${connectedUser}
-					</a>
-					<a href="@{Secure.logout()}" class="btn btn-sm pull-right">&{'menu.profile.signout'}</a>
+
+
+			#{if !session.contains("customUserLogo")}
+				<!-- logo El Roble -->
+				<div class="col-sm-7">
+					<a href="@{Application.index()}" class="pt-20 logo-img"><img src="@{'/public/images/ElRoble.png'}" alt="el roble"/></a>
 				</div>
-			</div>
+				<!-- Bienvenida Usuario -->
+				<div class="mt-20 col-sm-5 my-acount-box">
+					<div class="well">
+						<div class="ribbon-container"><h1 class="ribbon-title-small">Mi cuenta</h1></div>
+						<strong>Bienvenido</strong>
+						<div class="clear"></div>
+						<a href="@{AdminProfile.profile()}" class="btn btn-sm">
+						${connectedUser}
+						</a>
+						<a href="@{Secure.logout()}" class="btn btn-sm pull-right">&{'menu.profile.signout'}</a>
+					</div>
+				</div>
+
+			#{/if}
+
+
+			#{if session.contains("customUserLogo") }
+				<!-- logo El Roble -->
+				<div class="col-sm-4">
+					<a href="@{Application.index()}" class="pt-20 logo-img"><img src="@{'/public/images/ElRoble.png'}" alt="el roble"/></a>
+				</div>
+				<!-- logo Custom -->
+				<div class="col-sm-4">
+					<a href="" class="pt-20 logo-img"><img src="${'/public/images/custom/'+session.get("customUserLogo").toString()}" /></a>
+				</div>
+				<!-- Bienvenida Usuario -->
+				<div class="mt-20 col-sm-4 my-acount-box">
+					<div class="well">
+						<div class="ribbon-container"><h1 class="ribbon-title-small">Mi cuenta</h1></div>
+						<strong>Bienvenido</strong>
+						<div class="clear"></div>
+						<a href="@{AdminProfile.profile()}" class="btn btn-sm">
+						${connectedUser}
+						</a>
+						<a href="@{Secure.logout()}" class="btn btn-sm pull-right">&{'menu.profile.signout'}</a>
+					</div>
+				</div>
+
+			#{/if}
+
 		</div>
 	</div>
 
@@ -146,7 +179,7 @@
 						</ul>
 					</li>
 					#{/if}
-					
+
 					#{if controllers.Security.check('Administrador maestro')}
 					<li class="dropdown ${(request.controller == 'AdminCases' || request.controller == 'AdminActivities' || request.controller == 'AdminIncidents'
 					|| request.controller == 'AdminTasks' || request.controller == 'AdminInspection') ? 'current_page_item_selected active' : 'current_page_item'}">
@@ -266,6 +299,22 @@
 						</ul>
 					</li>
 					#{/if}
+
+
+					<!-- Admin Logos User -->
+					#{if controllers.Security.check('Administrador maestro') }
+						<li class="${request.controller == 'AdminLogos' ? 'current_page_item_selected active' : ''}">
+							<a href="@{AdminLogos.logosList(null,null,true)}">&{'menu.logos.title'}</a>
+						</li>
+					#{/if}
+
+					<!-- Admin Logos Distributor -->
+					#{if controllers.Security.check('Administrador maestro') }
+						<li class="${request.controller == 'AdminLogosDistributor' ? 'current_page_item_selected active' : ''}">
+							<a href="@{AdminLogosDistributor.logosList(null,null,true)}">&{'menu.logos.titleDistributor'}</a>
+						</li>
+					#{/if}
+
 				</ul>
 			</div>
 		</div>

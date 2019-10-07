@@ -221,6 +221,10 @@ public class UserCases extends AdminBaseController {
     	
     	ER_Incident incident = ER_Incident.incidentFromJson(iField, true);
     	vehicle.plate = vehicle.plate.toUpperCase();
+
+		if(vehicle.quotationnNew){
+			vehicle.isNew = true;
+		}
 		incident.vehicle = vehicle;
 		//associate inspection with incident
 		if(inspection!=null)
@@ -373,7 +377,9 @@ public class UserCases extends AdminBaseController {
 						validation.min("quotations[" + i + "].discount", quotation.discount, 0.0);
 					}
 					// Validate if has average value and car value is within parameters
+					if(incident.vehicle.quotationnNew != null && !incident.vehicle.quotationnNew) {
 					if (incident.vehicle.averageValue != null && quotation.carValue != null) {
+
 						BigDecimal averageValueParam = new BigDecimal(0.25);
 						ER_General_Configuration currentConfiguration = ER_General_Configuration.find("").first();
 						if (currentConfiguration.averageValueConfig != null) {
@@ -385,10 +391,14 @@ public class UserCases extends AdminBaseController {
 						BigDecimal lowerValue = incident.vehicle.averageValue.multiply(min);
 						BigDecimal upperValue = incident.vehicle.averageValue.multiply(max);
 						// car value within
-						if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
-							validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+
+							if (quotation.carValue.compareTo(lowerValue) < 0 || quotation.carValue.compareTo(upperValue) > 0) {
+								validation.addError("quotations[" + i + "].carValue", Messages.get("quotation.form.quotation.carvaluerange"));
+							}
 						}
+
 					}
+
 					if ( quotation.carValue != null) {
 						//Checks lower and higher range
 						boolean valueCorrect;
@@ -519,11 +529,15 @@ public class UserCases extends AdminBaseController {
                             BigDecimal min = queryAverage.getAverageValue().subtract(diff).setScale(2, RoundingMode.HALF_UP);
                             BigDecimal max = queryAverage.getAverageValue().add(diff).setScale(2, RoundingMode.HALF_UP);
 
+
                             if(quotation.carValue.compareTo(queryAverage.getAverageValue()) == 0){
                                 quotation.setGaranteedValue(Boolean.TRUE);
                             }else if(quotation.carValue.compareTo(min) >= 0 && quotation.carValue.compareTo(max) <= 0){
                                 quotation.setGaranteedValue(Boolean.TRUE);
                             }
+                            else if(incident.vehicle.quotationnNew){
+								quotation.setGaranteedValue(Boolean.TRUE);
+							}
                         }
                     }catch(Exception e){
                         e.printStackTrace();
@@ -899,11 +913,32 @@ public class UserCases extends AdminBaseController {
     	//Set the size of the PDF to Letter portrait
     	Options options = new Options();
     	options.pageSize = IHtmlToPdfTransformer.LETTERP;
-    	
+
+        Long idCreator = quotation.incident.creator.id;
+
+		ER_User userTemp = ER_User.findById(idCreator);
+		ER_Distributor_Custom_Logo customLogoDistributor = null;
+		if(userTemp.distributor != null)
+			customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id",userTemp.distributor.id).first();
+
+        Boolean hasCustomLogo = false;
+        String customLogoPath = "";
+
+		if(customLogoDistributor !=null && customLogoDistributor.active && customLogoDistributor.bannerName != null){
+			hasCustomLogo = customLogoDistributor.active;
+			customLogoPath = "/public/images/custom/" + customLogoDistributor.bannerName;
+		}else {
+			ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.id", idCreator).first();
+			if (customLogo != null && customLogo.bannerName != null) {
+				hasCustomLogo = customLogo.active;
+				customLogoPath = "/public/images/custom/" + customLogo.bannerName;
+			}
+		}
+
     	PDF.MultiPDFDocuments docs = new PDF.MultiPDFDocuments();
     	docs.add("Forms/Quotation.html", options);
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefits, additionalBenefitsArray);
+    	PDF.writePDF(os, docs, quotation, configuration, additionalBenefits, additionalBenefitsArray,hasCustomLogo, customLogoPath);
     	
     	return os;
     }

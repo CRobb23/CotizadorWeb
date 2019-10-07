@@ -49,7 +49,14 @@
         <td class="Fields" colspan="2">1. LUGAR:</td>
         <td class="FillFields" colspan="3">Guatemala</td>
         <td class="Fields" colspan="3">2. FECHA (dd/mm/aaaa):</td>
-        <td class="FillFields" colspan="3">${new Date().format('dd/MM/yy HH:mm')}</td>
+        <td class="FillFields" colspan="3">
+            #{if incident?.finalizedDate != null}
+			    ${incident?.finalizedDate.format('dd/MM/yy')}
+			#{/if}
+            #{else }
+                ${actualDate.format('dd/MM/yy')}
+            #{/else}
+        </td>
     </tr>
     <tr>
         <td class="Title" colspan="11">3. DATOS DE LA PERSONA OBLIGADA</td>

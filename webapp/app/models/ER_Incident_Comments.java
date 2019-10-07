@@ -1,9 +1,6 @@
 package models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import play.db.jpa.Model;
 
@@ -22,5 +19,9 @@ public class ER_Incident_Comments extends Model{
 
     @ManyToOne(fetch=FetchType.LAZY)
     public ER_Incident incident;
+
+    @ManyToOne(cascade=CascadeType.REFRESH, fetch=FetchType.EAGER)
+    @JoinColumn(name="status_id", nullable=true)
+    public ER_ReviewStatus status;
 
 }

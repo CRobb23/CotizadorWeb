@@ -1,0 +1,98 @@
+#{extends 'admin.html' /}
+
+#{form @searchUser(), class:"form-horizontal", method:"POST", role:"form"}
+<div class="well">
+    <div class="orange-title"><span>
+		<h1>&{'usersList.title'}</h1>
+		</span></div>
+    #{if flash.error}
+        <div class="alert alert-danger">
+        ${flash.error}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label" for="email">&{'usersList.search.form.email'}</label>
+        <div class="col-sm-6">
+            <input type="text" name="email" id="email" value="${flash.email}" class="form-control"/>
+            #{if errors.forKey("email")}<span class="help-block">#{error 'email' /}</span>#{/if}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">&{'usersList.search.form.role'}</label>
+        <div class="col-sm-6">
+            #{select 'role', value: flash.role, class:'form-control'}
+                #{option}&{'form.all'}#{/option}
+                #{list items: roles, as: 'role'}
+                    #{option role?.id}${role?.name}#{/option}
+                #{/list}
+            #{/select}
+            #{if errors.forKey("role")}<span class="help-block">#{error 'role' /}</span>#{/if}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">&{'usersList.search.form.state'}</label>
+        <div class="col-sm-6">
+            #{select 'active', value: flash.active, class:'form-control'}
+                #{option}&{'form.all'}#{/option}
+                #{option true}&{'usersList.table.state.active'}#{/option}
+                #{option false}&{'usersList.table.state.inactive'}#{/option}
+            #{/select}
+            #{if errors.forKey("active")}<span class="help-block">#{error 'active' /}</span>#{/if}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <input type="submit" class="btn btn-primary btn-block" name="searchUser" value=" &{'usersList.search.form.search'} " />
+            <input type="submit" class="btn btn-default btn-block" name="all" value=" &{'usersList.search.form.all'} " />
+        </div>
+    </div>
+
+</div>
+#{/form}
+
+<div class="well">
+    <div class="overflow">
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered usuarios" cellpadding="0" cellspacing="0">
+                <thead>
+                <tr class="table-head">
+                    <th class="first">&{'usersList.table.email'}</th>
+                    <th>&{'usersList.table.role'}</th>
+                    <th>&{'usersList.table.state'}</th>
+                    <th class="last textC" style="width:50px;">&{'usersList.table.edit'}</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                #{paginate.list items:users, as:'current'}
+                <tr class="${current_parity}">
+                    <td class="first style2">${current?.email}</td>
+                    <td>${current?.role?.name}</td>
+                    <td>${current?.active == true ? messages.get('usersList.table.state.active') : messages.get('usersList.table.state.inactive')}</td>
+                    <td class="lasticon textC">
+                        <a href="@{editLogo(current?.id, null)}"  class="btn btn-xs">Editar</a>
+                    </td>
+                </tr>
+                #{/paginate.list}
+                </tbody>
+            </table>
+        </div>
+
+    #{if users?.getPageCount() > 1}
+        #{paginate.controls items:users /}
+        <div class="visible-xs text-center">
+            #{paginate.summary items:users /}
+        </div>
+    #{/if}
+    </div>
+</div>

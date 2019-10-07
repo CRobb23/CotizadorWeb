@@ -132,6 +132,10 @@ public class AdminReports extends AdminBaseController {
 						break;
 					case ERConstants.USER_ROLE_SUPERVISOR:
 						List<Long> usersIds = ER_Store.find("select se.id from ER_Store s join s.administrators  a join s.sellers se where a = ? group by se", user).fetch();
+						//Administradores
+						List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", user.distributor).fetch();
+						//Agrega lista de administradores a lista de usuarios
+						usersIds.addAll(supervisoresIds);
 						if(!usersIds.isEmpty()){
 							quotations = ER_Quotation.find(" discount > 0 and discountDate >= ? and discountDate <= ?  and  incident.creator.id IN :c ",startDate, endDate ).bind("c",usersIds).fetch();
 						}
@@ -215,6 +219,8 @@ public class AdminReports extends AdminBaseController {
 				}
 			}
 		}
+		List <ER_ReviewStatus> status = ER_ReviewStatus.findAll();
+		renderArgs.put("status", status);
 
 		//Render the list
 		render();
@@ -277,8 +283,8 @@ public class AdminReports extends AdminBaseController {
 			if(GeneralMethods.validateParameter(startDate)&&GeneralMethods.validateParameter(endDate)) {
 				if(simpleformat.parse(startDate).before(simpleformat.parse(endDate)) || simpleformat.parse(startDate).equals(simpleformat.parse(endDate))){
 					filter.addGroupStart(Operator.AND);
-					filter.addQuery("creationDate  >= ?", format.parse(startDate + " 00:00:00"));
-					filter.addQuery("creationDate  <= ?", format.parse(endDate + " 23:59:59"),Operator.AND);
+					filter.addQuery("finalizedDate  >= ?", format.parse(startDate + " 00:00:00"));
+					filter.addQuery("finalizedDate  <= ?", format.parse(endDate + " 23:59:59"),Operator.AND);
 					filter.addGroupEnd();
 				}
 			}
@@ -287,12 +293,13 @@ public class AdminReports extends AdminBaseController {
 
 				filter.addQuery("status.id = ?", Long.valueOf(INCIDENT_STATUS_FINALIZED), Operator.AND);
 				if(search.get("review")!=null&&!search.get("review").isEmpty()) {
+					Long review = Long.valueOf(search.get("review"));
 					if 	(!search.get("review").equals("none"))
-					filter.addQuery("reviewAccepted = ?", Boolean.valueOf(search.get("review")), Operator.AND);
+					filter.addQuery("reviewDetail.status.id = ?",review, Operator.AND);
                     else {
                         filter.addGroupStart(Operator.AND);
-                        filter.addQuery("reviewAccepted = ?", true);
-                        filter.addQuery("reviewAccepted = ?", false, Operator.OR);
+                        filter.addQuery("inspection.inspectionNumber = ?", true);
+                        filter.addQuery("reviewDetail.status.id = ?", review, Operator.OR);
                         filter.addGroupEnd();
                     }
 				}
@@ -316,7 +323,7 @@ public class AdminReports extends AdminBaseController {
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e   .printStackTrace();
 		}
 
 		int page;
@@ -378,6 +385,11 @@ public class AdminReports extends AdminBaseController {
 				query.bind("s", connectedUser);
 			}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
+				//Administradores
+				List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+				//Agrega lista de administradores a lista de usuarios
+				userIds.addAll(supervisoresIds);
+
 				userIds.add(connectedUser.id);
 				if (!filter.getQuery().isEmpty())
 					query = ER_Incident.find(filter.getQuery() + " AND creator.id IN :s order by creationDate DESC", filter.getParametersArray()).bind("s", userIds);
@@ -787,6 +799,10 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 			}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
 				userIds.add(connectedUser.id);
+				//Administradores
+				List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+				//Agrega lista de administradores a lista de usuarios
+				userIds.addAll(supervisoresIds);
 				if (!filter.getQuery().isEmpty())
 					query = ER_Quotation.find(filter.getQuery() + " AND incident.creator.id IN :s order by incident.creationDate DESC", filter.getParametersArray()).bind("s", userIds);
 				else
@@ -1189,6 +1205,10 @@ List<ER_Product_Coverage> allProductCoverages = ER_Product_Coverage.findAll();
 				}else if(userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)){
 					List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u  join s.administrators a where a = ?", connectedUser).fetch();
 					userIds.add(connectedUser.id);
+					//Administradores
+					List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+					//Agrega lista de administradores a lista de usuarios
+					userIds.addAll(supervisoresIds);
 					if (!filter.getQuery().isEmpty())
 						query = ER_Exceptions.find(filter.getQuery() + " AND quotation.incident.creator.id IN :s order by quotation.incident.creationDate DESC", filter.getParametersArray()).bind("s", userIds);
 					else

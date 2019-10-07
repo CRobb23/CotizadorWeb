@@ -59,8 +59,18 @@ public class ER_User extends Model {
         isQAUser = QAUser;
     }
 
+    public Boolean getCommercialQAUser() {
+        return isCommercialQAUser;
+    }
+
+    public void setCommercialQAUser(Boolean QAUser) {
+        isCommercialQAUser = QAUser;
+    }
+
     public Boolean isQAUser;
-    
+
+    public Boolean isCommercialQAUser;
+
     @GsonExclude
     @ManyToOne
     public ER_Channel channel;
@@ -76,6 +86,10 @@ public class ER_User extends Model {
     public String token;
 
     public Long selectedBroker;
+
+    @GsonExclude
+    @OneToOne(mappedBy="user")
+    public ER_User_Custom_Logo logo;
     
     public Map<String, Object> toMap() {
     	Map<String, Object> map = new HashMap<String,Object>();

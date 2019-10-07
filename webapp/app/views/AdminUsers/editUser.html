@@ -160,6 +160,16 @@
                     </div>
                 </div>
 			#{/}
+
+			#{field 'isCommercialQAUser'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-3 control-label" for="${field.id}">&{'user.form.user.isCommercialQAUser'}</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" name="${field.name}" id="${field.id}" ${user?.isCommercialQAUser?.value == true ? 'checked' : ''}/>
+						#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                    </div>
+                </div>
+			#{/}
 		#{/if}
 
 

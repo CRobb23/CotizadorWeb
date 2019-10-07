@@ -7,6 +7,7 @@ import helpers.GeneralMethods;
 import helpers.Filter.Operator;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +91,12 @@ public class IncidentForms extends AdminBaseController {
 				
 			} else if (userRol.equals(ERConstants.USER_ROLE_SUPERVISOR)) {
 				List<Long> userIds = ER_Store.find("select u.id from ER_Store s join s.sellers u join d.administrators a where a = ?", connectedUser).fetch();
+				//Administradores
+				List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+				//Agrega lista de administradores a lista de usuarios
+				userIds.addAll(supervisoresIds);
+
+
 				userIds.add(connectedUser.id);
 				
 				query = ER_Incident.find(filter.getQuery() + " AND creator.id IN (:s) order by creationDate DESC",
@@ -194,7 +201,8 @@ public class IncidentForms extends AdminBaseController {
 	        	} else {
 	        		options.pageSize = IHtmlToPdfTransformer.LETTERP;
 	        	}
-				
+
+	        	renderArgs.put("actualDate", new Date());
 				renderArgs.put("incident", incident);
 				ER_General_Configuration configuration = ER_General_Configuration.find("").first();
 				renderArgs.put( "configuration", configuration);
