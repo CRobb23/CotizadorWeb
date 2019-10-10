@@ -711,6 +711,8 @@ quotation.insurance = Seguro
 quotation.simulation = Simulación
 quotation.task = Seguimiento
 quotation.incident = Éxito
+quotation.editMail.addingMails = SI USTED AGREGA CORREOS ELECTRÓNICOS ENVIARÁ COPIA DE SU PÓLIZA A LOS DESTINATARIOS
+quotation.clienteTab.addingMails = COLOCAR CORREO DE CLIENTE PARA FUTURAS NOTIFICACIONES
 
 quotation.form.next = Siguiente
 quotation.form.back = Anterior
@@ -761,6 +763,8 @@ quotation.simulation.table.paymentoptions = Opciones de pago
 quotation.simulation.table.discount = Descuento
 quotation.simulation.table.deductibles = Coberturas y deducibles
 quotation.simulation.table.averageValue = VALOR GARANTIZADO
+quotation.simulation.table.haveAverageValue = SI TIENE VALOR GARANTIZADO
+quotation.simulation.table.noAverageValue = NO TIENE VALOR GARANTIZADO
 
 quotation.simulation.payment = pago
 quotation.simulation.frecuencysuffix = es
@@ -1025,6 +1029,8 @@ incident.quotations.table.resend = Reenviar
 incident.quotations.newQuotation = Nueva cotización
 
 incident.quotation.discount.maximum = Máximo
+
+incident.quotation.message.instructions = Si usted desea que la información le llegue a otro destinatario seleccione agregar correos, si no desea puede continuar al paso 1
 
 incident.quotation.back = Regresar
 incidents.list.searcherror = Debe ingresar al menos un criterio de búsqueda

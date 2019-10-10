@@ -189,6 +189,7 @@
 		<div class="col-sm-6">
             <a href="@{editMail(incident?.client?.id, incident?.id)}" class="btn btn-block btn-large">&{'incident.attend.edit.mails'}</a>
             <a href="@{clienteTab(incident?.client?.id, incident?.id)}" class="btn btn-block btn-large">&{'incident.attend.complete'}</a>
+			<span>&{'incident.quotation.message.instructions'}</span>
 			#{if incident?.status?.code == 2 || incident?.status?.code == 3 || incident?.status?.code == 4 || incident?.status?.code == 9 || incident?.status?.code == 6 || incident?.status?.code == 7}
 				#{if !controllers.Security.check('Usuario Final')}
 					<a href="@{attendIncident(incident?.id)}" class="btn btn-block btn-large">&{'incident.attend'}</a>

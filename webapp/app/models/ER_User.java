@@ -51,24 +51,10 @@ public class ER_User extends Model {
     @Required
     public Boolean active;
 
-    public Boolean getQAUser() {
-        return isQAUser;
-    }
-
-    public void setQAUser(Boolean QAUser) {
-        isQAUser = QAUser;
-    }
-
-    public Boolean getCommercialQAUser() {
-        return isCommercialQAUser;
-    }
-
-    public void setCommercialQAUser(Boolean QAUser) {
-        isCommercialQAUser = QAUser;
-    }
-
+    @Required
     public Boolean isQAUser;
 
+    @Required
     public Boolean isCommercialQAUser;
 
     @GsonExclude
@@ -192,5 +178,21 @@ public class ER_User extends Model {
     public void generateToken() {
         UUID uuid = UUID.randomUUID();
         this.token = uuid.toString();
+    }
+
+    public Boolean getQAUser() {
+        return isQAUser;
+    }
+
+    public void setQAUser(Boolean QAUser) {
+        isQAUser = QAUser;
+    }
+
+    public Boolean getCommercialQAUser() {
+        return isCommercialQAUser;
+    }
+
+    public void setCommercialQAUser(Boolean QAUser) {
+        isCommercialQAUser = QAUser;
     }
 }

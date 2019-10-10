@@ -60,13 +60,13 @@
 									#{if quotation.carValue}
 									<tr>
 										<td>&{'quotation.simulation.table.carValue'}</td>
-										<td>${currencySymbol}${quotation?.carValue?.doubleValue()?.decimalFormat()} #{if quotation.garanteedValue == true}<br/>&{'quotation.simulation.table.averageValue'} #{/if} </td>
+										<td>${currencySymbol}${quotation?.carValue?.doubleValue()?.decimalFormat()} #{if quotation.garanteedValue == true}<br/>&{'quotation.simulation.table.haveAverageValue'} #{/if} </td>
 									</tr>
 									#{/if}
                                     #{else}
                                         <tr>
                                             <td>&{'quotation.simulation.table.averageValue'}</td>
-                                            <td> No existe valor promedio para este vehiculo</td>
+                                            <td>&{'quotation.simulation.table.noAverageValue'}</td>
                                         </tr>
                                     #{/else}
 									#{list quotation.parameters, as: 'parameter'}

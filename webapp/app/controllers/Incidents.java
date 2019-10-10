@@ -346,68 +346,68 @@ public class Incidents extends AdminBaseController {
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void incidentDetail(Long id) {
     	try{
-    	if (id!=null) {
-	    	ER_Incident incident = ER_Incident.findById(id);
-			ER_User currentUser = connectedUser();
-	    	if (canViewIncident(incident)) {
-	    		List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by id asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
-	    	
-	    		boolean isOwner = (incident.creator == currentUser);
-	    		boolean isQAUser = false;
-				boolean isCommercialQAUser = false;
-	    		if(currentUser.isQAUser != null && currentUser.isQAUser)
-					isQAUser = true;
-				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
-					isCommercialQAUser = true;
+			if (id!=null) {
+				ER_Incident incident = ER_Incident.findById(id);
+				ER_User currentUser = connectedUser();
+				if (canViewIncident(incident)) {
+					List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by id asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
 
-	    		if (!isOwner) {
-					switch (connectedUserRoleCode(currentUser)) {
-						case ERConstants.USER_ROLE_SUPER_ADMIN: {
-							isOwner = true;
-							break;
-						}
-						case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
-							List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", currentUser, incident.channel).fetch();
-							isOwner = !channels.isEmpty();
-							break;
-						}
-						case ERConstants.USER_ROLE_CHANNEL_MANAGER: {
-							List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", currentUser, incident.distributor).fetch();
-							isOwner = !distributors.isEmpty();
-							break;
-						}
+					boolean isOwner = (incident.creator == currentUser);
+					boolean isQAUser = false;
+					boolean isCommercialQAUser = false;
+					if(currentUser.isQAUser != null && currentUser.isQAUser)
+						isQAUser = true;
+					if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+						isCommercialQAUser = true;
 
-						case ERConstants.USER_ROLE_SUPERVISOR: {
-						//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
-						//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
-							//Agrega lista de administradores a lista de usuarios
-						//	stores.addAll(supervisoresIds);
+					if (!isOwner) {
+						switch (connectedUserRoleCode(currentUser)) {
+							case ERConstants.USER_ROLE_SUPER_ADMIN: {
+								isOwner = true;
+								break;
+							}
+							case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
+								List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", currentUser, incident.channel).fetch();
+								isOwner = !channels.isEmpty();
+								break;
+							}
+							case ERConstants.USER_ROLE_CHANNEL_MANAGER: {
+								List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", currentUser, incident.distributor).fetch();
+								isOwner = !distributors.isEmpty();
+								break;
+							}
 
-							isOwner = true;
-							break;
+							case ERConstants.USER_ROLE_SUPERVISOR: {
+							//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
+							//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+								//Agrega lista de administradores a lista de usuarios
+							//	stores.addAll(supervisoresIds);
+
+								isOwner = true;
+								break;
+							}
+
 						}
-
 					}
-				}
-				if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
-	    			isOwner = true;
-	    		}
-	    		ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(MESSAGE_AFTER_POLICY_CREATED));
-				String body = messages.body;
+					if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
+						isOwner = true;
+					}
+					ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(MESSAGE_AFTER_POLICY_CREATED));
+					String body = messages.body;
 
-				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
-				String outOfLineMessage = mail.body;
-				renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
-	    		render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
-	    	} 
-    	}
-    	
-    	incidentsList(null, null);
+					ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
+					String outOfLineMessage = mail.body;
+					renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
+					render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
+				}
+			}
+
+			incidentsList(null, null);
 		}
 		catch(Exception e){
-		Logger.error("error: " + e.getMessage());
-		e.printStackTrace();
-	}
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
     	
     }
 
