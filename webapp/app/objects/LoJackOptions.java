@@ -27,12 +27,12 @@ public class LoJackOptions {
             case 4:
                 description =  "Sin Dispositivo, 15% en Prima Neta";
                 break;
-            case 5:
+         /*   case 5:
                 description =  "Sin Dispositivo, Q500 en Prima Neta";
                 break;
             case 6:
                 description =  "Sin Dispositivo, Q850 en Prima Neta";
-            break;
+            break;*/
         }
         return description;
     }
