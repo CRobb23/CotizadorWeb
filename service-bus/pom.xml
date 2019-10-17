@@ -10,7 +10,22 @@
 
     <name>servicebus</name>
     <description>WebServices Bus between SOAP and REST</description>
-
+    <profiles>
+        <profile>
+            <id>develop</id>
+            <properties>
+                <portNumber>9059</portNumber>
+                <myWsUri>http://10.1.1.101:9081/WSPolizaRoble</myWsUri>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <portNumber>8880</portNumber>
+                <myWsUri>http://10.1.1.111:9080/WSPolizaRoble</myWsUri>
+            </properties>
+        </profile>
+    </profiles>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

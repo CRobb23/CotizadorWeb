@@ -20,6 +20,7 @@ public class CoverageCost {
 	public BigDecimal discount;
 	
 	public Boolean external;
+	public CoverageYoungerData youngerData;
 	
 	private void commonInit() {
 		this.minimumDeductible = BigDecimal.ZERO;

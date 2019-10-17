@@ -520,12 +520,61 @@
 								} else {
 									i--;
 								}
-								
 								i++
 							}
 							
 							html += '</div>';
 							html += '</div>';
+                            if(field.as_code==11 || field.as_code==46){
+                                /* Nombre de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">Nombre del menor (16-18)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==46)?'name="nombreMenorNombrado1618"':'name="nombreMenor1618"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+
+                                /* Licencia de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">No. Licencia del menor (16-18)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==46)?'name="licenciaMenorNombrado1618"':'name="licenciaMenor1618"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+
+                                /* Fecha de Nacimiento de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">Fecha De Nacimiento (16-18)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==46)?'name="fechaNacimientoMenorNombrado1618"':'name="fechaNacimientoMenor1618"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+                            }
+                            if(field.as_code==10 || field.as_code==47){
+                                /* Nombre de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">Nombre del menor (18-21)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==47)?'name="nombreMenorNombrado1821"':'name="nombreMenor1821"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+
+                                /* Licencia de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">No. Licencia del menor (18-21)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==47)?'name="licenciaMenorNombrado1821"':'name="licenciaMenor1821"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+
+                                /* Fecha de Nacimiento de menor nombrado */
+                                html += '<div class="form-group">';
+                                html += '<label class="col-sm-4 control-label">Fecha De Nacimiento (18-21)</label>'
+                                html += '<div class="col-sm-8">';
+                                html += '<input type="text" '+((field.as_code==47)?'name="fechaNacimientoMenorNombrado1821"':'name="fechaNacimientoMenor1821"')+' class="form-control" />';
+                                html += '</div>';
+                                html += '</div>';
+                            }
 							
 						});
 
