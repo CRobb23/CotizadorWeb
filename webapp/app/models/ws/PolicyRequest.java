@@ -36,7 +36,16 @@ public class PolicyRequest {
 	private String currency;
 	@Expose
 	private BigDecimal discountRate;
-	
+	@Expose
+	private String policyProduct;
+
+	public String getPolicyProduct() {
+		return policyProduct;
+	}
+	public void setPolicyProduct(String policyProduct) {
+		this.policyProduct = policyProduct;
+	}
+
 	public String getQuoteNumber() {
 		return quoteNumber;
 	}

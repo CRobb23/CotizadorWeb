@@ -401,7 +401,7 @@ public class AdminProducts extends AdminBaseController {
 				request.setPolicyFrom(product.policyFrom.toString());
 				request.setPolicyTo(product.policyTo.toString());
 				PolicyProductResponse queryAverage = productPolicyServiceBus.policyProductRequest(request) ;
-
+				Logger.info("Actualiza AS400 producto " + queryAverage.getMessage());
 
     		} catch (Exception e) {
     			Logger.error(e, "Error saving product");
