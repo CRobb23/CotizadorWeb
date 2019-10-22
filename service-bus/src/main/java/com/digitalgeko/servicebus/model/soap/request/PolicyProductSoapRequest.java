@@ -8,8 +8,8 @@ import javax.xml.bind.annotation.*;
 public class PolicyProductSoapRequest {
 
     //TODO COLOCAR LOS NUMEROS VERDADEROS DE TRANSACCIONES
-    public static final String RQ_CODE = "772";
-    public static final String RS_CODE = "773";
+    public static final String RQ_CODE = "732";
+    public static final String RS_CODE = "733";
 
     @XmlElement(name="id")
     private String id;

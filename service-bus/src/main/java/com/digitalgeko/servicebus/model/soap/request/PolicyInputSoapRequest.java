@@ -38,7 +38,15 @@ public class PolicyInputSoapRequest {
 	private String currency;
 	@XmlElement(name="tasaDescuento")
 	private BigDecimal discountRate;
-	
+	@XmlElement(name="polizaPorProducto")
+	private String policyProduct;
+
+	public String getPolicyProduct() {
+		return policyProduct;
+	}
+	public void setPolicyProduct(String PolicyProduct) {
+		this.policyProduct = policyProduct;
+	}
 	public String getQuoteNumber() {
 		return quoteNumber;
 	}
