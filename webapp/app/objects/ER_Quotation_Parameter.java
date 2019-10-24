@@ -31,6 +31,8 @@ public class ER_Quotation_Parameter {
 	public Boolean applyInsurance;
 	
 	public ER_Product_Coverage_Value coverageValue;
+
+	public CoverageYoungerData youngerData;
 	
 	@GsonExclude
 	public ER_Quotation quotation;
@@ -89,6 +91,9 @@ public class ER_Quotation_Parameter {
 		}
 		if (coverageValue!=null) {
 			map.put("coverageValue", this.coverageValue.toMap());
+		}
+		if (youngerData != null){
+			map.put("youngerData", this.youngerData.toMap());
 		}
 		return map;
 	}
@@ -165,5 +170,13 @@ public class ER_Quotation_Parameter {
 		}
 		
 		return null;
+	}
+
+	public CoverageYoungerData getYoungerData() {
+		return youngerData;
+	}
+
+	public void setYoungerData(CoverageYoungerData youngerData) {
+		this.youngerData = youngerData;
 	}
 }
