@@ -606,11 +606,9 @@
 				},
 				complete: function() {
 					selectelement.prop('disabled', false);
-                    $(document).on('click','.fecha-nacimiento',function(){
-                        $(this).datetimepicker({
-                            format: 'DD-MM-YYYY'
-                        });
-                    });
+					$('.fecha-nacimiento').datetimepicker({
+						format: 'DD-MM-YYYY'
+					});
 				}
 			});
 	    });

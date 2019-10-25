@@ -690,7 +690,8 @@ public class Incidents extends AdminBaseController {
     									 Long selectedQuotation, Long selectedPaymentForm, Boolean inspection,
     									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
-    									 String inspectionNumber,Date inspectionDate) {
+    									 String inspectionNumber,Date inspectionDate, String specialNotCoveredEquipment,
+										 String preexistingDamages) {
     	flash.clear();
     	flash.discard();
 
@@ -724,6 +725,8 @@ public class Incidents extends AdminBaseController {
         		}
 
 				incident.policyValidity = policyValidity;
+        		incident.preexistentDamage = preexistingDamages;
+        		incident.specialNotCoveredEquipment = specialNotCoveredEquipment;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_INDICTED) ||
@@ -758,7 +761,6 @@ public class Incidents extends AdminBaseController {
 								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
             				} else if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
-
             				}
             			}
             		}else{
@@ -853,6 +855,7 @@ public class Incidents extends AdminBaseController {
 	    				if(inspectionType == ERConstants.INSPECTION_TYPE_ADDRESS){
 	    					inspectionInfo.address = inspectionAddress;
 	    					inspectionInfo.appointmentDate = appointmentDate;
+	    					inspectionInfo.existentDamage = preexistingDamages;
 
 	    					inspectionR.setAddress(inspectionAddress);
 	    					inspectionR.setDate(DateHelper.formatDate(appointmentDate, "dd/MM/yyyy HH:mm:ss"));
@@ -1984,7 +1987,7 @@ public class Incidents extends AdminBaseController {
 
 				}
 
-				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
+				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) || (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
 					payer.legalRepresentativePayer = legalRepresentativePayer;
 				}
 				else{
@@ -2630,7 +2633,7 @@ public class Incidents extends AdminBaseController {
 					legalRepresentative.ConvertUpper();
 					clientPEP.ConvertUpper();
 					client.ConvertUpper();
-					if ((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) | (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
+					if ((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) || (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
 						client.legalRepresentative = legalRepresentative;
 					}
 					if (client.expose != null && client.expose) {
