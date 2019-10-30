@@ -380,11 +380,8 @@ public class AdminProducts extends AdminBaseController {
     	} else {
     		
     		try {
-	    		if (product.id == null) {
-	    			flash.success(Messages.get("product.create.success"));
-	    		} else {
+	    		if (product.id != null) {
 	    			product = ER_Product.findById(product.id);
-	    			flash.success(Messages.get("product.edit.success"));
 	    		}
 	    		
 	    		product.currency = ER_Currency.findById(product.currency.id);
@@ -402,6 +399,13 @@ public class AdminProducts extends AdminBaseController {
 				request.setPolicyTo(product.policyTo.toString());
 				PolicyProductResponse queryAverage = productPolicyServiceBus.policyProductRequest(request) ;
 				Logger.info("Actualiza AS400 producto " + queryAverage.getMessage());
+
+				if(queryAverage.getCode().equals("1")){
+					flash.error("Mensaje de AS-400:" + queryAverage.getMessage());
+				}
+				else{
+					flash.success("Operación exitosa");
+				}
 
     		} catch (Exception e) {
     			Logger.error(e, "Error saving product");
