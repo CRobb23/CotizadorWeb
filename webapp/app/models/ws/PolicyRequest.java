@@ -25,6 +25,8 @@ public class PolicyRequest {
 	@Expose
 	private String typeLine;
 	@Expose
+	private String productPolicy;
+	@Expose
 	private String typeProduction;
 	@Expose
 	private String validSice;
@@ -36,14 +38,13 @@ public class PolicyRequest {
 	private String currency;
 	@Expose
 	private BigDecimal discountRate;
-	@Expose
-	private String policyProduct;
 
-	public String getPolicyProduct() {
-		return policyProduct;
+
+	public String getProductPolicy() {
+		return productPolicy;
 	}
-	public void setPolicyProduct(String policyProduct) {
-		this.policyProduct = policyProduct;
+	public void setProductPolicy(String policyProduct) {
+		this.productPolicy = productPolicy;
 	}
 
 	public String getQuoteNumber() {
