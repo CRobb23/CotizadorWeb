@@ -1068,10 +1068,10 @@ client.edit.save = Modificar cliente
 client.edit.update = Actualizar
 client.edit.cancel = Salir
 client.edit.next = Siguiente
-client.edit.final.save = Guardar y Salir
+client.edit.final.save = Guardar y Continuar
 client.edit.previous = Anterior
 client.edit.partial = Guardar Parcial
-client.edit.complete = Guardar y Salir
+client.edit.complete = Guardar y Continuar
 
 client.edit.success = El cliente fue modificado exitosamente
 

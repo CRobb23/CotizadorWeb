@@ -43,7 +43,8 @@
 						#{if quotation?.carValue}
 						<tr>
 							<td>&{'quotation.simulation.table.carValue'}</td>
-							<td>${currencySymbol}. ${quotation?.carValue?.doubleValue()?.decimalFormat()} #{if quotation.garanteedValue == true}<br/>&{'quotation.simulation.table.averageValue'} #{/if} </td>
+							<td>${currencySymbol}. ${quotation?.carValue?.doubleValue()?.decimalFormat()} #{if quotation.garanteedValue == true}<br/>&{'quotation.simulation.table.averageValue'} #{/if}
+                            #{else}&{'quotation.simulation.table.noAverageValue'}#{/else}</td>
 						</tr>
 						#{/if}
 						#{list quotation.parameters, as: 'parameter'}

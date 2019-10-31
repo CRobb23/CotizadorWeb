@@ -183,6 +183,14 @@
                     </div>
 				#{/}
 			</div>
+			#{field 'specialCoveredEquipment'}
+                <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
+                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial cubierto:</label>
+                    <div class="col-sm-6">
+                        <textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
+                    </div>
+                </div>
+			#{/field}
 			#{field 'specialNotCoveredEquipmentCheck'}
             <div class="form-group ${field.error?'has-error':''}">
                 <label class="col-sm-4 control-label" for="${field.id}">¿Hay equipo especial no cubierto?</label>
@@ -258,7 +266,8 @@
 
 	<script type="text/javascript">
 		$(function(){
-            $('#specialCoveredEquipmentContainer').hide();
+            $('#specialCoveredEquipment').hide();
+            $('#specialNotCoveredEquipmentContainer').hide();
             $('#preexistingDamagesContainer').hide();
 		    *{
 			$('#appointmentDate').scroller({

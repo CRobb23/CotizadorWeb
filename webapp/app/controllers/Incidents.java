@@ -691,7 +691,7 @@ public class Incidents extends AdminBaseController {
     									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
     									 String inspectionNumber,Date inspectionDate, String specialNotCoveredEquipment,
-										 String preexistingDamages) {
+										 String preexistingDamages,String specialCoveredEquipment) {
     	flash.clear();
     	flash.discard();
 

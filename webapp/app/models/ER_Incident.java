@@ -104,6 +104,9 @@ public class ER_Incident extends Model {
 	@Column(name="special_not_covered_equipment")
 	public String specialNotCoveredEquipment;
 
+	@Column(name="special_covered_equipment")
+	public String specialCoveredEquipment;
+
 	public String getReviewDate() {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		if(this.reviewDate != null) {
