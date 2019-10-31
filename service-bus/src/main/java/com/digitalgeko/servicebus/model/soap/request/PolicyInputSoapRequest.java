@@ -30,6 +30,10 @@ public class PolicyInputSoapRequest {
 	private String typeProduction;
 	@XmlElement(name="vigenciaDesde")
 	private String validSice;
+
+	@XmlElement(name="polizaPorProducto")
+	private String productPolicy;
+
 	@XmlElement(name="vigenciaHasta")
 	private String validUntil;
 	@XmlElement(name="tipoCartera")
@@ -38,15 +42,17 @@ public class PolicyInputSoapRequest {
 	private String currency;
 	@XmlElement(name="tasaDescuento")
 	private BigDecimal discountRate;
-	@XmlElement(name="polizaPorProducto")
-	private String policyProduct;
 
-	public String getPolicyProduct() {
-		return policyProduct;
+
+
+
+	public String getProductPolicy() {
+		return productPolicy;
 	}
-	public void setPolicyProduct(String PolicyProduct) {
-		this.policyProduct = policyProduct;
+	public void setProductPolicy(String productPolicy) {
+		this.productPolicy = productPolicy;
 	}
+
 	public String getQuoteNumber() {
 		return quoteNumber;
 	}
