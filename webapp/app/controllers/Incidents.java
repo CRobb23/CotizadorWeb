@@ -727,6 +727,7 @@ public class Incidents extends AdminBaseController {
 				incident.policyValidity = policyValidity;
         		incident.preexistentDamage = preexistingDamages;
         		incident.specialNotCoveredEquipment = specialNotCoveredEquipment;
+        		incident.specialCoveredEquipment = specialCoveredEquipment;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_INDICTED) ||

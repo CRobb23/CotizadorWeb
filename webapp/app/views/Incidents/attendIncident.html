@@ -58,6 +58,7 @@
 				<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
 				<div class="col-sm-8">
 					#{select field.name, value:incident?.selectedQuotation?.id, class:'form-control', id:"selectedQuotation"}
+						<option value="">- SELECCIONE UNO -</option>
 						#{list incident?.quotations, as: 'quotation'}
 							%{currencySymbol = (quotation?.product?.currency)? quotation.product.currency?.symbol + '.' : ''}%
 							#{option quotation.id} ${quotation?.product?.name} - ${quotation?.creationDate?.format("dd/MM/yyyy HH:mm")}
@@ -201,7 +202,7 @@
 			#{/field}
 			#{field 'specialNotCoveredEquipment'}
                 <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
-                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial cubierto:</label>
+                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial no cubierto:</label>
                     <div class="col-sm-6">
                         <textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
                     </div>
@@ -266,7 +267,7 @@
 
 	<script type="text/javascript">
 		$(function(){
-            $('#specialCoveredEquipment').hide();
+            $('#specialCoveredEquipmentContainer').hide();
             $('#specialNotCoveredEquipmentContainer').hide();
             $('#preexistingDamagesContainer').hide();
 		    *{
@@ -385,6 +386,7 @@
 				var selectelement = $(this);
 				var select = $("#quotationOptions");
 				select.html("<option>&{'form.select.loading'}</option>");
+
 				$.ajax({
 					type : 'POST',
 					url : '@{ServiceQuotations.paymentOptionsForQuotation()}', 
@@ -408,7 +410,24 @@
 						selectelement.prop('disabled', false);
 					}
 				});
-				
+
+                $.ajax({
+                    type : 'POST',
+                    url : '@{ServiceQuotations.specialEquipmentQuotation()}',
+                    data :  {id:id},
+                    success: function(response) {
+                        var respuesta = response;
+                        if(respuesta.mostrarEquipoEspecial){
+                            $('#specialCoveredEquipmentContainer').show();
+						}
+                    },
+                    error: function() {
+                        //console.log("error");
+                    },
+                    complete: function() {
+                        //console.log("completado");
+                    }
+                });
 			});
 		});
 
