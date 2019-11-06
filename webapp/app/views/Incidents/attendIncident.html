@@ -184,6 +184,7 @@
                     </div>
 				#{/}
 			</div>
+			<!--
 			#{field 'specialCoveredEquipment'}
                 <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
                     <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial cubierto:</label>
@@ -223,7 +224,7 @@
 						<textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
                     </div>
                 </div>
-			#{/field}
+			#{/field}-->
          </div>
 
 		
@@ -267,9 +268,9 @@
 
 	<script type="text/javascript">
 		$(function(){
-            $('#specialCoveredEquipmentContainer').hide();
+            /*$('#specialCoveredEquipmentContainer').hide();
             $('#specialNotCoveredEquipmentContainer').hide();
-            $('#preexistingDamagesContainer').hide();
+            $('#preexistingDamagesContainer').hide();*/
 		    *{
 			$('#appointmentDate').scroller({
 				theme: 'default',
@@ -316,7 +317,7 @@
 				showSelectedInspection();
 			});
 
-			$("#specialNotCoveredEquipmentCheck").click(function(){
+			/*$("#specialNotCoveredEquipmentCheck").click(function(){
 			    if($(this).prop("checked") == true)
 			    	$('#specialNotCoveredEquipmentContainer').show();
 			    else if($(this).prop("checked") == false)
@@ -328,7 +329,7 @@
                     $('#preexistingDamagesContainer').show();
                 else if($(this).prop("checked") == false)
                     $('#preexistingDamagesContainer').hide();
-            });
+            });*/
 			
 			$("input[name=inspectionType]").change(function() {
 				showSelectedInspectionType();
@@ -411,9 +412,9 @@
 					}
 				});
 
-                $.ajax({
+                /*$.ajax({
                     type : 'POST',
-                    url : '@{ServiceQuotations.specialEquipmentQuotation()}',
+                    url : '@ {ServiceQuotations.specialEquipmentQuotation()}',
                     data :  {id:id},
                     success: function(response) {
                         var respuesta = response;
@@ -427,7 +428,7 @@
                     complete: function() {
                         //console.log("completado");
                     }
-                });
+                });*/
 			});
 		});
 
