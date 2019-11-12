@@ -1,0 +1,52 @@
+#{extends 'admin.html' /}
+
+#{form @save(), class:"form-horizontal", method:"POST", role:'form'}
+<div class="well">
+    <div class="orange-title">
+        <span>
+		    <h1>&{'chargeList.title'}</h1>
+		</span>
+    </div>
+    #{if flash.error}
+        <div class="alert alert-danger">
+        ${flash.error}
+        </div>
+    #{/if}
+    #{if flash.success}
+        <div class="alert alert-success">
+        ${flash.success}
+        </div>
+    #{/if}
+
+    #{field 'name'}
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'chargeList.save.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="text" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+            </div>
+        </div>
+    #{/}
+
+    #{field 'value'}
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'chargeList.save.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="numeric" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+            </div>
+        </div>
+    #{/}
+
+    #{field 'id'}
+        <input type="hidden" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+    #{/}
+
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-6">
+            <input type="submit" class="btn btn-primary btn-block" value="${charge?.id==null ? messages.get('charge.form.create') : messages.get('charge.form.edit')}" />
+        </div>
+        <div class="col-sm-offset-3 col-sm-6">
+            <a class="btn btn-primary btn-block" href="@{discountextracharge(null,true)}">&{'charge.form.cancel'}</a>
+        </div>
+    </div>
+</div>
+#{/form}
