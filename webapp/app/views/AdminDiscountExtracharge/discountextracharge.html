@@ -52,6 +52,7 @@
                 <tr class="table-head">
                     <th class="first">&{'chargeList.table.name'}</th>
                     <th>&{'chargeList.table.value'}</th>
+                    <th>&{'chargeList.table.type'}</th>
                     <th>&{'chargeList.table.status'}</th>
                     <th class="last textC" style="width:50px;">&{'chargeList.table.edit'}</th>
                     <th class="last textC" style="width:50px;">&{'chargeList.table.delete'}</th>
@@ -63,6 +64,7 @@
                 <tr class="${current_parity}">
                     <td class="first style2">${current?.name}</td>
                     <td class="first style2">${current?.value}%</td>
+                    <td class="first style2">${current?.type } </td>
                     <td>
                     ${current?.active.yesno('Activo', 'Inactivo') }
                     </td>

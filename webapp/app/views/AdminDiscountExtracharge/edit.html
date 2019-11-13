@@ -36,6 +36,16 @@
         </div>
     #{/}
 
+    #{field 'type'}
+        <div class="form-group">
+            <label class="col-sm-3 control-label" for="${field.id}">&{'chargeList.save.form.'+field.name}</label>
+            <div class="col-sm-6">
+                <input type="radio" name="${field.name}" value="Descuento" #{if type == "Descuento"} checked #{/if} />Descuento
+                <input type="radio" name="${field.name}" value="Recargo" #{if type == "Recargo"} checked #{/if}/>Recargo
+            </div>
+        </div>
+    #{/}
+
     #{field 'id'}
         <input type="hidden" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
     #{/}

@@ -69,6 +69,7 @@ public class AdminDiscountExtracharge extends AdminBaseController{
                 renderArgs.put("id", charge.getId());
                 renderArgs.put("name", charge.name);
                 renderArgs.put("value", charge.value);
+                renderArgs.put("type", charge.type);
             }
         }
         render();
@@ -89,7 +90,7 @@ public class AdminDiscountExtracharge extends AdminBaseController{
             discountextracharge("",false);
         }
     }
-    public static void save(Long id, String name, Double value){
+    public static void save(Long id, String name, Double value,String type){
         flash.clear();
 
         if(validation.hasErrors()) {
@@ -104,6 +105,7 @@ public class AdminDiscountExtracharge extends AdminBaseController{
                 charge.name = name;
                 charge.value = value;
                 charge.active = true;
+                charge.type = type;
 
                 charge.save();
                 flash.success(Messages.get("chargeList.form.create.success",1));
@@ -111,6 +113,7 @@ public class AdminDiscountExtracharge extends AdminBaseController{
                 ER_Discount_Extracharge discount_extracharge = ER_Discount_Extracharge.findById(id);
                 discount_extracharge.name = name;
                 discount_extracharge.value = value;
+                discount_extracharge.type = type;
                 discount_extracharge.save();
                 flash.success(Messages.get("chargeList.update.success"));
             }

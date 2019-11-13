@@ -23,4 +23,8 @@ public class ER_Discount_Extracharge extends Model {
 
     @Required
     public Double value;
+    @Required
+    @MaxSize(75)
+    @Column(length=75)
+    public String type;
 }
