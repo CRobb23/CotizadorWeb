@@ -477,10 +477,10 @@ public class Mails extends Mailer {
 		boolean result = false;
 		
 		try {
-			
+
 			setFrom(FROM_MAIL);
-			setSubject("Cotización Seguro de Vehículos ⚠⚪");
-			
+			setSubject("Cotización Seguro de Vehículos ⚠");
+
 			int recipientsCount = 0;
 			if (incident.client.email!=null && !incident.client.email.isEmpty()) {
 				addRecipient(incident.client.email);
