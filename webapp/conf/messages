@@ -184,6 +184,7 @@ usersList.table.state = Estado
 user.form.user.channel = Canal
 user.form.user.isQAUser = Usuario puede revisar casos
 user.form.user.isCommercialQAUser = Usuario puede trasladar area tecnica
+user.form.user.isCaseAnalizer = Usuario puede analizar casos
 user.form.user.distributor = Distribuidor
 usersList.table.state.active = Activo
 usersList.table.state.inactive = Inactivo

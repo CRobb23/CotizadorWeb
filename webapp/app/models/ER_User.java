@@ -76,7 +76,10 @@ public class ER_User extends Model {
     @GsonExclude
     @OneToOne(mappedBy="user")
     public ER_User_Custom_Logo logo;
-    
+
+    @Required
+    public Boolean isCaseAnalyst;
+
     public Map<String, Object> toMap() {
     	Map<String, Object> map = new HashMap<String,Object>();
     	if (id!=null) {
@@ -194,5 +197,13 @@ public class ER_User extends Model {
 
     public void setCommercialQAUser(Boolean QAUser) {
         isCommercialQAUser = QAUser;
+    }
+
+    public Boolean getCaseAnalyst() {
+        return isCaseAnalyst;
+    }
+
+    public void setCaseAnalyst(Boolean caseAnalyst) {
+        isCaseAnalyst = caseAnalyst;
     }
 }
