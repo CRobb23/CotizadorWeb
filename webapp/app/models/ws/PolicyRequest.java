@@ -43,7 +43,8 @@ public class PolicyRequest {
 	public String getProductPolicy() {
 		return productPolicy;
 	}
-	public void setProductPolicy(String policyProduct) {
+
+	public void setProductPolicy(String productPolicy) {
 		this.productPolicy = productPolicy;
 	}
 

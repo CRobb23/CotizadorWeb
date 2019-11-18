@@ -390,23 +390,25 @@ public class AdminProducts extends AdminBaseController {
 	    		product.setCoveragesValues(coverages, true);
 
 	    		//ENVIO TRANSACCION A AS400 PARA GUARDAR U ACTUALIZAR
-				PolicyProductRequest request = new PolicyProductRequest();
-				request.setId(product.id.toString());
-				request.setStatus(product.active.toString());
-				request.setName(product.name);
-				request.setDescription(product.description);
-				request.setPolicyFrom(product.policyFrom.toString());
-				request.setPolicyTo(product.policyTo.toString());
-				PolicyProductResponse queryAverage = productPolicyServiceBus.policyProductRequest(request) ;
-				Logger.info("Actualiza AS400 producto " + queryAverage.getMessage());
+				if(product.policyFrom!= null && product.policyTo != null) {
+					PolicyProductRequest request = new PolicyProductRequest();
+					request.setId(product.id.toString());
+					request.setStatus(product.active.toString());
+					request.setName(product.name);
+					request.setDescription(product.description);
+					request.setPolicyFrom(product.policyFrom.toString());
+					request.setPolicyTo(product.policyTo.toString());
+					PolicyProductResponse queryAverage = productPolicyServiceBus.policyProductRequest(request);
+					Logger.info("Actualiza AS400 producto " + queryAverage.getMessage());
 
-				if(queryAverage.getCode().equals("1")){
-					flash.error("Mensaje de AS-400:" + queryAverage.getMessage());
+					if (queryAverage.getCode().equals("1")) {
+						flash.error("Mensaje de AS-400:" + queryAverage.getMessage());
+					} else {
+						flash.success("Operación exitosa");
+					}
 				}
-				else{
-					flash.success("Operación exitosa");
-				}
-
+				else
+				flash.success("Operación exitosa");
     		} catch (Exception e) {
     			Logger.error(e, "Error saving product");
     			flash.success(Messages.get("product.save.error"));
