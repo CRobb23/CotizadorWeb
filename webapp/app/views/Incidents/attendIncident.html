@@ -58,6 +58,7 @@
 				<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'incident.attend.form.'+field.name}</label>
 				<div class="col-sm-8">
 					#{select field.name, value:incident?.selectedQuotation?.id, class:'form-control', id:"selectedQuotation"}
+						<option value="">- SELECCIONE UNO -</option>
 						#{list incident?.quotations, as: 'quotation'}
 							%{currencySymbol = (quotation?.product?.currency)? quotation.product.currency?.symbol + '.' : ''}%
 							#{option quotation.id} ${quotation?.product?.name} - ${quotation?.creationDate?.format("dd/MM/yyyy HH:mm")}
@@ -183,7 +184,49 @@
                     </div>
 				#{/}
 			</div>
+			<!--
+			#{field 'specialCoveredEquipment'}
+                <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
+                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial cubierto:</label>
+                    <div class="col-sm-6">
+                        <textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
+                    </div>
+                </div>
+			#{/field}
+			#{field 'specialNotCoveredEquipmentCheck'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-4 control-label" for="${field.id}">¿Hay equipo especial no cubierto?</label>
+                <div class="col-sm-2">
+                    <input type="checkbox" name="${field.name}" id="${field.id}" class="form-check-input" />
+                </div>
+            </div>
+			#{/field}
+			#{field 'specialNotCoveredEquipment'}
+                <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
+                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de equipo especial no cubierto:</label>
+                    <div class="col-sm-6">
+                        <textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
+                    </div>
+                </div>
+			#{/field}
+			#{field 'preexistingDamagesCheck'}
+                <div class="form-group ${field.error?'has-error':''}">
+                    <label class="col-sm-4 control-label" for="${field.id}">¿Hay daños preexistentes?</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" name="${field.name}" id="${field.id}" class="form-check-input" />
+                    </div>
+                </div>
+			#{/field}
+			#{field 'preexistingDamages'}
+                <div class="form-group ${field.error?'has-error':''}" id="${field.id}Container">
+                    <label class="col-sm-4 control-label" for="${field.id}">Detalle de daños preexistentes:</label>
+                    <div class="col-sm-6">
+						<textarea name="${field.name}" id="${field.id}" class="form-control" ></textarea>
+                    </div>
+                </div>
+			#{/field}-->
          </div>
+
 		
 		<div class="form-group">
 			<div class="col-sm-offset-4	 col-sm-2">
@@ -225,7 +268,9 @@
 
 	<script type="text/javascript">
 		$(function(){
-
+            /*$('#specialCoveredEquipmentContainer').hide();
+            $('#specialNotCoveredEquipmentContainer').hide();
+            $('#preexistingDamagesContainer').hide();*/
 		    *{
 			$('#appointmentDate').scroller({
 				theme: 'default',
@@ -271,6 +316,20 @@
 			$("input[name=inspection]").change(function() {
 				showSelectedInspection();
 			});
+
+			/*$("#specialNotCoveredEquipmentCheck").click(function(){
+			    if($(this).prop("checked") == true)
+			    	$('#specialNotCoveredEquipmentContainer').show();
+			    else if($(this).prop("checked") == false)
+            		$('#specialNotCoveredEquipmentContainer').hide();
+			});
+
+            $("#preexistingDamagesCheck").click(function(){
+                if($(this).prop("checked") == true)
+                    $('#preexistingDamagesContainer').show();
+                else if($(this).prop("checked") == false)
+                    $('#preexistingDamagesContainer').hide();
+            });*/
 			
 			$("input[name=inspectionType]").change(function() {
 				showSelectedInspectionType();
@@ -328,6 +387,7 @@
 				var selectelement = $(this);
 				var select = $("#quotationOptions");
 				select.html("<option>&{'form.select.loading'}</option>");
+
 				$.ajax({
 					type : 'POST',
 					url : '@{ServiceQuotations.paymentOptionsForQuotation()}', 
@@ -351,7 +411,24 @@
 						selectelement.prop('disabled', false);
 					}
 				});
-				
+
+                /*$.ajax({
+                    type : 'POST',
+                    url : '@ {ServiceQuotations.specialEquipmentQuotation()}',
+                    data :  {id:id},
+                    success: function(response) {
+                        var respuesta = response;
+                        if(respuesta.mostrarEquipoEspecial){
+                            $('#specialCoveredEquipmentContainer').show();
+						}
+                    },
+                    error: function() {
+                        //console.log("error");
+                    },
+                    complete: function() {
+                        //console.log("completado");
+                    }
+                });*/
 			});
 		});
 

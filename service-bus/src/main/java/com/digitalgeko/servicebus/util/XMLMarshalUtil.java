@@ -34,6 +34,7 @@ public class XMLMarshalUtil {
 		try {
 			// ESCAPE AMPERSANDS
 			xml = xml.replaceAll("&", "&amp;");
+			log.info("SOAP from XML MASHALL >: " + xml);
             JAXBContext jc = JAXBContext.newInstance(clazz);
             Unmarshaller u = jc.createUnmarshaller();
             StringReader reader = new StringReader(xml);

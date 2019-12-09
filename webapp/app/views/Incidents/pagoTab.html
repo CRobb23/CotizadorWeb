@@ -164,7 +164,7 @@
                 <input type="hidden" name="incidentId" value="${incident?.id}"/>
 
                 <div class="row">
-                    <div class="col-sm-offset-4 col-sm-2">
+                    <div class="col-sm-offset-3 col-sm-2">
                         <a class="btn btn-primary btn-block" href="@{incidentDetail(incident.id)}" class="btn btn-xs" >&{'client.edit.cancel'}</a>
                     </div>
                     <div class="col-sm-2">
@@ -172,7 +172,7 @@
                     </div>
                     #{if incident?.policy == null || incident?.policy.trim() == ''}
                         #{if incident?.status?.code == 0 || incident?.status?.code == 1 }
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <input type="submit" name="accion" class="btn btn-primary btn-block" value="&{'client.edit.final.save'}"/>
                             </div>
                         #{/if}

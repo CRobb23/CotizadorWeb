@@ -207,8 +207,6 @@ public class QuotationHelper {
 							fieldCalculation = classValue.productCoverageValue.productCoverage.minimumPrime;
 						}
 					}
-
-
 					
 					CoverageCost cost = new CoverageCost(fieldCalculation);
 					cost.coverageOrder = coverage.coverage.coverageOrder;
@@ -218,7 +216,9 @@ public class QuotationHelper {
 						cost.coverageDescription = parameter.coverageValue.optionName;
 					}
 					cost.coverageId = coverage.coverage.id;
-					
+					if(parameter!=null && parameter.youngerData != null){
+						cost.youngerData = parameter.youngerData;
+					}
 					if (parameter!=null) {
 						cost.coverage = parameter.coverageAmount();
 					} else if (baseCode==ERConstants.CALCULATION_BASE_CAR_VALUE_PERCENTAGE) {
@@ -283,6 +283,7 @@ public class QuotationHelper {
 			}
 			
 			//Adds the third injuries parameter based on the selected value in the injuriesCoverage
+			List<ER_Quotation_Parameter> parametersTemporal = quotation.parameters;
 			if (quotation.injuriesValue != null && !hasThirdInjuries) {
 				for (ER_Product_Coverage productCoverage : coverages) {
 					if (productCoverage.coverage.equals(configuration.thirdInjuriesCoverage)) {
@@ -294,6 +295,14 @@ public class QuotationHelper {
 								thirdInjuriesParam.coverageValue = value;
 								thirdInjuriesParam.productCoverage = productCoverage;
 								thirdInjuriesParam.quotation = quotation;
+								for(ER_Quotation_Parameter parametro : parametersTemporal){
+									if(parametro.productCoverage.coverage.transferCode != null &&
+											productCoverage.coverage.transferCode != null &&
+											parametro.productCoverage.coverage.transferCode.equals(productCoverage.coverage.transferCode)){
+										thirdInjuriesParam.youngerData = quotation.parameters.get(injuriesPosition).youngerData;
+										break;
+									}
+								}
 								quotation.parameters.add(injuriesPosition, thirdInjuriesParam);
 								break;
 							}

@@ -346,68 +346,68 @@ public class Incidents extends AdminBaseController {
 	@Check({"Administrador maestro","Gerente comercial","Gerente de canal", "Supervisor", "Vendedor", "Usuario Final"})
     public static void incidentDetail(Long id) {
     	try{
-    	if (id!=null) {
-	    	ER_Incident incident = ER_Incident.findById(id);
-			ER_User currentUser = connectedUser();
-	    	if (canViewIncident(incident)) {
-	    		List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by id asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
-	    	
-	    		boolean isOwner = (incident.creator == currentUser);
-	    		boolean isQAUser = false;
-				boolean isCommercialQAUser = false;
-	    		if(currentUser.isQAUser != null && currentUser.isQAUser)
-					isQAUser = true;
-				if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
-					isCommercialQAUser = true;
+			if (id!=null) {
+				ER_Incident incident = ER_Incident.findById(id);
+				ER_User currentUser = connectedUser();
+				if (canViewIncident(incident)) {
+					List<ER_Task> tasks = ER_Task.find("incident = ? and status.code != ? order by id asc", incident, ERConstants.TASK_STATUS_COMPLETE).fetch();
 
-	    		if (!isOwner) {
-					switch (connectedUserRoleCode(currentUser)) {
-						case ERConstants.USER_ROLE_SUPER_ADMIN: {
-							isOwner = true;
-							break;
-						}
-						case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
-							List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", currentUser, incident.channel).fetch();
-							isOwner = !channels.isEmpty();
-							break;
-						}
-						case ERConstants.USER_ROLE_CHANNEL_MANAGER: {
-							List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", currentUser, incident.distributor).fetch();
-							isOwner = !distributors.isEmpty();
-							break;
-						}
+					boolean isOwner = (incident.creator == currentUser);
+					boolean isQAUser = false;
+					boolean isCommercialQAUser = false;
+					if(currentUser.isQAUser != null && currentUser.isQAUser)
+						isQAUser = true;
+					if(connectedUser().isCommercialQAUser != null && connectedUser().isCommercialQAUser)
+						isCommercialQAUser = true;
 
-						case ERConstants.USER_ROLE_SUPERVISOR: {
-						//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
-						//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
-							//Agrega lista de administradores a lista de usuarios
-						//	stores.addAll(supervisoresIds);
+					if (!isOwner) {
+						switch (connectedUserRoleCode(currentUser)) {
+							case ERConstants.USER_ROLE_SUPER_ADMIN: {
+								isOwner = true;
+								break;
+							}
+							case ERConstants.USER_ROLE_COMMERCIAL_MANAGER: {
+								List<Long> channels = ER_Channel.find("select c.id from ER_Channel c join c.administrators a where a = ? and c = ? and c.active = true", currentUser, incident.channel).fetch();
+								isOwner = !channels.isEmpty();
+								break;
+							}
+							case ERConstants.USER_ROLE_CHANNEL_MANAGER: {
+								List<Long> distributors = ER_Distributor.find("select d.id from ER_Distributor d join d.administrators a where a = ? and d = ? and d.active=true", currentUser, incident.distributor).fetch();
+								isOwner = !distributors.isEmpty();
+								break;
+							}
 
-							isOwner = true;
-							break;
+							case ERConstants.USER_ROLE_SUPERVISOR: {
+							//	List<ER_Store> stores = ER_Store.find("select s from ER_Store s join s.sellers u join s.administrators a where u = ? and a = ? and  s.active = true", incident.creator, currentUser).fetch();
+							//	List<Long> supervisoresIds = ER_Store.find("select a.id from ER_Store s join s.administrators a where s.distributor = ?", connectedUser.distributor).fetch();
+								//Agrega lista de administradores a lista de usuarios
+							//	stores.addAll(supervisoresIds);
+
+								isOwner = true;
+								break;
+							}
+
 						}
-
 					}
-				}
-				if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
-	    			isOwner = true;
-	    		}
-	    		ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(MESSAGE_AFTER_POLICY_CREATED));
-				String body = messages.body;
+					if(incident.creator.role.code == ERConstants.USER_ROLE_FINAL_USER){
+						isOwner = true;
+					}
+					ER_Admin_Messages messages = ER_Admin_Messages.findById(Long.valueOf(MESSAGE_AFTER_POLICY_CREATED));
+					String body = messages.body;
 
-				ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
-				String outOfLineMessage = mail.body;
-				renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
-	    		render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
-	    	} 
-    	}
-    	
-    	incidentsList(null, null);
+					ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(OUT_OF_LINE_MESSAGE));
+					String outOfLineMessage = mail.body;
+					renderArgs.put("mensajeFueraDeLinea",outOfLineMessage);
+					render(incident, tasks, isOwner,body,isQAUser,isCommercialQAUser);
+				}
+			}
+
+			incidentsList(null, null);
 		}
 		catch(Exception e){
-		Logger.error("error: " + e.getMessage());
-		e.printStackTrace();
-	}
+			Logger.error("error: " + e.getMessage());
+			e.printStackTrace();
+		}
     	
     }
 
@@ -690,7 +690,8 @@ public class Incidents extends AdminBaseController {
     									 Long selectedQuotation, Long selectedPaymentForm, Boolean inspection,
     									 Integer inspectionType, String inspectionAddress,
     									 @As("dd/MM/yyyy HH:mm") Date appointmentDate,Date policyValidity,
-    									 String inspectionNumber,Date inspectionDate) {
+    									 String inspectionNumber,Date inspectionDate, String specialNotCoveredEquipment,
+										 String preexistingDamages,String specialCoveredEquipment) {
     	flash.clear();
     	flash.discard();
 
@@ -724,6 +725,9 @@ public class Incidents extends AdminBaseController {
         		}
 
 				incident.policyValidity = policyValidity;
+        		incident.preexistentDamage = preexistingDamages;
+        		incident.specialNotCoveredEquipment = specialNotCoveredEquipment;
+        		incident.specialCoveredEquipment = specialCoveredEquipment;
         		if( incident.status.code.equals(ERConstants.INCIDENT_STATUS_CREATED) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_IN_PROGRESS) ||
         			incident.status.code.equals(ERConstants.INCIDENT_STATUS_INDICTED) ||
@@ -758,7 +762,6 @@ public class Incidents extends AdminBaseController {
 								incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
             				} else if (StringUtil.isNullOrBlank(incident.inspection.inspectionNumber)) {
                                 incidentStatus = ER_Incident_Status.find("code = ?", ERConstants.INCIDENT_STATUS_INSPECTION).first();
-
             				}
             			}
             		}else{
@@ -853,6 +856,7 @@ public class Incidents extends AdminBaseController {
 	    				if(inspectionType == ERConstants.INSPECTION_TYPE_ADDRESS){
 	    					inspectionInfo.address = inspectionAddress;
 	    					inspectionInfo.appointmentDate = appointmentDate;
+	    					inspectionInfo.existentDamage = preexistingDamages;
 
 	    					inspectionR.setAddress(inspectionAddress);
 	    					inspectionR.setDate(DateHelper.formatDate(appointmentDate, "dd/MM/yyyy HH:mm:ss"));
@@ -1984,7 +1988,7 @@ public class Incidents extends AdminBaseController {
 
 				}
 
-				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) | (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
+				if((legalRepresentativePayer.passport != null && !legalRepresentativePayer.passport.isEmpty()) || (legalRepresentativePayer.identificationDocument != null && !legalRepresentativePayer.identificationDocument.isEmpty())){
 					payer.legalRepresentativePayer = legalRepresentativePayer;
 				}
 				else{
@@ -2630,7 +2634,7 @@ public class Incidents extends AdminBaseController {
 					legalRepresentative.ConvertUpper();
 					clientPEP.ConvertUpper();
 					client.ConvertUpper();
-					if ((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) | (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
+					if ((legalRepresentative.passport != null && !legalRepresentative.passport.isEmpty()) || (legalRepresentative.identificationDocument != null && !legalRepresentative.identificationDocument.isEmpty())) {
 						client.legalRepresentative = legalRepresentative;
 					}
 					if (client.expose != null && client.expose) {

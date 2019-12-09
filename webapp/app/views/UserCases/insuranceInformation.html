@@ -304,11 +304,15 @@
 
 #{set 'moreStyles'}
 	<link rel="stylesheet" href="@{'public/multiselect/bootstrap-multiselect.css'}" type="text/css"/>
+	<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/custom-theme/jquery-ui-1.10.4.custom.css'}">
 #{/}
 
 #{set 'moreScripts'}
 <script type="text/javascript" src="@{'public/multiselect/detectmobilebrowser.js'}"></script>
 <script type="text/javascript" src="@{'public/multiselect/bootstrap-multiselect.js'}"></script>
+<script src="@{'/public/javascripts/jquery-ui-1.10.4.custom.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/moment.min.js'}" type="text/javascript"></script>
+<script src="@{'/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'}" type="text/javascript"></script>
 
 <script type="text/javascript">
 
@@ -520,12 +524,39 @@
 								} else {
 									i--;
 								}
-								
+                                /*if(field.as_code==10 || field.as_code==47 || field.as_code==11 || field.as_code==46){
+                                    html += '</div>';
+                                    html += '</div>';
+                                    /!* Nombre de menor nombrado *!/
+                                    html += '<div class="form-group">';
+                                    html += '<label class="col-sm-4 control-label">Nombre del menor '+((field.as_code==11 || field.as_code==46)?'(16-18)':'(18-21)')+'</label>'
+                                    html += '<div class="col-sm-8">';
+                                    html += '<input type="text" name="quotations['+idNumber+'].parameters['+i+'].youngerData.name" class="form-control" value="" />';
+                                    html += '</div>';
+                                    html += '</div>';
+
+                                    /!* Licencia de menor nombrado *!/
+                                    html += '<div class="form-group">';
+                                    html += '<label class="col-sm-4 control-label">No. Licencia del menor '+((field.as_code==11 || field.as_code==46)?'(16-18)':'(18-21)')+'</label>'
+                                    html += '<div class="col-sm-8">';
+                                    html += '<input type="text" name="quotations['+idNumber+'].parameters['+i+'].youngerData.license" class="form-control" value="" />';
+                                    html += '</div>';
+                                    html += '</div>';
+
+                                    /!* Fecha de Nacimiento de menor nombrado *!/
+                                    html += '<div class="form-group">';
+                                    html += '<label class="col-sm-4 control-label">Fecha De Nacimiento '+((field.as_code==11 || field.as_code==46)?'(16-18)':'(18-21)')+'</label>'
+                                    html += '<div class="col-sm-8">';
+                                    html += '<input type="text" name="quotations['+idNumber+'].parameters['+i+'].youngerData.birthDate" class="form-control fecha-nacimiento" value="" />';
+                                    html += '</div>';
+                                    html += '</div>';
+                                }*/
 								i++
 							}
 							
 							html += '</div>';
 							html += '</div>';
+
 							
 						});
 
@@ -575,6 +606,9 @@
 				},
 				complete: function() {
 					selectelement.prop('disabled', false);
+					$('.fecha-nacimiento').datetimepicker({
+						format: 'DD-MM-YYYY'
+					});
 				}
 			});
 	    });

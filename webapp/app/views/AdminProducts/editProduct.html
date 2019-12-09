@@ -113,6 +113,24 @@
 				</div>
 			</div>
 		#{/field}
+		#{field 'product.policyFrom'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-3 control-label" for="${field.id}"> Póliza desde:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                </div>
+            </div>
+		#{/field}
+		#{field 'product.policyTo'}
+            <div class="form-group ${field.error?'has-error':''}">
+                <label class="col-sm-3 control-label" for="${field.id}"> Póliza hasta:</label>
+                <div class="col-sm-6">
+                    <input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : (!copy)?field.value:''}" class="form-control"/>
+					#{if field.error}<span class="help-block">${field.error}</span>#{/if}
+                </div>
+            </div>
+		#{/field}
 		<hr />
 		<h4 class="text-center">&{'product.form.product.montosAdicionales'}</h4>
 		#{field 'product.montoRestarSumaAseg'}

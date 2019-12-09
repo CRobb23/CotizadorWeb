@@ -811,14 +811,20 @@ function modalClient(clients) {
   // Fill table with clients data
   for (i=0; i<clients.length; i+=1) {
     client = clients[i];
-    console.log($("clientsTable"));
-    $("#clientsTable").append("<tr class='clientsRow'><td><label class='code'><input type='radio' id='"+client.codeClient+"' name='optradio'/>" + client.codeClient +"</label></td><td><label for='"+client.codeClient+"'>"+client.name+"</label></td><td><label for='"+client.codeClient+"'>"+client.cifClient+"</label></td></tr>");
+    console.log($("#clientsTable"));
+    $("#clientsTable").append("<tr class='clientsRow'>" +
+        "<td><input type='radio' id='"+client.codeClient+"' name='optradio'/></td>" +
+        "<td><label class='code'>" + client.codeClient +"</label></td>" +
+        "<td><label for='"+client.codeClient+"'>"+client.name+"</label></td>" +
+        "<td><label for='"+client.codeClient+"'>"+client.cifClient+"</label></td>" +
+        "<td><label for='"+client.codeClient+"'>"+client.cifClient+"</label></td>" +
+        "</tr>");
   }
   var dialog = $( "#dialog-clients" ).dialog({
     dialogClass: "no-close",
     autoOpen: false,
     height: 400,
-    width: 350,
+    width: 650,
     modal: true,
     buttons: [
       {

@@ -98,6 +98,15 @@ public class ER_Incident extends Model {
 
 	public Date reviewDate;
 
+	@Column(name="preexistent_damage")
+	public String preexistentDamage;
+
+	@Column(name="special_not_covered_equipment")
+	public String specialNotCoveredEquipment;
+
+	@Column(name="special_covered_equipment")
+	public String specialCoveredEquipment;
+
 	public String getReviewDate() {
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		if(this.reviewDate != null) {
@@ -320,4 +329,6 @@ public class ER_Incident extends Model {
         else
             return "";
     }
+
+
 }

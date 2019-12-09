@@ -64,6 +64,10 @@ public class ER_Product extends Model {
 	public String remoteSystemCode;
 	
 	public String rateTypeTransferCode;
+
+	public Long policyFrom;
+
+	public Long policyTo;
 	
 	@ManyToMany
 	@JoinTable(name = "ER_Product_Channels", 
@@ -113,6 +117,8 @@ public class ER_Product extends Model {
 		this.currency = product.currency;
 		this.montoAgregarPrima = product.montoAgregarPrima;
 		this.montoRestarSumaAseg = product.montoRestarSumaAseg;
+		this.policyFrom = product.policyFrom;
+		this.policyTo = product.policyTo;
 
 		
 		if (product.coverages!=null && !product.coverages.isEmpty()) {

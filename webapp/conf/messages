@@ -184,6 +184,7 @@ usersList.table.state = Estado
 user.form.user.channel = Canal
 user.form.user.isQAUser = Usuario puede revisar casos
 user.form.user.isCommercialQAUser = Usuario puede trasladar area tecnica
+user.form.user.isCaseAnalizer = Usuario puede analizar casos
 user.form.user.distributor = Distribuidor
 usersList.table.state.active = Activo
 usersList.table.state.inactive = Inactivo
@@ -711,6 +712,8 @@ quotation.insurance = Seguro
 quotation.simulation = Simulación
 quotation.task = Seguimiento
 quotation.incident = Éxito
+quotation.editMail.addingMails = SI USTED AGREGA CORREOS ELECTRÓNICOS ENVIARÁ COPIA DE SU PÓLIZA A LOS DESTINATARIOS
+quotation.clienteTab.addingMails = COLOCAR CORREO DE CLIENTE PARA FUTURAS NOTIFICACIONES
 
 quotation.form.next = Siguiente
 quotation.form.back = Anterior
@@ -761,6 +764,8 @@ quotation.simulation.table.paymentoptions = Opciones de pago
 quotation.simulation.table.discount = Descuento
 quotation.simulation.table.deductibles = Coberturas y deducibles
 quotation.simulation.table.averageValue = VALOR GARANTIZADO
+quotation.simulation.table.haveAverageValue = CUENTA CON VALOR GARANTIZADO
+quotation.simulation.table.noAverageValue = NO CUENTA CON VALOR GARANTIZADO
 
 quotation.simulation.payment = pago
 quotation.simulation.frecuencysuffix = es
@@ -1026,6 +1031,8 @@ incident.quotations.newQuotation = Nueva cotización
 
 incident.quotation.discount.maximum = Máximo
 
+incident.quotation.message.instructions = Si usted desea que la información le llegue a otro destinatario seleccione agregar correos, si no desea puede continuar al paso 1
+
 incident.quotation.back = Regresar
 incidents.list.searcherror = Debe ingresar al menos un criterio de búsqueda
 incidents.list.noentries = No se encontraron coincidencias
@@ -1062,10 +1069,10 @@ client.edit.save = Modificar cliente
 client.edit.update = Actualizar
 client.edit.cancel = Salir
 client.edit.next = Siguiente
-client.edit.final.save = Guardar y Salir
+client.edit.final.save = Guardar y Continuar
 client.edit.previous = Anterior
 client.edit.partial = Guardar Parcial
-client.edit.complete = Guardar y Salir
+client.edit.complete = Guardar y Continuar
 
 client.edit.success = El cliente fue modificado exitosamente
 
@@ -2905,3 +2912,25 @@ vehicleLoJack.masiveupdate.error = No se adjuntaron archivos para procesar
 vehicleLoJackList.table.fileLine = Fila
 vehicleLoJackList.table.error = Error
 
+chargeList.title = Descuentos Y Recargos
+chargeList.search.form.name = Descripción
+chargeList.search.form.search = Buscar
+chargeList.search.form.all = Buscar Todos
+chargeList.newExcel = Cargar desde Excel
+chargeList.new = Nuevo
+chargeList.table.name = Descripción
+chargeList.table.value = Valor
+chargeList.table.status = Estado
+chargeList.table.edit = Editar
+chargeList.table.delete = Eliminar
+chargeList.table.type = Tipo
+chargeList.save.form.name = Descripción
+chargeList.save.form.value = Valor
+charge.form.create = Guardar
+charge.form.edit = Editar
+charge.form.cancel = Cancelar
+chargeList.create.fielderrors = Error en formulario
+chargeList.form.create.success = Se Guardaró el deescuento o recargo
+chargeList.update.success = Se Actualizaron los valores
+chargeList.delete.success = Se eliminó el registro
+chargeList.delete.error = No se pudo eliminar el registro

@@ -83,8 +83,6 @@ public class ER_Quotation extends Model {
     @Column
     private Boolean garanteedValue;
 
-
-
     public ER_Quotation() {
 		this.discount = BigDecimal.ZERO;
 	}

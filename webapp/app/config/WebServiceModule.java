@@ -22,5 +22,6 @@ public class WebServiceModule extends AbstractModule {
 		bind(PolicyInputWebService.class).to(PolicyInputServiceBusImpl.class);
 		bind(InsurableVehicleQueryWebService.class).to(InsurableVehicleQueryServiceBusImpl.class);
 		bind(JsonService.class).to(JsonServiceImpl.class);
+		bind(ProductPolicyWebService.class).to(ProductPolicyWebServiceImpl.class);
 	}
 }

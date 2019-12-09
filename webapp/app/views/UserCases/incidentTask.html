@@ -129,10 +129,12 @@
                 stepMinute: 15
             });
         } else {
+            var tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
             $('#task_dueDate').datetimepicker({
                 locale: "es",
                 minDate: new Date(${new Date().getTime()}),
-                defaultDate: new Date(${new Date().getTime() + 15*60*1000}),
+                defaultDate: tomorrow,
                 stepping: 15,
                 sideBySide: true
             });

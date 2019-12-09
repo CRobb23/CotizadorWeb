@@ -248,11 +248,11 @@
 			<div class="row" style="min-height:auto">
 				<div class="col-sm-6">
 					#{field 'vehicle.mileage'}
-						<div class="form-group ${field.error?'has-error':''}">
+						<div id="${field.id}Container" class="form-group ${field.error?'has-error':''}">
 							<label class="col-sm-4 control-label" for="${field.id}">#{required/} &{'quotation.form.'+field.name}</label>
 							<div class="col-sm-8">
-								<input type="text" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
-							</div>
+								<input type="number" name="${field.name}" id="${field.id}" value="${field.flash ? field.flash : field.value}" class="form-control"/>
+								</div>
 						</div>
 					#{/}
 				</div>
@@ -462,5 +462,27 @@
             phoneNumbersString: ""
         }
         init(args);
+
+        $("#vehicle_mileage").keyup(function(){
+            var anioVehiculo = parseInt($("#erYear option:selected").text());
+            var anioActual = new Date().getFullYear();
+            //$("#formVehicle").validate();
+            if(anioVehiculo < anioActual){
+
+                $('#vehicle_mileage').rules( 'remove',  'min' );
+                $('#vehicle_mileage').rules( 'add',  {min:1,
+					messages:{
+                    	min:"El recorrido debe ser mayor a 0"
+            		}
+				} );
+                var odometro = parseInt($(this).val());
+                if(odometro <= 0) {
+                    $(this).focus();
+                }
+			}else{
+                $('#vehicle_mileage').rules( 'remove',  'min' );
+                $('#vehicle_mileage').rules( 'add',  {min:0} );
+			}
+		});
     });
 </script>

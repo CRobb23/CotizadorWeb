@@ -129,6 +129,7 @@ public class ServiceVehicles extends AdminBaseController {
     			Map<String, Object> map = new HashMap<String, Object>();
     			map.put("id", productCoverage.id);
     			map.put("name", productCoverage.coverage.fieldDescription.toUpperCase());
+    			map.put("as_code",productCoverage.coverage.transferCode);
     			
     			if (productCoverage.optional!=null) {
     				map.put("optional", productCoverage.optional);

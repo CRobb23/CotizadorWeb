@@ -29,17 +29,27 @@ import models.ER_Product_Discount;
 import models.ER_Product_Discount_Range;
 import models.ER_User_Role;
 import models.ER_Vehicle_Class;
+import models.ws.PolicyProductRequest;
+import models.ws.PolicyProductResponse;
 import play.Logger;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.modules.paginate.ModelPaginator;
 import play.mvc.With;
+import service.ProductPolicyWebService;
+
+import javax.inject.Inject;
+
+
 
 @With(Secure.class)
 @Check("Administrador maestro")
 public class AdminProducts extends AdminBaseController {
-	
+
+	@Inject
+	static ProductPolicyWebService productPolicyServiceBus;
+
 	/*
 	 * ************************************************************************************************************************
 	 * Filters the users and adds the result as a ModelPaginator object with the key "products"
@@ -370,17 +380,36 @@ public class AdminProducts extends AdminBaseController {
     	} else {
     		
     		try {
-	    		if (product.id == null) {
-	    			flash.success(Messages.get("product.create.success"));
-	    		} else {
+	    		if (product.id != null) {
 	    			product = ER_Product.findById(product.id);
-	    			flash.success(Messages.get("product.edit.success"));
 	    		}
 	    		
 	    		product.currency = ER_Currency.findById(product.currency.id);
 	    		
-	    		product.save();
+	    		product = product.save();
 	    		product.setCoveragesValues(coverages, true);
+
+	    		//ENVIO TRANSACCION A AS400 PARA GUARDAR U ACTUALIZAR
+				if(product.policyFrom!= null && product.policyTo != null) {
+					PolicyProductRequest request = new PolicyProductRequest();
+					request.setId(product.id.toString());
+					request.setStatus(product.active.toString());
+					request.setName(product.name);
+					request.setDescription(product.description);
+					request.setPolicyFrom(product.policyFrom.toString());
+					request.setPolicyTo(product.policyTo.toString());
+					PolicyProductResponse queryAverage = productPolicyServiceBus.policyProductRequest(request);
+					Logger.info("Actualiza AS400 producto " + queryAverage.getMessage());
+
+					if (queryAverage.getCode().equals("1")) {
+						flash.error("Mensaje de AS-400:" + queryAverage.getMessage());
+						editProduct(product.id);
+					} else {
+						flash.success("Operación exitosa");
+					}
+				}
+				else
+				flash.success("Operación exitosa");
     		} catch (Exception e) {
     			Logger.error(e, "Error saving product");
     			flash.success(Messages.get("product.save.error"));

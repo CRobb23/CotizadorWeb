@@ -116,7 +116,7 @@ public class Mails extends Mailer {
 		boolean result = false;
 		try{
 			setFrom(FROM_MAIL);
-			setSubject("Poliza de vehiculo");
+			setSubject("Poliza de vehiculo ✅");
 			String link= "";
 			Boolean isWebPath= true;
 			List<String> recipients = new ArrayList<String>();
@@ -294,7 +294,7 @@ public class Mails extends Mailer {
                     return true;
             }
 			setFrom(FROM_MAIL);
-			setSubject("Resguardo ha vencido");
+			setSubject("Resguardo ha vencido \uD83D\uDD34");
 			addRecipient(reminder.guard.incident.client.email);
             ER_Admin_Messages mail = ER_Admin_Messages.findById(Long.valueOf(GUARD_EXPIRATED_MAIL));
             String body = mail.body;
@@ -477,10 +477,10 @@ public class Mails extends Mailer {
 		boolean result = false;
 		
 		try {
-			
+
 			setFrom(FROM_MAIL);
-			setSubject("Cotización Seguro de Vehículos");
-			
+			setSubject("Cotización Seguro de Vehículos ⚠");
+
 			int recipientsCount = 0;
 			if (incident.client.email!=null && !incident.client.email.isEmpty()) {
 				addRecipient(incident.client.email);

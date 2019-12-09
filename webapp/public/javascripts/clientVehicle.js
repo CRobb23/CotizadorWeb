@@ -142,30 +142,31 @@ function init(args) {
                         maxlength : "El No. de chasis debe ser de 17 caracteres",
                 },
                 "vehicle.owner":      "Requerido",
-                    "vehicle.engine": "Requerido",
-                    "vehicle.plateType.id": "Requerido",
-                    "vehicle.plate": {
+                "vehicle.engine": "Requerido",
+                "vehicle.plateType.id": "Requerido",
+                "vehicle.plate": {
                     required: "Requerido"
                   //  validatePlate: "Ingrese mayúsculas y no debe contener vocales."
                 },
                 "vehicle.brand.id": "Requerido",
-                    "vehicle.line.id": "Requerido",
-                    "vehicle.type.id": "Requerido",
-                    "vehicle.rate.id": "Requerido",
-                    "vehicle.erYear.id": "Requerido",
-                    "vehicle.armor": "Requerido",
-                    "vehicle.alarmCode": "Requerido",
-                    "vehicle.numberOfPassengers": "Requerido",
-                    "vehicle.color": "Requerido",
-                    "vehicle.invoiceDate": "Requerido",
-                    "vehicle.mileage": {
+                "vehicle.line.id": "Requerido",
+                "vehicle.type.id": "Requerido",
+                "vehicle.rate.id": "Requerido",
+                "vehicle.erYear.id": "Requerido",
+                "vehicle.armor": "Requerido",
+                "vehicle.alarmCode": "Requerido",
+                "vehicle.numberOfPassengers": "Requerido",
+                "vehicle.color": "Requerido",
+                "vehicle.invoiceDate": "Requerido",
+                "vehicle.mileage": {
                     required: "Requerido",
-                        number: "Solo debe contener números"
+                    number: "Solo debe contener números",
+                    min:"El recorrido debe ser mayor a 0"
                 },
                 "vehicle.loanNumber": "Requerido",
-                    "vehicle.warranty": "Requerido",
-                    "vehicle.reminderType.id": "Requerido",
-                    "vehicle.numberDoor": "Requerido",
+                "vehicle.warranty": "Requerido",
+                "vehicle.reminderType.id": "Requerido",
+                "vehicle.numberDoor": "Requerido",
             },
             highlight: function(element){
                 $(element).closest(".form-group").removeClass("has-success").addClass("has-error");
