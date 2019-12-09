@@ -14,9 +14,18 @@ public class PolicyInputRestRequest {
 	private String typeLine;
 	private String typeProduction;
 	private String validSice;
+    private String productPolicy;
 	private String validUntil;
 	private String walletType;
 	private String currency;
+
+	public String getProductPolicy() {
+		return productPolicy;
+	}
+
+	public void setPolicyProduct(String productPolicy) {
+		this.productPolicy = productPolicy;
+	}
 	private BigDecimal discountRate;
 	
 	public String getQuoteNumber() {

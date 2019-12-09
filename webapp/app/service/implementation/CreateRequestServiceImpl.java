@@ -487,6 +487,13 @@ public class CreateRequestServiceImpl implements CreateRequestService{
     		request.setValidSice(DateHelper.formatDate(incident.policyValidity, "dd/MM/yyyy"));
     		request.setValidUntil(DateHelper.formatDate(DateHelper.addMonths(incident.policyValidity, 12), "dd/MM/yyyy"));
     		request.setCodeAgent("801");
+
+    		if(incident.selectedQuotation.product.policyFrom != null && incident.selectedQuotation.product.policyFrom != 0L
+				&&	incident.selectedQuotation.product.policyTo != null && incident.selectedQuotation.product.policyTo != 0L)
+    		request.setProductPolicy(incident.selectedQuotation.product.id.toString());
+    		else
+				request.setProductPolicy("0");
+
     		if(!FieldAccesor.isEmptyOrNull(configuration.agentCodeAS400)){
     			request.setCodeAgent(configuration.agentCodeAS400);
     		}

@@ -51,4 +51,10 @@ public class QueryRestInbound {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/policyProduct")
+    ResponseEntity<String> policyProductQuery(@RequestBody String message) {
+        String response = queryBus.policyProduct(message);
+        return ResponseEntity.ok(response);
+    }
+
 }

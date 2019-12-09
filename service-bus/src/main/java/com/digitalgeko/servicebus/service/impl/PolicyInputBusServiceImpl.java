@@ -66,6 +66,7 @@ public class PolicyInputBusServiceImpl extends AbstractBusServiceImpl implements
     @Override
     public String policyDataInput(String message) {
         try {
+            log.info("incoming >: " + message);
             String soapMessage = fromJSONtoSOAP(message, PolicyInputRestRequest.class, PolicyInputSoapRequest.class);
             soapMessage = PolicyInputSoapRequest.RQ_CODE + soapMessage;
             String soapResponse = brokerSoapOutbound.sendBrokerMessage(soapMessage);

@@ -39,7 +39,7 @@ public abstract class AbstractBusServiceImpl {
 
     protected String fromJSONtoSOAP(String restMessage, Class restClass, Class soapClass) throws ConvertException {
         try {
-            log.info("REST >: " + restMessage);
+            log.info("REST 234 >: " + restMessage);
             Object restObj = JSONMarshalUtil.fromJSON(restClass, restMessage);
             Object soapObj = mapper.map(restObj, soapClass);
             String soapMessage =  XMLMarshalUtil.toXML(soapClass, soapObj);
