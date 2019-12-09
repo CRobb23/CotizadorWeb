@@ -386,7 +386,7 @@ public class AdminProducts extends AdminBaseController {
 	    		
 	    		product.currency = ER_Currency.findById(product.currency.id);
 	    		
-	    		product.save();
+	    		product = product.save();
 	    		product.setCoveragesValues(coverages, true);
 
 	    		//ENVIO TRANSACCION A AS400 PARA GUARDAR U ACTUALIZAR
@@ -403,6 +403,7 @@ public class AdminProducts extends AdminBaseController {
 
 					if (queryAverage.getCode().equals("1")) {
 						flash.error("Mensaje de AS-400:" + queryAverage.getMessage());
+						editProduct(product.id);
 					} else {
 						flash.success("Operación exitosa");
 					}
