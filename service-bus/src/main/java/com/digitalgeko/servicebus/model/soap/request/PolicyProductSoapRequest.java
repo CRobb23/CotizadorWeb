@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PolicyProductSoapRequest {
 
-    //TODO COLOCAR LOS NUMEROS VERDADEROS DE TRANSACCIONES
     public static final String RQ_CODE = "732";
     public static final String RS_CODE = "733";
 
