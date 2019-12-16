@@ -1,3 +1,28 @@
+## Installation steps PROD
+
+Some of the steps to install the aplication on the Production Enviroment.
+
+1. Install linux Red Hat Enterprise 7.4
+2. Install Java 8
+3. Install ngnix 
+4. Grant writing access to ngnix folders, logs folders, *.sh files folder
+5. Disable server firewall
+6. Disable server SELinux
+7. Service's path: 
+	*. ServiceBus: 
+		-. usr/local/bin/servicebus.sh
+		-. /etc/systemd/system/servicebus.service
+	*. Cotizador:
+		-. /opt/elroble-cotizador-web/cotizador/start.sh
+		-. /opt/elroble-cotizador-web/cotizador/status.sh
+8. Configure ngnix
+	*. add cotizador.conf file path: /etc/ngnix/conf.d
+
+
+
+
+
+
 **Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
 
 When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
