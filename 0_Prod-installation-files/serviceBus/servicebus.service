@@ -1,0 +1,14 @@
+[Unit]
+Description = Servicebus Service
+After network.target = servicebus.service
+
+[Service]
+Type = forking
+ExecStart = /usr/local/bin/servicebus.sh start
+ExecStop = /usr/local/bin/servicebus.sh stop
+ExecReload = /usr/local/bin/servicebus.sh restart
+
+[Install]
+WantedBy=multi-user.target
+
+
