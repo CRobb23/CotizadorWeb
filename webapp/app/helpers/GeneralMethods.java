@@ -80,7 +80,7 @@ public class GeneralMethods {
 	    List<LoJackOptions> options = new ArrayList<>();
 	    if (loJackId != null) {
             ER_Vehicle_LoJack loJack = ER_Vehicle_LoJack.findById(loJackId);
-            for (int i = 1; i<= 6; i++) {
+            for (int i = 1; i<= 4; i++) {
                 LoJackOptions option = new LoJackOptions();
                 option.number = i;
                 option.description = LoJackOptions.getDescription(i);
