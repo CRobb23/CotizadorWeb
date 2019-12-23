@@ -10,7 +10,9 @@ import java.util.Date;
 public class Security extends Secure.Security {
 
 	static String authenticate(String username, String password) {
+
 		ER_User user = ER_User.connect(username, password);
+
 		if (user!=null) {
 			if (user.active) {
 				if (StringUtil.isNullOrBlank(user.token)) {

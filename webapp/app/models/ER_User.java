@@ -15,6 +15,7 @@ import javax.persistence.PreUpdate;
 
 import ext.GsonExclude;
 import helpers.ERConstants;
+import play.Logger;
 import play.data.validation.Email;
 import play.data.validation.MaxSize;
 import play.data.validation.Required;
@@ -127,6 +128,7 @@ public class ER_User extends Model {
     public static ER_User connect(String email, String password) {
         //Encrypt password to search in the database
     	String encryptedPassword = new Crypto().encryptAES(password);
+    	Logger.info("este es el password "+encryptedPassword);
     	return find("email = ? and password = ?", email, encryptedPassword).first();
     }
 

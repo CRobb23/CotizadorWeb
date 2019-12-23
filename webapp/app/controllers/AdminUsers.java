@@ -1,5 +1,7 @@
 package controllers;
 
+
+import com.google.gson.Gson;
 import helpers.ERConstants;
 import helpers.Filter;
 import helpers.Filter.Operator;
@@ -10,16 +12,25 @@ import java.util.List;
 
 import models.*;
 import models.ws.rest.InspectionBrokerResponse;
+import models.ws.rest.SecurityResponse;
 import notifiers.Mails;
 import play.Logger;
 import play.data.validation.Valid;
 import play.data.validation.Error;
 import play.i18n.Messages;
 import play.modules.paginate.ModelPaginator;
-import play.mvc.With;
+import play.Logger;
+import play.Play;
+import play.i18n.Messages;
+import play.mvc.*;
+import play.data.validation.*;
+import play.libs.*;
+import play.utils.*;
 import service.InspectionService;
-
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import javax.inject.Inject;
+import play.libs.*;
 
 @With(Secure.class)
 @Check({"Administrador Maestro", "Gerente comercial", "Gerente de canal"})
@@ -227,7 +238,7 @@ public class AdminUsers extends AdminBaseController {
     }
     
     public static void saveUser(ER_User user, String reset, String agentCode, Integer phoneNumber,Boolean isQAUser,Boolean isCommercialQAUser,Boolean isCaseAnalyst) {
-    	
+		Logger.info("*ENTRO ACA");
     	flash.clear();
     	
     	boolean uniqueUser = true;
@@ -314,21 +325,41 @@ public class AdminUsers extends AdminBaseController {
 	        	}
 	    		
 		    	if (user.id == null) {
-		    		
-		    		//Set user password
+		    		//Set user password  charlie123@elroble.com  83AKmJm6*
 					String code = PasswordMethods.getCode();
-					user.password = code;
-		    		
-					//Send the email to the user
-					if (Mails.welcome(user, user.password)) {
-						user.save();
-						flash.success(Messages.get("user.create.success"));
-					} else {
-						flash.error(Messages.get("user.create.erroremail"));
-						params.flash();
-						editUser(user.id);
-					}
+					Logger.info("***********CONTRASEÑA sin BASE 64:"+code);
+					Base64.Encoder encoder = Base64.getEncoder();
+					String code_encript = encoder.encodeToString(code.getBytes(StandardCharsets.UTF_8) );
+				  	user.password = code;
+					//user.password = code_encript;
+					Logger.info("***********CONTRASEÑA EN BASE 64:"+code_encript);
+		    		//Send the email to the user
+					//if (Mails.welcome(user, user.password)) {
+                    String WS_URL = Play.configuration.getProperty("ssoUrl");
+                    String WS_APPNAME = Play.configuration.getProperty("appName");
+                    WS.WSRequest wsRequest = WS.url(WS_URL+"/ws/usuarios/crearUsuario");
+
+                    wsRequest.setParameter("email",user.email);
+                    wsRequest.setParameter("password","NADA"); // ESTO no lo deberias usar.
+					 /* YA NO VOY A HACER NADA CON LA CONTRASEÑA, QUE la genere el SSO para poder usar la funcion Guardar y envio de corre
+					 * dese el SSO */
+                    wsRequest.setParameter("aplicacion",WS_APPNAME);
+                    wsRequest.setParameter("firstName",user.firstName);
+                    wsRequest.setParameter("lastName",user.lastName);
+                    String response = wsRequest.get().getString();
+                    SecurityResponse securityResponse;
+                    securityResponse = new Gson().fromJson(response, SecurityResponse.class);
+
+                    Logger.info("SERA QUE FUNCION? "+response );
+					Logger.info("If:"+securityResponse.getMensaje()+" T/F:"+ securityResponse.getMensaje().equals("ok"));
+                    if(securityResponse.getMensaje().equals("ok")){
+						Logger.info("ENTRO EN EL IF");
+                    	user.save();
+                        flash.success(Messages.get("user.create.success"));
+                    }
+
 		    	} else {
+					Logger.info("ENTRO EN EL ELSE");
 		    		user.save();
 		    		flash.success(Messages.get("user.edit.success"));
 		    	}

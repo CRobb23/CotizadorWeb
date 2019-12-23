@@ -7,6 +7,7 @@ import java.util.Date;
 import models.ER_User;
 import models.ER_User_Custom_Logo;
 import models.ER_Distributor_Custom_Logo;
+import models.ws.rest.SecurityResponse;
 import play.Logger;
 import play.Play;
 import play.i18n.Messages;
@@ -15,12 +16,15 @@ import play.data.validation.*;
 import play.libs.*;
 import play.utils.*;
 import utils.StringUtil;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 public class Secure extends Controller {
 
+
     @Before(unless={"login", "authenticate", "logout", "logoutByForce","closeSession","forceCloseSession"})
     static void checkAccess() throws Throwable {
-        // Check if username and token is present
+        // Check if username and token is present   //4dm1n3lr0bl3  -- pass encriptado 7e47ac3b579aeccf194b2154e87a6296
         if(!session.contains("username") || !session.contains("token")) {
             flash.put("url", "GET".equals(request.method) ? request.url : Play.ctxPath + "/"); // seems a good default
             login();
@@ -52,6 +56,10 @@ public class Secure extends Controller {
         // If here, update timestamp
         String userTime = (String) Security.invoke("userTime");
         session.put("usertime", userTime);
+
+        // Find the local access the user have. update session
+
+
     }
 
     private static void check(Check check) throws Throwable {
@@ -107,46 +115,61 @@ public class Secure extends Controller {
         }
         catch ( Exception ex )
         {
-            flash.error(Messages.get("user.edit.error"));
+            flash.error(Messages.get("user.edit.error" ));
             Logger.error(ex,"close session user");
             login();
         }
     }
 
     public static void authenticate(@Required String username, String password) throws Throwable {
-        // Check tokens
-        String allowed = (String)Security.invoke("authenticate", username, password);
 
+        // CALL SSO
+        boolean EsValido = doLogin(username,password); //pretende retornar true si el usuario esta en el SSO
+
+        // Check tokens
+
+        //password="4dm1n3lr0bl3";
+        String allowed = (String)Security.invoke("authenticate", username, password);
+        //Logger.info("Q tiene allowed:"+allowed); //Q tiene allowed:true / Q tiene allowed:El usuario y/o contraseña son incorrectos
         if(validation.hasErrors()) {
             flash.keep("url");
-            flash.error("secure.required");
+            flash.error("secure.required" );
             params.flash();
             login();
         }
 
-        if(!allowed.equals("true")) {
+        //if(!allowed.equals("true")) {  // esta es la version original solo trae True/corre-pass invalido
+        if(!EsValido){ //usando la misma logica de Allowed si es valido vamos al else.
             if(allowed.equals("token"))
             {
                 closeSession(username);
             }
             else {
                 flash.keep("url");
-                flash.error(allowed);
+                //flash.error(allowed);
+                flash.error("El usuario y/o contraseña son incorrectos");
                 params.flash();
                 login();
             }
         }
         else {
-            String token = (String) Security.invoke("generateToken", username);
+            //Get data of user
+            ER_User userTemp = ER_User.find("email",username).first();
+            String token_save = session.get("token");
+            //Logger.info("Token a Grabar del SSO A LOCAL:"+ token_save);
+            userTemp.token=token_save;
+            userTemp.save();
+
+            //traer la informacion correcta con Token igual al SSO
+            // String token = (String) Security.invoke("generateToken", username);
+            //Logger.info("Que tiene este token invoke:"+token_save); //son 2 Token`s diferentes SSO vs LOCAL
             // Mark user as connected
             session.put("username", username);
-            session.put("token", token);
+            session.put("token", token_save);
             // If here, update timestamp
             String userTime = (String) Security.invoke("userTime");
             session.put("usertime", userTime);
 
-            //Get data of user
-            ER_User userTemp = ER_User.find("email",username).first();
 
             //If user´s distributor has custom logo...
             ER_Distributor_Custom_Logo customLogoDistributor = null;
@@ -169,8 +192,43 @@ public class Secure extends Controller {
             redirectToOriginalURL();
         }
     }
+/*
+    private final String WS_URL = Play.configuration.getProperty("ssoUrl");
+    private final String CONNECTION_ERROR = "Ha ocurrido un error en la conexión.";
+    private final String WS_APPNAME = Play.configuration.getProperty("appName");
+    private final String WS_APPTOKEN = Play.configuration.getProperty("appToken");
+    private final String WS_PERFIL = Play.configuration.getProperty("defaultProfile");
+    private final String WS_AREA = Play.configuration.getProperty("defaultArea");
+ */
+
+    public static boolean doLogin(String username, String password){
+        SecurityResponse securityResponse;
+        boolean ToReturn = false;
+        try{
+            String WS_URL = Play.configuration.getProperty("ssoUrl");
+            String WS_APPNAME = Play.configuration.getProperty("appName");
+            WS.WSRequest wsRequest = WS.url(WS_URL+"/ws/usuarios/autenticar");
+                wsRequest.setParameter("usuario",username);
+            wsRequest.setParameter("contrasenia",password);
+            wsRequest.setParameter("aplicacion",WS_APPNAME);
+            String response = wsRequest.get().getString();
+            securityResponse = new Gson().fromJson(response, SecurityResponse.class);
+            Logger.info("Contenido del Response:"+response+" Data:"+securityResponse.getMensaje());
+            if(securityResponse.getMensaje().equals("ok")){
+                ToReturn = true;
+                session.put("username", username);
+                session.put("token", securityResponse.getToken());
+                session.put("parametros", securityResponse.getParametros());
+
+            }
 
 
+        }catch(Exception e){
+            Logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return ToReturn;
+    }
 
     public static void logout() throws Throwable {
         Security.invoke("onDisconnect");
