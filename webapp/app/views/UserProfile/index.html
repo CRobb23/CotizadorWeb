@@ -57,9 +57,29 @@
 #{/form}
 #{/if}
 
+<div class="well">
+	<div class="orange-title"><span>
+			<h1>Cambiar Contraseña</h1>
+		</span></div>
+
+
+
+	<!--	<input type="submit" name="Contraseña" class="button" value="Contraseña" /> -->
+#{form @AdminProfile.move(), class:"form-horizontal", method:"POST", role:'form'}
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-3">
+			<input type="button" formtarget="_blank" onclick="location.href='http://localhost:8080/admin/cambiarContrasenia';" class="btn btn-primary btn-block"  value="CAMBIAR CONTRASEÑA"  />
+			<!--<input type="button" onclick="location.href='http://google.com';" class="btn btn-primary btn-block"  value="&{'profile.changepassword.form.change'}" /> -->
+		</div>
+	</div>
+#{/form}
+
+</div>
+
+<!--
 #{form @AdminProfile.savePassword(), class:"form-horizontal", method:"POST", role:'form'}
 	<div class="well">
-	
+
 	#{if !controllers.Security.check('Administrador maestro') && !controllers.Security.check('Gerente comercial') && !controllers.Security.check('Gerente de canal') && !controllers.Security.check('Vendedor') && !controllers.Security.check('Supervisor')}
 		#{if flash.error}
 			<div class="alert alert-danger">
@@ -72,39 +92,40 @@
 			</div>
 		#{/if}
 	#{/if}
-	
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="password">#{required/} &{'profile.changepassword.form.password'}</label>
 			<div class="col-sm-3">
 				<input type="password" name="password" id="password" class="form-control"/>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="newPassword">#{required/} &{'profile.changepassword.form.newPassword'}</label>
 			<div class="col-sm-3">
 				<input type="password" name="newPassword" id="newPassword" class="form-control"/>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label" for="confirmPassword">#{required/} &{'profile.changepassword.form.confirmPassword'}</label>
 			<div class="col-sm-3">
 				<input type="password" name="confirmPassword" id="confirmPassword" class="form-control"/>
 			</div>
 		</div>
-		
+
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-3">
 				<input type="submit" class="btn btn-primary btn-block" value="&{'profile.changepassword.form.change'}" />
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div class="col-sm-offset-2 col-sm-6">
 				#{requiredleyend/}
 			</div>
 		</div>
-		
+
 	</div>
 #{/form}
+-->

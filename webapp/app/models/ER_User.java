@@ -48,7 +48,8 @@ public class ER_User extends Model {
     @MaxSize(30)
     @Column(length=255)
     public String password;
-    
+
+
     @Required
     public Boolean active;
 
@@ -208,4 +209,13 @@ public class ER_User extends Model {
     public void setCaseAnalyst(Boolean caseAnalyst) {
         isCaseAnalyst = caseAnalyst;
     }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
 }

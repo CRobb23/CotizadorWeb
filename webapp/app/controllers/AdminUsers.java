@@ -325,7 +325,7 @@ public class AdminUsers extends AdminBaseController {
 	        	}
 	    		
 		    	if (user.id == null) {
-		    		//Set user password  charlie123@elroble.com  83AKmJm6*
+		    		//Set user password  charlie123@elroble.com  83AKmJm6*  nuevapass: 83AKmJm7*
 					String code = PasswordMethods.getCode();
 					Logger.info("***********CONTRASEÑA sin BASE 64:"+code);
 					Base64.Encoder encoder = Base64.getEncoder();
@@ -353,7 +353,7 @@ public class AdminUsers extends AdminBaseController {
                     Logger.info("SERA QUE FUNCION? "+response );
 					Logger.info("If:"+securityResponse.getMensaje()+" T/F:"+ securityResponse.getMensaje().equals("ok"));
                     if(securityResponse.getMensaje().equals("ok")){
-						Logger.info("ENTRO EN EL IF");
+						Logger.info("ENTRO EN    EL IF");
                     	user.save();
                         flash.success(Messages.get("user.create.success"));
                     }
@@ -450,6 +450,50 @@ public class AdminUsers extends AdminBaseController {
 			usersList(null, null, null, null, null,true);
 		}
 	}
+
+
+	/** Charlie Robb estoy creando esto con el objetivo de cambiar la logica de borar usuarios por desactivar usaurios.
+	 *   No queremos perder la data generada por el usuario dentro del cotizador y desactivandolo se va a evitar el accesso.
+	 */
+    public static void deactivateUser(Long id){
+		ER_User  tuser = ER_User.findById(id);
+		ER_Channel channel = null;
+		if (id!=null) {
+			tuser  = ER_User.findById(id);
+		}
+		boolean errorscaptured = false;
+		Logger.info("ACTIVO?:"+tuser.getActive());
+		tuser.setActive(false);
+		Logger.info("LO DESACTIVE?:"+tuser.getActive());
+		try
+		{
+			tuser.save();
+			flash.success(Messages.get("user.delete.success"));
+		}
+		catch ( Exception ex )
+		{
+			flash.error(Messages.get("user.delete.error"));
+			errorscaptured = true;
+			Logger.error(ex,"user: %d", id);
+		}
+		if(errorscaptured){
+			String email = session.get("email");
+			String firstName = session.get("firstName");
+			String lastName = session.get("lastName");
+			Long  role = "".equals(session.get("role")) || "null".equals(session.get("role")) ||session.get("role")==null ? null : Long.parseLong(session.get("role"));
+			Boolean active = "todos".equals(session.get("active")) || null == session.get("active") ? null : Boolean.parseBoolean(session.get("active"));
+			if (email != null || firstName != null || lastName != null || role != null || active != null) {
+				System.out.print("paso 4 " + errorscaptured);
+				usersList(email, firstName,lastName,role,active,true);
+			} else {
+				usersList(null, null, null, null, null,true);
+			}
+		}else{
+			usersList(null, null, null, null, null,true);
+		}
+
+	}
+
 
 	public static void deleteUser(Long id){
 		ER_User  tuser = ER_User.findById(id);

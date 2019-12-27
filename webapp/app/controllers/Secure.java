@@ -56,11 +56,8 @@ public class Secure extends Controller {
         // If here, update timestamp
         String userTime = (String) Security.invoke("userTime");
         session.put("usertime", userTime);
-
         // Find the local access the user have. update session
-
-
-    }
+ }
 
     private static void check(Check check) throws Throwable {
         for(String profile : check.value()) {
@@ -122,6 +119,12 @@ public class Secure extends Controller {
     }
 
     public static void authenticate(@Required String username, String password) throws Throwable {
+        //token username response.status
+        Logger.info(">>>>>TOKEN:"+session.get("token")+">>>>>username:"+session.get("username")+">>>>>status:"+response.status);
+        if(response.status == 200){
+            Logger.info(">>>> ES UN USUARIO YA CONECTADO");
+
+        }
 
         // CALL SSO
         boolean EsValido = doLogin(username,password); //pretende retornar true si el usuario esta en el SSO
@@ -140,56 +143,56 @@ public class Secure extends Controller {
 
         //if(!allowed.equals("true")) {  // esta es la version original solo trae True/corre-pass invalido
         if(!EsValido){ //usando la misma logica de Allowed si es valido vamos al else.
-            if(allowed.equals("token"))
-            {
+            if(allowed.equals("token")){
                 closeSession(username);
-            }
-            else {
+            }else {
                 flash.keep("url");
                 //flash.error(allowed);
                 flash.error("El usuario y/o contraseña son incorrectos");
                 params.flash();
                 login();
             }
-        }
-        else {
+        }else{
             //Get data of user
             ER_User userTemp = ER_User.find("email",username).first();
-            String token_save = session.get("token");
-            //Logger.info("Token a Grabar del SSO A LOCAL:"+ token_save);
-            userTemp.token=token_save;
-            userTemp.save();
-
-            //traer la informacion correcta con Token igual al SSO
-            // String token = (String) Security.invoke("generateToken", username);
-            //Logger.info("Que tiene este token invoke:"+token_save); //son 2 Token`s diferentes SSO vs LOCAL
-            // Mark user as connected
-            session.put("username", username);
-            session.put("token", token_save);
-            // If here, update timestamp
-            String userTime = (String) Security.invoke("userTime");
-            session.put("usertime", userTime);
-
-
-            //If user´s distributor has custom logo...
-            ER_Distributor_Custom_Logo customLogoDistributor = null;
-            if(userTemp.distributor != null)
-                customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id", userTemp.distributor.id).first();
-
-            if(customLogoDistributor != null && customLogoDistributor.active && customLogoDistributor.logoName != null ){
-                session.put("customUserLogo", customLogoDistributor.logoName);
-            }
-            else{
-                //If user has custom logo
-                ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.email", username).first();
-                if(customLogo != null && customLogo.active && customLogo.logoName!=null){
-                    session.put("customUserLogo", customLogo.logoName);
+            Logger.info("TIENE ACCESSO EL USUARIO ES ACTIVO:"+userTemp.getActive());
+            if(!userTemp.getActive()){
+                flash.keep("url");
+                //flash.error(allowed);
+                flash.error("El usuario esta DESACTIVADO, Contacta Administrador");
+                params.flash();
+                login();
+            }else {
+                String token_save = session.get("token");
+                //Logger.info("Token a Grabar del SSO A LOCAL:"+ token_save);
+                userTemp.token = token_save;
+                userTemp.save();
+                //traer la informacion correcta con Token igual al SSO
+                // String token = (String) Security.invoke("generateToken", username);
+                //Logger.info("Que tiene este token invoke:"+token_save); //son 2 Token`s diferentes SSO vs LOCAL
+                // Mark user as connected
+                session.put("username", username);
+                session.put("token", token_save);
+                // If here, update timestamp
+                String userTime = (String) Security.invoke("userTime");
+                session.put("usertime", userTime);
+                //If user´s distributor has custom logo...
+                ER_Distributor_Custom_Logo customLogoDistributor = null;
+                if (userTemp.distributor != null)
+                    customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id", userTemp.distributor.id).first();
+                if (customLogoDistributor != null && customLogoDistributor.active && customLogoDistributor.logoName != null) {
+                    session.put("customUserLogo", customLogoDistributor.logoName);
+                } else {
+                    //If user has custom logo
+                    ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.email", username).first();
+                    if (customLogo != null && customLogo.active && customLogo.logoName != null) {
+                        session.put("customUserLogo", customLogo.logoName);
+                    }
                 }
+                response.setCookie("auth", username, "5d");
+                // Redirect to the original URL (or /)
+                redirectToOriginalURL();
             }
-
-            response.setCookie("auth", username, "5d");
-            // Redirect to the original URL (or /)
-            redirectToOriginalURL();
         }
     }
 /*
@@ -208,7 +211,7 @@ public class Secure extends Controller {
             String WS_URL = Play.configuration.getProperty("ssoUrl");
             String WS_APPNAME = Play.configuration.getProperty("appName");
             WS.WSRequest wsRequest = WS.url(WS_URL+"/ws/usuarios/autenticar");
-                wsRequest.setParameter("usuario",username);
+            wsRequest.setParameter("usuario",username);
             wsRequest.setParameter("contrasenia",password);
             wsRequest.setParameter("aplicacion",WS_APPNAME);
             String response = wsRequest.get().getString();
@@ -219,10 +222,7 @@ public class Secure extends Controller {
                 session.put("username", username);
                 session.put("token", securityResponse.getToken());
                 session.put("parametros", securityResponse.getParametros());
-
             }
-
-
         }catch(Exception e){
             Logger.error(e.getMessage());
             e.printStackTrace();
