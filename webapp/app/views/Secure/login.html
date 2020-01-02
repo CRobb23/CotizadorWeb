@@ -1,4 +1,6 @@
 #{extends 'Secure/layout.html' /}
+
+
 <div class="login-page">
 	<div class="topBar text-center">
 		<a href="@{login}"><img src="@{'/public/images/ElRoble.png'}" alt=""/></a>
@@ -33,7 +35,10 @@
 					<div class="form-group text-right">
 						<a href="@{UserRegistration.index()}">&{'userRegistration.user.newUser'}</a>
 						/
-						<a href="@{AdminPasswordReset.resetPassword()}" >&{'adminpasswordreset.resetpassword.forgot'}</a>
+						*{<a href="@{AdminPasswordReset.resetPassword()}" >&{'adminpasswordreset.resetpassword.forgot'}</a>
+		<a  onclick="location.href='http://localhost:8080/recuperarContrasenia';"  value="CAMBIAR CONTRASEÑA"  oncontextmenu="reiniciar" />
+}*
+						<a href="http://localhost:8080/recuperarContrasenia">Reiniciar Contraseña</a>
 					</div>
 					
 					<div class="form-group">

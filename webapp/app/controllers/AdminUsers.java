@@ -238,7 +238,7 @@ public class AdminUsers extends AdminBaseController {
     }
     
     public static void saveUser(ER_User user, String reset, String agentCode, Integer phoneNumber,Boolean isQAUser,Boolean isCommercialQAUser,Boolean isCaseAnalyst) {
-		Logger.info("*ENTRO ACA");
+		Logger.info("*ENTRO ACA saveUser");
     	flash.clear();
     	
     	boolean uniqueUser = true;

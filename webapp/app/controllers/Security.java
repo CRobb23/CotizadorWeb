@@ -4,14 +4,22 @@ import models.ER_General_Configuration;
 import models.ER_User;
 import play.i18n.Messages;
 import utils.StringUtil;
+import play.Logger;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Date;
+import java.util.Map;
 
 public class Security extends Secure.Security {
 
 	static String authenticate(String username, String password) {
 
 		ER_User user = ER_User.connect(username, password);
+
 
 		if (user!=null) {
 			if (user.active) {
@@ -133,5 +141,30 @@ public class Security extends Secure.Security {
 		}
 	}
 
+
+	public String SSOAuthentication(String data, HttpServletRequest request){
+		try {
+			byte[] byteArray = java.util.Base64.getDecoder().decode(data);
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
+			ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+			Map<String, String> usuario = (Map<String, String>) objectInputStream.readObject();
+			HttpSession session = request.getSession(true);
+			String username = usuario.get("userName");
+			String token = usuario.get("token");
+			session.setAttribute("tokenSso", token);
+			//session.setAttribute("SPRING_SECURITY_CONTEXT_KEY", sc);
+			//auth.isAuthenticated()
+
+			if(true) {
+				return "main";
+			}
+		}catch (ClassNotFoundException | IOException e){
+
+			Logger.error("Error al deserealizar el usuario");
+			Logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		return "login";
+	}
 
 }

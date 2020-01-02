@@ -35,7 +35,9 @@ public class ER_User extends Model {
     @MaxSize(75)
     @Column(length=75)
     public String firstName;
-    
+
+
+
     @Required
     @MaxSize(75)
     @Column(length=75)
@@ -81,6 +83,22 @@ public class ER_User extends Model {
 
     @Required
     public Boolean isCaseAnalyst;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public Map<String, Object> toMap() {
     	Map<String, Object> map = new HashMap<String,Object>();

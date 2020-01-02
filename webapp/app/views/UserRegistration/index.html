@@ -37,13 +37,15 @@
 					#{field 'user.password'}
 						<div class="form-group">
 							<label for="${field.id}">#{required/} &{'userRegistration.'+field.name}</label>
-							<input type="password" maxlength="30"  name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+							*{<input type="password" maxlength="30"  name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+						}*
 						</div>
 					#{/}
 					#{field 'user.confirmPassword'}
 						<div class="form-group">
 							<label for="${field.id}">#{required/} &{'userRegistration.'+field.name}</label>
-							<input type="password" maxlength="30" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+							*{<input type="password" maxlength="30" name="${field.name}" id="${field.id}" value="${field.value}" class="form-control"/>
+							}*
 						</div>
 					#{/}
 					#{field 'user.firstName'}

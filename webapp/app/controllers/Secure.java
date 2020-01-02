@@ -18,6 +18,9 @@ import play.utils.*;
 import utils.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import javax.servlet.http.HttpServletRequest;
+
+
 
 public class Secure extends Controller {
 
@@ -120,7 +123,8 @@ public class Secure extends Controller {
 
     public static void authenticate(@Required String username, String password) throws Throwable {
         //token username response.status
-        Logger.info(">>>>>TOKEN:"+session.get("token")+">>>>>username:"+session.get("username")+">>>>>status:"+response.status);
+
+        Logger.info(">>>>>TOKEN:"+request.cookies.get("auth")+">>>>>username:"+session.get("username")+">>>>>status:"+response.status);
         if(response.status == 200){
             Logger.info(">>>> ES UN USUARIO YA CONECTADO");
 
@@ -146,10 +150,10 @@ public class Secure extends Controller {
             if(allowed.equals("token")){
                 closeSession(username);
             }else {
-                flash.keep("url");
-                //flash.error(allowed);
-                flash.error("El usuario y/o contraseña son incorrectos");
-                params.flash();
+                    flash.keep("url");
+                    //flash.error(allowed);
+                    flash.error("El usuario y/o contraseña son incorrectos");
+                    params.flash();
                 login();
             }
         }else{
@@ -256,6 +260,9 @@ public class Secure extends Controller {
         redirect(url);
     }
 
+
+
+
     public static class Security extends Controller {
 
         /**
@@ -282,6 +289,9 @@ public class Secure extends Controller {
             return "true";
         }
 
+        String SSOAuthentication(String data, HttpServletRequest request){
+            return "true";
+        }
         /**
          * This method checks that a profile is allowed to view this page/method. This method is called prior
          * to the method's controller annotated with the @Check method.
@@ -353,6 +363,8 @@ public class Secure extends Controller {
             return "";
         }
 
+
+
         /**
          * This method is called when a user closed the window and we need to logout by force.
          * You need to override this method if you wish to perform specific actions (eg. Record the name of the user who signed off)
@@ -379,5 +391,6 @@ public class Secure extends Controller {
         }
 
     }
+
 
 }

@@ -61,22 +61,19 @@
 	<div class="orange-title"><span>
 			<h1>Cambiar Contraseña</h1>
 		</span></div>
-
-
-
-	<!--	<input type="submit" name="Contraseña" class="button" value="Contraseña" /> -->
-#{form @AdminProfile.move(), class:"form-horizontal", method:"POST", role:'form'}
-	<div class="form-group">
-		<div class="col-sm-offset-2 col-sm-3">
-			<input type="button" formtarget="_blank" onclick="location.href='http://localhost:8080/admin/cambiarContrasenia';" class="btn btn-primary btn-block"  value="CAMBIAR CONTRASEÑA"  />
-			<!--<input type="button" onclick="location.href='http://google.com';" class="btn btn-primary btn-block"  value="&{'profile.changepassword.form.change'}" /> -->
-		</div>
-	</div>
-#{/form}
+    <div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-3">
+            <!-- RECORDA CAMBIAR LA PAGINA WEB. -->
+            <p>Para cambiar contraseña se requiere ir al SSO y modificarla ahí.</p>
+            <input type="submit" class="btn btn-primary btn-block"  formtarget="_blank"  onclick="location.href='http://localhost:8080/admin/cambiarContrasenia';" class="btn btn-primary btn-block"  value="CAMBIAR CONTRASEÑA"  />
+         </div>
+    </div>
+    </div>
 
 </div>
 
-<!--
+*{
 #{form @AdminProfile.savePassword(), class:"form-horizontal", method:"POST", role:'form'}
 	<div class="well">
 
@@ -128,4 +125,4 @@
 
 	</div>
 #{/form}
--->
+}*
