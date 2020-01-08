@@ -21,6 +21,8 @@ import play.libs.Images;
 import play.libs.WS;
 import play.mvc.Controller;
 
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
+
 public class UserRegistration extends Controller {
 
     public static void index() {
@@ -28,14 +30,17 @@ public class UserRegistration extends Controller {
     	render(randomID);
     }
 
+
     public static SecurityResponse RegGlobal(ER_User user, WS.WSRequest wsRequest){
         String WS_URL = Play.configuration.getProperty("ssoUrl");
         String WS_APPNAME = Play.configuration.getProperty("appName");
         wsRequest = WS.url(WS_URL+"/ws/usuarios/crearUsuario");
-
+        wsRequest.setParameter("email",user.email);
+        wsRequest.setParameter("firstName",user.firstName);
+        wsRequest.setParameter("lastName",user.lastName);
+        wsRequest.setParameter("profile_id","88");
         String response = wsRequest.get().getString();
         SecurityResponse securityResponse = new Gson().fromJson(response, SecurityResponse.class);
-
         return securityResponse;
 	}
 
@@ -64,7 +69,7 @@ public class UserRegistration extends Controller {
             }else {
                 responseLocal = false;
             }
-            if(securityResponse.getCodigo().equals("200")){ //significa que el usuario existe en Global
+            if(securityResponse.getCodigo() == 200){ //significa que el usuario existe en Global
                 responseGlobal = true;
             }else {responseGlobal = false;}
             Logger.info("response:"+responseGlobal+" Local:"+responseLocal);
@@ -77,11 +82,13 @@ public class UserRegistration extends Controller {
                 flash.error("El usuario ya existe en la plataforma");
                 params.flash();
                 renderTemplate("UserRegistration/index.html", user, randomID);
-            }else if(responseGlobal && !responseLocal){
+            }
+            if(responseGlobal && !responseLocal) {
                 //existe global pero no local, crear usuario en SSO
-               user.save();
+                user.save();
 
-            }else if(!responseGlobal && responseLocal){
+
+            } if(!responseGlobal && responseLocal){
                 //no existe global pero si local OJO sera que estas despedido? deberia de volver a crearlo?
                 //todo POSIBLE MENSAJE DE ERROR PORQUE EXISTE! O podria ser un usuario que fue creado mucho antes con un uso minimo.
                 flash.keep("url");
@@ -90,24 +97,29 @@ public class UserRegistration extends Controller {
                 renderTemplate("UserRegistration/index.html", user, randomID);
 
 
-            }else if(!responseGlobal && !responseLocal){
-                // hoy si persona nueva, creando su usuario.
+            }
+            if(!responseGlobal && !responseLocal){
+                // hoy si persona nueva, crear su usuario.
                 securityResponse = RegGlobal(user, wsRequest);
-                if(securityResponse.getCodigo().equals("200")) { //significa que el usuario existe en Global
-                   user.save();
+                Logger.info("retorno del security:"+ securityResponse+ " getcod:"+ securityResponse.getCodigo());
+                if(securityResponse.getCodigo() == 200) { //significa que el usuario existe en Global
+                    Logger.info("ANTES DE CREAR EL USARIO:"+ user.email+" Nombre:"+user.firstName);
+                    user.save();
+                    Logger.info("SE DEBIO CREAR EL USUARIO");
                 }else{
                     flash.keep("url");
                     flash.error(securityResponse.getMensaje());
                     params.flash();
                     renderTemplate("UserRegistration/index.html", user, randomID);
-
                 }
 
             }
             /* lo ultimo si es existoso lo anterior */
             user.active = false;
             user.token = UUID.randomUUID().toString().replaceAll("-", "");
-            Cache.delete(randomID);
+            Cache.delete(randomID);flash.keep("url");
+            flash.success("El usuario creado");
+            params.flash();
             render();
         }
 

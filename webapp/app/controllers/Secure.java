@@ -131,6 +131,8 @@ public class Secure extends Controller {
         }
 
         // CALL SSO
+
+
         boolean EsValido = doLogin(username,password); //pretende retornar true si el usuario esta en el SSO
 
         // Check tokens
@@ -147,6 +149,7 @@ public class Secure extends Controller {
 
         //if(!allowed.equals("true")) {  // esta es la version original solo trae True/corre-pass invalido
         if(!EsValido){ //usando la misma logica de Allowed si es valido vamos al else.
+
             if(allowed.equals("token")){
                 closeSession(username);
             }else {

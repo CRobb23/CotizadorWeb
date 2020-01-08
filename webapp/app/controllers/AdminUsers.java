@@ -338,7 +338,6 @@ public class AdminUsers extends AdminBaseController {
                     String WS_URL = Play.configuration.getProperty("ssoUrl");
                     String WS_APPNAME = Play.configuration.getProperty("appName");
                     WS.WSRequest wsRequest = WS.url(WS_URL+"/ws/usuarios/crearUsuario");
-
                     wsRequest.setParameter("email",user.email);
                     wsRequest.setParameter("password","NADA"); // ESTO no lo deberias usar.
 					 /* YA NO VOY A HACER NADA CON LA CONTRASEÑA, QUE la genere el SSO para poder usar la funcion Guardar y envio de corre
@@ -346,6 +345,8 @@ public class AdminUsers extends AdminBaseController {
                     wsRequest.setParameter("aplicacion",WS_APPNAME);
                     wsRequest.setParameter("firstName",user.firstName);
                     wsRequest.setParameter("lastName",user.lastName);
+                    wsRequest.setParameter("profile_id","87");
+
                     String response = wsRequest.get().getString();
                     SecurityResponse securityResponse;
                     securityResponse = new Gson().fromJson(response, SecurityResponse.class);
@@ -400,8 +401,9 @@ public class AdminUsers extends AdminBaseController {
     		String firstName = session.get("firstName");
     		String lastName = session.get("lastName");
     		Long  role = "".equals(session.get("role")) || "null".equals(session.get("role")) ||session.get("role")==null ? null : Long.parseLong(session.get("role"));
+    		Logger.info("valor de activo:"+user.active);
     		Boolean active = "todos".equals(session.get("active")) || null == session.get("active") ? null : Boolean.parseBoolean(session.get("active"));
-
+			Logger.info("valor de activo:"+user.active + " valor del boolean:"+ active);
     		if (email != null || firstName != null || lastName != null || role != null || active != null) {    			
     			search(email, firstName, lastName, role, active, "",true,true);
     		} else {
