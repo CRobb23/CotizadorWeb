@@ -1,8 +1,11 @@
 package controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Date;
+import java.util.Map;
 
 import models.ER_User;
 import models.ER_User_Custom_Logo;
@@ -24,9 +27,77 @@ import javax.servlet.http.HttpServletRequest;
 
 public class Secure extends Controller {
 
-
+//
     @Before(unless={"login", "authenticate", "logout", "logoutByForce","closeSession","forceCloseSession"})
     static void checkAccess() throws Throwable {
+        String data = params.get("data");
+        Logger.info(">>>>>NUEVO TOKEN:"+request.cookies.get("auth").toString()+">>>>>username:"+session.get("username")+">:"+data);
+
+        if(data != null) {
+            byte[] byteArray = java.util.Base64.getDecoder().decode(data);
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArray);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+            Map<String, String> usuario = (Map<String, String>) objectInputStream.readObject();
+            Logger.debug("desebcriptar:" + usuario.toString() + " " + usuario.get("token"));
+            String username = usuario.get("userName");
+            ER_User userTemp = ER_User.find("email",username).first();
+
+            if(userTemp == null){
+                flash.keep("url");
+                //flash.error(allowed);
+                flash.error("El usuario no existe en el Cotizador... Contacta al Administrador");
+                params.flash();
+                login();
+            }
+            String token_save = usuario.get("token");
+            //Logger.info("Token a Grabar del SSO A LOCAL:"+ token_save);
+            userTemp.token = token_save;
+            userTemp.save();
+            session.put("username", username);
+            session.put("token", token_save);
+            String userTime = (String) Security.invoke("userTime");
+            session.put("usertime", userTime);
+            ER_Distributor_Custom_Logo customLogoDistributor = null;
+            if (userTemp.distributor != null)
+                customLogoDistributor = ER_Distributor_Custom_Logo.find("distributor.id", userTemp.distributor.id).first();
+            if (customLogoDistributor != null && customLogoDistributor.active && customLogoDistributor.logoName != null) {
+                session.put("customUserLogo", customLogoDistributor.logoName);
+            } else {
+                //If user has custom logo
+                ER_User_Custom_Logo customLogo = ER_User_Custom_Logo.find("user.email", username).first();
+                if (customLogo != null && customLogo.active && customLogo.logoName != null) {
+                    session.put("customUserLogo", customLogo.logoName);
+                }
+            }
+            response.setCookie("auth", username, "5d");
+            // Redirect to the original URL (or /)
+            redirectToOriginalURL();
+
+            /*
+
+            session.put("username", usuario.get("userName"));
+            session.put("token", usuario.get("token"));
+            ER_User user = ER_User.find("byEmail", usuario.get("userName")).first();
+            Logger.debug("USER CONTENIDO"+user+ "correo:"+usuario.get("userName"));
+            if (user!=null) {
+                String userTime = (String) Security.invoke("userTime");
+                Logger.debug("TIME:"+userTime);
+                response.setCookie("auth", user.email, "5d");
+                session.put("usertime", userTime);
+
+            }
+            else{
+                flash.error("Credenciales invalidas, no es posible cerrar sesión en el otro dispositivo");
+           //     closeSession();
+            }
+            ER_Distributor_Custom_Logo customLogoDistributor = null;
+//            Logger.debug("QUE CONTIENE LOGO:"+ customLogoDistributor+ " CONTIEN user.distributor:"+user.distributor);
+            response.setCookie("auth", usuario.get("userName"), "5d");
+            render();
+
+
+             */
+        }
         // Check if username and token is present   //4dm1n3lr0bl3  -- pass encriptado 7e47ac3b579aeccf194b2154e87a6296
         if(!session.contains("username") || !session.contains("token")) {
             flash.put("url", "GET".equals(request.method) ? request.url : Play.ctxPath + "/"); // seems a good default
@@ -34,6 +105,8 @@ public class Secure extends Controller {
         }
         // Check if username and token are valid
         boolean validSession = (Boolean) Security.invoke("validSession", session.get("username"), session.get("token"));
+        Logger.info("validSession:"+validSession+ " session.get(username):"+session.get("username")+
+                " session.get(token):"+ session.get("token"));
         if (!validSession) {
             login();
         }
@@ -92,6 +165,7 @@ public class Secure extends Controller {
         render();
     }
 
+
     public static void closeSession(String userName) throws Throwable {
         renderArgs.put("userName", userName);
         render();
@@ -124,19 +198,14 @@ public class Secure extends Controller {
     public static void authenticate(@Required String username, String password) throws Throwable {
         //token username response.status
 
-        Logger.info(">>>>>TOKEN:"+request.cookies.get("auth")+">>>>>username:"+session.get("username")+">>>>>status:"+response.status);
+       // Logger.info(">>>>>TOKEN:"+request.cookies.get("auth").toString()+">>>>>username:"+session.get("username")+">>>>>status:"+response.status);
         if(response.status == 200){
             Logger.info(">>>> ES UN USUARIO YA CONECTADO");
 
         }
-
         // CALL SSO
-
-
         boolean EsValido = doLogin(username,password); //pretende retornar true si el usuario esta en el SSO
-
         // Check tokens
-
         //password="4dm1n3lr0bl3";
         String allowed = (String)Security.invoke("authenticate", username, password);
         //Logger.info("Q tiene allowed:"+allowed); //Q tiene allowed:true / Q tiene allowed:El usuario y/o contraseña son incorrectos
@@ -146,7 +215,6 @@ public class Secure extends Controller {
             params.flash();
             login();
         }
-
         //if(!allowed.equals("true")) {  // esta es la version original solo trae True/corre-pass invalido
         if(!EsValido){ //usando la misma logica de Allowed si es valido vamos al else.
 

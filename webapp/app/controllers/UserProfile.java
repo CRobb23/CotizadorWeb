@@ -42,4 +42,17 @@ public class UserProfile extends AdminBaseController {
     	
     	AdminProfile.profile();
     }
-}
+
+
+
+
+    //AKLSFJAKLSÑDFJALSÑKDFJASDKLÑFJDAKLSÑFJADSKLFKL
+
+	public static void ChangePasswordProfile(@Valid ER_User_Profile profile) {
+		Logger.debug("ACA necesitamos armar la peticion para ir al SSO a cambiar contrasña");
+
+
+    }
+
+
+	}

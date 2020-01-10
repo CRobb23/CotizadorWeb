@@ -272,7 +272,7 @@ public class AdminUsers extends AdminBaseController {
     		if (!uniqueUser) {
     			validation.addError("user.email", Messages.get("user.create.emailnotunique", user.email));
     		}
-    		
+
     		editUser(user.id);
     	} else {
     		
@@ -345,7 +345,7 @@ public class AdminUsers extends AdminBaseController {
                     wsRequest.setParameter("aplicacion",WS_APPNAME);
                     wsRequest.setParameter("firstName",user.firstName);
                     wsRequest.setParameter("lastName",user.lastName);
-                    wsRequest.setParameter("profile_id","87");
+                    wsRequest.setParameter("profile_id",87l);
 
                     String response = wsRequest.get().getString();
                     SecurityResponse securityResponse;
@@ -360,8 +360,22 @@ public class AdminUsers extends AdminBaseController {
                     }
 
 		    	} else {
-					Logger.info("ENTRO EN EL ELSE");
-		    		user.save();
+					Logger.debug("ENTRO EN EL ELSE");
+					/*Logica va a ser:
+					* sin importar yo llamo a mi funcion enviando el usuario, perfil, activo/inactivo
+					* el plan seria que el SSO vea si esta cambiando el estatus y entonces poner o quitar el perfil.
+					* */
+					String WS_URL = Play.configuration.getProperty("ssoUrl");
+					String WS_APPNAME = Play.configuration.getProperty("appName");
+					WS.WSRequest wsRequest = WS.url(WS_URL+"/ws/usuarios/ActualizarEstatusUsuarioCotizador");
+					wsRequest.setParameter("email",user.email);
+					wsRequest.setParameter("profile_id",87l);
+					wsRequest.setParameter("active", user.active);
+					String response = wsRequest.get().getString();
+					SecurityResponse securityResponse;
+					securityResponse = new Gson().fromJson(response, SecurityResponse.class);
+					Logger.debug("Retorno respons:"+securityResponse.getMensaje());
+					user.save();
 		    		flash.success(Messages.get("user.edit.success"));
 		    	}
 
@@ -370,7 +384,7 @@ public class AdminUsers extends AdminBaseController {
                     if (userProfile!=null) {
                         userProfile.agentCode = agentCode;
                         userProfile.phoneNumber = phoneNumber;
-                        userProfile.save();
+						userProfile.save();
                     } else {
                         userProfile = new ER_User_Profile();
 						userProfile.agentCode = agentCode;
@@ -403,8 +417,7 @@ public class AdminUsers extends AdminBaseController {
     		Long  role = "".equals(session.get("role")) || "null".equals(session.get("role")) ||session.get("role")==null ? null : Long.parseLong(session.get("role"));
     		Logger.info("valor de activo:"+user.active);
     		Boolean active = "todos".equals(session.get("active")) || null == session.get("active") ? null : Boolean.parseBoolean(session.get("active"));
-			Logger.info("valor de activo:"+user.active + " valor del boolean:"+ active);
-    		if (email != null || firstName != null || lastName != null || role != null || active != null) {    			
+			if (email != null || firstName != null || lastName != null || role != null || active != null) {
     			search(email, firstName, lastName, role, active, "",true,true);
     		} else {
     	    	usersList(null, null, null, null, null,true);
