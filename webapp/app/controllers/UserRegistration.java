@@ -38,7 +38,7 @@ public class UserRegistration extends Controller {
         wsRequest.setParameter("email",user.email);
         wsRequest.setParameter("firstName",user.firstName);
         wsRequest.setParameter("lastName",user.lastName);
-        wsRequest.setParameter("profile_id","88");
+        wsRequest.setParameter("profile_id",88l);
         String response = wsRequest.get().getString();
         SecurityResponse securityResponse = new Gson().fromJson(response, SecurityResponse.class);
         return securityResponse;
